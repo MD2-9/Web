@@ -1,0 +1,10 @@
+node_modules
+.DS_Store
+/build
+/coverage
+packages/*/dist
+out
+*.log
+.idea
+*.sw*
+.closure-tmp
