@@ -1368,16 +1368,57 @@
 
     /* Outlined Text Field with Leading Icon */
     .mdc-text-field--outlined.mdc-text-field--with-leading-icon {
-      background: transparent;
-      border: 1px solid rgba(0, 0, 0, 0.24);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.24);
+      background: transparent !important;
+      border: 1px solid rgba(0, 0, 0, 0.24) !important;
+      border-radius: 0 !important;
+      height: 56px;
+      position: relative;
+      box-sizing: border-box;
     }
     .dark-theme .mdc-text-field--outlined.mdc-text-field--with-leading-icon {
-      background: transparent;
-      border-color: rgba(255, 255, 255, 0.24);
+      border-color: rgba(255, 255, 255, 0.24) !important;
+    }
+    .mdc-text-field--outlined.mdc-text-field--with-leading-icon .mdc-text-field__icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: var(--mdc-theme-primary);
+      pointer-events: none;
+      z-index: 2;
     }
     .mdc-text-field--outlined.mdc-text-field--with-leading-icon .mdc-text-field__input {
-      padding-top: 0;
+      height: 100% !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      line-height: 54px !important;
+      padding-left: 44px !important;
+      font-size: 14px;
+      width: 100%;
+      border: none;
+      background: transparent;
+      outline: none;
+      color: inherit;
+      box-sizing: border-box;
+    }
+    .mdc-text-field--outlined.mdc-text-field--with-leading-icon .mdc-floating-label {
+      position: absolute;
+      top: -8px !important;
+      left: 12px !important;
+      background-color: var(--mdc-theme-surface, #ffffff);
+      padding: 0 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--mdc-theme-primary);
+      z-index: 5;
+      transform: none !important;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .dark-theme .mdc-text-field--outlined.mdc-text-field--with-leading-icon .mdc-floating-label {
+      background-color: #19181e;
+      color: var(--mdc-theme-primary);
     }
 
     /* Material Design 0px 纯直角自定义 Select 组件 (MD Custom Select) */
@@ -1781,7 +1822,7 @@
             <i class="material-icons" style="font-size: 16px;">view_module</i> 全景视图
           </button>
           <button class="segmented-button" onclick="toggleSegmented(this)">
-            <i class="material-icons" style="font-size: 16px;">grid_view</i> 紧凑网格
+            <i class="material-icons" style="font-size: 16px;">view_compact</i> 紧凑网格
           </button>
           <button class="segmented-button" onclick="toggleSegmented(this)">
             <i class="material-icons" style="font-size: 16px;">view_list</i> 详细列表
