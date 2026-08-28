@@ -293,18 +293,8 @@
       position: relative;
       z-index: 1;
       overflow: hidden !important;
-      transition: opacity 0.25s ease, transform 0.25s ease;
       box-sizing: border-box;
       padding: 0 0 8px 0;
-    }
-    .drawer-nav-section.anim-out {
-      opacity: 0;
-      transform: translateY(20px);
-      pointer-events: none;
-    }
-    .drawer-nav-section.anim-in {
-      opacity: 1;
-      transform: translateY(0);
     }
 
     /* 顶部 Brand Header (点击触发调色盘水波纹) */
@@ -2581,9 +2571,6 @@
       }
 
       rail.classList.add('is-expanded');
-      navSec.classList.remove('anim-in');
-      navSec.classList.add('anim-out');
-
       panel.style.display = 'flex';
       panel.classList.remove('anim-out');
       panel.classList.add('anim-in');
@@ -2619,8 +2606,7 @@
 
       setTimeout(() => {
         panel.style.display = 'none';
-        navSec.classList.remove('anim-out');
-        navSec.classList.add('anim-in');
+        panel.classList.remove('anim-out');
         rail.classList.remove('is-expanded');
         if (activeOverlayId === id) activeOverlayId = null;
       }, 260);

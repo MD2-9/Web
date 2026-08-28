@@ -77,19 +77,6 @@ $mdc-rail-width-expanded: 260px !default;
   height: 100%;
   width: 100%;
   position: relative;
-  transition: opacity 0.25s ease, transform 0.25s ease;
-
-  &.anim-out {
-    opacity: 0;
-    pointer-events: none;
-    transform: scale(0.95);
-  }
-
-  &.anim-in {
-    opacity: 1;
-    pointer-events: auto;
-    transform: scale(1);
-  }
 }
 
 // 顶部 Brand Header
