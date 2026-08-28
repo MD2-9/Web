@@ -1902,6 +1902,16 @@
       updateSlider(sliderInput.value);
     }
 
+    // =========================================================================
+    // 无用/演示按钮全局点击提示 (对未绑定业务逻辑的按钮触发底部 Snackbar)
+    // =========================================================================
+    document.querySelectorAll('button:not([onclick]), .surface-token-chip:not([onclick])').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const text = btn.textContent.trim();
+        showDemoToast(text ? `这是一个无用的按钮 (${text})` : '这是一个无用的按钮');
+      });
+    });
+
     // 初始化莫奈色彩与 Tab
     applyMonetTheme();
     setTimeout(() => {
@@ -1909,7 +1919,7 @@
       const indicator = document.getElementById('md1TabIndicator');
       if (firstTab && indicator) {
         indicator.style.width = `${firstTab.offsetWidth}px`;
-        indicator.style.transform = `translateX(${firstTab.offsetLeft}px)`;
+        indicator.style.left = `${firstTab.offsetLeft}px`;
       }
     }, 100);
   </script>
