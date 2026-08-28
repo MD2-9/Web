@@ -390,13 +390,17 @@
         </div>
 
         <!-- 模式 1/2 专属控制区 -->
-        <div id="rail-config-box" style="display: none; flex-direction: column; gap: 6px; padding-top: 6px; border-top: 1px dashed rgba(0,0,0,0.1);">
+        <div id="rail-config-box" style="display: flex; flex-direction: column; gap: 6px; padding-top: 6px; border-top: 1px dashed rgba(0,0,0,0.1);">
           <div style="display: flex; align-items: center; justify-content: space-between;">
-            <span class="mdui-typo-caption">标题显示位置:</span>
-            <select id="title-pos-select" class="mdui-select" style="font-size: 11px; height: 24px; padding: 0 4px;">
-              <option value="top">上方竖排 (Google Sans)</option>
-              <option value="bottom">下方展示</option>
-              <option value="none">不显示</option>
+            <span class="mdui-typo-caption">静止沉浸策略:</span>
+            <select id="idle-delay-select" class="mdui-select" style="font-size: 11px; height: 24px; padding: 0 4px;">
+              <option value="3" selected>静止 3秒变竖排 (默认)</option>
+              <option value="1">静止 1秒变竖排</option>
+              <option value="2">静止 2秒变竖排</option>
+              <option value="5">静止 5秒变竖排</option>
+              <option value="10">静止 10秒变竖排</option>
+              <option value="0">常亮横向栏 (从不静止)</option>
+              <option value="-1">始终沉浸 (常驻竖排)</option>
             </select>
           </div>
 
@@ -1575,7 +1579,7 @@
     const btnToggleRailExpand = document.getElementById('btn-toggle-rail-expand');
     const drawerInst = new mdui.Drawer('#left-drawer', { overlay: true });
     
-    let currentDrawerMode = 'classic'; // 'edge' | 'rail' | 'classic'
+    let currentDrawerMode = 'rail'; // 'edge' | 'rail' | 'classic' (默认单图标主流形态)
     let isRailManuallyExpanded = false;
 
     // 模式 1: 边缘悬浮唤出
@@ -1653,7 +1657,7 @@
         drawerElement.classList.add('mdui-drawer-open');
         railConfigBox.style.display = 'none';
       } else if (mode === 'rail') {
-        // 2. 固定显示单图标 (可配 hover 展开)
+        // 2. 固定显示单图标 (默认主流形态)
         drawerInst.close();
         drawerInst.options.overlay = false;
         document.body.classList.add('drawer-mode-rail');
@@ -1662,7 +1666,7 @@
         }
         drawerElement.classList.add('mdui-drawer-open');
         railConfigBox.style.display = 'flex';
-        updateTitlePosition();
+        resetIdleTimer();
       } else {
         // 3. 原版侧边栏 (遮罩模态)
         drawerInst.options.overlay = true;
@@ -1672,15 +1676,56 @@
       }
     }
 
-    // 标题位置配置 (上方竖排 / 下方展示 / 不显示)
-    const titlePosSelect = document.getElementById('title-pos-select');
-    function updateTitlePosition() {
-      const pos = titlePosSelect.value;
-      document.body.classList.remove('title-pos-top', 'title-pos-bottom', 'title-pos-none');
-      document.body.classList.add('title-pos-' + pos);
+    // =========================================================================
+    // 智能静止/活跃动态标题形态转换机制 (Idle/Active Dynamic Title System)
+    // =========================================================================
+    let idleTimeoutSeconds = 3;
+    let idleTimer = null;
+
+    function resetIdleTimer() {
+      if (currentDrawerMode !== 'rail') return;
+
+      // 当处于始终沉浸状态时 (-1)
+      if (idleTimeoutSeconds === -1) {
+        document.body.classList.add('page-is-idle');
+        document.body.classList.remove('page-is-active');
+        return;
+      }
+      
+      // 激活活跃态 (横向 Appbar 呈现，竖排标题隐藏)
+      document.body.classList.remove('page-is-idle');
+      document.body.classList.add('page-is-active');
+      
+      if (idleTimer) clearTimeout(idleTimer);
+
+      // 如果设置为常亮横栏 (0)，则不进入静止态
+      if (idleTimeoutSeconds <= 0) return;
+
+      // 静止 N 秒后平滑转换为静止沉浸态 (横栏收起，左侧单图标内竖排标题淡入)
+      idleTimer = setTimeout(() => {
+        if (currentDrawerMode === 'rail') {
+          document.body.classList.remove('page-is-active');
+          document.body.classList.add('page-is-idle');
+        }
+      }, idleTimeoutSeconds * 1000);
     }
-    titlePosSelect.addEventListener('change', updateTitlePosition);
-    updateTitlePosition();
+
+    const idleDelaySelect = document.getElementById('idle-delay-select');
+    if (idleDelaySelect) {
+      idleDelaySelect.addEventListener('change', (e) => {
+        idleTimeoutSeconds = parseInt(e.target.value, 10);
+        resetIdleTimer();
+      });
+    }
+
+    // 全局活跃交互事件监听：鼠标移动、按下、按键、触控、滚动即刻唤醒横栏
+    ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'wheel'].forEach(evt => {
+      window.addEventListener(evt, resetIdleTimer, { passive: true });
+    });
+
+    // 默认启用 2. 单图标 Rail 模式
+    setDrawer3Mode('rail');
+    resetIdleTimer();
 
     // 侧边栏内快捷暗色切换
     const drawerDarkBtn = document.getElementById('btn-drawer-toggle-dark');
@@ -1694,5 +1739,29 @@
       btn.onclick = () => setDrawer3Mode(btn.getAttribute('data-mode'));
     });
   </script>
+
+  <!-- 移动端纯直角 Bottom Navigation (响应式置底单图标导航) -->
+  <nav class="mobile-bottom-nav">
+    <a href="#buttons" class="mobile-nav-item active">
+      <i class="mdui-icon material-icons">touch_app</i>
+      <span>按钮</span>
+    </a>
+    <a href="#cards" class="mobile-nav-item">
+      <i class="mdui-icon material-icons">view_agenda</i>
+      <span>卡片</span>
+    </a>
+    <a href="#components" class="mobile-nav-item">
+      <i class="mdui-icon material-icons">widgets</i>
+      <span>组件</span>
+    </a>
+    <a href="#monet-extract" class="mobile-nav-item">
+      <i class="mdui-icon material-icons">wallpaper</i>
+      <span>取色</span>
+    </a>
+    <a href="#split-theme" class="mobile-nav-item">
+      <i class="mdui-icon material-icons">compare_arrows</i>
+      <span>隔离</span>
+    </a>
+  </nav>
 </body>
 </html>

@@ -219,13 +219,33 @@ body.drawer-mode-rail .mdui-drawer.is-manually-expanded .drawer-rail-hidden {
   display: block !important;
 }
 
-/* 当启用模式 1 (边缘悬浮) 或模式 2 (单图标 Rail) 时，顶部标题栏彻底隐藏 */
-body.drawer-mode-edge .mdui-appbar,
+/* =============================================================================
+ * 智能静止/活跃动态标题形态转换系统 (Idle/Active Dynamic Title)
+ * ============================================================================= */
 body.drawer-mode-rail .mdui-appbar {
+  display: block !important;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  z-index: 999 !important;
+}
+
+/* 页面静止时 (page-is-idle): 顶部横向标题栏平滑滑出隐藏，左侧竖排标题淡入呈现 */
+body.drawer-mode-rail.page-is-idle .mdui-appbar {
+  transform: translateY(-100%) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+body.drawer-mode-rail.page-is-active .mdui-appbar {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* 模式 1 (边缘悬浮): 彻底隐藏顶部标题栏 */
+body.drawer-mode-edge .mdui-appbar {
   display: none !important;
 }
-body.drawer-mode-edge,
-body.drawer-mode-rail {
+body.drawer-mode-edge {
   padding-top: 0 !important;
 }
 
@@ -240,7 +260,7 @@ body.drawer-mode-rail {
 }
 /* 抽屉上部滚动区域需留出底部空间 */
 .drawer-scroll-area {
-  height: calc(100% - 150px);
+  height: calc(100% - 160px);
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -253,14 +273,27 @@ body.drawer-mode-rail {
   letter-spacing: 4px;
   font-size: 13px;
   font-weight: bold;
-  opacity: 0.85;
+  opacity: 0;
+  transform: translateY(-8px);
   padding: 12px 0;
   margin: 0 auto;
   user-select: none;
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
-/* 在模式 2 (72px 单图标收拢) 且配置为上方竖排时展示 */
-body.drawer-mode-rail.title-pos-top .mdui-drawer:not(:hover):not(.is-manually-expanded) .rail-vertical-title {
+
+/* 在单图标 Rail 模式下，当处于静止态 (page-is-idle) 且未展开时展示竖排标题 */
+body.drawer-mode-rail.page-is-idle .mdui-drawer:not(:hover):not(.is-manually-expanded) .rail-vertical-title {
   display: block !important;
+  opacity: 0.9 !important;
+  transform: translateY(0) !important;
+}
+/* 在活跃态 (page-is-active) 或展开态下竖排标题隐藏 */
+body.drawer-mode-rail.page-is-active .rail-vertical-title,
+body.drawer-mode-rail .mdui-drawer:hover .rail-vertical-title,
+body.drawer-mode-rail .mdui-drawer.is-manually-expanded .rail-vertical-title {
+  opacity: 0 !important;
+  transform: translateY(-8px) !important;
 }
 
 /* 侧边栏底部横排标题展示位 */
@@ -275,6 +308,73 @@ body.drawer-mode-rail.title-pos-top .mdui-drawer:not(:hover):not(.is-manually-ex
 }
 body.title-pos-bottom .rail-bottom-title {
   display: block !important;
+}
+
+/* =============================================================================
+ * 移动端响应式 (Mobile < 600px): 单图标自动转为纯直角 Bottom Navigation (底部导航栏)
+ * ============================================================================= */
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 599.9px) {
+  body.drawer-mode-rail {
+    padding-left: 0 !important;
+    padding-bottom: 56px !important;
+  }
+  
+  body.drawer-mode-rail .mdui-drawer {
+    display: none !important;
+  }
+  
+  .mobile-bottom-nav {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: #ffffff;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.12);
+    z-index: 9999;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 0;
+  }
+  
+  .mdui-theme-layout-dark .mobile-bottom-nav {
+    background: #211f26;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  
+  .mdui-theme-monet.mdui-theme-layout-dark .mobile-bottom-nav {
+    background: var(--mdui-monet-surface-container, #211f26) !important;
+  }
+  
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+    font-size: 10px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+  }
+  .mobile-nav-item.active,
+  .mobile-nav-item:active {
+    opacity: 1;
+    font-weight: bold;
+    color: var(--mdui-monet-primary-main, #3f51b5);
+  }
+  .mobile-nav-item i {
+    font-size: 20px;
+    margin-bottom: 2px;
+  }
 }
 
 /* 抽屉二级菜单缩进与样式 */
