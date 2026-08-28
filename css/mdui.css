@@ -13705,3 +13705,48 @@ body.mdui-theme-monet,
   background-color: var(--mdui-monet-surface-variant, #e0e0e0);
   color: var(--mdui-monet-on-surface-variant, rgba(0, 0, 0, 0.87));
 }
+
+/**
+ * =============================================================================
+ * ************   原生 MD 19 色最高优先级保护 (双主题共存隔离)   ************
+ * =============================================================================
+ * 当父容器明确指定了 .mdui-theme-primary-* / .mdui-theme-accent-* 时，
+ * 即使处于全局 .mdui-theme-monet 下，该容器也始终严格保持原生调色板颜色！
+ */
+.mdui-theme-primary-amber .mdui-color-theme, .mdui-theme-primary-amber.mdui-color-theme { background-color: #FFC107 !important; color: rgba(0, 0, 0, 0.87) !important; }
+.mdui-theme-primary-blue .mdui-color-theme, .mdui-theme-primary-blue.mdui-color-theme { background-color: #2196F3 !important; color: #ffffff !important; }
+.mdui-theme-primary-blue-grey .mdui-color-theme, .mdui-theme-primary-blue-grey.mdui-color-theme { background-color: #607D8B !important; color: #ffffff !important; }
+.mdui-theme-primary-brown .mdui-color-theme, .mdui-theme-primary-brown.mdui-color-theme { background-color: #795548 !important; color: #ffffff !important; }
+.mdui-theme-primary-cyan .mdui-color-theme, .mdui-theme-primary-cyan.mdui-color-theme { background-color: #00BCD4 !important; color: #ffffff !important; }
+.mdui-theme-primary-deep-orange .mdui-color-theme, .mdui-theme-primary-deep-orange.mdui-color-theme { background-color: #FF5722 !important; color: #ffffff !important; }
+.mdui-theme-primary-deep-purple .mdui-color-theme, .mdui-theme-primary-deep-purple.mdui-color-theme { background-color: #673AB7 !important; color: #ffffff !important; }
+.mdui-theme-primary-green .mdui-color-theme, .mdui-theme-primary-green.mdui-color-theme { background-color: #4CAF50 !important; color: #ffffff !important; }
+.mdui-theme-primary-grey .mdui-color-theme, .mdui-theme-primary-grey.mdui-color-theme { background-color: #9E9E9E !important; color: #ffffff !important; }
+.mdui-theme-primary-indigo .mdui-color-theme, .mdui-theme-primary-indigo.mdui-color-theme { background-color: #3F51B5 !important; color: #ffffff !important; }
+.mdui-theme-primary-light-blue .mdui-color-theme, .mdui-theme-primary-light-blue.mdui-color-theme { background-color: #03A9F4 !important; color: #ffffff !important; }
+.mdui-theme-primary-light-green .mdui-color-theme, .mdui-theme-primary-light-green.mdui-color-theme { background-color: #8BC34A !important; color: rgba(0, 0, 0, 0.87) !important; }
+.mdui-theme-primary-lime .mdui-color-theme, .mdui-theme-primary-lime.mdui-color-theme { background-color: #CDDC39 !important; color: rgba(0, 0, 0, 0.87) !important; }
+.mdui-theme-primary-orange .mdui-color-theme, .mdui-theme-primary-orange.mdui-color-theme { background-color: #FF9800 !important; color: rgba(0, 0, 0, 0.87) !important; }
+.mdui-theme-primary-pink .mdui-color-theme, .mdui-theme-primary-pink.mdui-color-theme { background-color: #E91E63 !important; color: #ffffff !important; }
+.mdui-theme-primary-purple .mdui-color-theme, .mdui-theme-primary-purple.mdui-color-theme { background-color: #9C27B0 !important; color: #ffffff !important; }
+.mdui-theme-primary-red .mdui-color-theme, .mdui-theme-primary-red.mdui-color-theme { background-color: #F44336 !important; color: #ffffff !important; }
+.mdui-theme-primary-teal .mdui-color-theme, .mdui-theme-primary-teal.mdui-color-theme { background-color: #009688 !important; color: #ffffff !important; }
+.mdui-theme-primary-yellow .mdui-color-theme, .mdui-theme-primary-yellow.mdui-color-theme { background-color: #FFEB3B !important; color: rgba(0, 0, 0, 0.87) !important; }
+
+/* 19 色 Accent 保护 */
+.mdui-theme-accent-amber .mdui-color-theme-accent, .mdui-theme-accent-amber.mdui-color-theme-accent { background-color: #FFD54F !important; color: rgba(0, 0, 0, 0.87) !important; }
+.mdui-theme-accent-blue .mdui-color-theme-accent, .mdui-theme-accent-blue.mdui-color-theme-accent { background-color: #448AFF !important; color: #ffffff !important; }
+.mdui-theme-accent-cyan .mdui-color-theme-accent, .mdui-theme-accent-cyan.mdui-color-theme-accent { background-color: #18FFFF !important; color: rgba(0, 0, 0, 0.87) !important; }
+.mdui-theme-accent-deep-orange .mdui-color-theme-accent, .mdui-theme-accent-deep-orange.mdui-color-theme-accent { background-color: #FF6E40 !important; color: #ffffff !important; }
+.mdui-theme-accent-deep-purple .mdui-color-theme-accent, .mdui-theme-accent-deep-purple.mdui-color-theme-accent { background-color: #7C4DFF !important; color: #ffffff !important; }
+.mdui-theme-accent-green .mdui-color-theme-accent, .mdui-theme-accent-green.mdui-color-theme-accent { background-color: #69F0AE !important; color: rgba(0, 0, 0, 0.87) !important; }
+.mdui-theme-accent-indigo .mdui-color-theme-accent, .mdui-theme-accent-indigo.mdui-color-theme-accent { background-color: #536DFE !important; color: #ffffff !important; }
+.mdui-theme-accent-light-blue .mdui-color-theme-accent, .mdui-theme-accent-light-blue.mdui-color-theme-accent { background-color: #40C4FF !important; color: rgba(0, 0, 0, 0.87) !important; }
+.mdui-theme-accent-light-green .mdui-color-theme-accent, .mdui-theme-accent-light-green.mdui-color-theme-accent { background-color: #B2FF59 !important; color: rgba(0, 0, 0, 0.87) !important; }
+.mdui-theme-accent-lime .mdui-color-theme-accent, .mdui-theme-accent-lime.mdui-color-theme-accent { background-color: #EEFF41 !important; color: rgba(0, 0, 0, 0.87) !important; }
+.mdui-theme-accent-orange .mdui-color-theme-accent, .mdui-theme-accent-orange.mdui-color-theme-accent { background-color: #FFAB40 !important; color: rgba(0, 0, 0, 0.87) !important; }
+.mdui-theme-accent-pink .mdui-color-theme-accent, .mdui-theme-accent-pink.mdui-color-theme-accent { background-color: #FF4081 !important; color: #ffffff !important; }
+.mdui-theme-accent-purple .mdui-color-theme-accent, .mdui-theme-accent-purple.mdui-color-theme-accent { background-color: #E040FB !important; color: #ffffff !important; }
+.mdui-theme-accent-red .mdui-color-theme-accent, .mdui-theme-accent-red.mdui-color-theme-accent { background-color: #FF5252 !important; color: #ffffff !important; }
+.mdui-theme-accent-teal .mdui-color-theme-accent, .mdui-theme-accent-teal.mdui-color-theme-accent { background-color: #64FFDA !important; color: rgba(0, 0, 0, 0.87) !important; }
+.mdui-theme-accent-yellow .mdui-color-theme-accent, .mdui-theme-accent-yellow.mdui-color-theme-accent { background-color: #FFFF00 !important; color: rgba(0, 0, 0, 0.87) !important; }
