@@ -277,22 +277,31 @@
       transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* 核心：竖向文字标题 (占位紧凑，无滚动条溢出) */
+    /* 核心：上/下双竖向动态文字标题 */
     .rail-vertical-title {
       writing-mode: vertical-rl;
       text-orientation: mixed;
-      letter-spacing: 3px;
-      font-size: 12px;
-      font-weight: bold;
+      letter-spacing: 2px;
+      font-size: 11.5px;
+      font-weight: 700;
       color: var(--mdc-theme-primary, #6750a4);
-      padding: 10px 0;
+      padding: 6px 0;
       margin: 0 auto;
       user-select: none;
       opacity: 0.9;
-      transform: translateY(0);
-      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                  transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.25s ease, color 0.3s ease;
       flex-shrink: 0;
+      white-space: nowrap;
+      max-height: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 展开或二级菜单激活时彻底移除竖向标题占位，避免挤压导致项目折行 */
+    .mdc-navigation-rail:hover .rail-vertical-title,
+    .mdc-navigation-rail.is-expanded .rail-vertical-title,
+    .mdc-navigation-rail.mobile-open .rail-vertical-title {
+      display: none !important;
     }
 
     /* 一级导航菜单 (主页, 目录, 设置, 关于 - 极其纯净紧凑) */
@@ -311,8 +320,10 @@
     }
 
     .rail-nav-item {
-      display: flex;
-      align-items: center;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      width: 100% !important;
       height: 48px;
       padding: 0 16px;
       color: inherit;
@@ -322,6 +333,7 @@
       white-space: nowrap;
       overflow: hidden;
       flex-shrink: 0;
+      box-sizing: border-box !important;
     }
     .rail-nav-item:hover {
       background-color: rgba(0, 0, 0, 0.05);
@@ -342,6 +354,31 @@
       font-size: 14px;
       font-weight: 600;
       transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 二级面板内的导航项样式 (完全无缩进瑕疵) */
+    .secondary-overlay-panel .rail-nav-item {
+      width: 100% !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      height: 46px !important;
+      padding: 0 16px !important;
+      box-sizing: border-box !important;
+    }
+    .secondary-overlay-panel .rail-nav-item .rail-item-icon {
+      margin-right: 14px !important;
+      margin-left: 0 !important;
+      flex-shrink: 0 !important;
+    }
+    .secondary-overlay-panel .rail-nav-item .rail-item-text {
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      white-space: nowrap !important;
+      font-size: 13.5px !important;
+      font-weight: 600 !important;
     }
 
     /* 底部控制面板 */
@@ -929,18 +966,18 @@
       <div class="rail-header" onclick="openOverlay('themePickerPanel')" title="点击打开莫奈动态调色盘">
         <div class="rail-header-avatar">M3</div>
         <div class="rail-header-text">
-          <div style="font-weight: bold; font-size: 15px;">MDC-Web · MD1</div>
+          <div style="font-weight: bold; font-size: 15px;">MD3.1 · MDC-Web</div>
           <div style="font-size: 11px; opacity: 0.85;">🎨 点击取色</div>
         </div>
       </div>
 
-      <!-- 核心：竖向文字标题 -->
-      <div class="rail-vertical-title">
-        MDC · 纯直角 & 莫奈动态色
+      <!-- 上部竖向动态标题 (默认 MD3.1，随页面动态更新) -->
+      <div class="rail-vertical-title" id="railVerticalTitleTop">
+        MD3.1
       </div>
 
       <!-- 一级核心导航菜单 (主页 ✖ 目录 ✖ 设置 ✖ 关于) -->
-      <nav class="rail-nav-list">
+      <nav class="rail-nav-list" style="justify-content: center;">
         
         <!-- 1. 主页 -->
         <a href="#section-overview" class="rail-nav-item" title="主页 (Overview)">
@@ -967,6 +1004,11 @@
         </div>
 
       </nav>
+
+      <!-- 下部竖向动态标题 (默认 安秋，随页面当前 H2/次级模块动态更新) -->
+      <div class="rail-vertical-title" id="railVerticalTitleBottom">
+        安秋
+      </div>
 
       <!-- 底部控制面板 -->
       <div class="rail-footer">
@@ -1987,6 +2029,53 @@
         showDemoToast(text ? `这是一个无用的按钮 (${text})` : '这是一个无用的按钮');
       });
     });
+
+    // =========================================================================
+    // 二级菜单空白处点击返回一级菜单
+    // =========================================================================
+    document.querySelectorAll('.secondary-overlay-panel').forEach(panel => {
+      panel.addEventListener('click', (e) => {
+        if (!e.target.closest('a, button, input, label, .theme-tile, .mdc-button')) {
+          closeOverlay(panel.id);
+        }
+      });
+    });
+
+    // =========================================================================
+    // 外部双竖排标题动态联动系统 (上部 MD3.1 / 下部 安秋，随页面与 Tab 自动变化)
+    // =========================================================================
+    const titleTopEl = document.getElementById('railVerticalTitleTop');
+    const titleBottomEl = document.getElementById('railVerticalTitleBottom');
+
+    const SECTION_TITLE_MAP = [
+      { id: 'section-overview', top: 'MD3.1', bottom: '安秋' },
+      { id: 'section-buttons', top: 'MD3.1 · 按钮', bottom: '1. 按钮与 FAB' },
+      { id: 'section-cards', top: 'MD3.1 · 卡片', bottom: '2. 直角卡片' },
+      { id: 'section-chips', top: 'MD3.1 · 标签', bottom: '3. 标签与胶囊' },
+      { id: 'section-form', top: 'MD3.1 · 表单', bottom: '4. 表单与开关' },
+      { id: 'section-list', top: 'MD3.1 · 列表', bottom: '5. 列表与手风琴' },
+      { id: 'section-dialogs', top: 'MD3.1 · 弹窗', bottom: '6. 对话框与菜单' },
+      { id: 'section-tabs', top: 'MD3.1 · 选项卡', bottom: '7. 选项卡 Tab' },
+      { id: 'section-progress', top: 'MD3.1 · 进度', bottom: '8. 进度与提示' },
+      { id: 'section-monet-lab', top: 'MD3.1 · 色彩', bottom: '9. 莫奈实验室' }
+    ];
+
+    function updateDynamicTitles(topText, bottomText) {
+      if (titleTopEl && topText) titleTopEl.textContent = topText;
+      if (titleBottomEl && bottomText) titleBottomEl.textContent = bottomText;
+    }
+
+    window.addEventListener('scroll', () => {
+      const scrollPos = window.scrollY + 180;
+      for (let i = SECTION_TITLE_MAP.length - 1; i >= 0; i--) {
+        const item = SECTION_TITLE_MAP[i];
+        const el = document.getElementById(item.id);
+        if (el && el.offsetTop <= scrollPos) {
+          updateDynamicTitles(item.top, item.bottom);
+          break;
+        }
+      }
+    }, { passive: true });
 
     // 初始化莫奈色彩与 Tab
     applyMonetTheme();
