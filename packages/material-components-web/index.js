@@ -34,6 +34,8 @@ import { MduiLinearProgress } from '@material/linear-progress/mdui-linear-progre
 import * as lineRipple from '@material/line-ripple/index';
 import * as menu from '@material/menu/index';
 import * as notchedOutline from '@material/notched-outline/index';
+import * as picker from '@material/picker/index';
+import { MdcTimePicker, MdcDatePicker } from '@material/picker/index';
 import * as radio from '@material/radio/index';
 import * as ripple from '@material/ripple/index';
 import { createRipple, attachRipples } from '@material/ripple/mdui-ripple';
@@ -88,6 +90,8 @@ autoInit.register('Md1Slider', Md1Slider);
 autoInit.register('Md1Tabs', Md1Tabs);
 autoInit.register('MduiLinearProgress', MduiLinearProgress);
 autoInit.register('MdcExpansionPanel', expansionPanel.MdcExpansionPanel);
+autoInit.register('MdcTimePicker', picker.MdcTimePicker);
+autoInit.register('MdcDatePicker', picker.MdcDatePicker);
 
 // Export all components
 export {
@@ -109,6 +113,9 @@ export {
   MduiLinearProgress,
   menu,
   notchedOutline,
+  picker,
+  MdcTimePicker,
+  MdcDatePicker,
   radio,
   ripple,
   createRipple,

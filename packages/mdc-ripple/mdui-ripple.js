@@ -58,8 +58,11 @@ export function attachRipples() {
   const CARD_CONTAINER_SELECTOR = '.demo-card, .mdc-card, [data-mdui-ripple]';
 
   window.addEventListener('pointerdown', (e) => {
-    // 1. 忽略原生输入框、单选、复选、滑块与自定义选择框
-    if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-checkbox, .mdc-radio, .mdc-select-custom')) {
+    // 1. 忽略原生输入框、单选、复选、滑块、自定义选择框以及 Picker 与复合控件区域
+    if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-checkbox, .mdc-radio, .mdc-select-custom, .mdc-date-picker, .mdc-time-picker, .expansion-panel')) {
+      // 若是 picker 内部具体的常规按钮，仍保留按钮自身涟漪
+      const btn = e.target.closest('.mdc-button, button, .mdc-date-picker__nav-btn');
+      if (btn) createRipple(e, btn);
       return;
     }
 

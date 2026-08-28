@@ -723,6 +723,8 @@
     /* =========================================================================
      * Material 水波纹涟漪动画 (Ripple Effect - 精准范围 ✖ 速率放缓 3/5)
      * ========================================================================= */
+    .demo-card,
+    .mdc-card,
     .preview-img-box,
     .secondary-overlay-panel .rail-nav-item,
     .rail-nav-item,
@@ -733,13 +735,6 @@
     button {
       position: relative;
       overflow: hidden;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .demo-card,
-    .mdc-card {
-      position: relative;
-      overflow: visible !important;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -874,6 +869,7 @@
       --mdc-theme-background: #1f1e24;
       --mdc-theme-surface: #19181e;
       --mdc-theme-on-surface: #e6e1e5;
+      --mdc-theme-on-primary: #000000;
       --mdc-theme-surface-container: #131217;
       --mdc-theme-surface-container-high: #0d0c10;
     }
@@ -1856,42 +1852,123 @@
       display: flex;
       align-items: center;
       gap: 4px;
+      position: relative;
+      height: 52px;
+      user-select: none;
     }
-    .mdc-time-picker__digit-box {
-      font-size: 32px;
-      font-weight: 700;
-      padding: 4px 12px;
+    /* 🌟 底部浅灰静态槽位背景 */
+    .mdc-time-picker__digit-slot {
+      position: absolute;
+      top: 0;
+      width: 62px;
+      height: 52px;
       background-color: rgba(0, 0, 0, 0.04);
       border-radius: 0 !important;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      line-height: 1.1;
+      pointer-events: none;
+      z-index: 0;
     }
-    .mdc-time-picker__digit-box.is-active {
-      background-color: var(--mdc-theme-primary, #6750a4);
+    .mdc-time-picker__digit-slot--hour {
+      left: 0;
+    }
+    .mdc-time-picker__digit-slot--min {
+      right: 0;
+    }
+
+    /* 🌟 文字内容行架构 (底层暗色 ✖ 顶层反色) */
+    .mdc-time-picker__digital-content {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 52px;
+    }
+    .mdc-time-picker__digital-content--base {
+      position: relative;
+      z-index: 1;
+      color: var(--mdc-theme-on-surface, #1d1b20);
+    }
+    .mdc-time-picker__digital-content--inverted {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
       color: var(--mdc-theme-on-primary, #ffffff);
+      pointer-events: none;
+      will-change: transform;
+    }
+    .mdc-time-picker__digital-content--inverted .mdc-time-picker__colon {
+      color: var(--mdc-theme-on-primary, #ffffff);
+      opacity: 0.9;
+    }
+
+    /* 🌟 物理反色遮罩滑块（和指针完全一致的几何局部反色剪裁器） */
+    .mdc-time-picker__digit-indicator {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 62px;
+      height: 52px;
+      background-color: var(--mdc-theme-primary, #6750a4);
+      border-radius: 0 !important;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 2;
+      will-change: transform, width;
+    }
+
+    .mdc-time-picker__digit-box {
+      font-size: 40px;
+      font-weight: 700;
+      padding: 0;
+      background-color: transparent;
+      border-radius: 0 !important;
+      cursor: pointer;
+      line-height: 1;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      overflow: hidden;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 62px;
+      min-width: 62px;
+      height: 52px;
+      box-sizing: border-box;
     }
     .mdc-time-picker__colon {
-      font-size: 28px;
+      font-size: 36px;
       font-weight: 700;
-      margin: 0 2px;
+      padding: 0 2px;
+      user-select: none;
+      line-height: 1;
       opacity: 0.6;
+      width: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .mdc-time-picker__ampm-toggle {
       display: flex;
       flex-direction: column;
       border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 8px;
       overflow: hidden;
+      margin-left: 12px;
     }
     .mdc-time-picker__ampm-btn {
-      padding: 4px 10px;
-      font-size: 12px;
+      padding: 6px 12px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       background: transparent;
       border: none;
       color: inherit;
-      transition: all 0.15s ease;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .mdc-time-picker__ampm-btn:first-child {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     }
     .mdc-time-picker__ampm-btn.is-active {
       background-color: var(--mdc-theme-primary, #6750a4);
@@ -1902,6 +1979,8 @@
       align-items: center;
       justify-content: center;
       padding: 24px 0;
+      touch-action: none !important;
+      overscroll-behavior: contain;
     }
     .mdc-time-picker__clock-face {
       width: 230px;
@@ -1910,6 +1989,25 @@
       border-radius: 50% !important;
       position: relative;
       box-sizing: border-box;
+      overflow: hidden;
+      touch-action: none !important;
+      overscroll-behavior: contain;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+      cursor: grab;
+    }
+    .mdc-time-picker__clock-face:active {
+      cursor: grabbing;
+    }
+    .mdc-time-picker__numbers-base {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 230px;
+      height: 230px;
+      pointer-events: none;
     }
     .mdc-time-picker__center-pivot {
       width: 8px;
@@ -1921,6 +2019,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 10;
+      pointer-events: none;
     }
     .mdc-time-picker__clock-hand {
       position: absolute;
@@ -1930,35 +2029,54 @@
       height: 88px;
       background-color: var(--mdc-theme-primary, #6750a4);
       transform-origin: bottom center;
-      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 5;
+      pointer-events: none;
     }
-    .mdc-time-picker__clock-hand::after {
-      content: '';
+    /* 🌟 36px 纯圆滑块遮罩（接触位置局部反色剪裁器） */
+    .mdc-time-picker__thumb-circle {
       position: absolute;
-      top: -16px;
-      left: calc(50% - 17px);
-      width: 34px;
-      height: 34px;
-      background-color: var(--mdc-theme-primary, #6750a4);
+      top: -18px;
+      left: calc(50% - 18px);
+      width: 36px;
+      height: 36px;
       border-radius: 50% !important;
+      background-color: var(--mdc-theme-primary, #6750a4);
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 6;
+    }
+    /* 🌟 逆向旋转反色镜像层，物理光栅级精确剪裁局部重叠文字 */
+    .mdc-time-picker__inverted-mask {
+      position: absolute;
+      top: -9px;
+      left: -97px;
+      width: 230px;
+      height: 230px;
+      transform-origin: 115px 115px;
+      pointer-events: none;
+    }
+    .mdc-time-picker__inverted-mask .mdc-time-picker__number {
+      color: var(--mdc-theme-on-primary, #ffffff) !important;
+      font-weight: 700;
     }
     .mdc-time-picker__number {
       position: absolute;
-      width: 32px;
-      height: 32px;
-      display: flex;
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      font-size: 16px;
       font-weight: 600;
+      line-height: 1;
       cursor: pointer;
       border-radius: 50% !important;
-      z-index: 6;
-      transition: color 0.15s ease;
-    }
-    .mdc-time-picker__number.is-active {
-      color: var(--mdc-theme-on-primary, #ffffff);
+      transform: translate(-50%, -50%);
+      color: var(--mdc-theme-on-surface, #1d1b20);
+      transition: left 0.22s cubic-bezier(0.4, 0, 0.2, 1), top 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      pointer-events: none;
     }
     .mdc-time-picker__actions {
       display: flex;
@@ -1995,6 +2113,27 @@
     }
     .dark-theme .mdc-time-picker__clock-face {
       background-color: #1c1a22;
+    }
+
+    /* 🌟 暗色模式下所有被主题色填充的文字统统变黑色 (#000000) */
+    .dark-theme .mdc-time-picker__digit-indicator,
+    .dark-theme .mdc-time-picker__digital-content--inverted,
+    .dark-theme .mdc-time-picker__digital-content--inverted *,
+    .dark-theme .mdc-time-picker__digit-box.is-active,
+    .dark-theme .mdc-time-picker__ampm-btn.is-active,
+    .dark-theme .mdc-time-picker__inverted-mask .mdc-time-picker__number,
+    .dark-theme .mdc-date-picker__header,
+    .dark-theme .mdc-date-picker__header *,
+    .dark-theme .mdc-date-picker__day.is-selected,
+    .dark-theme .mdc-button--raised,
+    .dark-theme .mdc-button--unelevated,
+    .dark-theme .mdc-button--raised *,
+    .dark-theme .mdc-button--unelevated *,
+    .dark-theme .mdc-fab,
+    .dark-theme .mdc-fab *,
+    .dark-theme .segmented-button.is-selected,
+    .dark-theme .segmented-button.is-selected * {
+      color: #000000 !important;
     }
 
   </style>
@@ -2912,9 +3051,20 @@
           <div class="mdc-time-picker" id="demoTimePicker">
             <div class="mdc-time-picker__header">
               <div class="mdc-time-picker__digital-display">
-                <span class="mdc-time-picker__digit-box mdc-time-picker__digit-hour is-active">09</span>
-                <span class="mdc-time-picker__colon">:</span>
-                <span class="mdc-time-picker__digit-box mdc-time-picker__digit-minute">30</span>
+                <div class="mdc-time-picker__digit-slot mdc-time-picker__digit-slot--hour"></div>
+                <div class="mdc-time-picker__digit-slot mdc-time-picker__digit-slot--min"></div>
+                <div class="mdc-time-picker__digital-content mdc-time-picker__digital-content--base">
+                  <span class="mdc-time-picker__digit-box mdc-time-picker__digit-hour">09</span>
+                  <span class="mdc-time-picker__colon">:</span>
+                  <span class="mdc-time-picker__digit-box mdc-time-picker__digit-minute">30</span>
+                </div>
+                <div class="mdc-time-picker__digit-indicator">
+                  <div class="mdc-time-picker__digital-content mdc-time-picker__digital-content--inverted">
+                    <span class="mdc-time-picker__digit-box mdc-time-picker__digit-hour">09</span>
+                    <span class="mdc-time-picker__colon">:</span>
+                    <span class="mdc-time-picker__digit-box mdc-time-picker__digit-minute">30</span>
+                  </div>
+                </div>
               </div>
               <div class="mdc-time-picker__ampm-toggle">
                 <button class="mdc-time-picker__ampm-btn mdc-time-picker__ampm-am is-active">上午</button>
@@ -2969,8 +3119,12 @@
       isDarkMode = !isDarkMode;
       if (isDarkMode) {
         document.body.classList.add('dark-theme');
+        document.documentElement.classList.add('dark-theme');
+        document.documentElement.style.setProperty('--mdc-theme-on-primary', '#000000');
       } else {
         document.body.classList.remove('dark-theme');
+        document.documentElement.classList.remove('dark-theme');
+        document.documentElement.style.setProperty('--mdc-theme-on-primary', '#ffffff');
       }
       applyMonetTheme();
     }
@@ -3210,12 +3364,12 @@
       '.md1-tab-item',
       '.mdc-fab'
     ].join(',');
-    const CARD_CONTAINER_SELECTOR = '.demo-card, .mdc-card, [data-mdui-ripple]';
-
     // 单一全局事件委托：精准获取最内层目标容器，点按钮仅按钮有涟漪，点卡片空白仅卡片自身有涟漪
     document.addEventListener('pointerdown', (e) => {
-      // 1. 忽略原生输入框、单选、复选、滑块与自定义选择框
-      if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-checkbox, .mdc-radio, .mdc-select-custom')) {
+      // 1. 忽略原生输入框、单选、复选、滑块、自定义选择框以及 Picker 与复合控件区域
+      if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-checkbox, .mdc-radio, .mdc-select-custom, .mdc-date-picker, .mdc-time-picker, .expansion-panel')) {
+        const btn = e.target.closest('.mdc-button, button, .mdc-date-picker__nav-btn');
+        if (btn) createRipple(e, btn);
         return;
       }
 
@@ -3401,6 +3555,14 @@
         document.documentElement.style.setProperty('--mdc-theme-primary', selectedPrimary);
         if (selectedSecondary) document.documentElement.style.setProperty('--mdc-theme-secondary', selectedSecondary);
         if (selectedTertiary) document.documentElement.style.setProperty('--mdc-theme-tertiary', selectedTertiary);
+      }
+
+      if (isDarkMode) {
+        document.documentElement.style.setProperty('--mdc-theme-on-primary', '#000000');
+        document.body.style.setProperty('--mdc-theme-on-primary', '#000000');
+      } else {
+        document.documentElement.style.setProperty('--mdc-theme-on-primary', '#ffffff');
+        document.body.style.setProperty('--mdc-theme-on-primary', '#ffffff');
       }
 
       document.getElementById('label-cur-p').textContent = selectedPrimary;
@@ -3616,7 +3778,10 @@
       const isOpen = menu.style.display === 'flex';
       menu.style.display = isOpen ? 'none' : 'flex';
       if (selectBox) selectBox.style.zIndex = isOpen ? '50' : '99999';
-      if (parentCard) parentCard.style.zIndex = isOpen ? '10' : '9999';
+      if (parentCard) {
+        parentCard.style.zIndex = isOpen ? '10' : '9999';
+        parentCard.style.overflow = isOpen ? 'hidden' : 'visible';
+      }
       if (arrow) arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
     }
 
@@ -3638,7 +3803,10 @@
         menu.style.display = 'none';
       }
       if (selectBox) selectBox.style.zIndex = '50';
-      if (parentCard) parentCard.style.zIndex = '10';
+      if (parentCard) {
+        parentCard.style.zIndex = '10';
+        parentCard.style.overflow = 'hidden';
+      }
       const arrow = document.getElementById('mdcSelectArrow');
       if (arrow) arrow.style.transform = 'rotate(0deg)';
     }
@@ -3652,7 +3820,10 @@
         if (menu) menu.style.display = 'none';
         if (arrow) arrow.style.transform = 'rotate(0deg)';
         selectBox.style.zIndex = '50';
-        if (parentCard) parentCard.style.zIndex = '10';
+        if (parentCard) {
+          parentCard.style.zIndex = '10';
+          parentCard.style.overflow = 'hidden';
+        }
       }
     });
 
@@ -4100,93 +4271,741 @@
       showDemoToast(`已选择日期: ${y}年${m}月${d}日`);
     }
 
-    // --- TimePicker 交互 ---
     let timeMode = 'hour'; // 'hour' | 'minute'
     let timeHour = 9;
     let timeMinute = 30;
     let timeIsPM = false;
+    let timeCurrentAngle = 270; // 9点对应 270度
 
-    function renderDemoTimePicker() {
-      const hourBox = document.querySelector('#demoTimePicker .mdc-time-picker__digit-hour');
-      const minBox = document.querySelector('#demoTimePicker .mdc-time-picker__digit-minute');
+    let demoNumbersBase = null;
+    let demoInvertedMask = null;
+    let demoClockHand = null;
+    let demoCurrentDialMode = null;
+    let demoCachedNodes = [];
+
+    function setupDemoDialDOM() {
+      const clockFace = document.querySelector('#demoTimePicker .mdc-time-picker__clock-face');
+      if (!clockFace) return;
+      clockFace.innerHTML = '';
+
+      // 1. 底层暗色数字容器
+      demoNumbersBase = document.createElement('div');
+      demoNumbersBase.className = 'mdc-time-picker__numbers-base';
+      clockFace.appendChild(demoNumbersBase);
+
+      // 2. 中心点
+      const centerPivot = document.createElement('div');
+      centerPivot.className = 'mdc-time-picker__center-pivot';
+      clockFace.appendChild(centerPivot);
+
+      // 3. 旋转指针
+      demoClockHand = document.createElement('div');
+      demoClockHand.className = 'mdc-time-picker__clock-hand';
+
+      // 4. 指针头部 34px 圆环滑块（局部遮罩剪裁器）
+      const thumbCircle = document.createElement('div');
+      thumbCircle.className = 'mdc-time-picker__thumb-circle';
+
+      // 5. 逆向旋转反色白色数字镜像层
+      demoInvertedMask = document.createElement('div');
+      demoInvertedMask.className = 'mdc-time-picker__inverted-mask';
+      thumbCircle.appendChild(demoInvertedMask);
+
+      demoClockHand.appendChild(thumbCircle);
+      clockFace.appendChild(demoClockHand);
+
+      demoCurrentDialMode = null;
+      demoCachedNodes = [];
+    }
+
+    let demoDisplayedHour = timeHour;
+    let demoDisplayedMinute = timeMinute;
+
+    function rollDemoDigitBox(box, fromVal, toVal, maxVal, stepSize, dragDirection, onFinished) {
+      if (!box) return;
+      if (fromVal === toVal) {
+        box.innerHTML = `<span class="mdc-time-picker__digit-text">${String(toVal).padStart(2, '0')}</span>`;
+        if (onFinished) onFinished();
+        return;
+      }
+
+      const forwardDist = (toVal - fromVal + maxVal) % maxVal;
+      const backwardDist = (fromVal - toVal + maxVal) % maxVal;
+
+      let isUp;
+      if (dragDirection !== undefined && dragDirection !== 0) {
+        isUp = dragDirection > 0;
+      } else {
+        isUp = forwardDist <= backwardDist;
+      }
+
+      const intermediates = [];
+      if (isUp) {
+        let curr = fromVal;
+        while (true) {
+          const dist = (toVal - curr + maxVal) % maxVal;
+          if (dist <= 0 || dist <= stepSize) break;
+          curr = (curr + stepSize) % maxVal;
+          intermediates.push(curr);
+        }
+      } else {
+        let curr = fromVal;
+        while (true) {
+          const dist = (curr - toVal + maxVal) % maxVal;
+          if (dist <= 0 || dist <= stepSize) break;
+          curr = (curr - stepSize + maxVal) % maxVal;
+          intermediates.push(curr);
+        }
+      }
+
+      const token = Symbol();
+      box._rollAnimToken = token;
+
+      const itemHeight = box.clientHeight || 52;
+
+      const track = document.createElement('div');
+      track.className = 'mdc-time-picker__roller-track';
+      track.style.position = 'absolute';
+      track.style.left = '0';
+      track.style.width = '100%';
+      track.style.display = 'flex';
+      track.style.flexDirection = 'column';
+      track.style.willChange = 'transform';
+
+      const createItem = (val, isInter) => {
+        const el = document.createElement('div');
+        el.className = 'mdc-time-picker__digit-text';
+        el.style.height = `${itemHeight}px`;
+        el.style.display = 'flex';
+        el.style.alignItems = 'center';
+        el.style.justifyContent = 'center';
+        el.style.width = '100%';
+        el.textContent = String(val).padStart(2, '0');
+
+        if (isInter) {
+          // 🌟 中途步进时间变化：高透明度 (0.35) ✖ 80%字号 (32px) 显示
+          el.style.opacity = '0.35';
+          el.style.fontSize = '32px';
+          el.style.transform = 'scale(0.8)';
+        } else {
+          el.style.opacity = '1';
+          el.style.fontSize = '40px';
+        }
+        return el;
+      };
+
+      let startTranslateY = 0;
+      let endTranslateY = 0;
+
+      if (isUp) {
+        track.style.top = '0';
+        track.appendChild(createItem(fromVal, false));
+        intermediates.forEach(v => track.appendChild(createItem(v, true)));
+        track.appendChild(createItem(toVal, false));
+
+        const totalDist = (intermediates.length + 1) * itemHeight;
+        startTranslateY = 0;
+        endTranslateY = -totalDist;
+      } else {
+        track.appendChild(createItem(toVal, false));
+        intermediates.forEach(v => track.appendChild(createItem(v, true)));
+        track.appendChild(createItem(fromVal, false));
+
+        const totalDist = (intermediates.length + 1) * itemHeight;
+        track.style.top = `-${totalDist}px`;
+        startTranslateY = 0;
+        endTranslateY = totalDist;
+      }
+
+      box.innerHTML = '';
+      box.appendChild(track);
+
+      // 🌟 过程与结果同时开始切换动画、同时结束切换动画（过程只作为动效用）
+      const duration = Math.min(320, Math.max(220, 180 + intermediates.length * 28));
+
+      const anim = track.animate([
+        { transform: `translateY(${startTranslateY}px)` },
+        { transform: `translateY(${endTranslateY}px)` }
+      ], {
+        duration: duration,
+        easing: 'cubic-bezier(0.2, 0, 0, 1)',
+        fill: 'forwards'
+      });
+
+      anim.onfinish = () => {
+        if (box._rollAnimToken !== token) return;
+        box.innerHTML = `<span class="mdc-time-picker__digit-text">${String(toVal).padStart(2, '0')}</span>`;
+        if (onFinished) onFinished();
+      };
+    }
+
+    function updateTimeDigitalDisplay(animate = false, onHourFinished = null) {
+      const baseHour = document.querySelector('#demoTimePicker .mdc-time-picker__digital-content--base .mdc-time-picker__digit-hour');
+      const baseMin = document.querySelector('#demoTimePicker .mdc-time-picker__digital-content--base .mdc-time-picker__digit-minute');
+      const invHour = document.querySelector('#demoTimePicker .mdc-time-picker__digital-content--inverted .mdc-time-picker__digit-hour');
+      const invMin = document.querySelector('#demoTimePicker .mdc-time-picker__digital-content--inverted .mdc-time-picker__digit-minute');
       const amBtn = document.querySelector('#demoTimePicker .mdc-time-picker__ampm-am');
       const pmBtn = document.querySelector('#demoTimePicker .mdc-time-picker__ampm-pm');
-      const clockHand = document.querySelector('#demoTimePicker .mdc-time-picker__clock-hand');
-      const clockFace = document.querySelector('#demoTimePicker .mdc-time-picker__clock-face');
 
-      if (hourBox) {
-        hourBox.textContent = String(timeHour).padStart(2, '0');
-        hourBox.classList.toggle('is-active', timeMode === 'hour');
+      const hStr = String(timeHour).padStart(2, '0');
+      const mStr = String(timeMinute).padStart(2, '0');
+
+      if (!animate) {
+        if (baseHour) baseHour.innerHTML = `<span class="mdc-time-picker__digit-text">${hStr}</span>`;
+        if (invHour) invHour.innerHTML = `<span class="mdc-time-picker__digit-text">${hStr}</span>`;
+        if (baseMin) baseMin.innerHTML = `<span class="mdc-time-picker__digit-text">${mStr}</span>`;
+        if (invMin) invMin.innerHTML = `<span class="mdc-time-picker__digit-text">${mStr}</span>`;
+        demoDisplayedHour = timeHour;
+        demoDisplayedMinute = timeMinute;
+        if (onHourFinished) onHourFinished();
+      } else {
+        if (demoDisplayedHour !== timeHour) {
+          const fromH = demoDisplayedHour;
+          const toH = timeHour;
+          demoDisplayedHour = timeHour;
+          if (baseHour) rollDemoDigitBox(baseHour, fromH, toH, 24, 2, timeDragDirection, onHourFinished);
+          if (invHour) rollDemoDigitBox(invHour, fromH, toH, 24, 2, timeDragDirection);
+        } else {
+          if (onHourFinished) onHourFinished();
+        }
+        if (demoDisplayedMinute !== timeMinute) {
+          const fromM = demoDisplayedMinute;
+          const toM = timeMinute;
+          demoDisplayedMinute = timeMinute;
+          if (baseMin) rollDemoDigitBox(baseMin, fromM, toM, 60, 5, timeDragDirection);
+          if (invMin) rollDemoDigitBox(invMin, fromM, toM, 60, 5, timeDragDirection);
+        }
       }
-      if (minBox) {
-        minBox.textContent = String(timeMinute).padStart(2, '0');
-        minBox.classList.toggle('is-active', timeMode === 'minute');
-      }
+
       if (amBtn) amBtn.classList.toggle('is-active', !timeIsPM);
       if (pmBtn) pmBtn.classList.toggle('is-active', timeIsPM);
 
-      if (clockHand) {
-        const angle = timeMode === 'hour'
-          ? (timeHour % 12) * 30
-          : timeMinute * 6;
-        clockHand.style.transform = `rotate(${angle}deg)`;
+      setDemoIndicatorPosition(timeMode);
+    }
+
+    function setDemoIndicatorPosition(mode) {
+      const display = document.querySelector('#demoTimePicker .mdc-time-picker__digital-display');
+      if (!display) return;
+      const indicator = display.querySelector('.mdc-time-picker__digit-indicator');
+      const invContent = display.querySelector('.mdc-time-picker__digital-content--inverted');
+      const baseContent = display.querySelector('.mdc-time-picker__digital-content--base');
+      if (!indicator || !invContent || !baseContent) return;
+
+      const baseHour = baseContent.querySelector('.mdc-time-picker__digit-hour');
+      const baseMin = baseContent.querySelector('.mdc-time-picker__digit-minute');
+      if (!baseHour || !baseMin) return;
+
+      const targetBox = mode === 'minute' ? baseMin : baseHour;
+      const targetX = targetBox.offsetLeft;
+      const baseW = targetBox.offsetWidth || 62;
+
+      indicator.style.transform = `translateX(${targetX}px)`;
+      indicator.style.width = `${baseW}px`;
+      invContent.style.transform = `translateX(${-targetX}px)`;
+    }
+
+    function animateDemoDigitIndicator(fromMode, toMode, onFinished) {
+      const display = document.querySelector('#demoTimePicker .mdc-time-picker__digital-display');
+      if (!display) return;
+      const indicator = display.querySelector('.mdc-time-picker__digit-indicator');
+      const invContent = display.querySelector('.mdc-time-picker__digital-content--inverted');
+      const baseContent = display.querySelector('.mdc-time-picker__digital-content--base');
+      if (!indicator || !invContent || !baseContent) return;
+
+      const baseHour = baseContent.querySelector('.mdc-time-picker__digit-hour');
+      const baseMin = baseContent.querySelector('.mdc-time-picker__digit-minute');
+      if (!baseHour || !baseMin) return;
+
+      const hourX = baseHour.offsetLeft;
+      const minX = baseMin.offsetLeft;
+      const baseW = baseHour.offsetWidth || 62;
+      const stretchW = baseW + 34; // 96px: 冲刺拉伸宽度
+
+      const isRight = toMode === 'minute';
+      const startX = isRight ? hourX : minX;
+      const endX = isRight ? minX : hourX;
+
+      if (indicator._anim) indicator._anim.cancel();
+      if (invContent._anim) invContent._anim.cancel();
+
+      // 🌟 1.2s 非线性运动曲线：蓄力回缩 ➔ 冲刺大幅拉伸 ➔ 缓冲过冲与阻尼沉降归位
+      let keyframes;
+      if (isRight) {
+        keyframes = [
+          { transform: `translateX(${startX}px)`, width: `${baseW}px`, offset: 0, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
+          // 蓄力压缩：向左回拉 5px，宽度压缩至 56px
+          { transform: `translateX(${startX - 5}px)`, width: `${baseW - 6}px`, offset: 0.12, easing: 'cubic-bezier(0.2, 0, 0.1, 1)' },
+          // 弹射拉伸：向右爆发冲刺，拉伸至 96px
+          { transform: `translateX(${startX + (endX - startX) * 0.22}px)`, width: `${stretchW}px`, offset: 0.36, easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)' },
+          // 跨越冒号区
+          { transform: `translateX(${startX + (endX - startX) * 0.65}px)`, width: `${stretchW - 4}px`, offset: 0.64, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
+          // 缓冲过冲：向右探出 3px
+          { transform: `translateX(${endX + 3}px)`, width: `${baseW + 2}px`, offset: 0.85, easing: 'cubic-bezier(0.2, 1, 0.3, 1)' },
+          // 阻尼归位：锁定目标位置 62px
+          { transform: `translateX(${endX}px)`, width: `${baseW}px`, offset: 1 }
+        ];
+      } else {
+        keyframes = [
+          { transform: `translateX(${startX}px)`, width: `${baseW}px`, offset: 0, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
+          // 蓄力压缩：向右回拉 5px，宽度压缩至 56px
+          { transform: `translateX(${startX + 5}px)`, width: `${baseW - 6}px`, offset: 0.12, easing: 'cubic-bezier(0.2, 0, 0.1, 1)' },
+          // 弹射拉伸：向左爆发冲刺，拉伸至 96px
+          { transform: `translateX(${startX - (startX - endX) * 0.38 - (stretchW - baseW)}px)`, width: `${stretchW}px`, offset: 0.36, easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)' },
+          // 跨越冒号区
+          { transform: `translateX(${startX - (startX - endX) * 0.75 - (stretchW - 4 - baseW)}px)`, width: `${stretchW - 4}px`, offset: 0.64, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
+          // 缓冲过冲：向左探出 3px
+          { transform: `translateX(${endX - 3}px)`, width: `${baseW + 2}px`, offset: 0.85, easing: 'cubic-bezier(0.2, 1, 0.3, 1)' },
+          // 阻尼归位：锁定目标位置 62px
+          { transform: `translateX(${endX}px)`, width: `${baseW}px`, offset: 1 }
+        ];
       }
 
-      if (!clockFace) return;
-      clockFace.querySelectorAll('.mdc-time-picker__number').forEach(n => n.remove());
+      const invKeyframes = keyframes.map(kf => {
+        const match = kf.transform.match(/translateX\(([-0-9.]+)px\)/);
+        const x = match ? parseFloat(match[1]) : 0;
+        return {
+          transform: `translateX(${-x}px)`,
+          offset: kf.offset,
+          easing: kf.easing
+        };
+      });
+
+      const animOptions = {
+        duration: 800,
+        fill: 'forwards'
+      };
+
+      indicator._animDirection = isRight ? 'toMinute' : 'toHour';
+      indicator._anim = indicator.animate(keyframes, animOptions);
+      invContent._anim = invContent.animate(invKeyframes, animOptions);
+
+      indicator._anim.onfinish = () => {
+        indicator.style.transform = `translateX(${endX}px)`;
+        indicator.style.width = `${baseW}px`;
+        invContent.style.transform = `translateX(${-endX}px)`;
+        if (onFinished) onFinished();
+      };
+    }
+
+    // 🌟 打断动画机制：已执行动画反向执行 并且时长变为52%
+    function interruptDemoIndicatorReverse(onFinished) {
+      const display = document.querySelector('#demoTimePicker .mdc-time-picker__digital-display');
+      if (!display) return false;
+      const indicator = display.querySelector('.mdc-time-picker__digit-indicator');
+      const invContent = display.querySelector('.mdc-time-picker__digital-content--inverted');
+      if (!indicator || !invContent || !indicator._anim) return false;
+
+      const anim = indicator._anim;
+      const invAnim = invContent._anim;
+
+      if (anim.playState === 'running' || anim.playState === 'paused') {
+        const elapsed = anim.currentTime || 0;
+        if (elapsed > 10) {
+          // 速率设定为 -(1 / 0.52)，使倒放所需耗时恰好为已执行时间的 52%
+          const reverseRate = - (1 / 0.52);
+          anim.playbackRate = reverseRate;
+          if (invAnim) invAnim.playbackRate = reverseRate;
+
+          anim.onfinish = () => {
+            anim.cancel();
+            if (invAnim) invAnim.cancel();
+            const startMode = indicator._animDirection === 'toMinute' ? 'hour' : 'minute';
+            setDemoIndicatorPosition(startMode);
+            if (onFinished) onFinished();
+          };
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function snapDemoTimeToCurrent(animate = false) {
+      const targetDeg = timeMode === 'hour'
+        ? (timeHour % 24) * 15
+        : (timeMinute % 60) * 6;
+
+      let currentMod = ((timeCurrentAngle % 360) + 360) % 360;
+      let delta = targetDeg - currentMod;
+      if (delta < -180) delta += 360;
+      if (delta > 180) delta -= 360;
+      timeCurrentAngle += delta;
+
+      const transitionStyle = animate ? 'transform 0.29s cubic-bezier(0.4, 0, 0.2, 1)' : 'none';
+      if (demoClockHand) {
+        demoClockHand.style.transition = transitionStyle;
+        demoClockHand.style.transform = `rotate(${timeCurrentAngle}deg)`;
+      }
+      if (demoInvertedMask) {
+        demoInvertedMask.style.transition = transitionStyle;
+        demoInvertedMask.style.transform = `rotate(${-timeCurrentAngle}deg)`;
+      }
+
+      renderDemoTimePicker(animate);
+    }
+
+    let timeDragDirection = 1;
+
+    function renderDemoNumbers(isLiveDrag = false) {
+      if (!demoNumbersBase || !demoInvertedMask) return;
 
       const isHour = timeMode === 'hour';
-      const radius = 84;
-      const center = 115;
 
-      for (let i = 1; i <= 12; i++) {
-        const val = isHour ? i : (i === 12 ? 0 : i * 5);
-        const rad = (i * 30 - 90) * (Math.PI / 180);
-        const x = center + radius * Math.cos(rad) - 16;
-        const y = center + radius * Math.sin(rad) - 16;
+      // 1. 初始化或切换模式时重构持久化 DOM 节点（保持平滑 CSS 动画）
+      if (demoCurrentDialMode !== timeMode) {
+        demoCurrentDialMode = timeMode;
+        demoNumbersBase.innerHTML = '';
+        demoInvertedMask.innerHTML = '';
+        demoCachedNodes = [];
 
-        const numEl = document.createElement('div');
-        numEl.className = 'mdc-time-picker__number';
-        numEl.style.left = `${x}px`;
-        numEl.style.top = `${y}px`;
-        numEl.textContent = isHour ? val : String(val).padStart(2, '0');
+        // 小时表盘：0 3 6 .. 架构（0, 3, 6, 9, 12, 15, 18, 21，共 8 个 45° 等距正八方位锚点）
+        const anchorList = isHour
+          ? [0, 3, 6, 9, 12, 15, 18, 21]
+          : [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
 
-        const isActive = isHour ? (timeHour === val || (val === 12 && timeHour === 0)) : (timeMinute === val);
-        if (isActive) numEl.classList.add('is-active');
+        anchorList.forEach(anchorVal => {
+          const baseEl = document.createElement('div');
+          baseEl.className = 'mdc-time-picker__number';
+          demoNumbersBase.appendChild(baseEl);
 
-        numEl.addEventListener('click', () => {
-          if (isHour) {
-            timeHour = val;
-            timeMode = 'minute';
-          } else {
-            timeMinute = val;
-          }
-          renderDemoTimePicker();
+          const invEl = document.createElement('div');
+          invEl.className = 'mdc-time-picker__number';
+          demoInvertedMask.appendChild(invEl);
+
+          demoCachedNodes.push({ anchorVal, baseEl, invEl });
         });
-
-        clockFace.appendChild(numEl);
       }
+
+      const center = 115;
+      const radius = 88; // 统一优雅大外圈 88px
+
+      if (isHour) {
+        // 🌟 小时模式：24小时 0 3 6 .. 架构 ✖ 动态数字平滑滑翔跟随（最大位移仅 15°）
+        const currentHour = timeHour;
+        const baseAnchor = Math.floor(currentHour / 3) * 3;
+        const rem = currentHour % 3;
+        const nextAnchor = (baseAnchor + 3) % 24;
+
+        let closestAnchor;
+        if (rem === 0) {
+          closestAnchor = baseAnchor;
+        } else if (rem === 1) {
+          // 比如 1 (距离 0 只有 1 步)：由 0 滑翔至 1；4 由 3 滑翔至 4
+          closestAnchor = baseAnchor;
+        } else {
+          // rem === 2，比如 2 (距离 3 只有 1 步)：由 3 滑翔至 2；5 由 6 滑翔至 5
+          closestAnchor = nextAnchor;
+        }
+
+        demoCachedNodes.forEach(item => {
+          const A = item.anchorVal;
+          const isMorphing = (A === closestAnchor);
+
+          let angleDeg;
+          let text;
+
+          if (isMorphing) {
+            // 最近的基准刻度沿圆周滑翔至当前小时并显示当前小时数字
+            angleDeg = (currentHour % 24) * 15;
+            text = String(currentHour);
+          } else {
+            // 其余刻度静止在基准位置（0, 3, 6, 9, 12, 15, 18, 21）
+            angleDeg = (A % 24) * 15;
+            text = String(A);
+          }
+
+          const rad = (angleDeg - 90) * (Math.PI / 180);
+          const x = center + radius * Math.cos(rad);
+          const y = center + radius * Math.sin(rad);
+
+          item.baseEl.style.left = `${x}px`;
+          item.baseEl.style.top = `${y}px`;
+          item.baseEl.textContent = text;
+
+          item.invEl.style.left = `${x}px`;
+          item.invEl.style.top = `${y}px`;
+          item.invEl.textContent = text;
+        });
+      } else {
+        // 🌟 分钟模式：方向感知迟滞（10->15在13切换，15->10在12切换）✖ 动态数字平滑变形跟随
+        const currentMin = timeMinute;
+        const base = Math.floor(currentMin / 5) * 5;
+        const rem = currentMin - base;
+        const next = (base + 5) % 60;
+
+        let closestAnchor;
+        if (rem === 0) {
+          closestAnchor = base % 60;
+        } else if (timeDragDirection >= 0) {
+          // 顺时针（如 10->15）：10, 11, 12 使用 10；到 13 切换至 15
+          closestAnchor = (rem < 3) ? (base % 60) : next;
+        } else {
+          // 逆时针（如 15->10）：15, 14, 13 使用 15；到 12 切换至 10
+          closestAnchor = (rem > 2) ? next : (base % 60);
+        }
+
+        demoCachedNodes.forEach(item => {
+          const A = item.anchorVal;
+          const isMorphing = (A === closestAnchor);
+
+          let angleDeg;
+          let text;
+
+          if (isMorphing) {
+            // 最近的基准数字（如 15 或 20）平滑滑翔至指针当前分钟位置（如 16 或 19）并显示当前分钟
+            angleDeg = (currentMin % 60) * 6;
+            text = String(currentMin).padStart(2, '0');
+          } else {
+            // 其余数字安静停留在基准刻度位置
+            angleDeg = (A % 60) * 6;
+            text = String(A).padStart(2, '0');
+          }
+
+          const rad = (angleDeg - 90) * (Math.PI / 180);
+          const x = center + radius * Math.cos(rad);
+          const y = center + radius * Math.sin(rad);
+
+          item.baseEl.style.left = `${x}px`;
+          item.baseEl.style.top = `${y}px`;
+          item.baseEl.textContent = text;
+
+          item.invEl.style.left = `${x}px`;
+          item.invEl.style.top = `${y}px`;
+          item.invEl.textContent = text;
+        });
+      }
+    }
+
+    function renderDemoTimePicker(animateDigital = false) {
+      updateTimeDigitalDisplay(animateDigital);
+
+      if (demoClockHand) {
+        demoClockHand.style.transform = `rotate(${timeCurrentAngle}deg)`;
+      }
+      if (demoInvertedMask) {
+        demoInvertedMask.style.transform = `rotate(${-timeCurrentAngle}deg)`;
+      }
+
+      renderDemoNumbers(false);
     }
 
     const digitHour = document.querySelector('#demoTimePicker .mdc-time-picker__digit-hour');
     const digitMin = document.querySelector('#demoTimePicker .mdc-time-picker__digit-minute');
     const amBtnEl = document.querySelector('#demoTimePicker .mdc-time-picker__ampm-am');
     const pmBtnEl = document.querySelector('#demoTimePicker .mdc-time-picker__ampm-pm');
+    const demoClockFace = document.querySelector('#demoTimePicker .mdc-time-picker__clock-face');
+    let demoHourToMinuteTimer = null;
+    let demoHourPauseTimer = null;
 
-    if (digitHour) digitHour.addEventListener('click', () => { timeMode = 'hour'; renderDemoTimePicker(); });
-    if (digitMin) digitMin.addEventListener('click', () => { timeMode = 'minute'; renderDemoTimePicker(); });
-    if (amBtnEl) amBtnEl.addEventListener('click', () => { timeIsPM = false; renderDemoTimePicker(); });
-    if (pmBtnEl) pmBtnEl.addEventListener('click', () => { timeIsPM = true; renderDemoTimePicker(); });
+    if (digitHour) digitHour.addEventListener('click', () => {
+      if (demoHourPauseTimer) {
+        clearTimeout(demoHourPauseTimer);
+        demoHourPauseTimer = null;
+      }
+      if (demoHourToMinuteTimer) {
+        clearTimeout(demoHourToMinuteTimer);
+        demoHourToMinuteTimer = null;
+      }
+      const wasInterrupted = interruptDemoIndicatorReverse();
+      if (!wasInterrupted && timeMode !== 'hour') {
+        animateDemoDigitIndicator('minute', 'hour');
+      }
+      timeMode = 'hour';
+      snapDemoTimeToCurrent(true);
+      updateTimeDigitalDisplay(false);
+    });
+    if (digitMin) digitMin.addEventListener('click', () => {
+      if (demoHourPauseTimer) {
+        clearTimeout(demoHourPauseTimer);
+        demoHourPauseTimer = null;
+      }
+      if (demoHourToMinuteTimer) {
+        clearTimeout(demoHourToMinuteTimer);
+        demoHourToMinuteTimer = null;
+      }
+      const wasInterrupted = interruptDemoIndicatorReverse();
+      if (!wasInterrupted && timeMode !== 'minute') {
+        animateDemoDigitIndicator('hour', 'minute');
+      }
+      timeMode = 'minute';
+      snapDemoTimeToCurrent(true);
+      updateTimeDigitalDisplay(false);
+    });
+    if (amBtnEl) amBtnEl.addEventListener('click', () => {
+      if (timeHour >= 12) {
+        timeHour -= 12;
+        timeIsPM = false;
+        timeDragDirection = -1;
+        if (timeMode === 'hour') {
+          snapDemoTimeToCurrent(true);
+        }
+        updateTimeDigitalDisplay(true);
+      } else {
+        timeIsPM = false;
+        updateTimeDigitalDisplay(false);
+      }
+    });
+    if (pmBtnEl) pmBtnEl.addEventListener('click', () => {
+      if (timeHour < 12) {
+        timeHour += 12;
+        timeIsPM = true;
+        timeDragDirection = 1;
+        if (timeMode === 'hour') {
+          snapDemoTimeToCurrent(true);
+        }
+        updateTimeDigitalDisplay(true);
+      } else {
+        timeIsPM = true;
+        updateTimeDigitalDisplay(false);
+      }
+    });
+
+    // 🌟 表盘连续平滑跨越 00 ✖ 方向感知迟滞 ✖ 动态数字平滑变形移动 ✖ 0.29s 磁吸
+    if (demoClockFace) {
+      let isDragging = false;
+
+      const updatePointer = (clientX, clientY) => {
+        const rect = demoClockFace.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const dx = clientX - centerX;
+        const dy = clientY - centerY;
+
+        let rawDeg = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+        if (rawDeg < 0) rawDeg += 360;
+
+        let currentMod = ((timeCurrentAngle % 360) + 360) % 360;
+        let delta = rawDeg - currentMod;
+        if (delta < -180) delta += 360;
+        if (delta > 180) delta -= 360;
+
+        if (Math.abs(delta) > 0.4) {
+          timeDragDirection = delta > 0 ? 1 : -1;
+        }
+
+        timeCurrentAngle += delta;
+
+        if (demoClockHand) {
+          demoClockHand.style.transition = 'none';
+          demoClockHand.style.transform = `rotate(${timeCurrentAngle}deg)`;
+        }
+        if (demoInvertedMask) {
+          demoInvertedMask.style.transition = 'none';
+          demoInvertedMask.style.transform = `rotate(${-timeCurrentAngle}deg)`;
+        }
+
+        const normAngle = ((timeCurrentAngle % 360) + 360) % 360;
+        if (timeMode === 'hour') {
+          // 24小时表盘：360° / 24 = 15° 每小时
+          let h = Math.round(normAngle / 15);
+          if (h >= 24) h = 0;
+          timeHour = h;
+          timeIsPM = timeHour >= 12;
+        } else {
+          let m = Math.round(normAngle / 6);
+          if (m >= 60) m = 0;
+          timeMinute = m;
+        }
+        renderDemoNumbers(true);
+      };
+
+      demoClockFace.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // 🌟 核心保护：只有在小时模式处于等待/过渡期间，触碰表盘才打断倒放回小时
+        if (timeMode === 'hour') {
+          const isTransitionPending = Boolean(demoHourPauseTimer || demoHourToMinuteTimer);
+          if (demoHourPauseTimer) {
+            clearTimeout(demoHourPauseTimer);
+            demoHourPauseTimer = null;
+          }
+          if (demoHourToMinuteTimer) {
+            clearTimeout(demoHourToMinuteTimer);
+            demoHourToMinuteTimer = null;
+          }
+          if (isTransitionPending) {
+            interruptDemoIndicatorReverse();
+          }
+        }
+        // 🌟 如果已经切换到分钟模式 (timeMode === 'minute')：
+        // 拖动绝对不会变回小时！保持 timeMode = 'minute'，指针与角度精确对应分钟！
+
+        isDragging = true;
+        try { demoClockFace.setPointerCapture(e.pointerId); } catch (_) {}
+        updatePointer(e.clientX, e.clientY);
+      });
+
+      demoClockFace.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        e.stopPropagation();
+        updatePointer(e.clientX, e.clientY);
+      });
+
+      const endPointer = (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        e.stopPropagation();
+        isDragging = false;
+        try { demoClockFace.releasePointerCapture(e.pointerId); } catch (_) {}
+
+        snapDemoTimeToCurrent(true);
+
+        if (demoHourPauseTimer) {
+          clearTimeout(demoHourPauseTimer);
+          demoHourPauseTimer = null;
+        }
+        if (demoHourToMinuteTimer) {
+          clearTimeout(demoHourToMinuteTimer);
+          demoHourToMinuteTimer = null;
+        }
+
+        if (timeMode === 'hour') {
+          // 🌟 1. 先把时的改变动画播放完
+          updateTimeDigitalDisplay(true, () => {
+            if (isDragging) return;
+
+            // 🌟 2. 执行完等待 0.3s (300ms)
+            demoHourPauseTimer = setTimeout(() => {
+              if (isDragging) return;
+
+              // 🌟 3. 然后开始 0.8s (800ms) 的时分切换动画
+              animateDemoDigitIndicator('hour', 'minute');
+
+              // 4. 给出 0.8s (800ms) 完整等待时间，期间维持小时表盘显示，滑块正在物理反色滑移
+              demoHourToMinuteTimer = setTimeout(() => {
+                demoHourToMinuteTimer = null;
+                if (!isDragging) {
+                  timeMode = 'minute';
+                  snapDemoTimeToCurrent(true);
+                  updateTimeDigitalDisplay(false);
+                }
+              }, 800);
+            }, 300);
+          });
+        } else {
+          updateTimeDigitalDisplay(true);
+        }
+      };
+
+      demoClockFace.addEventListener('pointerup', endPointer);
+      demoClockFace.addEventListener('pointercancel', endPointer);
+
+      // 🌟 彻底隔离移动端与滚轮滚动，防止拖拽表盘时误触发页面滚动
+      demoClockFace.addEventListener('touchstart', (e) => { e.preventDefault(); }, { passive: false });
+      demoClockFace.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
+      demoClockFace.addEventListener('wheel', (e) => { e.preventDefault(); e.stopPropagation(); }, { passive: false });
+    }
 
     function confirmDemoTime() {
-      const period = timeIsPM ? '下午' : '上午';
       const h = String(timeHour).padStart(2, '0');
-      const m = String(timeMinute).padStart(2, '0');
-      showDemoToast(`已选择时间: ${period} ${h}:${m}`);
+      const m = String(timeMinute === 60 ? '00' : timeMinute).padStart(2, '0');
+      showDemoToast(`已选择时间: ${h}:${m}`);
     }
 
     // 初始化渲染 Pickers
     renderDemoDatePicker();
+    setupDemoDialDOM();
     renderDemoTimePicker();
   </script>
 </body>

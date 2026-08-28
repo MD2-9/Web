@@ -3,6 +3,8 @@
 // Licensed under the Apache License, Version 2.0
 //
 
+.demo-card,
+.mdc-card,
 .preview-img-box,
 .secondary-overlay-panel .rail-nav-item,
 .rail-nav-item,
@@ -13,13 +15,6 @@
 button {
   position: relative;
   overflow: hidden;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.demo-card,
-.mdc-card {
-  position: relative;
-  overflow: visible !important;
   -webkit-tap-highlight-color: transparent;
 }
 
