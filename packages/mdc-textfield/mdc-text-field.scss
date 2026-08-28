@@ -257,11 +257,12 @@
   .mdc-text-field__icon {
     position: absolute;
     left: 14px;
-    top: 50%;
+    top: 51%;
     transform: translateY(-50%);
     font-size: 20px;
     pointer-events: none;
     z-index: 2;
+    margin: 0;
   }
 
   .mdc-text-field__input {
@@ -306,11 +307,12 @@
   .mdc-text-field__icon {
     position: absolute;
     left: 14px;
-    top: 50%;
+    top: 48%;
     transform: translateY(-50%);
     font-size: 20px;
     pointer-events: none;
     z-index: 2;
+    margin: 0;
   }
 
   .mdc-text-field__input {

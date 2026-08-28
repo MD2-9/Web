@@ -723,7 +723,6 @@
     /* =========================================================================
      * Material 水波纹涟漪动画 (Ripple Effect - 精准范围 ✖ 速率放缓 3/5)
      * ========================================================================= */
-    .demo-card,
     .preview-img-box,
     .secondary-overlay-panel .rail-nav-item,
     .rail-nav-item,
@@ -734,6 +733,14 @@
     button {
       position: relative;
       overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .demo-card,
+    .mdc-card {
+      position: relative;
+      overflow: visible !important;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .mdui-ripple-wave {
@@ -751,9 +758,24 @@
       pointer-events: none;
       will-change: transform, opacity;
     }
+
+    // 大卡片涟漪透明度调高（更透、更细腻，略小于常规按钮涟漪效果）
+    .demo-card .mdui-ripple-wave,
+    .mdc-card .mdui-ripple-wave,
+    [data-mdui-ripple] .mdui-ripple-wave {
+      background-color: rgba(103, 80, 164, 0.06) !important;
+    }
+
     .dark-theme .mdui-ripple-wave {
       background-color: rgba(255, 255, 255, 0.14) !important;
     }
+
+    .dark-theme .demo-card .mdui-ripple-wave,
+    .dark-theme .mdc-card .mdui-ripple-wave,
+    .dark-theme [data-mdui-ripple] .mdui-ripple-wave {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
     .mdui-ripple-wave.is-active {
       transform: translate3d(0, 0, 0) scale(1);
       opacity: 1;
@@ -1464,13 +1486,14 @@
     }
     .mdc-text-field--with-leading-icon .mdc-text-field__icon {
       position: absolute;
-      left: 12px;
-      top: 50%;
+      left: 14px;
+      top: 48%;
       transform: translateY(-50%);
       color: var(--mdc-theme-primary);
       font-size: 20px;
       pointer-events: none;
       z-index: 2;
+      margin: 0 !important;
     }
     .mdc-text-field--with-leading-icon .mdc-text-field__input {
       padding-left: 44px !important;
@@ -1532,7 +1555,7 @@
     .mdc-text-field--outlined .mdc-text-field__icon {
       position: absolute;
       left: 14px;
-      top: 50%;
+      top: 51%;
       transform: translateY(-50%);
       font-size: 20px;
       color: var(--mdc-theme-primary, #6750a4);
@@ -1676,6 +1699,304 @@
       border-bottom-color: rgba(255,255,255,0.06);
     }
 
+    /* =========================================================================
+     * Material 纯直角日历选择器 (MDC DatePicker)
+     * ========================================================================= */
+    .mdc-date-picker {
+      display: inline-flex;
+      flex-direction: column;
+      width: 328px;
+      background-color: var(--mdc-theme-surface, #ffffff);
+      color: var(--mdc-theme-on-surface, #1d1b20);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 0 !important;
+      user-select: none;
+      box-sizing: border-box;
+      overflow: hidden;
+      font-family: inherit;
+    }
+    .mdc-date-picker__header {
+      background-color: var(--mdc-theme-primary, #6750a4);
+      color: var(--mdc-theme-on-primary, #ffffff);
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .mdc-date-picker__header-year {
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0.85;
+      letter-spacing: 0.5px;
+    }
+    .mdc-date-picker__header-date {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.2px;
+    }
+    .mdc-date-picker__controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px 4px;
+    }
+    .mdc-date-picker__current-month {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mdc-date-picker__nav-btn {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: inherit;
+      border-radius: 50% !important;
+      transition: background-color 0.15s ease;
+    }
+    .mdc-date-picker__nav-btn:hover {
+      background-color: rgba(0, 0, 0, 0.06);
+    }
+    .mdc-date-picker__weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      padding: 8px 12px 4px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      opacity: 0.6;
+    }
+    .mdc-date-picker__grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      padding: 4px 12px 14px;
+      gap: 4px 0;
+    }
+    .mdc-date-picker__cell {
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+    }
+    .mdc-date-picker__cell > span {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50% !important;
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .mdc-date-picker__cell:hover:not(.is-empty):not(.is-selected) > span {
+      background-color: rgba(103, 80, 164, 0.08);
+      color: var(--mdc-theme-primary);
+    }
+    .mdc-date-picker__cell.is-today:not(.is-selected) > span {
+      border: 1px solid var(--mdc-theme-primary);
+      color: var(--mdc-theme-primary);
+      font-weight: 700;
+    }
+    .mdc-date-picker__cell.is-selected > span {
+      background-color: var(--mdc-theme-primary) !important;
+      color: var(--mdc-theme-on-primary) !important;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    .mdc-date-picker__cell.is-empty {
+      cursor: default;
+      opacity: 0.25;
+    }
+    .mdc-date-picker__actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 10px 16px;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    /* =========================================================================
+     * Material 纯正表盘时钟选择器 (MDC TimePicker)
+     * ========================================================================= */
+    .mdc-time-picker {
+      display: inline-flex;
+      flex-direction: column;
+      width: 310px;
+      background-color: var(--mdc-theme-surface, #ffffff);
+      color: var(--mdc-theme-on-surface, #1d1b20);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 0 !important;
+      user-select: none;
+      box-sizing: border-box;
+      overflow: hidden;
+      font-family: inherit;
+    }
+    .mdc-time-picker__header {
+      background-color: var(--mdc-theme-surface-container-high, #f7f2fa);
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+    .mdc-time-picker__digital-display {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .mdc-time-picker__digit-box {
+      font-size: 32px;
+      font-weight: 700;
+      padding: 4px 12px;
+      background-color: rgba(0, 0, 0, 0.04);
+      border-radius: 0 !important;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      line-height: 1.1;
+    }
+    .mdc-time-picker__digit-box.is-active {
+      background-color: var(--mdc-theme-primary, #6750a4);
+      color: var(--mdc-theme-on-primary, #ffffff);
+    }
+    .mdc-time-picker__colon {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 2px;
+      opacity: 0.6;
+    }
+    .mdc-time-picker__ampm-toggle {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+    }
+    .mdc-time-picker__ampm-btn {
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: inherit;
+      transition: all 0.15s ease;
+    }
+    .mdc-time-picker__ampm-btn.is-active {
+      background-color: var(--mdc-theme-primary, #6750a4);
+      color: var(--mdc-theme-on-primary, #ffffff);
+    }
+    .mdc-time-picker__dial-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 0;
+    }
+    .mdc-time-picker__clock-face {
+      width: 230px;
+      height: 230px;
+      background-color: var(--mdc-theme-surface-container-high, #f7f2fa);
+      border-radius: 50% !important;
+      position: relative;
+      box-sizing: border-box;
+    }
+    .mdc-time-picker__center-pivot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--mdc-theme-primary, #6750a4);
+      border-radius: 50% !important;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+    .mdc-time-picker__clock-hand {
+      position: absolute;
+      bottom: 50%;
+      left: calc(50% - 1px);
+      width: 2px;
+      height: 88px;
+      background-color: var(--mdc-theme-primary, #6750a4);
+      transform-origin: bottom center;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 5;
+    }
+    .mdc-time-picker__clock-hand::after {
+      content: '';
+      position: absolute;
+      top: -16px;
+      left: calc(50% - 17px);
+      width: 34px;
+      height: 34px;
+      background-color: var(--mdc-theme-primary, #6750a4);
+      border-radius: 50% !important;
+    }
+    .mdc-time-picker__number {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 50% !important;
+      z-index: 6;
+      transition: color 0.15s ease;
+    }
+    .mdc-time-picker__number.is-active {
+      color: var(--mdc-theme-on-primary, #ffffff);
+    }
+    .mdc-time-picker__actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 10px 16px;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .dark-theme .mdc-date-picker,
+    .dark-theme .mdc-time-picker {
+      background-color: var(--mdc-theme-surface-container, #131217);
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65);
+    }
+    .dark-theme .mdc-date-picker__actions,
+    .dark-theme .mdc-time-picker__actions {
+      border-top-color: rgba(255, 255, 255, 0.06);
+    }
+    .dark-theme .mdc-date-picker__nav-btn:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+    .dark-theme .mdc-time-picker__header {
+      background-color: #19181e;
+      border-bottom-color: rgba(255, 255, 255, 0.06);
+    }
+    .dark-theme .mdc-time-picker__digit-box:not(.is-active) {
+      background-color: rgba(255, 255, 255, 0.06);
+      color: #e6e1e5;
+    }
+    .dark-theme .mdc-time-picker__ampm-toggle {
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+    .dark-theme .mdc-time-picker__clock-face {
+      background-color: #1c1a22;
+    }
+
   </style>
 </head>
 <body>
@@ -1796,6 +2117,10 @@
         <a href="#section-typography" class="rail-nav-item" onclick="handleNavClick()" title="10. 排版与变量字体">
           <i class="material-icons rail-item-icon">text_fields</i>
           <span class="rail-item-text">10. 排版与变量字体</span>
+        </a>
+        <a href="#section-pickers" class="rail-nav-item" onclick="handleNavClick()" title="11. 日历与时钟">
+          <i class="material-icons rail-item-icon">date_range</i>
+          <span class="rail-item-text">11. 日历与时钟</span>
         </a>
       </nav>
 
@@ -2276,7 +2601,9 @@
               <i class="material-icons expansion-arrow">keyboard_arrow_down</i>
             </div>
             <div class="expansion-body">
-              坚守纯正 MD1 骨架，圆角半径严格为 0px，所有组件均以利落切角与丰富海拔阴影呈现。
+              <div class="expansion-body__content">
+                坚守纯正 MD1 骨架，圆角半径严格为 0px，所有组件均以利落切角与丰富海拔阴影呈现。
+              </div>
             </div>
           </div>
 
@@ -2286,7 +2613,9 @@
               <i class="material-icons expansion-arrow">keyboard_arrow_down</i>
             </div>
             <div class="expansion-body">
-              暗色模式采用 Tone 20 雅致背景与 Tone 12 略深卡片，告别死黑，提供绝佳阅读层次感。
+              <div class="expansion-body__content">
+                暗色模式采用 Tone 20 雅致背景与 Tone 12 略深卡片，告别死黑，提供绝佳阅读层次感。
+              </div>
             </div>
           </div>
         </div>
@@ -2531,6 +2860,81 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- 📅 模块 11: 日历与时钟选择器 (Date & Time Pickers) -->
+    <div class="demo-card" id="section-pickers">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">date_range</i>
+        11. 日历与时钟选择器 (Date & Time Pickers)
+      </h3>
+      <div style="display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap; margin-top: 16px;">
+        
+        <!-- 📅 Material 纯直角日历选择器 (DatePicker) -->
+        <div>
+          <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px; opacity: 0.85;">日历选择器 (DatePicker · 0px 纯直角与 50% 纯圆几何)</div>
+          <div class="mdc-date-picker" id="demoDatePicker">
+            <div class="mdc-date-picker__header">
+              <span class="mdc-date-picker__header-year">2026 年</span>
+              <span class="mdc-date-picker__header-date">8月29日 周六</span>
+            </div>
+            <div class="mdc-date-picker__controls">
+              <span class="mdc-date-picker__current-month">
+                <i class="material-icons" style="font-size: 18px; color: var(--mdc-theme-primary);">event</i>
+                <span class="mdc-date-picker__month-label">2026 年 8 月</span>
+              </span>
+              <div style="display: flex; gap: 4px;">
+                <button class="mdc-date-picker__nav-btn mdc-date-picker__prev-btn" title="上个月">
+                  <i class="material-icons" style="font-size: 20px;">chevron_left</i>
+                </button>
+                <button class="mdc-date-picker__nav-btn mdc-date-picker__next-btn" title="下个月">
+                  <i class="material-icons" style="font-size: 20px;">chevron_right</i>
+                </button>
+              </div>
+            </div>
+            <div class="mdc-date-picker__weekdays">
+              <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+            </div>
+            <div class="mdc-date-picker__grid">
+              <!-- 动态由 JS 生成日期网格 -->
+            </div>
+            <div class="mdc-date-picker__actions">
+              <button class="mdc-button mdc-button--dense" onclick="showDemoToast('已取消日期选择')">取消</button>
+              <button class="mdc-button mdc-button--raised mdc-button--dense" style="background-color: var(--mdc-theme-primary);" onclick="confirmDemoDate()">确定</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ⏰ Material 纯正表盘时钟选择器 (TimePicker) -->
+        <div>
+          <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px; opacity: 0.85;">时钟表盘选择器 (TimePicker · 240px 纯圆表盘与指针)</div>
+          <div class="mdc-time-picker" id="demoTimePicker">
+            <div class="mdc-time-picker__header">
+              <div class="mdc-time-picker__digital-display">
+                <span class="mdc-time-picker__digit-box mdc-time-picker__digit-hour is-active">09</span>
+                <span class="mdc-time-picker__colon">:</span>
+                <span class="mdc-time-picker__digit-box mdc-time-picker__digit-minute">30</span>
+              </div>
+              <div class="mdc-time-picker__ampm-toggle">
+                <button class="mdc-time-picker__ampm-btn mdc-time-picker__ampm-am is-active">上午</button>
+                <button class="mdc-time-picker__ampm-btn mdc-time-picker__ampm-pm">下午</button>
+              </div>
+            </div>
+            <div class="mdc-time-picker__dial-container">
+              <div class="mdc-time-picker__clock-face">
+                <div class="mdc-time-picker__center-pivot"></div>
+                <div class="mdc-time-picker__clock-hand" style="transform: rotate(270deg);"></div>
+                <!-- 动态由 JS 生成刻度数字 -->
+              </div>
+            </div>
+            <div class="mdc-time-picker__actions">
+              <button class="mdc-button mdc-button--dense" onclick="showDemoToast('已取消时间选择')">取消</button>
+              <button class="mdc-button mdc-button--raised mdc-button--dense" style="background-color: var(--mdc-theme-primary);" onclick="confirmDemoTime()">确定</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -3204,17 +3608,23 @@
     // =========================================================================
     function toggleMdcSelect(e) {
       if (e) e.stopPropagation();
+      const selectBox = document.getElementById('demoMdcSelect');
       const menu = document.getElementById('mdcSelectMenu');
       const arrow = document.getElementById('mdcSelectArrow');
+      const parentCard = document.getElementById('section-form');
       if (!menu) return;
       const isOpen = menu.style.display === 'flex';
       menu.style.display = isOpen ? 'none' : 'flex';
+      if (selectBox) selectBox.style.zIndex = isOpen ? '50' : '99999';
+      if (parentCard) parentCard.style.zIndex = isOpen ? '10' : '9999';
       if (arrow) arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
     }
 
     function selectMdcOption(val, el) {
       const valEl = document.getElementById('mdcSelectValue');
       if (valEl) valEl.textContent = val;
+      const selectBox = document.getElementById('demoMdcSelect');
+      const parentCard = document.getElementById('section-form');
       const menu = document.getElementById('mdcSelectMenu');
       if (menu) {
         menu.querySelectorAll('.mdc-select-custom__item').forEach(item => {
@@ -3227,17 +3637,22 @@
         if (activeCheck) activeCheck.style.visibility = 'visible';
         menu.style.display = 'none';
       }
+      if (selectBox) selectBox.style.zIndex = '50';
+      if (parentCard) parentCard.style.zIndex = '10';
       const arrow = document.getElementById('mdcSelectArrow');
       if (arrow) arrow.style.transform = 'rotate(0deg)';
     }
 
     document.addEventListener('click', (e) => {
       const selectBox = document.getElementById('demoMdcSelect');
+      const parentCard = document.getElementById('section-form');
       if (selectBox && !selectBox.contains(e.target)) {
         const menu = document.getElementById('mdcSelectMenu');
         const arrow = document.getElementById('mdcSelectArrow');
         if (menu) menu.style.display = 'none';
         if (arrow) arrow.style.transform = 'rotate(0deg)';
+        selectBox.style.zIndex = '50';
+        if (parentCard) parentCard.style.zIndex = '10';
       }
     });
 
@@ -3265,7 +3680,8 @@
       { id: 'section-tabs', top: 'MD3.1 · 选项卡', bottom: '7. 选项卡 Tab' },
       { id: 'section-progress', top: 'MD3.1 · 进度', bottom: '8. 进度指示器' },
       { id: 'section-monet-lab', top: 'MD3.1 · 色彩', bottom: '9. 莫奈实验室' },
-      { id: 'section-typography', top: 'MD3.1 · 排版', bottom: '10. 排版与变量字体' }
+      { id: 'section-typography', top: 'MD3.1 · 排版', bottom: '10. 排版与变量字体' },
+      { id: 'section-pickers', top: 'MD3.1 · 选择器', bottom: '11. 日历与时钟' }
     ];
 
     function updateDynamicTitles(topText, bottomText) {
@@ -3595,6 +4011,183 @@
         el = el.parentElement;
       }
     }, { passive: true, capture: true });
+
+    // =========================================================================
+    // Material 纯直角日历与时钟选择器交互逻辑 (DatePicker & TimePicker)
+    // =========================================================================
+    let pickerCurrentDate = new Date();
+    let pickerSelectedDate = new Date();
+
+    function renderDemoDatePicker() {
+      const year = pickerCurrentDate.getFullYear();
+      const month = pickerCurrentDate.getMonth();
+
+      const yearEl = document.querySelector('#demoDatePicker .mdc-date-picker__header-year');
+      const dateEl = document.querySelector('#demoDatePicker .mdc-date-picker__header-date');
+      const monthLabel = document.querySelector('#demoDatePicker .mdc-date-picker__month-label');
+      const grid = document.querySelector('#demoDatePicker .mdc-date-picker__grid');
+
+      if (yearEl) yearEl.textContent = `${year} 年`;
+      if (monthLabel) monthLabel.textContent = `${year} 年 ${month + 1} 月`;
+
+      const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+      if (dateEl) {
+        const sMonth = pickerSelectedDate.getMonth() + 1;
+        const sDay = pickerSelectedDate.getDate();
+        const sW = weekdays[pickerSelectedDate.getDay()];
+        dateEl.textContent = `${sMonth}月${sDay}日 ${sW}`;
+      }
+
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const today = new Date();
+
+      for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'mdc-date-picker__cell is-empty';
+        grid.appendChild(empty);
+      }
+
+      for (let d = 1; d <= totalDays; d++) {
+        const cell = document.createElement('div');
+        cell.className = 'mdc-date-picker__cell';
+
+        const isSelected = pickerSelectedDate.getFullYear() === year &&
+                           pickerSelectedDate.getMonth() === month &&
+                           pickerSelectedDate.getDate() === d;
+        const isToday = today.getFullYear() === year &&
+                        today.getMonth() === month &&
+                        today.getDate() === d;
+
+        if (isSelected) cell.classList.add('is-selected');
+        if (isToday) cell.classList.add('is-today');
+
+        const span = document.createElement('span');
+        span.textContent = d;
+        cell.appendChild(span);
+
+        cell.addEventListener('click', () => {
+          pickerSelectedDate = new Date(year, month, d);
+          renderDemoDatePicker();
+        });
+
+        grid.appendChild(cell);
+      }
+    }
+
+    const prevMonthBtn = document.querySelector('#demoDatePicker .mdc-date-picker__prev-btn');
+    const nextMonthBtn = document.querySelector('#demoDatePicker .mdc-date-picker__next-btn');
+    if (prevMonthBtn) {
+      prevMonthBtn.addEventListener('click', () => {
+        pickerCurrentDate.setMonth(pickerCurrentDate.getMonth() - 1);
+        renderDemoDatePicker();
+      });
+    }
+    if (nextMonthBtn) {
+      nextMonthBtn.addEventListener('click', () => {
+        pickerCurrentDate.setMonth(pickerCurrentDate.getMonth() + 1);
+        renderDemoDatePicker();
+      });
+    }
+
+    function confirmDemoDate() {
+      const y = pickerSelectedDate.getFullYear();
+      const m = pickerSelectedDate.getMonth() + 1;
+      const d = pickerSelectedDate.getDate();
+      showDemoToast(`已选择日期: ${y}年${m}月${d}日`);
+    }
+
+    // --- TimePicker 交互 ---
+    let timeMode = 'hour'; // 'hour' | 'minute'
+    let timeHour = 9;
+    let timeMinute = 30;
+    let timeIsPM = false;
+
+    function renderDemoTimePicker() {
+      const hourBox = document.querySelector('#demoTimePicker .mdc-time-picker__digit-hour');
+      const minBox = document.querySelector('#demoTimePicker .mdc-time-picker__digit-minute');
+      const amBtn = document.querySelector('#demoTimePicker .mdc-time-picker__ampm-am');
+      const pmBtn = document.querySelector('#demoTimePicker .mdc-time-picker__ampm-pm');
+      const clockHand = document.querySelector('#demoTimePicker .mdc-time-picker__clock-hand');
+      const clockFace = document.querySelector('#demoTimePicker .mdc-time-picker__clock-face');
+
+      if (hourBox) {
+        hourBox.textContent = String(timeHour).padStart(2, '0');
+        hourBox.classList.toggle('is-active', timeMode === 'hour');
+      }
+      if (minBox) {
+        minBox.textContent = String(timeMinute).padStart(2, '0');
+        minBox.classList.toggle('is-active', timeMode === 'minute');
+      }
+      if (amBtn) amBtn.classList.toggle('is-active', !timeIsPM);
+      if (pmBtn) pmBtn.classList.toggle('is-active', timeIsPM);
+
+      if (clockHand) {
+        const angle = timeMode === 'hour'
+          ? (timeHour % 12) * 30
+          : timeMinute * 6;
+        clockHand.style.transform = `rotate(${angle}deg)`;
+      }
+
+      if (!clockFace) return;
+      clockFace.querySelectorAll('.mdc-time-picker__number').forEach(n => n.remove());
+
+      const isHour = timeMode === 'hour';
+      const radius = 84;
+      const center = 115;
+
+      for (let i = 1; i <= 12; i++) {
+        const val = isHour ? i : (i === 12 ? 0 : i * 5);
+        const rad = (i * 30 - 90) * (Math.PI / 180);
+        const x = center + radius * Math.cos(rad) - 16;
+        const y = center + radius * Math.sin(rad) - 16;
+
+        const numEl = document.createElement('div');
+        numEl.className = 'mdc-time-picker__number';
+        numEl.style.left = `${x}px`;
+        numEl.style.top = `${y}px`;
+        numEl.textContent = isHour ? val : String(val).padStart(2, '0');
+
+        const isActive = isHour ? (timeHour === val || (val === 12 && timeHour === 0)) : (timeMinute === val);
+        if (isActive) numEl.classList.add('is-active');
+
+        numEl.addEventListener('click', () => {
+          if (isHour) {
+            timeHour = val;
+            timeMode = 'minute';
+          } else {
+            timeMinute = val;
+          }
+          renderDemoTimePicker();
+        });
+
+        clockFace.appendChild(numEl);
+      }
+    }
+
+    const digitHour = document.querySelector('#demoTimePicker .mdc-time-picker__digit-hour');
+    const digitMin = document.querySelector('#demoTimePicker .mdc-time-picker__digit-minute');
+    const amBtnEl = document.querySelector('#demoTimePicker .mdc-time-picker__ampm-am');
+    const pmBtnEl = document.querySelector('#demoTimePicker .mdc-time-picker__ampm-pm');
+
+    if (digitHour) digitHour.addEventListener('click', () => { timeMode = 'hour'; renderDemoTimePicker(); });
+    if (digitMin) digitMin.addEventListener('click', () => { timeMode = 'minute'; renderDemoTimePicker(); });
+    if (amBtnEl) amBtnEl.addEventListener('click', () => { timeIsPM = false; renderDemoTimePicker(); });
+    if (pmBtnEl) pmBtnEl.addEventListener('click', () => { timeIsPM = true; renderDemoTimePicker(); });
+
+    function confirmDemoTime() {
+      const period = timeIsPM ? '下午' : '上午';
+      const h = String(timeHour).padStart(2, '0');
+      const m = String(timeMinute).padStart(2, '0');
+      showDemoToast(`已选择时间: ${period} ${h}:${m}`);
+    }
+
+    // 初始化渲染 Pickers
+    renderDemoDatePicker();
+    renderDemoTimePicker();
   </script>
 </body>
 </html>

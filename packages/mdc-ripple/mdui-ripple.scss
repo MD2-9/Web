@@ -3,7 +3,6 @@
 // Licensed under the Apache License, Version 2.0
 //
 
-.demo-card,
 .preview-img-box,
 .secondary-overlay-panel .rail-nav-item,
 .rail-nav-item,
@@ -14,6 +13,14 @@
 button {
   position: relative;
   overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.demo-card,
+.mdc-card {
+  position: relative;
+  overflow: visible !important;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mdui-ripple-wave {
@@ -32,8 +39,21 @@ button {
   will-change: transform, opacity;
 }
 
+// 大卡片涟漪透明度调高（更透、更细腻，略小于常规按钮涟漪效果）
+.demo-card .mdui-ripple-wave,
+.mdc-card .mdui-ripple-wave,
+[data-mdui-ripple] .mdui-ripple-wave {
+  background-color: rgba(103, 80, 164, 0.06);
+}
+
 .dark-theme .mdui-ripple-wave {
   background-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.dark-theme .demo-card .mdui-ripple-wave,
+.dark-theme .mdc-card .mdui-ripple-wave,
+.dark-theme [data-mdui-ripple] .mdui-ripple-wave {
+  background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
 .mdui-ripple-wave.is-active {

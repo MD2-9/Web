@@ -1,0 +1,15 @@
+{
+  "name": "@material/picker",
+  "version": "0.34.1",
+  "description": "Material Components Web - DatePicker & TimePicker (0px Straight Angle & Monet Colors)",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "style": "mdc-picker.scss",
+  "dependencies": {
+    "@material/base": "^0.34.1",
+    "@material/button": "^0.34.1",
+    "@material/ripple": "^0.34.1",
+    "@material/theme": "^0.34.1",
+    "@material/typography": "^0.34.1"
+  }
+}

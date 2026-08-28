@@ -1,0 +1,350 @@
+//
+// Copyright 2026 unjal <unjal29@outlook.com>
+// Licensed under the Apache License, Version 2.0
+//
+// Material Components Web - DatePicker & TimePicker (0px Straight Angle & Monet Colors)
+//
+
+@import "@material/theme/variables";
+@import "@material/theme/mixins";
+
+// =============================================================================
+// 1. Material DatePicker (日历选择器 - 0px 直角骨架 ✖ 50% 纯圆选中几何)
+// =============================================================================
+.mdc-date-picker {
+  display: inline-flex;
+  flex-direction: column;
+  width: 328px;
+  background-color: var(--mdc-theme-surface, #ffffff);
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  border-radius: 0 !important;
+  user-select: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-family: inherit;
+
+  &__header {
+    background-color: var(--mdc-theme-primary, #6750a4);
+    color: var(--mdc-theme-on-primary, #ffffff);
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__header-year {
+    font-size: 12px;
+    font-weight: 500;
+    opacity: 0.85;
+    letter-spacing: 0.5px;
+  }
+
+  &__header-date {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.2px;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px 4px;
+  }
+
+  &__current-month {
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__nav-btn {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: inherit;
+    border-radius: 50% !important;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.06);
+    }
+  }
+
+  &__weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 8px 12px 4px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    opacity: 0.6;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 4px 12px 14px;
+    gap: 4px 0;
+  }
+
+  &__cell {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+
+    & > span {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50% !important;
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &:hover:not(.is-empty):not(.is-selected) > span {
+      background-color: rgba(103, 80, 164, 0.08);
+      color: var(--mdc-theme-primary);
+    }
+
+    &.is-today:not(.is-selected) > span {
+      border: 1px solid var(--mdc-theme-primary);
+      color: var(--mdc-theme-primary);
+      font-weight: 700;
+    }
+
+    &.is-selected > span {
+      background-color: var(--mdc-theme-primary) !important;
+      color: var(--mdc-theme-on-primary) !important;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    &.is-empty {
+      cursor: default;
+      opacity: 0.25;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 10px 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+}
+
+// =============================================================================
+// 2. Material TimePicker (时钟表盘选择器 - 240px 纯圆表盘 ✖ 指针旋转)
+// =============================================================================
+.mdc-time-picker {
+  display: inline-flex;
+  flex-direction: column;
+  width: 310px;
+  background-color: var(--mdc-theme-surface, #ffffff);
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  border-radius: 0 !important;
+  user-select: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-family: inherit;
+
+  &__header {
+    background-color: var(--mdc-theme-surface-container-high, #f7f2fa);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  &__digital-display {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__digit-box {
+    font-size: 32px;
+    font-weight: 700;
+    padding: 4px 12px;
+    background-color: rgba(0, 0, 0, 0.04);
+    border-radius: 0 !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    line-height: 1.1;
+
+    &.is-active {
+      background-color: var(--mdc-theme-primary, #6750a4);
+      color: var(--mdc-theme-on-primary, #ffffff);
+    }
+  }
+
+  &__colon {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 2px;
+    opacity: 0.6;
+  }
+
+  &__ampm-toggle {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+  }
+
+  &__ampm-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: inherit;
+    transition: all 0.15s ease;
+
+    &.is-active {
+      background-color: var(--mdc-theme-primary, #6750a4);
+      color: var(--mdc-theme-on-primary, #ffffff);
+    }
+  }
+
+  &__dial-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 0;
+  }
+
+  &__clock-face {
+    width: 230px;
+    height: 230px;
+    background-color: var(--mdc-theme-surface-container-high, #f7f2fa);
+    border-radius: 50% !important;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  &__center-pivot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--mdc-theme-primary, #6750a4);
+    border-radius: 50% !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+
+  &__clock-hand {
+    position: absolute;
+    bottom: 50%;
+    left: calc(50% - 1px);
+    width: 2px;
+    height: 88px;
+    background-color: var(--mdc-theme-primary, #6750a4);
+    transform-origin: bottom center;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 5;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: -16px;
+      left: calc(50% - 17px);
+      width: 34px;
+      height: 34px;
+      background-color: var(--mdc-theme-primary, #6750a4);
+      border-radius: 50% !important;
+    }
+  }
+
+  &__number {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 50% !important;
+    z-index: 6;
+    transition: color 0.15s ease;
+
+    &.is-active {
+      color: var(--mdc-theme-on-primary, #ffffff);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 10px 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+}
+
+// =============================================================================
+// 暗色模式主题支持 (Dark Theme Adaptations)
+// =============================================================================
+.dark-theme {
+  .mdc-date-picker,
+  .mdc-time-picker {
+    background-color: var(--mdc-theme-surface-container, #131217);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65);
+  }
+
+  .mdc-date-picker__actions,
+  .mdc-time-picker__actions {
+    border-top-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .mdc-date-picker__nav-btn:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .mdc-time-picker__header {
+    background-color: #19181e;
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .mdc-time-picker__digit-box:not(.is-active) {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #e6e1e5;
+  }
+
+  .mdc-time-picker__ampm-toggle {
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .mdc-time-picker__clock-face {
+    background-color: #1c1a22;
+  }
+}
