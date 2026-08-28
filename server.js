@@ -22,7 +22,7 @@ import fs from 'fs';
 import path from 'path';
 
 const PORT = 2929;
-const HOST = '127.0.0.1';
+const HOST = '0.0.0.0';
 const ROOT_DIR = path.resolve();
 
 const MIME_TYPES = {
