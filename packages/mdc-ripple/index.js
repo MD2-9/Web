@@ -155,9 +155,14 @@ export {
 
 export { createRipple, attachRipples } from './mdui-ripple';
 export { 
+  MduiFlatEdgeEffect,
+  MduiFlatEdgeEffectManager,
+  attachFlatEdgeEffect,
   MduiEdgeEffect, 
   MduiEdgeEffectManager, 
   attachEdgeEffect,
+  MduiOverscrollRipple,
   MduiEdgeEffect as MduiOverscrollGlow, 
   attachEdgeEffect as attachOverscrollGlow 
 } from './mdui-overscroll-glow';
+

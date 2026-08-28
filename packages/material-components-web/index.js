@@ -37,7 +37,16 @@ import * as notchedOutline from '@material/notched-outline/index';
 import * as radio from '@material/radio/index';
 import * as ripple from '@material/ripple/index';
 import { createRipple, attachRipples } from '@material/ripple/mdui-ripple';
-import { MduiOverscrollGlow, attachOverscrollGlow } from '@material/ripple/mdui-overscroll-glow';
+import { 
+  MduiFlatEdgeEffect,
+  MduiFlatEdgeEffectManager,
+  attachFlatEdgeEffect,
+  MduiEdgeEffect,
+  MduiEdgeEffectManager,
+  attachEdgeEffect,
+  MduiOverscrollGlow,
+  attachOverscrollGlow
+} from '@material/ripple/mdui-overscroll-glow';
 import * as select from '@material/select/index';
 import * as selectionControl from '@material/selection-control/index';
 import * as slider from '@material/slider/index';
@@ -104,7 +113,11 @@ export {
   ripple,
   createRipple,
   attachRipples,
+  MduiFlatEdgeEffect,
+  MduiFlatEdgeEffectManager,
+  attachFlatEdgeEffect,
   MduiEdgeEffect,
+  MduiEdgeEffectManager,
   attachEdgeEffect,
   MduiOverscrollGlow,
   attachOverscrollGlow,

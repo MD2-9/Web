@@ -116,33 +116,35 @@ const picker = new MdcMonetPicker({
 
 ---
 
-### 2. 📱 Android 5.0 ~ 11.0 触顶/触底边缘水波纹泛光 (`@material/ripple`)
+### 2. 📱 Android 5.0 ~ 11.0 扁平化边界临界动效 (Flat Arc EdgeEffect / 边界水波纹)
 
-* **功能定位**：完美重现 Android 5.0 (Lollipop) 至 Android 11 (R) 系统经典的 `EdgeEffect` 边缘水波纹与泛光弧线。**自动适用于全局页面视口以及所有内部可滚动容器**（如侧边栏抽屉、模态弹窗滚动区、手风琴内容区等）。
+* **功能定位**：1:1 严格复刻 Android 5.0 (Lollipop) 至 Android 11.0 (R) AOSP 系统的 `android.widget.EdgeEffect` 扁平化半椭圆弧顶临界动效。配色与 Material Ripple 同源（纯色微透，无发光/光晕），支持手指实时阻尼拉伸 (`onPull`)、触点横向偏置 (`mDisplacement`)、滚轮/惯性冲击吸能 (`onAbsorb`) 与 Material 经典 Fast-Out Slow-In 回弹消退 (`onRelease`)。
 * **引入路径**：
   * SCSS: `@import "@material/ripple/mdui-overscroll-glow";`
-  * JS: `import { MduiOverscrollGlow, attachOverscrollGlow } from '@material/ripple';`
+  * JS: `import { MduiFlatEdgeEffect, attachFlatEdgeEffect, MduiEdgeEffect, attachEdgeEffect } from '@material/ripple';`
 
 #### HTML 结构 (自动挂载或手动声明)
 ```html
-<!-- 全局视口泛光弧线 (会自动创建，亦可显式挂载) -->
-<div class="md1-overscroll-glow md1-overscroll-glow--top md1-overscroll-glow--fixed">
-  <div class="md1-overscroll-glow__arc"></div>
-</div>
-<div class="md1-overscroll-glow md1-overscroll-glow--bottom md1-overscroll-glow--fixed">
-  <div class="md1-overscroll-glow__arc"></div>
+<!-- 全局视口/容器边界弧顶 (JS 自动注入 SVG 贝塞尔穹顶) -->
+<div class="md1-overscroll-edge-container md1-overscroll-edge-container--fixed">
+  <svg class="md1-overscroll-edge-arc md1-overscroll-edge-arc--top" viewBox="0 0 1000 100" preserveAspectRatio="none">
+    <path d="M 0 0 C 250 120, 750 120, 1000 0 Z"></path>
+  </svg>
+  <svg class="md1-overscroll-edge-arc md1-overscroll-edge-arc--bottom" viewBox="0 0 1000 100" preserveAspectRatio="none">
+    <path d="M 0 100 C 250 -20, 750 -20, 1000 100 Z"></path>
+  </svg>
 </div>
 ```
 
 #### JavaScript 调用
 ```javascript
-import { attachOverscrollGlow } from '@material/ripple';
+import { attachFlatEdgeEffect } from '@material/ripple';
 
-// 一键初始化全页面与所有滚动容器的边缘水波纹监听
-const overscrollController = attachOverscrollGlow();
+// 1. 一键初始化全页面视口与所有内部滚动容器的边界临界动效
+const edgeManager = attachFlatEdgeEffect();
 
-// 亦可手动触发特定容器的边缘泛光
-overscrollController.triggerGlow(document.querySelector('.my-scroll-box'), true /* isTop */, 1.0 /* intensity */);
+// 2. 手动触发特定方向的边界冲击回弹
+edgeManager.triggerGlow(document.querySelector('.my-scroll-box'), true /* isTop */, 1.2 /* intensity */);
 ```
 
 ---

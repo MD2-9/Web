@@ -54,18 +54,27 @@ export function createRipple(e, container) {
  * 优先响应最近子交互元素（如按钮、标签），点击卡片空白区才作用于卡片自身，绝不向上重叠触发
  */
 export function attachRipples() {
-  const RIPPLE_SELECTOR = '.mdc-button, button, .mdc-icon-button, .segmented-button, .surface-token-chip, .theme-tile, .rail-nav-item, .preview-img-box, .expansion-header';
+  const INNER_INTERACTIVE_SELECTOR = '.mdc-button, button, .mdc-icon-button, .segmented-button, .surface-token-chip, .theme-tile, .rail-nav-item, .preview-img-box, .expansion-header, .md1-tab-item, .mdc-fab';
+  const CARD_CONTAINER_SELECTOR = '.demo-card, .mdc-card, [data-mdui-ripple]';
 
   window.addEventListener('pointerdown', (e) => {
-    // 忽略表单输入框、单选、复选、滑块本身
-    if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-checkbox, .mdc-radio')) {
+    // 1. 忽略原生输入框、单选、复选、滑块与自定义选择框
+    if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-checkbox, .mdc-radio, .mdc-select-custom')) {
       return;
     }
 
-    // 查找当前点击坐标下最近的涟漪目标容器（按钮优先于卡片）
-    const target = e.target.closest(RIPPLE_SELECTOR);
-    if (!target) return;
+    // 2. 优先查找最内层的具体交互元素（如按钮、标签、选项等）
+    const innerTarget = e.target.closest(INNER_INTERACTIVE_SELECTOR);
+    if (innerTarget) {
+      createRipple(e, innerTarget);
+      return; // 精确隔离：绝不向外冒泡触发外部卡片的水波纹！
+    }
 
-    createRipple(e, target);
+    // 3. 若未点击在内部具体交互元素上，且点击在卡片空白区，则仅触发当前卡片自身的水波纹
+    const cardTarget = e.target.closest(CARD_CONTAINER_SELECTOR);
+    if (cardTarget) {
+      createRipple(e, cardTarget);
+    }
   });
 }
+
