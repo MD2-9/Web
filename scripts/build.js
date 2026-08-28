@@ -94,10 +94,31 @@ const drawerAppbarFix = `
   border-radius: 0 !important;
 }
 
-/* 主题背景 Tab 条在宽屏/大屏响应式自适应居中 */
+/* 主题背景 Tab 条在宽屏/大屏响应式自适应居中与纯直角规范 */
+.mdui-tab.mdui-tab-centered,
+.mdui-tab-centered {
+  display: -webkit-box !important;
+  display: -webkit-flex !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-pack: center !important;
+  -webkit-justify-content: center !important;
+  -ms-flex-pack: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+.mdui-tab.mdui-tab-centered > a,
+.mdui-tab-centered > a {
+  float: none !important;
+  display: -webkit-inline-box !important;
+  display: -webkit-inline-flex !important;
+  display: -ms-inline-flexbox !important;
+  display: inline-flex !important;
+}
+
 @media (min-width: 600px) {
-  .mdui-tab.mdui-tab-scrollable,
-  .mdui-tab.mdui-tab-centered {
+  .mdui-tab.mdui-tab-scrollable.mdui-tab-centered,
+  .mdui-tab.mdui-tab-scrollable.mdui-tab-responsive-centered {
     display: -webkit-box !important;
     display: -webkit-flex !important;
     display: -ms-flexbox !important;
@@ -106,6 +127,15 @@ const drawerAppbarFix = `
     -webkit-justify-content: center !important;
     -ms-flex-pack: center !important;
     justify-content: center !important;
+    text-align: center !important;
+  }
+  .mdui-tab.mdui-tab-scrollable.mdui-tab-centered > a,
+  .mdui-tab.mdui-tab-scrollable.mdui-tab-responsive-centered > a {
+    float: none !important;
+    display: -webkit-inline-box !important;
+    display: -webkit-inline-flex !important;
+    display: -ms-inline-flexbox !important;
+    display: inline-flex !important;
   }
 }
 
@@ -433,23 +463,6 @@ console.log('3. Integrating Monet & Tab content animation into JS bundles...');
 
 function updateTabSetActiveInJs(rawJs) {
   const targetOld = `            if (index === this$1.activeIndex && !this$1.isDisabled($tab)) {
-                if (!$tab.hasClass('mdui-tab-active')) {
-                    this$1.triggerEvent('change', this$1.$element, {
-                        index: this$1.activeIndex,
-                        id: targetId.substr(1),
-                    });
-                    this$1.triggerEvent('show', $tab);
-                    $tab.addClass('mdui-tab-active');
-                }
-                $(targetId).show();
-                this$1.setIndicatorPosition();
-            }
-            else {
-                $tab.removeClass('mdui-tab-active');
-                $(targetId).hide();
-            }`;
-
-  const targetNew = `            if (index === this$1.activeIndex && !this$1.isDisabled($tab)) {
                 var $target = $(targetId);
                 if (!$tab.hasClass('mdui-tab-active')) {
                     this$1.triggerEvent('change', this$1.$element, {
@@ -470,6 +483,38 @@ function updateTabSetActiveInJs(rawJs) {
             else {
                 $tab.removeClass('mdui-tab-active');
                 $(targetId).hide().removeClass('mdui-tab-panel-active');
+            }`;
+
+  const targetNew = `            var isHashTarget = targetId && targetId.indexOf('#') === 0 && targetId.length > 1;
+            if (index === this$1.activeIndex && !this$1.isDisabled($tab)) {
+                if (!$tab.hasClass('mdui-tab-active')) {
+                    this$1.triggerEvent('change', this$1.$element, {
+                        index: this$1.activeIndex,
+                        id: isHashTarget ? targetId.substr(1) : '',
+                    });
+                    this$1.triggerEvent('show', $tab);
+                    $tab.addClass('mdui-tab-active');
+                    if (isHashTarget) {
+                        try {
+                            var $target = $(targetId);
+                            if ($target.length) {
+                                $target.removeClass('mdui-tab-panel-active');
+                                if ($target[0]) void $target[0].offsetWidth;
+                                $target.addClass('mdui-tab-panel-active');
+                            }
+                        } catch(e) {}
+                    }
+                }
+                if (isHashTarget) {
+                    try { $(targetId).show(); } catch(e) {}
+                }
+                this$1.setIndicatorPosition();
+            }
+            else {
+                $tab.removeClass('mdui-tab-active');
+                if (isHashTarget) {
+                    try { $(targetId).hide().removeClass('mdui-tab-panel-active'); } catch(e) {}
+                }
             }`;
 
   return rawJs.replace(targetOld, targetNew);
