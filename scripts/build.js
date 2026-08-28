@@ -93,7 +93,7 @@ body.drawer-mode-edge #drawer-edge-hover-zone {
   display: block;
 }
 
-/* 模式 1: 边缘悬浮唤出 (未 Hover 时完全隐藏在屏幕外 translateX(-100%)，Hover 到边缘立即平滑滑出) */
+/* 模式 1: 边缘悬浮唤出 (未 Hover 时完全收在屏幕外 translateX(-100%)，Hover 到边缘立即滑出并进入完整 260px 展开态) */
 body.drawer-mode-edge {
   padding-left: 0 !important;
 }
@@ -106,6 +106,18 @@ body.drawer-mode-edge .mdui-drawer {
 }
 body.drawer-mode-edge .mdui-drawer.edge-hover-active {
   transform: translateX(0) !important;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.3) !important;
+}
+/* 模式 1 展开时拥有与模式 2 展开态完全一致的全部文本与二级折叠菜单 */
+body.drawer-mode-edge .mdui-drawer .drawer-header-text,
+body.drawer-mode-edge .mdui-drawer .mdui-list-item-content,
+body.drawer-mode-edge .mdui-drawer .mdui-collapse-item-arrow,
+body.drawer-mode-edge .mdui-drawer .mdui-subheader,
+body.drawer-mode-edge .mdui-drawer .drawer-footer-text {
+  opacity: 1 !important;
+}
+body.drawer-mode-edge .mdui-drawer .drawer-rail-hidden {
+  display: block !important;
 }
 
 /* 模式 2: 固定显示单图标 (Persistent Mini Rail) */
