@@ -652,9 +652,9 @@
 
     <!-- 6. 对话框与菜单 -->
     <div id="dialogs" class="demo-section">
-      <div class="mdui-typo-headline mdui-m-b-2">6. 直角对话框、菜单与浮层（纯直角 0px，图层置顶修复）</div>
+      <div class="mdui-typo-headline mdui-m-b-2">6. 直角对话框、菜单与浮层（纯直角 0px，图层置顶与全展开修复）</div>
 
-      <div class="mdui-card mdui-p-a-3 demo-card">
+      <div class="mdui-card mdui-p-a-3 demo-card" style="overflow: visible;">
         <button class="mdui-btn mdui-btn-raised mdui-color-theme mdui-ripple mdui-m-r-2" mdui-dialog="{target: '#demo-dialog'}">
           打开直角对话框
         </button>
@@ -666,12 +666,42 @@
         <button class="mdui-btn mdui-btn-raised mdui-ripple" id="btn-snackbar">
           弹出直角 Snackbar
         </button>
+
+        <!-- 纯直角 Menu (作为按钮的 sibling，卡片 overflow: visible 确保完全展开不截断) -->
+        <ul class="mdui-menu" id="demo-menu">
+          <li class="mdui-menu-item">
+            <a href="javascript:;" class="mdui-ripple">
+              <i class="mdui-menu-item-icon mdui-icon material-icons">content_cut</i>剪切
+            </a>
+          </li>
+          <li class="mdui-menu-item">
+            <a href="javascript:;" class="mdui-ripple">
+              <i class="mdui-menu-item-icon mdui-icon material-icons">content_copy</i>复制
+            </a>
+          </li>
+          <li class="mdui-menu-item">
+            <a href="javascript:;" class="mdui-ripple">
+              <i class="mdui-menu-item-icon mdui-icon material-icons">content_paste</i>粘贴
+            </a>
+          </li>
+          <li class="mdui-divider"></li>
+          <li class="mdui-menu-item">
+            <a href="javascript:;" class="mdui-ripple">
+              <i class="mdui-menu-item-icon mdui-icon material-icons">select_all</i>全选
+            </a>
+          </li>
+          <li class="mdui-menu-item">
+            <a href="javascript:;" class="mdui-ripple">
+              <i class="mdui-menu-item-icon mdui-icon material-icons">settings</i>设置
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
 
   </div>
 
-  <!-- 纯直角 Dialog (置于根节点，避免 overflow 截断) -->
+  <!-- 纯直角 Dialog (Dialog 无需与按钮 sibling) -->
   <div class="mdui-dialog" id="demo-dialog">
     <div class="mdui-dialog-title">经典直角对话框</div>
     <div class="mdui-dialog-content">
@@ -682,36 +712,6 @@
       <button class="mdui-btn mdui-ripple mdui-color-theme" mdui-dialog-confirm>确定</button>
     </div>
   </div>
-
-  <!-- 纯直角 Menu (置于根节点，具备最高 z-index，绝不被任何按钮或卡片遮挡) -->
-  <ul class="mdui-menu" id="demo-menu">
-    <li class="mdui-menu-item">
-      <a href="javascript:;" class="mdui-ripple">
-        <i class="mdui-menu-item-icon mdui-icon material-icons">content_cut</i>剪切
-      </a>
-    </li>
-    <li class="mdui-menu-item">
-      <a href="javascript:;" class="mdui-ripple">
-        <i class="mdui-menu-item-icon mdui-icon material-icons">content_copy</i>复制
-      </a>
-    </li>
-    <li class="mdui-menu-item">
-      <a href="javascript:;" class="mdui-ripple">
-        <i class="mdui-menu-item-icon mdui-icon material-icons">content_paste</i>粘贴
-      </a>
-    </li>
-    <li class="mdui-divider"></li>
-    <li class="mdui-menu-item">
-      <a href="javascript:;" class="mdui-ripple">
-        <i class="mdui-menu-item-icon mdui-icon material-icons">select_all</i>全选
-      </a>
-    </li>
-    <li class="mdui-menu-item">
-      <a href="javascript:;" class="mdui-ripple">
-        <i class="mdui-menu-item-icon mdui-icon material-icons">settings</i>设置
-      </a>
-    </li>
-  </ul>
 
   <script src="./js/mdui.js"></script>
   <script>
@@ -761,6 +761,7 @@
 
     function setClassicPrimary(colorName) {
       currentClassicColor = colorName;
+      // 移除旧的 19 色 primary 类
       document.body.className = document.body.className
         .replace(/mdui-theme-primary-[a-z-]+/g, '')
         .trim();
@@ -786,6 +787,11 @@
         setClassicPrimary(currentClassicColor);
       } else {
         label.textContent = `当前: 莫奈 (${currentColorMode === 'single' ? '单色' : (currentColorMode === 'dual' ? '双色' : '三色')}) 动态模式`;
+        // 进入莫奈模式时，移除 body 上的原生 19 色类名，确保标题栏和全站元素完全由 Monet 变量驱动
+        document.body.className = document.body.className
+          .replace(/mdui-theme-primary-[a-z-]+/g, '')
+          .replace(/mdui-theme-accent-[a-z-]+/g, '')
+          .trim();
         classicControls.style.display = 'none';
         monetControls.style.display = 'block';
         paletteView.style.display = 'block';
