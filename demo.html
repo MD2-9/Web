@@ -282,7 +282,10 @@
     </div>
   </header>
 
-  <!-- 左侧抽屉栏 (支持 M3 Navigation Rail 仅图标模式 ✖ 二级菜单 ✖ 底部切换选项) -->
+  <!-- 模式 1: 屏幕最左侧悬浮感应热区 -->
+  <div id="drawer-edge-hover-zone"></div>
+
+  <!-- 左侧抽屉栏 (支持三大形态 ✖ 二级菜单 ✖ 底部完备配置) -->
   <div class="mdui-drawer mdui-drawer-close" id="left-drawer" style="display: flex; flex-direction: column; justify-content: space-between;">
     <!-- 抽屉栏上部滚动内容 -->
     <div style="overflow-y: auto; flex: 1;">
@@ -359,14 +362,26 @@
       </div>
     </div>
 
-    <!-- 抽屉栏底部模式控制选项 (Rail 紧凑 / 常驻 Expanded / 模态 Modal) -->
+    <!-- 抽屉栏底部模式控制与配置选项 -->
     <div class="mdui-p-a-2" style="border-top: 1px solid var(--mdui-monet-outline-variant, rgba(0,0,0,0.08)); background: var(--mdui-monet-surface-container, rgba(0,0,0,0.02));">
-      <div class="drawer-footer-options">
-        <div class="mdui-typo-caption mdui-m-b-1"><strong>侧边栏显示形态:</strong></div>
-        <div class="segmented-btn-group" id="drawer-mode-group" style="width: 100%; display: flex;">
-          <button type="button" data-mode="modal" class="active" style="flex: 1; padding: 4px 2px; font-size: 11px;">模态</button>
-          <button type="button" data-mode="rail" style="flex: 1; padding: 4px 2px; font-size: 11px;">仅图标</button>
-          <button type="button" data-mode="expanded" style="flex: 1; padding: 4px 2px; font-size: 11px;">常驻</button>
+      <div class="drawer-footer-text">
+        <div class="mdui-typo-caption mdui-m-b-1"><strong>侧边栏模式切换:</strong></div>
+        <div class="segmented-btn-group mdui-m-b-1" id="drawer-3mode-group" style="width: 100%; display: flex;">
+          <button type="button" data-mode="edge" style="flex: 1; padding: 4px 1px; font-size: 10.5px;" title="靠近屏幕边缘悬浮滑出">1.边缘悬浮</button>
+          <button type="button" data-mode="rail" style="flex: 1; padding: 4px 1px; font-size: 10.5px;" title="固定显示单图标">2.单图标Rail</button>
+          <button type="button" data-mode="classic" class="active" style="flex: 1; padding: 4px 1px; font-size: 10.5px;" title="原版抽屉栏">3.原版抽屉</button>
+        </div>
+
+        <!-- 模式 2 专属控制区 -->
+        <div id="rail-config-box" style="display: none; flex-direction: column; gap: 4px; padding-top: 4px; border-top: 1px dashed rgba(0,0,0,0.1);">
+          <label class="mdui-switch" style="font-size: 11px; display: flex; align-items: center; gap: 6px;">
+            <input type="checkbox" id="check-hover-expand" checked/>
+            <i class="mdui-switch-icon"></i>
+            <span>Hover 自动展开</span>
+          </label>
+          <button id="btn-toggle-rail-expand" class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-color-theme mdui-ripple mdui-m-t-1" style="font-size: 11px; width: 100%;">
+            展开 / 收纳侧边栏
+          </button>
         </div>
       </div>
     </div>
@@ -1526,49 +1541,112 @@
       }
     };
 
-    // 侧边栏抽屉与 M3 Navigation Rail 模式控制
+    // 侧边栏三大形态系统控制
     const drawerElement = document.getElementById('left-drawer');
+    const edgeHoverZone = document.getElementById('drawer-edge-hover-zone');
+    const railConfigBox = document.getElementById('rail-config-box');
+    const checkHoverExpand = document.getElementById('check-hover-expand');
+    const btnToggleRailExpand = document.getElementById('btn-toggle-rail-expand');
     const drawerInst = new mdui.Drawer('#left-drawer', { overlay: true });
-    let currentDrawerMode = 'modal'; // 'modal' | 'rail' | 'expanded'
+    
+    let currentDrawerMode = 'classic'; // 'edge' | 'rail' | 'classic'
+    let isRailManuallyExpanded = false;
 
-    document.getElementById('btn-open-drawer').onclick = () => {
-      if (currentDrawerMode === 'modal') {
-        drawerInst.toggle();
+    // 模式 1: 边缘悬浮唤出
+    let edgeLeaveTimer = null;
+    edgeHoverZone.addEventListener('mouseenter', () => {
+      if (currentDrawerMode === 'edge') {
+        clearTimeout(edgeLeaveTimer);
+        drawerElement.classList.add('edge-hover-active');
+      }
+    });
+    drawerElement.addEventListener('mouseenter', () => {
+      if (currentDrawerMode === 'edge') {
+        clearTimeout(edgeLeaveTimer);
+        drawerElement.classList.add('edge-hover-active');
+      }
+    });
+    drawerElement.addEventListener('mouseleave', () => {
+      if (currentDrawerMode === 'edge') {
+        edgeLeaveTimer = setTimeout(() => {
+          drawerElement.classList.remove('edge-hover-active');
+        }, 250);
+      }
+    });
+
+    // 模式 2 配置: 是否启用 hover 自动展开
+    checkHoverExpand.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        document.body.classList.add('drawer-hover-expand-enabled');
       } else {
-        // 在常驻/Rail 模式下点击菜单图标可在 Rail 与 Expanded 之间切换
-        const nextMode = currentDrawerMode === 'rail' ? 'expanded' : 'rail';
-        setDrawerMode(nextMode);
+        document.body.classList.remove('drawer-hover-expand-enabled');
+      }
+    });
+
+    // 模式 2 底部展开/收纳按钮
+    btnToggleRailExpand.onclick = () => {
+      isRailManuallyExpanded = !isRailManuallyExpanded;
+      if (isRailManuallyExpanded) {
+        drawerElement.classList.add('is-manually-expanded');
+        btnToggleRailExpand.textContent = '收纳侧边栏 (72px)';
+      } else {
+        drawerElement.classList.remove('is-manually-expanded');
+        btnToggleRailExpand.textContent = '展开侧边栏 (260px)';
       }
     };
 
-    function setDrawerMode(mode) {
+    // 顶部汉堡菜单按钮
+    document.getElementById('btn-open-drawer').onclick = () => {
+      if (currentDrawerMode === 'classic') {
+        drawerInst.toggle();
+      } else if (currentDrawerMode === 'rail') {
+        btnToggleRailExpand.click();
+      } else if (currentDrawerMode === 'edge') {
+        drawerElement.classList.toggle('edge-hover-active');
+      }
+    };
+
+    function setDrawer3Mode(mode) {
       currentDrawerMode = mode;
-      document.querySelectorAll('#drawer-mode-group button').forEach(b => {
+      document.querySelectorAll('#drawer-3mode-group button').forEach(b => {
         if (b.getAttribute('data-mode') === mode) b.classList.add('active');
         else b.classList.remove('active');
       });
 
-      document.body.classList.remove('drawer-mode-rail', 'drawer-mode-expanded', 'mdui-drawer-body-left');
-      drawerElement.classList.remove('drawer-rail', 'mdui-drawer-open', 'mdui-drawer-close');
+      // 清理旧状态
+      document.body.classList.remove('drawer-mode-edge', 'drawer-mode-rail', 'drawer-mode-classic', 'drawer-hover-expand-enabled');
+      drawerElement.classList.remove('edge-hover-active', 'is-manually-expanded', 'mdui-drawer-open', 'mdui-drawer-close');
+      isRailManuallyExpanded = false;
+      btnToggleRailExpand.textContent = '展开侧边栏 (260px)';
 
-      if (mode === 'modal') {
+      if (mode === 'edge') {
+        // 1. 边缘悬浮唤出
+        drawerInst.close();
+        drawerInst.options.overlay = false;
+        document.body.classList.add('drawer-mode-edge');
+        drawerElement.classList.add('mdui-drawer-open');
+        railConfigBox.style.display = 'none';
+      } else if (mode === 'rail') {
+        // 2. 固定显示单图标 (可配 hover 展开)
+        drawerInst.close();
+        drawerInst.options.overlay = false;
+        document.body.classList.add('drawer-mode-rail');
+        if (checkHoverExpand.checked) {
+          document.body.classList.add('drawer-hover-expand-enabled');
+        }
+        drawerElement.classList.add('mdui-drawer-open');
+        railConfigBox.style.display = 'flex';
+      } else {
+        // 3. 原版侧边栏 (遮罩模态)
         drawerInst.options.overlay = true;
         drawerElement.classList.add('mdui-drawer-close');
-      } else if (mode === 'rail') {
-        drawerInst.close();
-        drawerInst.options.overlay = false;
-        drawerElement.classList.add('drawer-rail', 'mdui-drawer-open');
-        document.body.classList.add('drawer-mode-rail', 'mdui-drawer-body-left');
-      } else if (mode === 'expanded') {
-        drawerInst.close();
-        drawerInst.options.overlay = false;
-        drawerElement.classList.add('mdui-drawer-open');
-        document.body.classList.add('drawer-mode-expanded', 'mdui-drawer-body-left');
+        document.body.classList.add('drawer-mode-classic');
+        railConfigBox.style.display = 'none';
       }
     }
 
-    document.querySelectorAll('#drawer-mode-group button').forEach(btn => {
-      btn.onclick = () => setDrawerMode(btn.getAttribute('data-mode'));
+    document.querySelectorAll('#drawer-3mode-group button').forEach(btn => {
+      btn.onclick = () => setDrawer3Mode(btn.getAttribute('data-mode'));
     });
   </script>
 </body>

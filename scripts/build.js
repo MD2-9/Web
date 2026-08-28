@@ -65,7 +65,9 @@ css = css.replace(/border-radius:\s*2px;/g, 'border-radius: 0;');
 
 // C. Fix Drawer Top under Appbar for all screens including ultra-wide desktop
 const drawerAppbarFix = `
-/* 抽屉栏完美贴合与 M3 Navigation Rail (迷你图标模式) 平滑展开系统 */
+/* =============================================================================
+ * 侧边栏三大形态系统 (1. 边缘悬浮唤出 / 2. 固定单图标 Rail / 3. 原版侧边栏)
+ * ============================================================================= */
 .mdui-drawer {
   top: 0 !important;
   height: 100% !important;
@@ -76,80 +78,101 @@ const drawerAppbarFix = `
               box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* 抽屉栏 Navigation Rail 迷你紧凑图标模式 (72px 仅显示居中图标) */
-.mdui-drawer.drawer-rail {
-  width: 72px !important;
-  overflow-x: hidden !important;
-  box-shadow: 1px 0 3px rgba(0,0,0,0.08) !important;
+/* 屏幕最左侧悬浮感应热区 (用于模式 1: 边缘悬浮唤出) */
+#drawer-edge-hover-zone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 100%;
+  z-index: 9998;
+  display: none;
+  background: transparent;
 }
-.mdui-drawer.drawer-rail:hover {
-  width: 260px !important;
-  box-shadow: 2px 0 12px rgba(0,0,0,0.2) !important;
-  z-index: 9999 !important;
-}
-.mdui-drawer.drawer-rail .drawer-header-text,
-.mdui-drawer.drawer-rail .mdui-list-item-content,
-.mdui-drawer.drawer-rail .mdui-collapse-item-arrow,
-.mdui-drawer.drawer-rail .mdui-subheader,
-.mdui-drawer.drawer-rail .drawer-footer-options {
-  opacity: 0;
-  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap;
-}
-.mdui-drawer.drawer-rail:hover .drawer-header-text,
-.mdui-drawer.drawer-rail:hover .mdui-list-item-content,
-.mdui-drawer.drawer-rail:hover .mdui-collapse-item-arrow,
-.mdui-drawer.drawer-rail:hover .mdui-subheader,
-.mdui-drawer.drawer-rail:hover .drawer-footer-options {
-  opacity: 1;
-}
-.mdui-drawer.drawer-rail .mdui-list-item-icon {
-  margin-right: 0 !important;
-  margin-left: 8px !important;
-}
-.mdui-drawer.drawer-rail:hover .mdui-list-item-icon {
-  margin-left: 0 !important;
-  margin-right: 16px !important;
-}
-.mdui-drawer.drawer-rail .drawer-rail-hidden {
-  display: none !important;
-}
-.mdui-drawer.drawer-rail:hover .drawer-rail-hidden {
-  display: block !important;
+body.drawer-mode-edge #drawer-edge-hover-zone {
+  display: block;
 }
 
-/* 桌面常驻时根据 Rail / Expanded 自动适配主内容左边距 */
+/* 模式 1: 边缘悬浮唤出 (未 Hover 时完全隐藏在屏幕外 translateX(-100%)，Hover 到边缘立即平滑滑出) */
+body.drawer-mode-edge {
+  padding-left: 0 !important;
+}
+body.drawer-mode-edge .mdui-drawer {
+  width: 260px !important;
+  transform: translateX(-100%) !important;
+  box-shadow: 2px 0 16px rgba(0,0,0,0.2) !important;
+  z-index: 9999 !important;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+body.drawer-mode-edge .mdui-drawer.edge-hover-active {
+  transform: translateX(0) !important;
+}
+
+/* 模式 2: 固定显示单图标 (Persistent Mini Rail) */
+body.drawer-mode-rail .mdui-drawer {
+  width: 72px !important;
+  transform: translateX(0) !important;
+  overflow-x: hidden !important;
+  box-shadow: 1px 0 3px rgba(0,0,0,0.08) !important;
+  z-index: 100 !important;
+}
 body.drawer-mode-rail {
   padding-left: 72px !important;
   transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-body.drawer-mode-expanded {
-  padding-left: 260px !important;
-  transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-@media (max-width: 1023.9px) {
-  body.drawer-mode-rail,
-  body.drawer-mode-expanded {
-    padding-left: 0 !important;
-  }
+
+/* 模式 2-A: 支持配置 Hover 后展开 (当开启 enable-hover-expand 时) */
+body.drawer-mode-rail.drawer-hover-expand-enabled .mdui-drawer:hover,
+body.drawer-mode-rail .mdui-drawer.is-manually-expanded {
+  width: 260px !important;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.25) !important;
+  z-index: 9999 !important;
 }
 
-/* 仅在桌面端桌面常驻（body-left 且非全高）时，挂载在标题栏下方 */
-.mdui-drawer-body-left:not(.mdui-drawer-full-height) .mdui-drawer:not(.mdui-drawer-overlay):not(.mdui-drawer-close) {
-  top: 56px !important;
-  height: calc(100% - 56px) !important;
+/* 模式 2 下单图标收纳状态隐藏文本，展开时平滑显示 */
+body.drawer-mode-rail .drawer-header-text,
+body.drawer-mode-rail .mdui-list-item-content,
+body.drawer-mode-rail .mdui-collapse-item-arrow,
+body.drawer-mode-rail .mdui-subheader,
+body.drawer-mode-rail .drawer-footer-text {
+  opacity: 0;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
 }
-@media (min-width: 600px) {
-  .mdui-drawer-body-left:not(.mdui-drawer-full-height) .mdui-drawer:not(.mdui-drawer-overlay):not(.mdui-drawer-close) {
-    top: 64px !important;
-    height: calc(100% - 64px) !important;
-  }
+body.drawer-mode-rail.drawer-hover-expand-enabled .mdui-drawer:hover .drawer-header-text,
+body.drawer-mode-rail.drawer-hover-expand-enabled .mdui-drawer:hover .mdui-list-item-content,
+body.drawer-mode-rail.drawer-hover-expand-enabled .mdui-drawer:hover .mdui-collapse-item-arrow,
+body.drawer-mode-rail.drawer-hover-expand-enabled .mdui-drawer:hover .mdui-subheader,
+body.drawer-mode-rail.drawer-hover-expand-enabled .mdui-drawer:hover .drawer-footer-text,
+body.drawer-mode-rail .mdui-drawer.is-manually-expanded .drawer-header-text,
+body.drawer-mode-rail .mdui-drawer.is-manually-expanded .mdui-list-item-content,
+body.drawer-mode-rail .mdui-drawer.is-manually-expanded .mdui-collapse-item-arrow,
+body.drawer-mode-rail .mdui-drawer.is-manually-expanded .mdui-subheader,
+body.drawer-mode-rail .mdui-drawer.is-manually-expanded .drawer-footer-text {
+  opacity: 1;
 }
-@media (orientation: landscape) and (max-width: 959.9px) {
-  .mdui-drawer-body-left:not(.mdui-drawer-full-height) .mdui-drawer:not(.mdui-drawer-overlay):not(.mdui-drawer-close) {
-    top: 48px !important;
-    height: calc(100% - 48px) !important;
-  }
+
+body.drawer-mode-rail .mdui-list-item-icon {
+  margin-right: 0 !important;
+  margin-left: 8px !important;
+}
+body.drawer-mode-rail.drawer-hover-expand-enabled .mdui-drawer:hover .mdui-list-item-icon,
+body.drawer-mode-rail .mdui-drawer.is-manually-expanded .mdui-list-item-icon {
+  margin-left: 0 !important;
+  margin-right: 16px !important;
+}
+
+body.drawer-mode-rail .drawer-rail-hidden {
+  display: none !important;
+}
+body.drawer-mode-rail.drawer-hover-expand-enabled .mdui-drawer:hover .drawer-rail-hidden,
+body.drawer-mode-rail .mdui-drawer.is-manually-expanded .drawer-rail-hidden {
+  display: block !important;
+}
+
+/* 模式 3: 原版侧边栏 (Classic Modal Overlay Drawer) */
+body.drawer-mode-classic {
+  padding-left: 0 !important;
 }
 
 /* 抽屉二级菜单缩进与样式 */
