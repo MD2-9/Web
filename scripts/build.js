@@ -18,7 +18,7 @@ await esbuild.build({
 const monetIifeRaw = fs.readFileSync('dist/monet.iife.js', 'utf8');
 
 // 2. Modify and update CSS
-console.log('2. Updating CSS (Google Sans Flex + Pure Angular & Circle + Monet Dynamic Colors + Isolation + Menu Fix)...');
+console.log('2. Updating CSS (Google Sans Flex + Pure Angular & Circle + Monet Dynamic Colors + Tab Content Animation + Isolation + Menu Fix)...');
 let css = fs.readFileSync('css/mdui.css', 'utf8');
 
 // A. Replace font-family: Roboto with Google Sans Flex
@@ -86,10 +86,27 @@ const drawerAppbarFix = `
   border-radius: 0 !important;
   box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12) !important;
 }
+
+/* MDUI Tab 绑定内容容器平滑切换动画 (Material Fade & Slide-In) */
+.mdui-tab-panel-active {
+  animation: mduiTabPanelFadeIn 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+}
+@keyframes mduiTabPanelFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 `;
 
 if (!css.includes('抽屉栏在标题栏下方留空')) {
   css += '\n' + drawerAppbarFix;
+} else if (!css.includes('mduiTabPanelFadeIn')) {
+  css = css.replace('.mdui-menu {', '/* Tab 切换动画 */\n.mdui-tab-panel-active {\n  animation: mduiTabPanelFadeIn 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;\n}\n@keyframes mduiTabPanelFadeIn {\n  0% { opacity: 0; transform: translateY(10px); }\n  100% { opacity: 1; transform: translateY(0); }\n}\n\n.mdui-menu {');
 }
 
 // D. Monet Dynamic Color Theme CSS (Placed at the VERY END with absolute priority)
@@ -375,11 +392,57 @@ const minifiedCss = await esbuild.transform(css, { loader: 'css', minify: true }
 fs.writeFileSync('css/mdui.min.css', minifiedCss.code, 'utf8');
 console.log('Saved css/mdui.min.css');
 
-// 3. Integrate Monet into JS bundles
-console.log('3. Integrating Monet into JS bundles...');
+// 3. Integrate Monet into JS bundles & inject Tab content animation
+console.log('3. Integrating Monet & Tab content animation into JS bundles...');
+
+function updateTabSetActiveInJs(rawJs) {
+  const targetOld = `            if (index === this$1.activeIndex && !this$1.isDisabled($tab)) {
+                if (!$tab.hasClass('mdui-tab-active')) {
+                    this$1.triggerEvent('change', this$1.$element, {
+                        index: this$1.activeIndex,
+                        id: targetId.substr(1),
+                    });
+                    this$1.triggerEvent('show', $tab);
+                    $tab.addClass('mdui-tab-active');
+                }
+                $(targetId).show();
+                this$1.setIndicatorPosition();
+            }
+            else {
+                $tab.removeClass('mdui-tab-active');
+                $(targetId).hide();
+            }`;
+
+  const targetNew = `            if (index === this$1.activeIndex && !this$1.isDisabled($tab)) {
+                var $target = $(targetId);
+                if (!$tab.hasClass('mdui-tab-active')) {
+                    this$1.triggerEvent('change', this$1.$element, {
+                        index: this$1.activeIndex,
+                        id: targetId.substr(1),
+                    });
+                    this$1.triggerEvent('show', $tab);
+                    $tab.addClass('mdui-tab-active');
+                    if ($target.length) {
+                        $target.removeClass('mdui-tab-panel-active');
+                        if ($target[0]) void $target[0].offsetWidth;
+                        $target.addClass('mdui-tab-panel-active');
+                    }
+                }
+                $target.show();
+                this$1.setIndicatorPosition();
+            }
+            else {
+                $tab.removeClass('mdui-tab-active');
+                $(targetId).hide().removeClass('mdui-tab-panel-active');
+            }`;
+
+  return rawJs.replace(targetOld, targetNew);
+}
 
 // A. js/mdui.js
 let js = fs.readFileSync('js/mdui.js', 'utf8');
+js = updateTabSetActiveInJs(js);
+
 const iifeMonetInner = `
   // === Monet Dynamic Theme Module ===
   (function() {
@@ -400,6 +463,8 @@ console.log('Saved js/mdui.js');
 
 // B. js/mdui.esm.js
 let esm = fs.readFileSync('js/mdui.esm.js', 'utf8');
+esm = updateTabSetActiveInJs(esm);
+
 const esmMonetInner = `
 // === Monet Dynamic Theme Module ===
 const monet = (() => {

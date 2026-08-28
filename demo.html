@@ -136,6 +136,21 @@
       color: var(--mdui-monet-on-surface, #1D1B20) !important;
       border-color: var(--mdui-monet-outline-variant, rgba(0, 0, 0, 0.08)) !important;
     }
+
+    /* Tab 选项卡内容面板丝滑 Material 切换动画 */
+    .tab-content-panel {
+      animation: mduiTabFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    @keyframes mduiTabFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
     .code-badge {
       display: inline-block;
       padding: 2px 8px;
@@ -717,9 +732,9 @@
 
     <!-- 7. 多 Tab 选项卡与内容联动切换系统 -->
     <div id="tabs" class="demo-section">
-      <div class="mdui-typo-headline mdui-m-b-2">7. 多 Tab 选项卡系统（纯直角指示条 ✖ 内容平滑联动 ✖ 莫奈主题驱动）</div>
+      <div class="mdui-typo-headline mdui-m-b-2">7. 多 Tab 选项卡系统（纯直角指示条 ✖ 内容容器原生平滑过渡动画 ✖ 莫奈主题联动）</div>
 
-      <!-- 卡片内嵌多 Tab 切换 -->
+      <!-- 卡片内嵌标准多 Tab 切换 (内置框架级平滑 Material 缓动淡入/滑入动画) -->
       <div class="mdui-card demo-card">
         <div class="mdui-tab mdui-tab-full-width mdui-tab-centered" mdui-tab id="card-tab">
           <a href="#tab-overview" class="mdui-ripple">
@@ -736,17 +751,19 @@
           </a>
         </div>
 
+        <!-- 选项卡 1 内容面板 (切换时自动播放 .mdui-tab-panel-active 平滑动画) -->
         <div id="tab-overview" class="mdui-p-a-3">
           <div class="mdui-typo-title mdui-m-b-1">MD1 纯直角秩序 ✖ Material You (Monet) 双引擎</div>
           <p class="mdui-typo-body-1">
-            本选项卡组件（<code>.mdui-tab</code>）严格遵循 MD1 直角几何规范，滑动指示条（<code>.mdui-tab-indicator</code>）采用纯直角设计，颜色自动随全局主题（原生 19 色 / 莫奈单双三色）动态着色。
+            本选项卡组件（<code>.mdui-tab</code>）在框架层内置了<strong>内容容器平滑切换动效</strong>。当点击切换 Tab 时，激活的目标内容容器自动触发优雅的 Material 缓动渐变位移动画（<code>.mdui-tab-panel-active</code>），告别传统生硬的瞬间跳变。
           </p>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px;">
             <button class="mdui-btn mdui-btn-raised mdui-color-theme mdui-ripple">主色动作</button>
             <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">次要动作</button>
           </div>
         </div>
 
+        <!-- 选项卡 2 内容面板 -->
         <div id="tab-tokens" class="mdui-p-a-3" style="display: none;">
           <div class="mdui-typo-title mdui-m-b-1">Android 12-17 5 组核心 Palettes 与 MD3 Surface 阶度</div>
           <div class="mdui-table-fluid" style="border-radius: 0; box-shadow: none; border: 1px solid rgba(0,0,0,0.08);">
@@ -784,16 +801,17 @@
           </div>
         </div>
 
+        <!-- 选项卡 3 内容面板 -->
         <div id="tab-api" class="mdui-p-a-3" style="display: none;">
-          <div class="mdui-typo-title mdui-m-b-1">JavaScript Tab 实例控制方法</div>
+          <div class="mdui-typo-title mdui-m-b-1">JavaScript 动画与联动控制</div>
           <p class="mdui-typo-body-1">
-            支持通过 <code>var tab = new mdui.Tab('#card-tab');</code> 进行代码级切换控制：
+            通过 <code>var tab = new mdui.Tab('#card-tab');</code> 进行代码控制时同样自动播放顺滑切换动效：
           </p>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
             <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple" onclick="mdui.Tab('#card-tab').show(0)">切换到 Tab 1</button>
             <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple" onclick="mdui.Tab('#card-tab').show(1)">切换到 Tab 2</button>
             <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple" onclick="mdui.Tab('#card-tab').show(2)">切换到 Tab 3</button>
-            <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-color-theme mdui-ripple" onclick="mdui.Tab('#card-tab').next()">Next 下一项</button>
+            <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-color-theme mdui-ripple" onclick="mdui.Tab('#card-tab').next()">Next 下一项 ▶</button>
           </div>
         </div>
       </div>
