@@ -13693,6 +13693,20 @@ body.mdui-theme-monet.mdui-theme-layout-dark .mdui-toolbar.mdui-color-theme {
   color: var(--mdui-monet-on-background, rgba(255, 255, 255, 0.87)) !important;
 }
 
+/* 暗色模式下的卡片色阶与阴影 */
+.mdui-theme-monet.mdui-theme-layout-dark .mdui-card,
+.mdui-theme-monet .mdui-theme-layout-dark .mdui-card {
+  background-color: var(--mdui-monet-surface-container, #1d1b20) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+}
+.mdui-theme-monet.mdui-theme-layout-dark .mdui-dialog,
+.mdui-theme-monet .mdui-theme-layout-dark .mdui-dialog,
+.mdui-theme-monet.mdui-theme-layout-dark .mdui-menu,
+.mdui-theme-monet .mdui-theme-layout-dark .mdui-menu {
+  background-color: var(--mdui-monet-surface-container-high, #2b2930) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+}
+
 /* Monet 各组件动态样式 */
 .mdui-theme-monet .mdui-tab-indicator {
   background-color: var(--mdui-monet-accent-a400, var(--mdui-monet-primary-500, var(--mdui-monet-primary))) !important;

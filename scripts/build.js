@@ -128,9 +128,46 @@ body.drawer-mode-rail .mdui-drawer {
   box-shadow: 1px 0 3px rgba(0,0,0,0.08) !important;
   z-index: 100 !important;
 }
+
+/* 桌面常驻时根据 Rail / Expanded 自动适配主内容左边距 */
 body.drawer-mode-rail {
   padding-left: 72px !important;
   transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+body.drawer-mode-expanded {
+  padding-left: 260px !important;
+  transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media (max-width: 1023.9px) {
+  body.drawer-mode-rail,
+  body.drawer-mode-expanded {
+    padding-left: 0 !important;
+  }
+}
+
+/* 仅在经典模式下桌面常驻（body-left 且非全高）时，挂载在标题栏下方 */
+body.drawer-mode-classic .mdui-drawer-body-left:not(.mdui-drawer-full-height) .mdui-drawer:not(.mdui-drawer-overlay):not(.mdui-drawer-close) {
+  top: 56px !important;
+  height: calc(100% - 56px) !important;
+}
+@media (min-width: 600px) {
+  body.drawer-mode-classic .mdui-drawer-body-left:not(.mdui-drawer-full-height) .mdui-drawer:not(.mdui-drawer-overlay):not(.mdui-drawer-close) {
+    top: 64px !important;
+    height: calc(100% - 64px) !important;
+  }
+}
+@media (orientation: landscape) and (max-width: 959.9px) {
+  body.drawer-mode-classic .mdui-drawer-body-left:not(.mdui-drawer-full-height) .mdui-drawer:not(.mdui-drawer-overlay):not(.mdui-drawer-close) {
+    top: 48px !important;
+    height: calc(100% - 48px) !important;
+  }
+}
+
+/* 在模式 1 (边缘) 与模式 2 (Rail) 下强制 Drawer 为满高 */
+body.drawer-mode-edge .mdui-drawer,
+body.drawer-mode-rail .mdui-drawer {
+  top: 0 !important;
+  height: 100% !important;
 }
 
 /* 模式 2-A: 支持配置 Hover 后展开 (当开启 enable-hover-expand 时) */
@@ -182,16 +219,30 @@ body.drawer-mode-rail .mdui-drawer.is-manually-expanded .drawer-rail-hidden {
   display: block !important;
 }
 
-/* 当启用模式 1 (边缘悬浮) 或模式 2 (单图标 Rail) 时，顶部标题栏自动优雅隐藏，内容全高沉浸 */
+/* 当启用模式 1 (边缘悬浮) 或模式 2 (单图标 Rail) 时，顶部标题栏彻底隐藏 */
 body.drawer-mode-edge .mdui-appbar,
 body.drawer-mode-rail .mdui-appbar {
-  transform: translateY(-100%) !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
+  display: none !important;
 }
 body.drawer-mode-edge,
 body.drawer-mode-rail {
   padding-top: 0 !important;
+}
+
+/* 侧边栏底部绝对定位固定宽度 (防止 72px 收拢时内容被挤压错乱) */
+.drawer-footer-absolute {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 260px;
+  background: inherit;
+  z-index: 10;
+}
+/* 抽屉上部滚动区域需留出底部空间 */
+.drawer-scroll-area {
+  height: calc(100% - 150px);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* 侧边栏竖排文字标题系统 (writing-mode: vertical-rl) */
@@ -511,6 +562,20 @@ body.mdui-theme-monet.mdui-theme-layout-dark .mdui-toolbar.mdui-color-theme {
 .mdui-theme-monet .mdui-theme-layout-dark {
   background-color: var(--mdui-monet-background, #121212) !important;
   color: var(--mdui-monet-on-background, rgba(255, 255, 255, 0.87)) !important;
+}
+
+/* 暗色模式下的卡片色阶与阴影 */
+.mdui-theme-monet.mdui-theme-layout-dark .mdui-card,
+.mdui-theme-monet .mdui-theme-layout-dark .mdui-card {
+  background-color: var(--mdui-monet-surface-container, #1d1b20) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+}
+.mdui-theme-monet.mdui-theme-layout-dark .mdui-dialog,
+.mdui-theme-monet .mdui-theme-layout-dark .mdui-dialog,
+.mdui-theme-monet.mdui-theme-layout-dark .mdui-menu,
+.mdui-theme-monet .mdui-theme-layout-dark .mdui-menu {
+  background-color: var(--mdui-monet-surface-container-high, #2b2930) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
 }
 
 /* Monet 各组件动态样式 */

@@ -286,9 +286,9 @@
   <div id="drawer-edge-hover-zone"></div>
 
   <!-- 左侧抽屉栏 (支持三大形态 ✖ 竖排标题 ✖ 二级菜单 ✖ 底部完备配置) -->
-  <div class="mdui-drawer mdui-drawer-close" id="left-drawer" style="display: flex; flex-direction: column; justify-content: space-between;">
+  <div class="mdui-drawer mdui-drawer-close" id="left-drawer">
     <!-- 抽屉栏上部滚动内容 -->
-    <div style="overflow-y: auto; flex: 1;">
+    <div class="drawer-scroll-area">
       <!-- Header (展开态显示横排品牌与副标题；收纳态可展示上方竖排标题) -->
       <div class="mdui-p-a-2 mdui-color-theme" style="display: flex; align-items: center; justify-content: space-between; min-height: 72px; box-sizing: border-box;">
         <div style="display: flex; align-items: center; gap: 12px;">
@@ -374,7 +374,7 @@
     </div>
 
     <!-- 侧边栏底部模式控制与标题位置配置 -->
-    <div class="mdui-p-a-2" style="border-top: 1px solid var(--mdui-monet-outline-variant, rgba(0,0,0,0.08)); background: var(--mdui-monet-surface-container, rgba(0,0,0,0.02));">
+    <div class="mdui-p-a-2 drawer-footer-absolute" style="border-top: 1px solid var(--mdui-monet-outline-variant, rgba(0,0,0,0.08));">
       
       <!-- 下方标题展示位 (当配置为下方标题时展示) -->
       <div class="rail-bottom-title mdui-text-color-theme">

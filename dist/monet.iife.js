@@ -6266,18 +6266,18 @@ var mdui_monet_bundle = (() => {
       };
     } else {
       return {
-        surface: hexFromArgb(n.tone(10)),
+        surface: hexFromArgb(n.tone(12)),
         surfaceDim: hexFromArgb(n.tone(6)),
         surfaceBright: hexFromArgb(n.tone(24)),
         surfaceContainerLowest: hexFromArgb(n.tone(4)),
         surfaceContainerLow: hexFromArgb(n.tone(10)),
         surfaceContainer: hexFromArgb(n.tone(12)),
-        surfaceContainerHigh: hexFromArgb(n.tone(17)),
-        surfaceContainerHighest: hexFromArgb(n.tone(22)),
+        surfaceContainerHigh: hexFromArgb(n.tone(10)),
+        surfaceContainerHighest: hexFromArgb(n.tone(8)),
         onSurface: hexFromArgb(n.tone(90)),
         surfaceVariant: hexFromArgb(nv.tone(30)),
         onSurfaceVariant: hexFromArgb(nv.tone(80)),
-        background: hexFromArgb(n.tone(10)),
+        background: hexFromArgb(n.tone(20)),
         onBackground: hexFromArgb(n.tone(90)),
         outline: hexFromArgb(nv.tone(60)),
         outlineVariant: hexFromArgb(nv.tone(30))
