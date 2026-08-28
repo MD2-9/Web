@@ -2,9 +2,10 @@
 
 欢迎使用经过深度改造的 **MDUI 组件库**！
 
-本版本在保持 MDUI 轻量、高性能特性的基础上，完成了两大重磅升级：
+本版本在保持 MDUI 轻量、高性能特性的基础上，完成了两大重磅升级与全面细节修复：
 1. **视觉语言回归与统一**：严格遵循 **Material Design 1 (Android 5.0 - 8.0 Lollipop 到 Oreo 时代)** 的经典 **「纯直角 & 圆形」** 几何美学规范，默认排版字体全面升级为 Google 官方 **Google Sans Flex** 变量字体；
-2. **双主题系统并存**：内置基于 Google **HCT 色彩空间**与 **CAM16** 色貌模型的 **莫奈（Monet / Material You）动态取色引擎**，并与 MDUI 原生 **19 色调色板系统** 完美并存，支持全局/局部容器自由切换与独立渲染。
+2. **双主题系统并存与 MD3 沉浸式着色**：内置基于 Google **HCT 色彩空间**与 **CAM16** 色貌模型的 **莫奈（Monet / Material You）动态取色引擎**，支持从颜色或壁纸图片自动生成 5 组 Tonal Palettes 与完整的 MD3 Surface Container 表面体系（背景底色、卡片、抽屉栏、对话框、菜单等自动沉浸着色），并与 MDUI 原生 **19 色调色板系统** 完美并存，支持全局/局部容器自由切换与独立渲染；
+3. **关键体验修复**：修复了侧边栏在超宽屏下与顶部标题栏重叠的布局 bug、修复了卡片置顶 Sticky 遮挡问题。
 
 ---
 
@@ -12,10 +13,11 @@
 - [一、快速引入](#一快速引入)
 - [二、MD1 纯直角 & 圆形视觉规范](#二md1-纯直角--圆形视觉规范)
 - [三、主题系统一：MD 原生 19 色系统](#三主题系统一md-原生-19-色系统)
-- [四、主题系统二：莫奈（Monet）动态取色系统](#四主题系统二莫奈monet动态取色系统)
+- [四、主题系统二：莫奈（Monet）动态取色系统 (MD3 沉浸方案)](#四主题系统二莫奈monet动态取色系统-md3-沉浸方案)
 - [五、双主题并存与局部隔离](#五双主题并存与局部隔离)
 - [六、API 完整参考 (mdui.monet)](#六api-完整参考-mduimonet)
-- [七、演示 Demo](#七演示-demo)
+- [七、常见布局最佳实践 (Appbar / 抽屉栏 / Sticky 置顶)](#七常见布局最佳实践-appbar--抽屉栏--sticky-置顶)
+- [八、演示 Demo](#八演示-demo)
 
 ---
 
@@ -29,14 +31,12 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <!-- 引入样式 (已包含 Google Sans Flex 字体声明与纯直角/圆形规范) -->
   <link rel="stylesheet" href="./css/mdui.min.css">
 </head>
-<body class="mdui-theme-primary-indigo mdui-theme-accent-pink">
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
 
   <!-- 你的 HTML 内容 -->
 
-  <!-- 引入 JS (包含全部组件逻辑与 mdui.monet 动态取色引擎) -->
   <script src="./js/mdui.min.js"></script>
 </body>
 </html>
@@ -61,8 +61,8 @@ mdui.monet.setColor('#6750A4');
 
 | 组件类型 | 涉及类名 / 元素 | 形状规范 | 说明 |
 | :--- | :--- | :--- | :--- |
-| **卡片 Card** | `.mdui-card` | **纯直角 (`0px`)** | 经典直角卡片与阴影 |
-| **对话框 Dialog** | `.mdui-dialog` | **纯直角 (`0px`)** | 经典居中弹窗 |
+| **卡片 Card** | `.mdui-card` | **纯直角 (`0px`)** | 经典直角卡片，自动响应 MD3 Surface 容器着色 |
+| **对话框 Dialog** | `.mdui-dialog` | **纯直角 (`0px`)** | 经典居中弹窗，自动响应 MD3 高层级表面色 |
 | **下拉与弹出菜单** | `.mdui-menu`, `.mdui-select-menu` | **纯直角 (`0px`)** | 直角菜单浮层 |
 | **常规按钮** | `.mdui-btn`, `.mdui-btn-raised`, `.mdui-btn-group` | **纯直角 (`0px`)** | 直角 Raised / Flat 按钮 |
 | **线性进度条** | `.mdui-progress` | **纯直角 (`0px`)** | 直角进度槽 |
@@ -91,7 +91,6 @@ mdui.monet.setColor('#6750A4');
 <!-- 设置主色为 Teal，强调色为 Deep Orange -->
 <body class="mdui-theme-primary-teal mdui-theme-accent-deep-orange">
 
-  <!-- 使用主题主色背景与文字 -->
   <button class="mdui-btn mdui-btn-raised mdui-color-theme">主色按钮</button>
   <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent">强调色按钮</button>
   <span class="mdui-text-color-theme">主色文字</span>
@@ -102,19 +101,15 @@ mdui.monet.setColor('#6750A4');
 ### 2. 19 种主色列表
 `amber`, `blue`, `blue-grey`, `brown`, `cyan`, `deep-orange`, `deep-purple`, `green`, `grey`, `indigo`, `light-blue`, `light-green`, `lime`, `orange`, `pink`, `purple`, `red`, `teal`, `yellow`。
 
-### 3. 暗色模式 (Dark Theme)
-在容器上添加 `.mdui-theme-layout-dark`：
-```html
-<body class="mdui-theme-primary-indigo mdui-theme-layout-dark">
-```
-
 ---
 
-## 四、主题系统二：莫奈（Monet）动态取色系统
+## 四、主题系统二：莫奈（Monet）动态取色系统 (MD3 沉浸方案)
 
-莫奈取色系统基于 Google **Material Color Utilities (HCT & CAM16)** 算法，支持根据给定的种子颜色或从任意图片壁纸中采样提取主色，并动态生成 5 组 Tonal Palettes（色调阶度 50~900 及 A100~A700），通过 CSS 变量驱动整个页面的组件色彩。
+莫奈取色系统基于 Google **Material Color Utilities (HCT & CAM16)** 算法：
+- 动态生成 5 组 Tonal Palettes（Primary, Secondary, Tertiary, Neutral, NeutralVariant）；
+- **背景与卡片沉浸着色**：页面背景自动着色为 `--mdui-monet-background`，卡片着色为 `--mdui-monet-surface-container`，副标题等由 `--mdui-monet-on-surface-variant` 驱动，暗色模式下自适应呈现舒适柔和的深色调。
 
-### 1. 从颜色代码一键设置莫奈主题
+### 1. 从颜色代码一键设置
 ```javascript
 // 设置任意十六进制颜色作为莫奈种子色
 mdui.monet.setColor('#6750A4');
@@ -123,31 +118,19 @@ mdui.monet.setColor('#6750A4');
 mdui.monet.setColor('#6750A4', { dark: true });
 ```
 
-### 2. 从图片壁纸中自动提取并应用莫奈主题
-莫奈引擎内置了图像色彩量化与评分算法（`QuantizerCelebi` + `Score`），能够自动过滤杂色并选取最和谐的视觉基调：
-
+### 2. 从图片壁纸中自动提取并应用
 ```javascript
-// 方式 A：传入 HTMLImageElement 或 Canvas
-const img = document.querySelector('#my-wallpaper');
-const theme = await mdui.monet.fromImage(img);
-console.log('提取到的种子色:', theme.sourceColor);
-
-// 方式 B：传入图片 URL 字符串
-await mdui.monet.fromImage('https://example.com/wallpaper.jpg');
+// 传入 HTMLImageElement / Canvas 或图片 URL
+const img = document.querySelector('#wallpaper');
+await mdui.monet.fromImage(img);
 ```
 
-### 3. 动态切换亮色 / 暗色模式
+### 3. 暗色/亮色切换与重置
 ```javascript
-// 切换暗色
+// 切换暗色模式
 mdui.monet.setDarkMode(true);
 
-// 切换亮色
-mdui.monet.setDarkMode(false);
-```
-
-### 4. 重置并切回原生 19 色系统
-```javascript
-// 清除当前 DOM 上的莫奈主题变量，无缝切回 MD 19 色
+// 恢复 MD 原生 19 色
 mdui.monet.reset();
 ```
 
@@ -155,25 +138,18 @@ mdui.monet.reset();
 
 ## 五、双主题并存与局部隔离
 
-原生 19 色系统与莫奈取色系统支持**完全独立**地在同屏不同容器中共存：
-
 ```html
-<!-- 容器 A：使用原生 19 色系统 -->
+<!-- 容器 A：原生 19 色 -->
 <div class="mdui-theme-primary-teal mdui-theme-accent-orange">
-  <button class="mdui-btn mdui-btn-raised mdui-color-theme">
-    原生 Teal 按钮
-  </button>
+  <button class="mdui-btn mdui-btn-raised mdui-color-theme">原生 Teal</button>
 </div>
 
-<!-- 容器 B：使用莫奈动态取色系统 -->
+<!-- 容器 B：独立 Monet 动态主题 -->
 <div id="monet-container" class="mdui-theme-monet">
-  <button class="mdui-btn mdui-btn-raised mdui-color-theme">
-    莫奈动态主色按钮
-  </button>
+  <button class="mdui-btn mdui-btn-raised mdui-color-theme">莫奈动态色</button>
 </div>
 
 <script>
-  // 只将莫奈主题应用到容器 B，容器 A 完全不受影响
   mdui.monet.setColor('#9C27B0', {
     target: document.getElementById('monet-container')
   });
@@ -189,21 +165,42 @@ mdui.monet.reset();
 | `mdui.monet.setColor(color, options)` | `color: string \| number`<br>`options: { target?, dark?, apply? }` | `ThemeObject` | 设置种子色（Hex/RGB/ARGB），计算调色板并可选应用到指定 DOM |
 | `mdui.monet.fromImage(source, options)` | `source: HTMLImageElement \| HTMLCanvasElement \| string`<br>`options: { target?, dark? }` | `Promise<ThemeObject>` | 从图片/Canvas/URL 采样提取主色并应用莫奈主题 |
 | `mdui.monet.setDarkMode(isDark, target?)` | `isDark: boolean`<br>`target?: HTMLElement` | `void` | 切换指定容器或全局的莫奈暗色/亮色方案 |
-| `mdui.monet.generateTheme(sourceColor)` | `sourceColor: string \| number` | `ThemeObject` | 计算并返回完整的 Tonal Palettes、Schemes、MDUI 阶度色板对象（不修改 DOM） |
+| `mdui.monet.generateTheme(sourceColor)` | `sourceColor: string \| number` | `ThemeObject` | 计算并返回包含 Palettes、MD3 Surfaces 与 Schemes 的主题对象 |
 | `mdui.monet.applyTheme(theme, options)` | `theme: ThemeObject`<br>`options: { target?, dark? }` | `void` | 将计算出的主题对象以 CSS 变量形式注入指定 DOM |
 | `mdui.monet.reset(target?)` | `target?: HTMLElement` | `void` | 移除 `.mdui-theme-monet` 及相关 CSS 变量，恢复原生主题 |
 | `mdui.monet.getTheme()` | 无 | `ThemeObject \| null` | 获取当前活跃的莫奈主题数据 |
-| `mdui.monet.getSourceColor()` | 无 | `string` | 获取当前的种子颜色 Hex |
-| `mdui.monet.isDarkMode()` | 无 | `boolean` | 获取当前是否处于暗色模式 |
-| `mdui.monet.argbFromHex(hex)` | `hex: string` | `number` | 辅助工具：十六进制颜色转 ARGB 整型 |
-| `mdui.monet.hexFromArgb(argb)` | `argb: number` | `string` | 辅助工具：ARGB 整型转十六进制颜色 |
 
 ---
 
-## 七、演示 Demo
+## 七、常见布局最佳实践 (Appbar / 抽屉栏 / Sticky 置顶)
 
-在浏览器中打开根目录下的 `demo.html` 即可直观体验：
-- 纯直角卡片、对话框、菜单与纯圆 FAB、单选框、开关组件的交互；
-- 原生 19 色主色与暗色模式无缝切换；
-- 莫奈动态拾色器、预置 Material You 经典配色、本地壁纸上传取色及 Tonal Palettes 色阶可视化；
-- 双主题同屏局部隔离并存效果。
+### 1. 抽屉栏与固定标题栏联动
+当页面使用固定 Appbar 时，建议给 `<body>` 添加 `.mdui-appbar-with-toolbar`，侧边栏在超宽屏展开时将自动在标题栏下方留出恰当空间：
+```html
+<body class="mdui-appbar-with-toolbar ...">
+  <header class="mdui-appbar mdui-appbar-fixed">...</header>
+  <div class="mdui-drawer" id="my-drawer">...</div>
+</body>
+```
+
+### 2. 卡片置顶 (Sticky)
+当在固定标题栏下方使用置顶卡片或面板时，将 `top` 设为 `top: 64px`（小屏 `top: 56px`）：
+```css
+.my-sticky-panel {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 64px;
+  z-index: 400;
+}
+@media (max-width: 599.9px) {
+  .my-sticky-panel {
+    top: 56px;
+  }
+}
+```
+
+---
+
+## 八、演示 Demo
+
+在浏览器中打开根目录下的 `demo.html` 即可直观体验所有特性。

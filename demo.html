@@ -3,20 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MDUI - MD1 纯直角&圆形样式与莫奈取色双主题系统演示</title>
+  <title>MDUI - MD1 纯直角&圆形样式与莫奈取色双主题系统</title>
   <link rel="stylesheet" href="./css/mdui.css">
   <style>
-    body {
-      padding-bottom: 80px;
-      transition: background-color 0.3s ease, color 0.3s ease;
+    /* 字体平滑渲染与通用过渡 */
+    * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
+    body {
+      padding-bottom: 96px;
+      transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* 修复卡片置顶 (Sticky) Bug：在标题栏下方正确定位 */
+    .theme-controller-panel {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 64px;
+      z-index: 490;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      padding: 14px 18px;
+      margin-top: 16px;
+      margin-bottom: 24px;
+      border-radius: 0;
+      transition: all 0.3s ease;
+    }
+    @media (max-width: 599.9px) {
+      .theme-controller-panel {
+        top: 56px;
+        padding: 10px 12px;
+      }
+    }
+    @media (orientation: landscape) and (max-width: 959.9px) {
+      .theme-controller-panel {
+        top: 48px;
+      }
+    }
+
+    .mdui-theme-layout-dark .theme-controller-panel {
+      background: rgba(30, 30, 30, 0.95);
+      border-bottom-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 莫奈模式下控制器面板采用 MD3 Surface Container 着色 */
+    .mdui-theme-monet .theme-controller-panel {
+      background: var(--mdui-monet-surface-container, rgba(243, 237, 247, 0.95)) !important;
+      color: var(--mdui-monet-on-surface, #1d1b20) !important;
+      border-bottom-color: var(--mdui-monet-outline-variant, rgba(0, 0, 0, 0.06)) !important;
+    }
+
     .demo-section {
-      margin-top: 32px;
-      margin-bottom: 32px;
+      margin-top: 36px;
+      margin-bottom: 36px;
     }
     .demo-card {
       margin-bottom: 24px;
-      transition: all 0.3s ease;
+      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
     }
     .palette-swatches {
       display: flex;
@@ -25,9 +72,10 @@
       margin: 12px 0;
     }
     .palette-swatch {
-      width: 40px;
+      width: 44px;
       height: 40px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       font-size: 10px;
@@ -37,10 +85,16 @@
       cursor: pointer;
       user-select: none;
       transition: transform 0.15s ease;
+      border-radius: 0;
     }
     .palette-swatch:hover {
-      transform: scale(1.15);
+      transform: scale(1.12);
       z-index: 2;
+    }
+    .palette-swatch span {
+      font-size: 9px;
+      font-weight: normal;
+      opacity: 0.85;
     }
     .color-dot {
       display: inline-block;
@@ -58,34 +112,24 @@
       border-color: #fff;
       box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     }
-    .theme-controller-panel {
-      position: sticky;
-      top: 0;
-      z-index: 500;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-      padding: 12px 16px;
-      transition: background 0.3s ease;
-    }
-    .mdui-theme-layout-dark .theme-controller-panel {
-      background: rgba(33, 33, 33, 0.95);
-    }
     .split-box {
       border: 1px solid rgba(0,0,0,0.12);
-      padding: 16px;
+      padding: 20px;
       margin-bottom: 20px;
+      border-radius: 0;
     }
     .mdui-theme-layout-dark .split-box {
       border-color: rgba(255,255,255,0.12);
     }
     .code-badge {
       display: inline-block;
-      padding: 2px 6px;
+      padding: 2px 8px;
       font-family: monospace;
       font-size: 12px;
+      font-weight: bold;
       background: rgba(0,0,0,0.06);
       color: #e91e63;
+      border-radius: 0;
     }
     .mdui-theme-layout-dark .code-badge {
       background: rgba(255,255,255,0.1);
@@ -93,31 +137,53 @@
     }
     .preview-img-box {
       width: 100%;
-      height: 140px;
+      height: 120px;
       border-radius: 0;
       background-size: cover;
       background-position: center;
       position: relative;
       cursor: pointer;
       overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .preview-img-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
     .preview-img-box span {
       position: absolute;
       bottom: 6px;
       left: 6px;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.65);
       color: #fff;
-      padding: 2px 8px;
+      padding: 3px 8px;
       font-size: 11px;
+      font-weight: 500;
+    }
+    .surface-token-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      margin: 3px;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    .surface-token-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: inline-block;
+      border: 1px solid rgba(0,0,0,0.2);
     }
   </style>
 </head>
-<body class="mdui-theme-primary-indigo mdui-theme-accent-pink">
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
 
-  <!-- 顶部导航栏 -->
+  <!-- 顶部导航栏 (固定) -->
   <header class="mdui-appbar mdui-appbar-fixed">
     <div class="mdui-toolbar mdui-color-theme">
-      <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#left-drawer'}">
+      <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#left-drawer', overlay: true}">
         <i class="mdui-icon material-icons">menu</i>
       </a>
       <span class="mdui-typo-title">MDUI MD1 纯直角 & 圆形双主题系统</span>
@@ -125,51 +191,51 @@
       <button id="btn-toggle-dark" class="mdui-btn mdui-btn-icon" title="切换暗色/亮色">
         <i class="mdui-icon material-icons">brightness_4</i>
       </button>
-      <a href="https://github.com" target="_blank" class="mdui-btn mdui-btn-icon">
-        <i class="mdui-icon material-icons">code</i>
-      </a>
+      <button class="mdui-btn mdui-btn-icon" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="回到顶部">
+        <i class="mdui-icon material-icons">arrow_upward</i>
+      </button>
     </div>
   </header>
 
-  <!-- 左侧抽屉菜单 -->
+  <!-- 左侧抽屉栏 (已修复顶部空间预留，超宽屏和手机均不遮挡 Appbar) -->
   <div class="mdui-drawer mdui-drawer-close" id="left-drawer">
     <ul class="mdui-list">
-      <li class="mdui-list-item mdui-ripple">
-        <i class="mdui-list-item-icon mdui-icon material-icons">style</i>
-        <div class="mdui-list-item-content">MD1 直角规范</div>
-      </li>
-      <li class="mdui-list-item mdui-ripple">
-        <i class="mdui-list-item-icon mdui-icon material-icons">palette</i>
-        <div class="mdui-list-item-content">莫奈取色引擎</div>
-      </li>
-      <li class="mdui-list-item mdui-ripple">
-        <i class="mdui-list-item-icon mdui-icon material-icons">font_download</i>
-        <div class="mdui-list-item-content">Google Sans Flex</div>
-      </li>
-      <li class="mdui-subheader">演示锚点</li>
+      <li class="mdui-subheader">MDUI MD1 & Monet 导航</li>
       <li class="mdui-list-item mdui-ripple" onclick="location.hash='#buttons'">
         <i class="mdui-list-item-icon mdui-icon material-icons">touch_app</i>
-        <div class="mdui-list-item-content">按钮与 FAB</div>
+        <div class="mdui-list-item-content">1. 按钮与 FAB</div>
       </li>
       <li class="mdui-list-item mdui-ripple" onclick="location.hash='#cards'">
         <i class="mdui-list-item-icon mdui-icon material-icons">dashboard</i>
-        <div class="mdui-list-item-content">卡片与头像</div>
+        <div class="mdui-list-item-content">2. 卡片与头像 (MD3 着色)</div>
       </li>
       <li class="mdui-list-item mdui-ripple" onclick="location.hash='#forms'">
         <i class="mdui-list-item-icon mdui-icon material-icons">check_box</i>
-        <div class="mdui-list-item-content">表单与选择器</div>
+        <div class="mdui-list-item-content">3. 表单与选择组件</div>
+      </li>
+      <li class="mdui-list-item mdui-ripple" onclick="location.hash='#monet-extract'">
+        <i class="mdui-list-item-icon mdui-icon material-icons">wallpaper</i>
+        <div class="mdui-list-item-content">4. 壁纸图片取色</div>
+      </li>
+      <li class="mdui-list-item mdui-ripple" onclick="location.hash='#dual-theme'">
+        <i class="mdui-list-item-icon mdui-icon material-icons">compare_arrows</i>
+        <div class="mdui-list-item-content">5. 局部双主题并存</div>
+      </li>
+      <li class="mdui-list-item mdui-ripple" onclick="location.hash='#dialogs'">
+        <i class="mdui-list-item-icon mdui-icon material-icons">aspect_ratio</i>
+        <div class="mdui-list-item-content">6. 直角对话框与菜单</div>
       </li>
     </ul>
   </div>
 
-  <div class="mdui-container" style="padding-top: 72px;">
+  <div class="mdui-container">
 
-    <!-- 顶部主题控制台 (可随时切换 原生19色 vs 莫奈动态主题) -->
-    <div class="theme-controller-panel mdui-card mdui-m-y-2">
+    <!-- 顶部置顶主题控制器 (已修复 Sticky 遮挡 Bug) -->
+    <div class="theme-controller-panel mdui-card">
       <div class="mdui-row">
-        <div class="mdui-col-md-6 mdui-col-sm-12">
+        <div class="mdui-col-md-5 mdui-col-sm-12">
           <div class="mdui-typo-subheading mdui-m-b-1">
-            <strong>🎨 主题系统模式切换</strong>
+            <strong>🎨 主题模式切换</strong>
             <span id="active-mode-label" class="code-badge">当前: 原生 19 色模式</span>
           </div>
           <div>
@@ -182,7 +248,7 @@
           </div>
         </div>
 
-        <div class="mdui-col-md-6 mdui-col-sm-12">
+        <div class="mdui-col-md-7 mdui-col-sm-12">
           <!-- 原生 19 色选择盘 -->
           <div id="classic-controls">
             <div class="mdui-typo-caption mdui-m-b-1">快速选择 19 色主色 (Primary):</div>
@@ -191,39 +257,49 @@
 
           <!-- 莫奈动态取色选择盘 -->
           <div id="monet-controls" style="display: none;">
-            <div class="mdui-typo-caption mdui-m-b-1">莫奈种子色 (Seed Color / 拾色器 / 预设):</div>
+            <div class="mdui-typo-caption mdui-m-b-1">莫奈种子色 (拾色器 / 精选配色):</div>
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-              <input type="color" id="monet-picker" value="#3F51B5" style="width: 38px; height: 38px; border: none; cursor: pointer; padding: 0; background: none;">
+              <input type="color" id="monet-picker" value="#3F51B5" style="width: 36px; height: 36px; border: none; cursor: pointer; padding: 0; background: none;">
               <span id="monet-hex-val" class="code-badge">#3F51B5</span>
               <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple preset-monet" data-color="#6750A4" style="background: #6750A4; color:#fff;">紫罗兰</button>
               <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple preset-monet" data-color="#006A60" style="background: #006A60; color:#fff;">松石绿</button>
               <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple preset-monet" data-color="#984061" style="background: #984061; color:#fff;">莓果红</button>
               <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple preset-monet" data-color="#825500" style="background: #825500; color:#fff;">琥珀金</button>
+              <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple preset-monet" data-color="#006492" style="background: #006492; color:#fff;">静谧蓝</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 莫奈动态取色色阶可视化 -->
+      <!-- 莫奈动态取色色阶与 MD3 Surface 着色可视化 -->
       <div id="monet-palette-view" class="mdui-m-t-2" style="display: none;">
-        <div class="mdui-typo-caption"><strong>莫奈 Tonal Palettes 色阶 (50 ~ 900 / A100 ~ A700):</strong></div>
-        <div id="monet-swatches" class="palette-swatches"></div>
+        <div class="mdui-divider mdui-m-b-1"></div>
+        <div class="mdui-row">
+          <div class="mdui-col-md-7 mdui-col-sm-12">
+            <div class="mdui-typo-caption"><strong>莫奈 Tonal Palettes 色阶 (Primary 50~900 & Accent A100~A700):</strong></div>
+            <div id="monet-swatches" class="palette-swatches"></div>
+          </div>
+          <div class="mdui-col-md-5 mdui-col-sm-12">
+            <div class="mdui-typo-caption"><strong>MD3 Surface 表面着色体系:</strong></div>
+            <div id="monet-surface-tokens" style="margin-top: 6px;"></div>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- 特性说明 Banner -->
-    <div class="mdui-card mdui-m-y-3 mdui-p-a-2">
-      <div class="mdui-card-primary">
-        <div class="mdui-card-primary-title" style="font-family: 'Google Sans Flex', sans-serif;">
-          Android 5-8 (MD1) 经典纯直角 & 圆形设计语言 + 莫奈色彩核心
+    <div class="mdui-card mdui-m-y-3 mdui-p-a-3 demo-card">
+      <div class="mdui-card-primary" style="padding: 0 0 12px 0;">
+        <div class="mdui-card-primary-title" style="font-family: 'Google Sans Flex', sans-serif; font-size: 22px;">
+          Android 5-8 (MD1) 纯直角 & 圆形几何秩序 ✖ MD3 莫奈沉浸色彩
         </div>
         <div class="mdui-card-primary-subtitle">
-          纯直角卡片 / 纯直角对话框 / 纯直角菜单 / 纯直角按钮 ✖ 纯圆 FAB / 纯圆图标 / 纯圆单选 / 胶囊开关与 Chip
+          全套直角 0px (卡片/对话框/菜单/按钮/进度条) ➕ 纯圆 50% (FAB/头像/单选/滑块/加载器) ➕ 动态背景与容器着色
         </div>
       </div>
-      <div class="mdui-card-content mdui-typo">
+      <div class="mdui-card-content mdui-typo" style="padding: 0;">
         <p>
-          本改造版本将 MDUI 的排版字体全面升级为 <strong>Google Sans Flex</strong> 变量字体，彻底统一直角与圆形两大几何要素，并搭载由 Google 官方 <code>@material/material-color-utilities</code> (HCT & CAM16) 驱动的<strong>莫奈取色引擎</strong>，与 MDUI 原生的 19 色体系完美共存。
+          在当前<strong>莫奈取色模式</strong>下，页面背景自动渲染为 <code>--mdui-monet-background</code>，所有卡片容器自动渲染为带有种子色微调的 <code>--mdui-monet-surface-container</code>，彻底告别单调纯白，呈现细腻的 MD3 沉浸质感。
         </p>
       </div>
     </div>
@@ -232,16 +308,16 @@
     <div id="buttons" class="demo-section">
       <div class="mdui-typo-headline mdui-m-b-2">1. 按钮与操作组件（MD1 纯直角 vs 纯圆 FAB）</div>
       
-      <div class="mdui-card mdui-p-a-2 demo-card">
+      <div class="mdui-card mdui-p-a-3 demo-card">
         <div class="mdui-m-b-2">
           <strong>纯直角常规按钮 (Raised & Flat & Dense & Group) - <code>border-radius: 0</code></strong>
         </div>
-        <div class="mdui-m-b-2">
-          <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme mdui-m-r-1">Theme Primary</button>
-          <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-m-r-1">Theme Accent</button>
-          <button class="mdui-btn mdui-ripple mdui-m-r-1">Flat Button</button>
-          <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-color-theme mdui-m-r-1">Dense Button</button>
-          <button class="mdui-btn mdui-btn-raised mdui-ripple" disabled>Disabled</button>
+        <div class="mdui-m-b-2" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+          <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme">Theme Primary</button>
+          <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent">Theme Accent</button>
+          <button class="mdui-btn mdui-ripple">Flat Button</button>
+          <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-color-theme">Dense Button</button>
+          <button class="mdui-btn mdui-btn-raised" disabled>Disabled</button>
         </div>
 
         <div class="mdui-m-b-2">
@@ -257,17 +333,17 @@
         <div class="mdui-m-b-2">
           <strong>纯圆形按钮 (FAB & Mini FAB & Icon Button) - <code>border-radius: 50%</code></strong>
         </div>
-        <div>
-          <button class="mdui-fab mdui-color-theme-accent mdui-ripple mdui-m-r-2" title="FAB 浮动操作按钮">
+        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <button class="mdui-fab mdui-color-theme-accent mdui-ripple" title="FAB 浮动操作按钮">
             <i class="mdui-icon material-icons">add</i>
           </button>
-          <button class="mdui-fab mdui-fab-mini mdui-color-theme mdui-ripple mdui-m-r-2" title="Mini FAB">
+          <button class="mdui-fab mdui-fab-mini mdui-color-theme mdui-ripple" title="Mini FAB">
             <i class="mdui-icon material-icons">edit</i>
           </button>
-          <button class="mdui-btn mdui-btn-icon mdui-color-theme mdui-ripple mdui-m-r-1">
+          <button class="mdui-btn mdui-btn-icon mdui-color-theme mdui-ripple">
             <i class="mdui-icon material-icons">favorite</i>
           </button>
-          <button class="mdui-btn mdui-btn-icon mdui-color-theme-accent mdui-ripple mdui-m-r-1">
+          <button class="mdui-btn mdui-btn-icon mdui-color-theme-accent mdui-ripple">
             <i class="mdui-icon material-icons">share</i>
           </button>
           <button class="mdui-btn mdui-btn-icon mdui-ripple">
@@ -277,9 +353,9 @@
       </div>
     </div>
 
-    <!-- 2. 卡片、头像与图片 -->
+    <!-- 2. 卡片与头像展示 -->
     <div id="cards" class="demo-section">
-      <div class="mdui-typo-headline mdui-m-b-2">2. 卡片与头像展示（纯直角卡片 + 纯圆头像）</div>
+      <div class="mdui-typo-headline mdui-m-b-2">2. 卡片与头像（纯直角卡片 + 纯圆头像 + MD3 表面容器色）</div>
 
       <div class="mdui-row">
         <div class="mdui-col-md-6 mdui-col-sm-12">
@@ -289,11 +365,11 @@
               <div class="mdui-card-header-avatar mdui-color-theme" style="display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;">
                 M
               </div>
-              <div class="mdui-card-header-title">Material Design 1.0</div>
-              <div class="mdui-card-header-subtitle">经典纯直角卡片容器</div>
+              <div class="mdui-card-header-title">Material Design 1.0 经典直角</div>
+              <div class="mdui-card-header-subtitle">自动适配 MD3 Surface Container 色彩</div>
             </div>
             <div class="mdui-card-content">
-              卡片采用严格的 <code>border-radius: 0</code> 纯直角设计，搭配纯圆头像与细腻阴影，重现 Android 5-8 黄金时代的经典质感。
+              卡片采用严格的 <code>border-radius: 0</code> 纯直角设计。在莫奈模式下，卡片背景由 <code>var(--mdui-monet-surface-container)</code> 着色，副标题由 <code>var(--mdui-monet-on-surface-variant)</code> 着色。
             </div>
             <div class="mdui-card-actions">
               <button class="mdui-btn mdui-ripple mdui-text-color-theme">ACTION 1</button>
@@ -306,14 +382,14 @@
           <div class="mdui-card demo-card">
             <!-- 纯直角媒体容器 -->
             <div class="mdui-card-media" style="height: 120px; background: linear-gradient(135deg, var(--mdui-monet-primary-500, #3f51b5), var(--mdui-monet-accent-a400, #ff4081)); display: flex; align-items: center; justify-content: center; color: #fff;">
-              <span class="mdui-typo-headline">Media Container (直角)</span>
+              <span class="mdui-typo-headline" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">Media Container (直角 0px)</span>
             </div>
             <div class="mdui-card-primary">
-              <div class="mdui-card-primary-title">动态色彩适配</div>
-              <div class="mdui-card-primary-subtitle">Monet 动态色与 19 色平滑过渡</div>
+              <div class="mdui-card-primary-title">沉浸式色调映射</div>
+              <div class="mdui-card-primary-subtitle">MD3 动态色彩与 MD1 几何规范完美统一</div>
             </div>
             <div class="mdui-card-actions">
-              <button class="mdui-btn mdui-btn-raised mdui-color-theme mdui-ripple">确定</button>
+              <button class="mdui-btn mdui-btn-raised mdui-color-theme mdui-ripple">确认操作</button>
             </div>
           </div>
         </div>
@@ -322,17 +398,17 @@
 
     <!-- 3. 表单、开关、单选多选、滑块与进度条 -->
     <div id="forms" class="demo-section">
-      <div class="mdui-typo-headline mdui-m-b-2">3. 表单与交互组件</div>
+      <div class="mdui-typo-headline mdui-m-b-2">3. 表单与交互组件（直角复选框 / 纯圆单选 / 胶囊开关 / 直角进度条）</div>
 
       <div class="mdui-card mdui-p-a-3 demo-card">
         <div class="mdui-row">
           <div class="mdui-col-md-6 mdui-col-sm-12">
             <div class="mdui-textfield mdui-textfield-floating-label">
               <label class="mdui-textfield-label">用户名 (直角聚焦指示)</label>
-              <input class="mdui-textfield-input" type="text" value="MaterialUser">
+              <input class="mdui-textfield-input" type="text" value="MaterialDesign">
             </div>
 
-            <div class="mdui-m-t-2">
+            <div class="mdui-m-t-3">
               <label class="mdui-checkbox mdui-m-r-2">
                 <input type="checkbox" checked/>
                 <i class="mdui-checkbox-icon"></i>
@@ -372,7 +448,7 @@
             <div class="mdui-m-y-2">
               <div class="mdui-typo-caption">滑块 (纯圆滑块):</div>
               <label class="mdui-slider mdui-slider-discrete">
-                <input type="range" step="1" min="0" max="100" value="65"/>
+                <input type="range" step="1" min="0" max="100" value="70"/>
               </label>
             </div>
 
@@ -396,58 +472,58 @@
       </div>
     </div>
 
-    <!-- 4. 图片莫奈动态取色实战体验 -->
-    <div class="demo-section">
-      <div class="mdui-typo-headline mdui-m-b-2">4. 🖼️ 图片莫奈动态取色 (从壁纸/照片一键提取主题色)</div>
+    <!-- 4. 壁纸图片取色实战 -->
+    <div id="monet-extract" class="demo-section">
+      <div class="mdui-typo-headline mdui-m-b-2">4. 🖼️ 图片莫奈动态取色 (从壁纸/照片提取主题色)</div>
       
-      <div class="mdui-card mdui-p-a-2 demo-card">
+      <div class="mdui-card mdui-p-a-3 demo-card">
         <div class="mdui-typo-body-2 mdui-m-b-2">
-          点击下方预置壁纸色调，或上传本地图片，莫奈引擎将通过 <strong>CAM16 & QuantizerCelebi</strong> 色彩量化打分算法提取最佳种子色并无缝注入整个 MDUI 系统：
+          点击下方预置壁纸色调，或上传本地图片，莫奈引擎将通过 <strong>CAM16 & QuantizerCelebi</strong> 算法提取种子色，并实时为背景、卡片和所有组件完成 MD3 沉浸式着色：
         </div>
 
         <div class="mdui-row">
-          <div class="mdui-col-md-3 mdui-col-sm-6 mdui-m-b-1">
+          <div class="mdui-col-md-3 mdui-col-sm-6 mdui-m-b-2">
             <div class="preview-img-box img-sample" data-color="#1B5E20" style="background: linear-gradient(135deg, #134e5e, #71b280);">
               <span>深林绿韵 (#1B5E20)</span>
             </div>
           </div>
-          <div class="mdui-col-md-3 mdui-col-sm-6 mdui-m-b-1">
+          <div class="mdui-col-md-3 mdui-col-sm-6 mdui-m-b-2">
             <div class="preview-img-box img-sample" data-color="#E65100" style="background: linear-gradient(135deg, #ff8c00, #e52d27);">
               <span>落日晚霞 (#E65100)</span>
             </div>
           </div>
-          <div class="mdui-col-md-3 mdui-col-sm-6 mdui-m-b-1">
+          <div class="mdui-col-md-3 mdui-col-sm-6 mdui-m-b-2">
             <div class="preview-img-box img-sample" data-color="#0288D1" style="background: linear-gradient(135deg, #2980b9, #6dd5fa);">
               <span>蔚蓝深海 (#0288D1)</span>
             </div>
           </div>
-          <div class="mdui-col-md-3 mdui-col-sm-6 mdui-m-b-1">
+          <div class="mdui-col-md-3 mdui-col-sm-6 mdui-m-b-2">
             <div class="preview-img-box img-sample" data-color="#7B1FA2" style="background: linear-gradient(135deg, #8e2de2, #4a00e0);">
               <span>幻彩极光 (#7B1FA2)</span>
             </div>
           </div>
         </div>
 
-        <div class="mdui-m-t-2" style="display: flex; align-items: center; gap: 12px;">
+        <div class="mdui-m-t-1" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
           <input type="file" id="local-img-input" accept="image/*" style="display: none;">
           <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple" onclick="document.getElementById('local-img-input').click()">
             <i class="mdui-icon material-icons mdui-icon-left">upload</i> 上传自定义图片取色
           </button>
-          <span id="img-extract-status" class="mdui-typo-caption">支持任意 JPG / PNG 壁纸</span>
+          <span id="img-extract-status" class="mdui-typo-caption">支持任意壁纸或照片</span>
         </div>
       </div>
     </div>
 
-    <!-- 5. 双主题系统同屏对比展示 -->
-    <div class="demo-section">
-      <div class="mdui-typo-headline mdui-m-b-2">5. ⚡ 双主题系统局部容器独立并存演示</div>
+    <!-- 5. 局部双主题并存 -->
+    <div id="dual-theme" class="demo-section">
+      <div class="mdui-typo-headline mdui-m-b-2">5. ⚡ 双主题系统局部容器隔离共存</div>
       
       <div class="mdui-row">
         <!-- 容器 1: 强制 MD 原生 19 色 -->
         <div class="mdui-col-md-6 mdui-col-sm-12">
           <div class="split-box mdui-theme-primary-teal mdui-theme-accent-deep-orange">
-            <div class="mdui-typo-title mdui-m-b-1" style="color: #009688;">容器 A：原生 19 色 (Teal + Deep Orange)</div>
-            <p>不受全局 Monet 影响，始终保持原生 19 色调色板样式。</p>
+            <div class="mdui-typo-title mdui-m-b-1" style="color: #009688;">容器 A：原生 19 色 (Teal + Orange)</div>
+            <p>不受全局 Monet 影响，始终维持经典 19 色体系。</p>
             <button class="mdui-btn mdui-btn-raised mdui-color-theme mdui-ripple mdui-m-r-1">Teal Primary</button>
             <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">Orange Accent</button>
           </div>
@@ -456,8 +532,8 @@
         <!-- 容器 2: 独立 Monet 容器 -->
         <div class="mdui-col-md-6 mdui-col-sm-12">
           <div id="monet-isolated-box" class="split-box mdui-theme-monet">
-            <div class="mdui-typo-title mdui-m-b-1 mdui-text-color-theme">容器 B：独立 Monet 动态容器</div>
-            <p>使用独立的莫奈色彩变量渲染，验证两套主题系统完全解耦并存。</p>
+            <div class="mdui-typo-title mdui-m-b-1 mdui-text-color-theme">容器 B：独立 Monet 动态主题</div>
+            <p>使用独立的莫奈色彩变量渲染，实现局部沉浸。</p>
             <button class="mdui-btn mdui-btn-raised mdui-color-theme mdui-ripple mdui-m-r-1">Monet Primary</button>
             <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">Monet Accent</button>
           </div>
@@ -465,11 +541,11 @@
       </div>
     </div>
 
-    <!-- 6. 对话框、菜单与浮层交互 -->
-    <div class="demo-section">
-      <div class="mdui-typo-headline mdui-m-b-2">6. 对话框、菜单与工具提示（纯直角 0px）</div>
+    <!-- 6. 对话框与菜单 -->
+    <div id="dialogs" class="demo-section">
+      <div class="mdui-typo-headline mdui-m-b-2">6. 直角对话框、菜单与浮层（纯直角 0px）</div>
 
-      <div class="mdui-card mdui-p-a-2 demo-card">
+      <div class="mdui-card mdui-p-a-3 demo-card">
         <button class="mdui-btn mdui-btn-raised mdui-color-theme mdui-ripple mdui-m-r-2" mdui-dialog="{target: '#demo-dialog'}">
           打开直角对话框
         </button>
@@ -486,7 +562,7 @@
         <div class="mdui-dialog" id="demo-dialog">
           <div class="mdui-dialog-title">经典直角对话框</div>
           <div class="mdui-dialog-content">
-            这是一个符合 MD1 纯直角规范的对话框组件 (<code>border-radius: 0</code>)，背景与文字色完美适配当前活跃主题。
+            这是一个符合 MD1 纯直角规范的对话框组件 (<code>border-radius: 0</code>)，背景由 <code>--mdui-monet-surface-container-high</code> 着色，与当前主题完美协调。
           </div>
           <div class="mdui-dialog-actions">
             <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
@@ -497,14 +573,14 @@
         <!-- 纯直角 Menu -->
         <ul class="mdui-menu" id="demo-menu">
           <li class="mdui-menu-item">
-            <a href="javascript:;" class="mdui-ripple">剪切</a>
+            <a href="javascript:;" class="mdui-ripple">复制</a>
           </li>
           <li class="mdui-menu-item">
-            <a href="javascript:;" class="mdui-ripple">复制</a>
+            <a href="javascript:;" class="mdui-ripple">剪切</a>
           </li>
           <li class="mdui-divider"></li>
           <li class="mdui-menu-item">
-            <a href="javascript:;" class="mdui-ripple">全选</a>
+            <a href="javascript:;" class="mdui-ripple">属性</a>
           </li>
         </ul>
       </div>
@@ -514,7 +590,6 @@
 
   <script src="./js/mdui.js"></script>
   <script>
-    // 19 原生色列表
     const classicColors = [
       { name: 'amber', hex: '#FFC107' },
       { name: 'blue', hex: '#2196F3' },
@@ -537,11 +612,11 @@
       { name: 'yellow', hex: '#FFEB3B' }
     ];
 
-    let currentMode = 'classic'; // 'classic' | 'monet'
+    let currentMode = 'classic';
     let isDarkMode = false;
     let currentClassicColor = 'indigo';
 
-    // 初始化 19 色原点
+    // 初始化 19 色圆点
     const dotsContainer = document.getElementById('classic-dots');
     classicColors.forEach(c => {
       const dot = document.createElement('span');
@@ -558,7 +633,6 @@
 
     function setClassicPrimary(colorName) {
       currentClassicColor = colorName;
-      // 移除所有 mdui-theme-primary-* 类
       document.body.className = document.body.className
         .replace(/mdui-theme-primary-[a-z-]+/g, '')
         .trim();
@@ -594,12 +668,13 @@
     document.getElementById('btn-use-classic').onclick = () => updateMode('classic');
     document.getElementById('btn-use-monet').onclick = () => updateMode('monet');
 
-    // 莫奈调色盘渲染
-    function renderMonetSwatches(theme) {
-      const container = document.getElementById('monet-swatches');
-      container.innerHTML = '';
+    // 莫奈调色盘与 MD3 Surface Tokens 渲染
+    function renderMonetDetails(theme) {
+      const swatchesContainer = document.getElementById('monet-swatches');
+      swatchesContainer.innerHTML = '';
       const mode = isDarkMode ? 'dark' : 'light';
       const tones = theme.mduiTones[mode];
+      const surfaces = theme.surfaces[mode];
 
       // Primary tones
       for (const [degree, hex] of Object.entries(tones.primary)) {
@@ -607,8 +682,8 @@
         sw.className = 'palette-swatch';
         sw.style.backgroundColor = hex;
         sw.title = 'Primary ' + degree + ': ' + hex;
-        sw.textContent = degree;
-        container.appendChild(sw);
+        sw.innerHTML = `<div>${degree}</div><span>${hex.slice(1,4)}</span>`;
+        swatchesContainer.appendChild(sw);
       }
 
       // Accent tones
@@ -617,9 +692,26 @@
         sw.className = 'palette-swatch';
         sw.style.backgroundColor = hex;
         sw.title = 'Accent ' + degree + ': ' + hex;
-        sw.textContent = degree;
-        container.appendChild(sw);
+        sw.innerHTML = `<div>${degree}</div><span>${hex.slice(1,4)}</span>`;
+        swatchesContainer.appendChild(sw);
       }
+
+      // Surface Tokens
+      const surfaceContainer = document.getElementById('monet-surface-tokens');
+      surfaceContainer.innerHTML = `
+        <div class="surface-token-chip">
+          <span class="surface-token-color" style="background:${surfaces.background}"></span>
+          Background: <code>${surfaces.background}</code>
+        </div>
+        <div class="surface-token-chip">
+          <span class="surface-token-color" style="background:${surfaces.surfaceContainer}"></span>
+          Card/Container: <code>${surfaces.surfaceContainer}</code>
+        </div>
+        <div class="surface-token-chip">
+          <span class="surface-token-color" style="background:${surfaces.surfaceContainerHigh}"></span>
+          Dialog/Header: <code>${surfaces.surfaceContainerHigh}</code>
+        </div>
+      `;
     }
 
     function applyMonetColor(hex) {
@@ -629,7 +721,7 @@
         target: document.body,
         dark: isDarkMode
       });
-      renderMonetSwatches(theme);
+      renderMonetDetails(theme);
     }
 
     document.getElementById('monet-picker').addEventListener('input', (e) => {
@@ -675,7 +767,7 @@
       isDarkMode = !isDarkMode;
       if (currentMode === 'monet') {
         mdui.monet.setDarkMode(isDarkMode, document.body);
-        if (mdui.monet.getTheme()) renderMonetSwatches(mdui.monet.getTheme());
+        if (mdui.monet.getTheme()) renderMonetDetails(mdui.monet.getTheme());
       } else {
         if (isDarkMode) {
           document.body.classList.add('mdui-theme-layout-dark');

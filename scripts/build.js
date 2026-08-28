@@ -61,10 +61,31 @@ if (robotoFontFaceRegex.test(css)) {
 }
 
 // B. MD1 Pure Angular & Circle transformation
-// Replace border-radius: 2px; with border-radius: 0; across rectangular components
 css = css.replace(/border-radius:\s*2px;/g, 'border-radius: 0;');
 
-// C. Append Monet Dynamic Color Theme CSS
+// C. Fix Drawer Top under Appbar for all screens including ultra-wide desktop
+const drawerAppbarFix = `
+/* 抽屉栏在标题栏下方留空（移动端 & 桌面超宽屏适配） */
+.mdui-appbar-with-toolbar .mdui-drawer:not(.mdui-drawer-full-height) {
+  top: 56px;
+}
+@media (min-width: 600px) {
+  .mdui-appbar-with-toolbar .mdui-drawer:not(.mdui-drawer-full-height) {
+    top: 64px;
+  }
+}
+@media (orientation: landscape) and (max-width: 959.9px) {
+  .mdui-appbar-with-toolbar .mdui-drawer:not(.mdui-drawer-full-height) {
+    top: 48px;
+  }
+}
+`;
+
+if (!css.includes('抽屉栏在标题栏下方留空')) {
+  css += '\n' + drawerAppbarFix;
+}
+
+// D. Append Monet Dynamic Color Theme CSS (with MD3 Surface & Card/Background coloring)
 const monetCssBlock = `
 /**
  * =============================================================================
@@ -85,6 +106,13 @@ const monetCssBlock = `
   --mdui-monet-tertiary-container: #FFD8E4;
   --mdui-monet-on-tertiary-container: #31111D;
   --mdui-monet-surface: #FEF7FF;
+  --mdui-monet-surface-dim: #DED8E1;
+  --mdui-monet-surface-bright: #FEF7FF;
+  --mdui-monet-surface-container-lowest: #FFFFFF;
+  --mdui-monet-surface-container-low: #F7F2FA;
+  --mdui-monet-surface-container: #F3EDF7;
+  --mdui-monet-surface-container-high: #ECE6F0;
+  --mdui-monet-surface-container-highest: #E6E0E9;
   --mdui-monet-on-surface: #1D1B20;
   --mdui-monet-surface-variant: #E7E0EC;
   --mdui-monet-on-surface-variant: #49454F;
@@ -109,6 +137,45 @@ const monetCssBlock = `
   --mdui-monet-accent-a200: #536DFE;
   --mdui-monet-accent-a400: #3D5AFE;
   --mdui-monet-accent-a700: #304FFE;
+}
+
+/* Monet 页面背景与文字色 (MD3 Background) */
+body.mdui-theme-monet,
+.mdui-theme-monet {
+  background-color: var(--mdui-monet-background, #FEF7FF) !important;
+  color: var(--mdui-monet-on-background, #1D1B20) !important;
+}
+
+/* Monet 卡片着色 (MD3 Surface Container) */
+.mdui-theme-monet .mdui-card,
+.mdui-theme-monet.mdui-card {
+  background-color: var(--mdui-monet-surface-container, #F3EDF7) !important;
+  color: var(--mdui-monet-on-surface, #1D1B20) !important;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.12) !important;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.12) !important;
+}
+.mdui-theme-monet .mdui-card-header-subtitle,
+.mdui-theme-monet .mdui-card-primary-subtitle {
+  color: var(--mdui-monet-on-surface-variant, #49454F) !important;
+}
+
+/* Monet 抽屉栏、对话框、菜单、面板着色 */
+.mdui-theme-monet .mdui-drawer {
+  background-color: var(--mdui-monet-surface-container-low, var(--mdui-monet-surface, #FEF7FF)) !important;
+  color: var(--mdui-monet-on-surface, #1D1B20) !important;
+}
+.mdui-theme-monet .mdui-dialog {
+  background-color: var(--mdui-monet-surface-container-high, #ECE6F0) !important;
+  color: var(--mdui-monet-on-surface, #1D1B20) !important;
+}
+.mdui-theme-monet .mdui-menu,
+.mdui-theme-monet .mdui-select-menu {
+  background-color: var(--mdui-monet-surface-container, #F3EDF7) !important;
+  color: var(--mdui-monet-on-surface, #1D1B20) !important;
+}
+.mdui-theme-monet .mdui-table {
+  background-color: var(--mdui-monet-surface-container, #F3EDF7) !important;
+  color: var(--mdui-monet-on-surface, #1D1B20) !important;
 }
 
 /* Monet 动态主色与强调色适配 */
@@ -168,8 +235,8 @@ const monetCssBlock = `
 /* 暗色模式下的背景与文字色适配 */
 .mdui-theme-monet.mdui-theme-layout-dark,
 .mdui-theme-monet .mdui-theme-layout-dark {
-  background-color: var(--mdui-monet-background, #121212);
-  color: var(--mdui-monet-on-background, rgba(255, 255, 255, 0.87));
+  background-color: var(--mdui-monet-background, #121212) !important;
+  color: var(--mdui-monet-on-background, rgba(255, 255, 255, 0.87)) !important;
 }
 
 /* Monet 各组件动态样式 */
@@ -234,6 +301,9 @@ const monetCssBlock = `
 
 if (!css.includes('Monet (Material You) 动态取色主题系统')) {
   css += '\n' + monetCssBlock;
+} else {
+  // Replace monet block
+  css = css.replace(/\/\*\*\s*\n\s*\* =+\s*\n\s*\* \*+   Monet \(Material You\) 动态取色主题系统[\s\S]*$/, monetCssBlock.trim());
 }
 
 fs.writeFileSync('css/mdui.css', css, 'utf8');
@@ -262,9 +332,11 @@ const iifeMonetInner = `
 
 if (!js.includes('// === Monet Dynamic Theme Module ===')) {
   js = js.replace('return mdui;', `${iifeMonetInner}\n  return mdui;`);
-  fs.writeFileSync('js/mdui.js', js, 'utf8');
-  console.log('Saved js/mdui.js');
+} else {
+  js = js.replace(/\/\/ === Monet Dynamic Theme Module ===[\s\S]*?return mdui;/, `${iifeMonetInner}\n  return mdui;`);
 }
+fs.writeFileSync('js/mdui.js', js, 'utf8');
+console.log('Saved js/mdui.js');
 
 // B. js/mdui.esm.js
 let esm = fs.readFileSync('js/mdui.esm.js', 'utf8');
@@ -279,9 +351,11 @@ mdui.monet = monet;
 
 if (!esm.includes('// === Monet Dynamic Theme Module ===')) {
   esm = esm.replace('export default mdui;', `${esmMonetInner}\nexport { monet };\nexport default mdui;`);
-  fs.writeFileSync('js/mdui.esm.js', esm, 'utf8');
-  console.log('Saved js/mdui.esm.js');
+} else {
+  esm = esm.replace(/\/\/ === Monet Dynamic Theme Module ===[\s\S]*?export default mdui;/, `${esmMonetInner}\nexport { monet };\nexport default mdui;`);
 }
+fs.writeFileSync('js/mdui.esm.js', esm, 'utf8');
+console.log('Saved js/mdui.esm.js');
 
 // C. Minify js/mdui.min.js
 console.log('Minifying js/mdui.min.js...');

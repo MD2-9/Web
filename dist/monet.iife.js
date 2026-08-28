@@ -5936,6 +5936,47 @@ var mdui_monet_bundle = (() => {
       a700: hexFromArgb(palette.tone(isDark ? 60 : 30))
     };
   }
+  function createMd3Surfaces(palettes, isDark = false) {
+    const n = palettes.neutral;
+    const nv = palettes.neutralVariant;
+    if (!isDark) {
+      return {
+        surface: hexFromArgb(n.tone(98)),
+        surfaceDim: hexFromArgb(n.tone(87)),
+        surfaceBright: hexFromArgb(n.tone(98)),
+        surfaceContainerLowest: hexFromArgb(n.tone(100)),
+        surfaceContainerLow: hexFromArgb(n.tone(96)),
+        surfaceContainer: hexFromArgb(n.tone(94)),
+        surfaceContainerHigh: hexFromArgb(n.tone(92)),
+        surfaceContainerHighest: hexFromArgb(n.tone(90)),
+        onSurface: hexFromArgb(n.tone(10)),
+        surfaceVariant: hexFromArgb(nv.tone(90)),
+        onSurfaceVariant: hexFromArgb(nv.tone(30)),
+        background: hexFromArgb(n.tone(98)),
+        onBackground: hexFromArgb(n.tone(10)),
+        outline: hexFromArgb(nv.tone(50)),
+        outlineVariant: hexFromArgb(nv.tone(80))
+      };
+    } else {
+      return {
+        surface: hexFromArgb(n.tone(6)),
+        surfaceDim: hexFromArgb(n.tone(6)),
+        surfaceBright: hexFromArgb(n.tone(24)),
+        surfaceContainerLowest: hexFromArgb(n.tone(4)),
+        surfaceContainerLow: hexFromArgb(n.tone(10)),
+        surfaceContainer: hexFromArgb(n.tone(12)),
+        surfaceContainerHigh: hexFromArgb(n.tone(17)),
+        surfaceContainerHighest: hexFromArgb(n.tone(22)),
+        onSurface: hexFromArgb(n.tone(90)),
+        surfaceVariant: hexFromArgb(nv.tone(30)),
+        onSurfaceVariant: hexFromArgb(nv.tone(80)),
+        background: hexFromArgb(n.tone(6)),
+        onBackground: hexFromArgb(n.tone(90)),
+        outline: hexFromArgb(nv.tone(60)),
+        outlineVariant: hexFromArgb(nv.tone(30))
+      };
+    }
+  }
   var activeTheme = null;
   var activeSourceColor = "#3F51B5";
   var activeIsDark = false;
@@ -5948,7 +5989,7 @@ var mdui_monet_bundle = (() => {
     /**
      * Generate full Monet theme object from source color
      * @param {string|number} sourceColor - Hex, RGB, or ARGB color
-     * @returns {Object} theme data including palettes and schemes
+     * @returns {Object} theme data including palettes, MD3 surfaces and schemes
      */
     generateTheme(sourceColor) {
       const argb = parseColorToArgb(sourceColor);
@@ -5958,14 +5999,18 @@ var mdui_monet_bundle = (() => {
       const darkPrimaryMap = createMduiToneMap(mcuTheme.palettes.primary, true);
       const lightAccentMap = createMduiToneMap(mcuTheme.palettes.tertiary, false);
       const darkAccentMap = createMduiToneMap(mcuTheme.palettes.tertiary, true);
+      const lightSurfaces = createMd3Surfaces(mcuTheme.palettes, false);
+      const darkSurfaces = createMd3Surfaces(mcuTheme.palettes, true);
       const lightScheme = {};
       for (const [key, value] of Object.entries(mcuTheme.schemes.light.toJSON())) {
         lightScheme[key] = hexFromArgb(value);
       }
+      Object.assign(lightScheme, lightSurfaces);
       const darkScheme = {};
       for (const [key, value] of Object.entries(mcuTheme.schemes.dark.toJSON())) {
         darkScheme[key] = hexFromArgb(value);
       }
+      Object.assign(darkScheme, darkSurfaces);
       return {
         sourceColor: hex,
         sourceArgb: argb,
@@ -5973,6 +6018,10 @@ var mdui_monet_bundle = (() => {
         schemes: {
           light: lightScheme,
           dark: darkScheme
+        },
+        surfaces: {
+          light: lightSurfaces,
+          dark: darkSurfaces
         },
         mduiTones: {
           light: {
@@ -6107,7 +6156,7 @@ var mdui_monet_bundle = (() => {
       style.setProperty("--mdui-monet-accent-main", scheme.tertiary || scheme.secondary);
       style.setProperty("--mdui-monet-accent-contrast", scheme.onTertiary || scheme.onSecondary);
       style.setProperty("--mdui-monet-bg", scheme.background);
-      style.setProperty("--mdui-monet-surface-bg", scheme.surface);
+      style.setProperty("--mdui-monet-surface-bg", scheme.surfaceContainer || scheme.surface);
       style.setProperty("--mdui-monet-text-main", scheme.onSurface);
     },
     /**
@@ -6127,21 +6176,12 @@ var mdui_monet_bundle = (() => {
       toRemove.forEach((prop) => target.style.removeProperty(prop));
       activeTheme = null;
     },
-    /**
-     * Get active theme data
-     */
     getTheme() {
       return activeTheme;
     },
-    /**
-     * Get current source color
-     */
     getSourceColor() {
       return activeSourceColor;
     },
-    /**
-     * Check if dark mode is active
-     */
     isDarkMode() {
       return activeIsDark;
     }

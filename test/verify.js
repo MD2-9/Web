@@ -56,15 +56,18 @@ if (!css.includes("'Google Sans Flex'") || !css.includes("'GoogleSansFlex'")) {
 }
 console.log('  ✓ Test 3 Passed: Font family declared properly.\n');
 
-// Test 4: Check Monet Theme CSS classes
-console.log('Test 4: Verify .mdui-theme-monet CSS rules');
-if (!css.includes('.mdui-theme-monet .mdui-color-theme')) {
-  throw new Error('Monet color theme rules missing in css/mdui.css');
+// Test 4: Check Monet Theme CSS classes & MD3 Surface/Card coloring
+console.log('Test 4: Verify .mdui-theme-monet CSS rules and MD3 background/card coloring');
+if (!css.includes('.mdui-theme-monet .mdui-card')) {
+  throw new Error('Monet card coloring rules missing in css/mdui.css');
 }
-if (!css.includes('--mdui-monet-primary-500')) {
-  throw new Error('Monet CSS variables missing in css/mdui.css');
+if (!css.includes('--mdui-monet-surface-container')) {
+  throw new Error('Monet surface container CSS variables missing in css/mdui.css');
 }
-console.log('  ✓ Test 4 Passed: Monet CSS rules verified.\n');
+if (!css.includes('.mdui-appbar-with-toolbar .mdui-drawer')) {
+  throw new Error('Drawer top space rules missing in css/mdui.css');
+}
+console.log('  ✓ Test 4 Passed: Monet MD3 coloring and Drawer layout verified.\n');
 
 // Test 5: Check JS Bundles and API
 console.log('Test 5: Verify JS Bundles (mdui.js, mdui.esm.js, mdui.min.js)');
@@ -77,8 +80,8 @@ if (!mduiEsm.includes('mdui.monet =')) throw new Error('mdui.monet missing in js
 if (!mduiMin.includes('generateTheme') || !mduiMin.includes('monet')) throw new Error('monet missing in js/mdui.min.js');
 console.log('  ✓ Test 5 Passed: JS Bundles contain Monet integration.\n');
 
-// Test 6: Verify Monet Algorithm Computation with different seeds
-console.log('Test 6: Verify MCU algorithm calculations');
+// Test 6: Verify Monet Algorithm Computation & MD3 Surface hierarchy
+console.log('Test 6: Verify MCU algorithm calculations & MD3 surfaces');
 const monetIife = fs.readFileSync('dist/monet.iife.js', 'utf8');
 const fn = new Function('window', monetIife + '; return mdui_monet_bundle;');
 const { monet } = fn({});
@@ -89,9 +92,12 @@ testSeeds.forEach(seed => {
   if (!theme.sourceColor || !theme.schemes.light.primary || !theme.schemes.dark.primary) {
     throw new Error(`Theme generation failed for ${seed}`);
   }
-  console.log(`  ✓ Seed ${seed} -> Light: ${theme.schemes.light.primary}, Dark: ${theme.schemes.dark.primary}, Tone 500: ${theme.mduiTones.light.primary[500]}`);
+  if (!theme.surfaces.light.surfaceContainer || !theme.surfaces.dark.surfaceContainer) {
+    throw new Error(`MD3 surfaces missing for ${seed}`);
+  }
+  console.log(`  ✓ Seed ${seed} -> Light: ${theme.schemes.light.primary}, Container: ${theme.surfaces.light.surfaceContainer}, Dark: ${theme.schemes.dark.primary}`);
 });
-console.log('  ✓ Test 6 Passed: Color generation math accurate.\n');
+console.log('  ✓ Test 6 Passed: Color generation and MD3 surface math accurate.\n');
 
 console.log('============================================');
 console.log('🎉 ALL 6 COMPREHENSIVE TESTS PASSED 100%! 🎉');

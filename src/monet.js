@@ -2,8 +2,6 @@ import {
   argbFromHex,
   hexFromArgb,
   themeFromSourceColor,
-  themeFromImage,
-  applyTheme as mcuApplyTheme,
   Hct,
   QuantizerCelebi,
   Score,
@@ -13,6 +11,7 @@ import {
 /**
  * MDUI Monet Dynamic Color Theme Engine
  * Powered by Google Material Color Utilities (HCT & CAM16)
+ * Full Material Design 3 (Material You) Surface & Tonal Palette support
  */
 
 function rgbaFromArgb(argb, alpha = 1) {
@@ -50,9 +49,6 @@ function parseColorToArgb(color) {
 
 // Map Tonal Palettes to MDUI 50..900 & A100..A700 shades
 function createMduiToneMap(palette, isDark = false) {
-  // MDUI Degrees: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900
-  // In Light mode, 50 is lightest (tone 95), 500 is primary (tone 40), 900 is darkest (tone 10)
-  // In Dark mode, 50 is tone 95, 500 is primary (tone 80), 900 is tone 10
   return {
     50: hexFromArgb(palette.tone(95)),
     100: hexFromArgb(palette.tone(90)),
@@ -71,6 +67,52 @@ function createMduiToneMap(palette, isDark = false) {
   };
 }
 
+// Generate MD3 Surface Containers from Neutral & NeutralVariant palettes
+function createMd3Surfaces(palettes, isDark = false) {
+  const n = palettes.neutral;
+  const nv = palettes.neutralVariant;
+
+  if (!isDark) {
+    // Light Mode Surface Hierarchy
+    return {
+      surface: hexFromArgb(n.tone(98)),
+      surfaceDim: hexFromArgb(n.tone(87)),
+      surfaceBright: hexFromArgb(n.tone(98)),
+      surfaceContainerLowest: hexFromArgb(n.tone(100)),
+      surfaceContainerLow: hexFromArgb(n.tone(96)),
+      surfaceContainer: hexFromArgb(n.tone(94)),
+      surfaceContainerHigh: hexFromArgb(n.tone(92)),
+      surfaceContainerHighest: hexFromArgb(n.tone(90)),
+      onSurface: hexFromArgb(n.tone(10)),
+      surfaceVariant: hexFromArgb(nv.tone(90)),
+      onSurfaceVariant: hexFromArgb(nv.tone(30)),
+      background: hexFromArgb(n.tone(98)),
+      onBackground: hexFromArgb(n.tone(10)),
+      outline: hexFromArgb(nv.tone(50)),
+      outlineVariant: hexFromArgb(nv.tone(80))
+    };
+  } else {
+    // Dark Mode Surface Hierarchy
+    return {
+      surface: hexFromArgb(n.tone(6)),
+      surfaceDim: hexFromArgb(n.tone(6)),
+      surfaceBright: hexFromArgb(n.tone(24)),
+      surfaceContainerLowest: hexFromArgb(n.tone(4)),
+      surfaceContainerLow: hexFromArgb(n.tone(10)),
+      surfaceContainer: hexFromArgb(n.tone(12)),
+      surfaceContainerHigh: hexFromArgb(n.tone(17)),
+      surfaceContainerHighest: hexFromArgb(n.tone(22)),
+      onSurface: hexFromArgb(n.tone(90)),
+      surfaceVariant: hexFromArgb(nv.tone(30)),
+      onSurfaceVariant: hexFromArgb(nv.tone(80)),
+      background: hexFromArgb(n.tone(6)),
+      onBackground: hexFromArgb(n.tone(90)),
+      outline: hexFromArgb(nv.tone(60)),
+      outlineVariant: hexFromArgb(nv.tone(30))
+    };
+  }
+}
+
 let activeTheme = null;
 let activeSourceColor = '#3F51B5';
 let activeIsDark = false;
@@ -85,7 +127,7 @@ export const monet = {
   /**
    * Generate full Monet theme object from source color
    * @param {string|number} sourceColor - Hex, RGB, or ARGB color
-   * @returns {Object} theme data including palettes and schemes
+   * @returns {Object} theme data including palettes, MD3 surfaces and schemes
    */
   generateTheme(sourceColor) {
     const argb = parseColorToArgb(sourceColor);
@@ -97,14 +139,20 @@ export const monet = {
     const lightAccentMap = createMduiToneMap(mcuTheme.palettes.tertiary, false);
     const darkAccentMap = createMduiToneMap(mcuTheme.palettes.tertiary, true);
 
+    const lightSurfaces = createMd3Surfaces(mcuTheme.palettes, false);
+    const darkSurfaces = createMd3Surfaces(mcuTheme.palettes, true);
+
     const lightScheme = {};
     for (const [key, value] of Object.entries(mcuTheme.schemes.light.toJSON())) {
       lightScheme[key] = hexFromArgb(value);
     }
+    Object.assign(lightScheme, lightSurfaces);
+
     const darkScheme = {};
     for (const [key, value] of Object.entries(mcuTheme.schemes.dark.toJSON())) {
       darkScheme[key] = hexFromArgb(value);
     }
+    Object.assign(darkScheme, darkSurfaces);
 
     return {
       sourceColor: hex,
@@ -113,6 +161,10 @@ export const monet = {
       schemes: {
         light: lightScheme,
         dark: darkScheme
+      },
+      surfaces: {
+        light: lightSurfaces,
+        dark: darkSurfaces
       },
       mduiTones: {
         light: {
@@ -174,7 +226,6 @@ export const monet = {
       imgElement = imageSource;
     }
 
-    // Extract dominant / seed color via Canvas and QuantizerCelebi
     let seedArgb;
     try {
       const canvas = document.createElement('canvas');
@@ -199,7 +250,6 @@ export const monet = {
       const ranked = Score.score(quantized);
       seedArgb = ranked[0] || pixels[0] || 0xff3f51b5;
     } catch (err) {
-      // Fallback
       seedArgb = 0xff3f51b5;
     }
 
@@ -237,7 +287,6 @@ export const monet = {
     const scheme = theme.schemes[mode];
     const tones = theme.mduiTones[mode];
 
-    // Ensure .mdui-theme-monet class is present
     target.classList.add('mdui-theme-monet');
     if (activeIsDark) {
       target.classList.add('mdui-theme-layout-dark');
@@ -245,12 +294,11 @@ export const monet = {
       target.classList.remove('mdui-theme-layout-dark');
     }
 
-    // Set Material You / Monet CSS custom properties
     const style = target.style;
     style.setProperty('--mdui-monet-source', theme.sourceColor);
     style.setProperty('--mdui-monet-mode', mode);
 
-    // Core Scheme roles
+    // Scheme roles & MD3 Surface Containers
     for (const [role, hex] of Object.entries(scheme)) {
       const kebab = role.replace(/([A-Z])/g, '-$1').toLowerCase();
       style.setProperty(`--mdui-monet-${kebab}`, hex);
@@ -272,7 +320,7 @@ export const monet = {
     style.setProperty('--mdui-monet-accent-main', scheme.tertiary || scheme.secondary);
     style.setProperty('--mdui-monet-accent-contrast', scheme.onTertiary || scheme.onSecondary);
     style.setProperty('--mdui-monet-bg', scheme.background);
-    style.setProperty('--mdui-monet-surface-bg', scheme.surface);
+    style.setProperty('--mdui-monet-surface-bg', scheme.surfaceContainer || scheme.surface);
     style.setProperty('--mdui-monet-text-main', scheme.onSurface);
   },
 
@@ -295,23 +343,14 @@ export const monet = {
     activeTheme = null;
   },
 
-  /**
-   * Get active theme data
-   */
   getTheme() {
     return activeTheme;
   },
 
-  /**
-   * Get current source color
-   */
   getSourceColor() {
     return activeSourceColor;
   },
 
-  /**
-   * Check if dark mode is active
-   */
   isDarkMode() {
     return activeIsDark;
   }
