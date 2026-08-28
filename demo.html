@@ -265,10 +265,19 @@
     </div>
   </header>
 
-  <!-- 左侧抽屉栏 (在标题栏下方留空) -->
+  <!-- 左侧抽屉栏 (带经典 Material Drawer Header 与无缝贴合) -->
   <div class="mdui-drawer mdui-drawer-close" id="left-drawer">
+    <div class="mdui-p-a-2 mdui-color-theme" style="display: flex; align-items: center; gap: 12px; height: 110px; box-sizing: border-box;">
+      <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px;">
+        M1
+      </div>
+      <div>
+        <div style="font-weight: bold; font-size: 16px;">MDUI Angular</div>
+        <div style="font-size: 12px; opacity: 0.85;">MD1 纯直角 & 莫奈动态色</div>
+      </div>
+    </div>
     <ul class="mdui-list">
-      <li class="mdui-subheader">MDUI MD1 & Monet 导航</li>
+      <li class="mdui-subheader">组件导航索引</li>
       <li class="mdui-list-item mdui-ripple" onclick="location.hash='#buttons'">
         <i class="mdui-list-item-icon mdui-icon material-icons">touch_app</i>
         <div class="mdui-list-item-content">1. 按钮与 FAB</div>

@@ -65,18 +65,29 @@ css = css.replace(/border-radius:\s*2px;/g, 'border-radius: 0;');
 
 // C. Fix Drawer Top under Appbar for all screens including ultra-wide desktop
 const drawerAppbarFix = `
-/* 抽屉栏在标题栏下方留空（移动端 & 桌面超宽屏适配） */
-.mdui-appbar-with-toolbar .mdui-drawer:not(.mdui-drawer-full-height) {
+/* 抽屉栏完美贴合修复（模态遮罩抽屉 100% 满高无缝，桌面常驻抽屉紧贴 Appbar） */
+.mdui-drawer {
+  top: 0 !important;
+  height: 100% !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* 仅在桌面端桌面常驻（body-left 且非全高）时，挂载在标题栏下方 */
+.mdui-drawer-body-left:not(.mdui-drawer-full-height) .mdui-drawer:not(.mdui-drawer-overlay):not(.mdui-drawer-close) {
   top: 56px !important;
+  height: calc(100% - 56px) !important;
 }
 @media (min-width: 600px) {
-  .mdui-appbar-with-toolbar .mdui-drawer:not(.mdui-drawer-full-height) {
+  .mdui-drawer-body-left:not(.mdui-drawer-full-height) .mdui-drawer:not(.mdui-drawer-overlay):not(.mdui-drawer-close) {
     top: 64px !important;
+    height: calc(100% - 64px) !important;
   }
 }
 @media (orientation: landscape) and (max-width: 959.9px) {
-  .mdui-appbar-with-toolbar .mdui-drawer:not(.mdui-drawer-full-height) {
+  .mdui-drawer-body-left:not(.mdui-drawer-full-height) .mdui-drawer:not(.mdui-drawer-overlay):not(.mdui-drawer-close) {
     top: 48px !important;
+    height: calc(100% - 48px) !important;
   }
 }
 
