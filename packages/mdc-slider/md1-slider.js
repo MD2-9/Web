@@ -1,0 +1,57 @@
+/**
+ * @license
+ * Copyright 2026 unjal <unjal29@outlook.com>
+ * Licensed under the Apache License, Version 2.0
+ */
+
+/**
+ * MD1 / MDUI 经典离散滑块控制器
+ */
+export class Md1Slider {
+  /**
+   * @param {HTMLElement} root
+   */
+  constructor(root) {
+    this.root = root;
+    this.input = root.querySelector('input[type="range"]');
+    this.fill = root.querySelector('.md1-slider-fill');
+    this.thumbWrapper = root.querySelector('.md1-slider-thumb-wrapper');
+    this.pinText = root.querySelector('.md1-slider-thumb span');
+    this.valueDisplay = root.parentElement ? root.parentElement.querySelector('#slider-val') : null;
+
+    if (this.input) {
+      this.init();
+    }
+  }
+
+  init() {
+    const update = (val) => {
+      const min = parseInt(this.input.min, 10) || 0;
+      const max = parseInt(this.input.max, 10) || 100;
+      const percent = ((val - min) / (max - min)) * 100;
+
+      if (this.fill) this.fill.style.width = `${percent}%`;
+      if (this.thumbWrapper) this.thumbWrapper.style.left = `${percent}%`;
+      if (this.pinText) this.pinText.textContent = val;
+      if (this.valueDisplay) this.valueDisplay.textContent = `Tone ${val}`;
+    };
+
+    this.input.addEventListener('input', (e) => update(e.target.value));
+    this.input.addEventListener('focus', () => this.root.classList.add('is-active'));
+    this.input.addEventListener('blur', () => this.root.classList.remove('is-active'));
+    this.input.addEventListener('mousedown', () => this.root.classList.add('is-active'));
+    window.addEventListener('mouseup', () => this.root.classList.remove('is-active'));
+    this.input.addEventListener('touchstart', () => this.root.classList.add('is-active'), { passive: true });
+    window.addEventListener('touchend', () => this.root.classList.remove('is-active'), { passive: true });
+
+    update(this.input.value);
+  }
+
+  static attachTo(root) {
+    return new Md1Slider(root);
+  }
+
+  static initAll(selector = '.md1-slider') {
+    return Array.from(document.querySelectorAll(selector)).map(el => new Md1Slider(el));
+  }
+}

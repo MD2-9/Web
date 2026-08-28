@@ -60,7 +60,7 @@
   min-width: 640px;
   max-width: 865px;
   transform: translateY(150px) scale(.8);
-  border-radius: 2px;
+  border-radius: 0;
   opacity: 0;
 
   @include mdc-rtl(".mdc-dialog") {

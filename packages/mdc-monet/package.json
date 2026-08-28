@@ -1,0 +1,19 @@
+{
+  "name": "@material/monet",
+  "version": "0.34.1",
+  "description": "Material Components Web - Monet Dynamic Color & Palette System (CAM16 & HCT)",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "keywords": [
+    "material components",
+    "material design",
+    "monet",
+    "material you",
+    "cam16",
+    "hct",
+    "palette"
+  ],
+  "dependencies": {
+    "@material/theme": "^0.34.1"
+  }
+}

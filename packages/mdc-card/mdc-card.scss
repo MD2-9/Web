@@ -24,9 +24,11 @@
 
 .mdc-card {
   @include mdc-card-fill-color(background);
-  @include mdc-card-corner-radius(2px);
+  @include mdc-card-corner-radius(0px);
   @include mdc-elevation(2);
   @include mdc-card-container-layout_;
+  position: relative;
+  overflow: hidden;
 }
 
 .mdc-card--stroked {

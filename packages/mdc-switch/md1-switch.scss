@@ -1,0 +1,58 @@
+//
+// Copyright 2026 unjal <unjal29@outlook.com>
+// Licensed under the Apache License, Version 2.0
+//
+// MD1 纯正滑动开关规范
+//
+
+.md1-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.md1-switch-track {
+  width: 36px;
+  height: 14px;
+  border-radius: 7px !important;
+  background-color: rgba(0, 0, 0, 0.26);
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  transition: background-color 0.25s ease;
+}
+
+.dark-theme .md1-switch-track {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.md1-switch-thumb {
+  position: absolute;
+  top: -3px;
+  left: -2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50% !important;
+  background-color: #fafafa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.28);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.25s ease;
+}
+
+.md1-switch input:checked + .md1-switch-track {
+  background-color: rgba(103, 80, 164, 0.5);
+
+  .md1-switch-thumb {
+    transform: translateX(20px);
+    background-color: var(--mdc-theme-primary, #6750a4);
+  }
+}

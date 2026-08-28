@@ -1,0 +1,17 @@
+{
+  "name": "@material/expansion-panel",
+  "version": "0.34.1",
+  "description": "Material Components Web - Expansion Panel & Accordion",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "keywords": [
+    "material components",
+    "material design",
+    "expansion panel",
+    "accordion"
+  ],
+  "dependencies": {
+    "@material/theme": "^0.34.1",
+    "@material/ripple": "^0.34.1"
+  }
+}
