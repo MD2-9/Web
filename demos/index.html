@@ -1311,30 +1311,141 @@
       width: calc(100% - 56px);
     }
 
-    /* 下拉选择器 (Select) */
-    .mdc-custom-select {
+    /* 图标对齐与 MDC 标准 Text Field 修复 */
+    .mdc-text-field {
+      position: relative;
       display: inline-flex;
       align-items: center;
-      position: relative;
-      background: rgba(0,0,0,0.04);
+      box-sizing: border-box;
+      height: 56px;
+      background-color: rgba(0, 0, 0, 0.04);
       border-bottom: 2px solid var(--mdc-theme-primary);
-      height: 48px;
-      padding: 0 12px;
     }
-    .dark-theme .mdc-custom-select {
-      background: rgba(255,255,255,0.06);
+    .dark-theme .mdc-text-field {
+      background-color: rgba(255, 255, 255, 0.06);
     }
-    .mdc-custom-select select {
+    .mdc-text-field--with-leading-icon .mdc-text-field__icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--mdc-theme-primary);
+      font-size: 20px;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .mdc-text-field--with-leading-icon .mdc-text-field__input {
+      padding-left: 44px !important;
+      padding-right: 12px;
+      width: 100%;
+      height: 100%;
       border: none;
       background: transparent;
-      font-size: 14px;
-      font-weight: 500;
-      color: inherit;
       outline: none;
+      font-size: 14px;
+      color: inherit;
+      box-sizing: border-box;
+      padding-top: 14px;
+    }
+    .mdc-text-field--with-leading-icon .mdc-floating-label {
+      position: absolute;
+      left: 44px;
+      top: 18px;
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.6);
+      pointer-events: none;
+      transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dark-theme .mdc-text-field--with-leading-icon .mdc-floating-label {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    .mdc-text-field--with-leading-icon .mdc-floating-label--float-above {
+      transform: translateY(-12px) scale(0.75);
+      transform-origin: top left;
+      color: var(--mdc-theme-primary);
+      font-weight: 600;
+    }
+
+    /* Outlined Text Field with Leading Icon */
+    .mdc-text-field--outlined.mdc-text-field--with-leading-icon {
+      background: transparent;
+      border: 1px solid rgba(0, 0, 0, 0.24);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.24);
+    }
+    .dark-theme .mdc-text-field--outlined.mdc-text-field--with-leading-icon {
+      background: transparent;
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+    .mdc-text-field--outlined.mdc-text-field--with-leading-icon .mdc-text-field__input {
+      padding-top: 0;
+    }
+
+    /* Material Design 0px 纯直角自定义 Select 组件 (MD Custom Select) */
+    .mdc-select-custom {
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      width: 240px;
+    }
+    .mdc-select-custom__surface {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      padding: 0 14px;
+      background: rgba(0, 0, 0, 0.04);
+      border-bottom: 2px solid var(--mdc-theme-primary);
       cursor: pointer;
-      padding-right: 20px;
-      appearance: none;
-      -webkit-appearance: none;
+      user-select: none;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .dark-theme .mdc-select-custom__surface {
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .mdc-select-custom__menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      min-width: 240px;
+      background: var(--mdc-theme-surface, #ffffff);
+      color: var(--mdc-theme-on-surface, #1d1b20);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+      z-index: 9999;
+      flex-direction: column;
+      padding: 6px 0;
+      border-radius: 0;
+    }
+    .dark-theme .mdc-select-custom__menu {
+      background: #25232a;
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    }
+    .mdc-select-custom__item {
+      padding: 12px 16px;
+      font-size: 13.5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .mdc-select-custom__item:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    .dark-theme .mdc-select-custom__item:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .mdc-select-custom__item.is-selected {
+      background: rgba(103, 80, 164, 0.1);
+      color: var(--mdc-theme-primary);
+      font-weight: 600;
+    }
+    .dark-theme .mdc-select-custom__item.is-selected {
+      background: rgba(208, 188, 255, 0.12);
     }
 
     /* 排版表格 */
@@ -1792,28 +1903,44 @@
       </h3>
       <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 16px;">
         
-        <!-- 填充型输入框 (带图标) -->
-        <div class="mdc-text-field" style="width: 230px; display: inline-flex; align-items: center;">
-          <i class="material-icons" style="margin-left: 12px; margin-right: -4px; color: var(--mdc-theme-primary); font-size: 20px;">edit</i>
+        <!-- MDC 标准填充型输入框 (带前缀图标) -->
+        <div class="mdc-text-field mdc-text-field--with-leading-icon" style="width: 240px;">
+          <i class="material-icons mdc-text-field__icon">edit</i>
           <input type="text" id="input-filled" class="mdc-text-field__input" value="Google Sans Flex">
           <label class="mdc-floating-label mdc-floating-label--float-above" for="input-filled">Filled 输入框</label>
           <div class="mdc-line-ripple"></div>
         </div>
 
-        <!-- 描边型输入框 (Outlined Text Field) -->
-        <div style="position: relative; width: 200px; display: inline-flex; align-items: center; border: 1px solid rgba(0,0,0,0.24); padding: 12px 14px; box-sizing: border-box;">
-          <input type="text" value="Outlined Style" style="border: none; background: transparent; outline: none; font-size: 14px; width: 100%; color: inherit;">
-          <label style="position: absolute; top: -8px; left: 10px; background: var(--mdc-theme-surface-container, #fff); padding: 0 4px; font-size: 11px; color: var(--mdc-theme-primary); font-weight: 600;">Outlined 框</label>
+        <!-- MDC 标准描边型输入框 (带前缀图标) -->
+        <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon" style="width: 240px;">
+          <i class="material-icons mdc-text-field__icon">tune</i>
+          <input type="text" id="input-outlined" class="mdc-text-field__input" value="Outlined Style">
+          <label class="mdc-floating-label mdc-floating-label--float-above" for="input-outlined">Outlined 框</label>
         </div>
 
-        <!-- 下拉选择器 (Select Component) -->
-        <div class="mdc-custom-select">
-          <select>
-            <option>选项 1: 莫奈算法色阶</option>
-            <option>选项 2: Google 变量字体</option>
-            <option>选项 3: 纯直角骨架体系</option>
-          </select>
-          <i class="material-icons" style="font-size: 20px; pointer-events: none; margin-left: -20px;">arrow_drop_down</i>
+        <!-- Material Design 0px 纯直角自定义 Select 组件 (MD Custom Select with Floating Menu) -->
+        <div class="mdc-select-custom" id="demoMdcSelect">
+          <div class="mdc-select-custom__surface" onclick="toggleMdcSelect(event)">
+            <div style="display: flex; flex-direction: column; overflow: hidden; text-align: left;">
+              <span style="font-size: 11px; color: var(--mdc-theme-primary); font-weight: 600; line-height: 1.2;">选择主题算法</span>
+              <span id="mdcSelectValue" style="font-size: 14px; font-weight: 500; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; margin-top: 2px;">选项 2: Google 变量字体</span>
+            </div>
+            <i class="material-icons" id="mdcSelectArrow" style="font-size: 22px; color: var(--mdc-theme-primary); transition: transform 0.25s ease;">arrow_drop_down</i>
+          </div>
+          <div class="mdc-select-custom__menu" id="mdcSelectMenu">
+            <div class="mdc-select-custom__item" onclick="selectMdcOption('选项 1: 莫奈算法色阶', this)">
+              <span>选项 1: 莫奈算法色阶</span>
+              <i class="material-icons item-check" style="font-size: 18px; color: var(--mdc-theme-primary); visibility: hidden;">check</i>
+            </div>
+            <div class="mdc-select-custom__item is-selected" onclick="selectMdcOption('选项 2: Google 变量字体', this)">
+              <span>选项 2: Google 变量字体</span>
+              <i class="material-icons item-check" style="font-size: 18px; color: var(--mdc-theme-primary); visibility: visible;">check</i>
+            </div>
+            <div class="mdc-select-custom__item" onclick="selectMdcOption('选项 3: 纯直角骨架体系', this)">
+              <span>选项 3: 纯直角骨架体系</span>
+              <i class="material-icons item-check" style="font-size: 18px; color: var(--mdc-theme-primary); visibility: hidden;">check</i>
+            </div>
+          </div>
         </div>
 
         <!-- 纯直角复选框 (Checked, Unchecked, Indeterminate) -->
@@ -2774,6 +2901,48 @@
           closeOverlay(panel.id);
         }
       });
+    });
+
+    // =========================================================================
+    // Material Design 0px 自定义 Select 下拉组件交互与全局外部点击监听
+    // =========================================================================
+    function toggleMdcSelect(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById('mdcSelectMenu');
+      const arrow = document.getElementById('mdcSelectArrow');
+      if (!menu) return;
+      const isOpen = menu.style.display === 'flex';
+      menu.style.display = isOpen ? 'none' : 'flex';
+      if (arrow) arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
+    function selectMdcOption(val, el) {
+      const valEl = document.getElementById('mdcSelectValue');
+      if (valEl) valEl.textContent = val;
+      const menu = document.getElementById('mdcSelectMenu');
+      if (menu) {
+        menu.querySelectorAll('.mdc-select-custom__item').forEach(item => {
+          item.classList.remove('is-selected');
+          const check = item.querySelector('.item-check');
+          if (check) check.style.visibility = 'hidden';
+        });
+        el.classList.add('is-selected');
+        const activeCheck = el.querySelector('.item-check');
+        if (activeCheck) activeCheck.style.visibility = 'visible';
+        menu.style.display = 'none';
+      }
+      const arrow = document.getElementById('mdcSelectArrow');
+      if (arrow) arrow.style.transform = 'rotate(0deg)';
+    }
+
+    document.addEventListener('click', (e) => {
+      const selectBox = document.getElementById('demoMdcSelect');
+      if (selectBox && !selectBox.contains(e.target)) {
+        const menu = document.getElementById('mdcSelectMenu');
+        const arrow = document.getElementById('mdcSelectArrow');
+        if (menu) menu.style.display = 'none';
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+      }
     });
 
     // =========================================================================
