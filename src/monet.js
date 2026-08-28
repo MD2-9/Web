@@ -21,11 +21,9 @@ import {
 /**
  * MDUI Monet Dynamic Color Theme Engine
  * Full Android 12 - 17 Material You (Monet) implementation
- * - Supports Single-color, Dual-color, and Triple-color themes
- * - Configurable wallpaper extraction (1, 2, or 3 colors)
- * - Android 12-17 5 Core Palettes (Accent 1, Accent 2, Accent 3, Neutral 1, Neutral 2)
- * - Android 13+ Dynamic Scheme Variants (TonalSpot, Vibrant, Expressive, Neutral, Rainbow, FruitSalad, Monochrome, Content, Fidelity)
- * - Full MD3 Surface Hierarchy & MD1 Pure Angular/Circle styling integration
+ * - Strict CAM16/HCT Neutral Tone 4..24 MD3 Dark Surface hierarchy
+ * - Subtle seed hue tinting in dark mode (Tone 4, 6, 10, 12, 17, 22, 24)
+ * - Single, Dual, and Triple seed modes with Scheme variants
  */
 
 function rgbaFromArgb(argb, alpha = 1) {
@@ -81,7 +79,18 @@ function createMduiToneMap(palette, isDark = false) {
   };
 }
 
-// Generate MD3 Surface Containers from Neutral & NeutralVariant palettes
+/**
+ * Generate MD3 Surface Containers from Neutral & NeutralVariant palettes
+ * Strict compliance with Material 3 Dark theme specification:
+ * - background / surface: Tone 6 (Subtle seed hue tinted night shade)
+ * - surfaceContainerLowest: Tone 4
+ * - surfaceContainerLow: Tone 10
+ * - surfaceContainer: Tone 12
+ * - surfaceContainerHigh: Tone 17
+ * - surfaceContainerHighest: Tone 22
+ * - onSurface: Tone 90 (Soft high-contrast, not pure white)
+ * - onSurfaceVariant: Tone 80
+ */
 function createMd3Surfaces(palettes, isDark = false) {
   const n = palettes.neutral || palettes.neutral1;
   const nv = palettes.neutralVariant || palettes.neutral2 || palettes.neutral;
@@ -142,7 +151,7 @@ const variantConstructors = {
 
 let activeTheme = null;
 let activeSourceColors = { primary: '#3F51B5', secondary: null, tertiary: null };
-let activeColorMode = 'single'; // 'single' | 'dual' | 'triple'
+let activeColorMode = 'single';
 let activeVariant = 'tonal_spot';
 let activeIsDark = false;
 
@@ -153,10 +162,6 @@ export const monet = {
   Hct,
   TonalPalette,
 
-  /**
-   * Normalize input into { primary, secondary, tertiary, mode }
-   * @param {string|Array|Object} input
-   */
   normalizeColors(input) {
     if (!input) return { primary: '#3F51B5', secondary: null, tertiary: null, mode: 'single' };
     if (typeof input === 'string' || typeof input === 'number') {
@@ -186,12 +191,6 @@ export const monet = {
     return { primary: '#3F51B5', secondary: null, tertiary: null, mode: 'single' };
   },
 
-  /**
-   * Generate full Monet theme object supporting single, dual, or triple theme colors
-   * @param {string|Array|Object} sourceInput - 1, 2, or 3 theme colors
-   * @param {Object} [options] - variant: 'tonal_spot'|'vibrant'|'expressive'|'neutral'|'rainbow'|'fruit_salad'|'monochrome', contrastLevel: 0
-   * @returns {Object} theme data including palettes, MD3 surfaces, schemes
-   */
   generateTheme(sourceInput, options = {}) {
     const { variant = activeVariant || 'tonal_spot', contrastLevel = 0 } = options;
     const norm = this.normalizeColors(sourceInput);
@@ -220,21 +219,19 @@ export const monet = {
       neutralVariant: TonalPalette.fromHueAndChroma(primaryHct.hue, 8)
     };
 
-    // Dual or Triple mode: Override Secondary Palette if provided
+    // Dual or Triple mode overrides
     if (norm.secondary) {
       const secArgb = parseColorToArgb(norm.secondary);
       const secHct = Hct.fromInt(secArgb);
       palettes.secondary = TonalPalette.fromHueAndChroma(secHct.hue, Math.max(16, secHct.chroma));
     }
 
-    // Triple mode: Override Tertiary Palette if provided
     if (norm.tertiary) {
       const tertArgb = parseColorToArgb(norm.tertiary);
       const tertHct = Hct.fromInt(tertArgb);
       palettes.tertiary = TonalPalette.fromHueAndChroma(tertHct.hue, Math.max(24, tertHct.chroma));
     }
 
-    // Alias to Android 12-17 5 Core Palettes (A1, A2, A3, N1, N2)
     palettes.accent1 = palettes.primary;
     palettes.accent2 = palettes.secondary;
     palettes.accent3 = palettes.tertiary;
@@ -245,7 +242,6 @@ export const monet = {
     const secondaryHex = norm.secondary ? hexFromArgb(parseColorToArgb(norm.secondary)) : hexFromArgb(palettes.secondary.tone(40));
     const tertiaryHex = norm.tertiary ? hexFromArgb(parseColorToArgb(norm.tertiary)) : hexFromArgb(palettes.tertiary.tone(40));
 
-    // Generate MDUI 50..900 Tones for all 3 accent colors
     const lightPrimaryMap = createMduiToneMap(palettes.primary, false);
     const darkPrimaryMap = createMduiToneMap(palettes.primary, true);
     const lightSecondaryMap = createMduiToneMap(palettes.secondary, false);
@@ -256,7 +252,6 @@ export const monet = {
     const lightSurfaces = createMd3Surfaces(palettes, false);
     const darkSurfaces = createMd3Surfaces(palettes, true);
 
-    // Light Scheme
     const lightScheme = {
       primary: hexFromArgb(palettes.primary.tone(40)),
       onPrimary: hexFromArgb(palettes.primary.tone(100)),
@@ -273,7 +268,6 @@ export const monet = {
       ...lightSurfaces
     };
 
-    // Dark Scheme
     const darkScheme = {
       primary: hexFromArgb(palettes.primary.tone(80)),
       onPrimary: hexFromArgb(palettes.primary.tone(20)),
@@ -325,11 +319,6 @@ export const monet = {
     };
   },
 
-  /**
-   * Set Monet seed color(s) and apply theme (Supports 1, 2, or 3 colors)
-   * @param {string|Array|Object} colors - Single color, array (1..3 colors), or { primary, secondary, tertiary, mode }
-   * @param {Object} [options] - Options: target, dark, variant, apply
-   */
   setColor(colors, options = {}) {
     const {
       target = (typeof document !== 'undefined' ? document.documentElement : null),
@@ -352,9 +341,6 @@ export const monet = {
     return theme;
   },
 
-  /**
-   * Convenience helpers
-   */
   setSingleColor(primary, options = {}) {
     return this.setColor({ primary, secondary: null, tertiary: null, mode: 'single' }, options);
   },
@@ -367,9 +353,6 @@ export const monet = {
     return this.setColor({ primary, secondary, tertiary, mode: 'triple' }, options);
   },
 
-  /**
-   * Set dynamic scheme variant (Android 13+)
-   */
   setVariant(variant, target = (typeof document !== 'undefined' ? document.documentElement : null)) {
     activeVariant = variant;
     if (activeSourceColors) {
@@ -377,12 +360,6 @@ export const monet = {
     }
   },
 
-  /**
-   * Extract Monet theme from image element, canvas or image URL
-   * @param {HTMLImageElement|HTMLCanvasElement|string} imageSource
-   * @param {Object} [options] - count: 1 | 2 | 3 (number of colors to extract), variant, dark
-   * @returns {Promise<Object>}
-   */
   async fromImage(imageSource, options = {}) {
     if (typeof document === 'undefined') {
       throw new Error('fromImage requires browser environment');
@@ -443,9 +420,6 @@ export const monet = {
     }, { ...options, variant });
   },
 
-  /**
-   * Toggle or set dark mode for Monet theme
-   */
   setDarkMode(isDark, target = (typeof document !== 'undefined' ? document.documentElement : null)) {
     activeIsDark = Boolean(isDark);
     if (activeTheme && target) {
@@ -453,9 +427,6 @@ export const monet = {
     }
   },
 
-  /**
-   * Apply theme data as CSS variables to target DOM node
-   */
   applyTheme(theme, options = {}) {
     const {
       target = (typeof document !== 'undefined' ? document.documentElement : null),
@@ -511,7 +482,7 @@ export const monet = {
       style.setProperty(`--mdui-monet-accent-${degree}`, hex);
     }
 
-    // Base shortcuts
+    // Shortcuts
     style.setProperty('--mdui-monet-primary-main', scheme.primary);
     style.setProperty('--mdui-monet-primary-contrast', scheme.onPrimary);
     style.setProperty('--mdui-monet-secondary-main', scheme.secondary);
@@ -525,9 +496,6 @@ export const monet = {
     style.setProperty('--mdui-monet-text-main', scheme.onSurface);
   },
 
-  /**
-   * Reset target and remove Monet theme (reverting to MD 19 colors)
-   */
   reset(target = (typeof document !== 'undefined' ? document.documentElement : null)) {
     if (!target || !target.style) return;
     target.classList.remove('mdui-theme-monet');

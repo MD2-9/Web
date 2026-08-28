@@ -5983,6 +5983,7 @@ $(() => {
 
 
 
+
 // === Monet Dynamic Theme Module ===
 const monet = (() => {
   var mdui_monet_bundle = (() => {
@@ -12295,10 +12296,6 @@ const monet = (() => {
     rgbaFromArgb,
     Hct,
     TonalPalette,
-    /**
-     * Normalize input into { primary, secondary, tertiary, mode }
-     * @param {string|Array|Object} input
-     */
     normalizeColors(input) {
       if (!input) return { primary: "#3F51B5", secondary: null, tertiary: null, mode: "single" };
       if (typeof input === "string" || typeof input === "number") {
@@ -12327,12 +12324,6 @@ const monet = (() => {
       }
       return { primary: "#3F51B5", secondary: null, tertiary: null, mode: "single" };
     },
-    /**
-     * Generate full Monet theme object supporting single, dual, or triple theme colors
-     * @param {string|Array|Object} sourceInput - 1, 2, or 3 theme colors
-     * @param {Object} [options] - variant: 'tonal_spot'|'vibrant'|'expressive'|'neutral'|'rainbow'|'fruit_salad'|'monochrome', contrastLevel: 0
-     * @returns {Object} theme data including palettes, MD3 surfaces, schemes
-     */
     generateTheme(sourceInput, options = {}) {
       const { variant = activeVariant || "tonal_spot", contrastLevel = 0 } = options;
       const norm = this.normalizeColors(sourceInput);
@@ -12446,11 +12437,6 @@ const monet = (() => {
         }
       };
     },
-    /**
-     * Set Monet seed color(s) and apply theme (Supports 1, 2, or 3 colors)
-     * @param {string|Array|Object} colors - Single color, array (1..3 colors), or { primary, secondary, tertiary, mode }
-     * @param {Object} [options] - Options: target, dark, variant, apply
-     */
     setColor(colors, options = {}) {
       const {
         target = typeof document !== "undefined" ? document.documentElement : null,
@@ -12470,9 +12456,6 @@ const monet = (() => {
       }
       return theme;
     },
-    /**
-     * Convenience helpers
-     */
     setSingleColor(primary, options = {}) {
       return this.setColor({ primary, secondary: null, tertiary: null, mode: "single" }, options);
     },
@@ -12482,21 +12465,12 @@ const monet = (() => {
     setTripleColors(primary, secondary, tertiary, options = {}) {
       return this.setColor({ primary, secondary, tertiary, mode: "triple" }, options);
     },
-    /**
-     * Set dynamic scheme variant (Android 13+)
-     */
     setVariant(variant, target = typeof document !== "undefined" ? document.documentElement : null) {
       activeVariant = variant;
       if (activeSourceColors) {
         return this.setColor(activeSourceColors, { target, variant: activeVariant, dark: activeIsDark });
       }
     },
-    /**
-     * Extract Monet theme from image element, canvas or image URL
-     * @param {HTMLImageElement|HTMLCanvasElement|string} imageSource
-     * @param {Object} [options] - count: 1 | 2 | 3 (number of colors to extract), variant, dark
-     * @returns {Promise<Object>}
-     */
     async fromImage(imageSource, options = {}) {
       if (typeof document === "undefined") {
         throw new Error("fromImage requires browser environment");
@@ -12550,18 +12524,12 @@ const monet = (() => {
         mode
       }, { ...options, variant });
     },
-    /**
-     * Toggle or set dark mode for Monet theme
-     */
     setDarkMode(isDark, target = typeof document !== "undefined" ? document.documentElement : null) {
       activeIsDark = Boolean(isDark);
       if (activeTheme && target) {
         this.applyTheme(activeTheme, { target, dark: activeIsDark });
       }
     },
-    /**
-     * Apply theme data as CSS variables to target DOM node
-     */
     applyTheme(theme, options = {}) {
       const {
         target = typeof document !== "undefined" ? document.documentElement : null,
@@ -12614,9 +12582,6 @@ const monet = (() => {
       style.setProperty("--mdui-monet-surface-bg", scheme.surfaceContainer || scheme.surface);
       style.setProperty("--mdui-monet-text-main", scheme.onSurface);
     },
-    /**
-     * Reset target and remove Monet theme (reverting to MD 19 colors)
-     */
     reset(target = typeof document !== "undefined" ? document.documentElement : null) {
       if (!target || !target.style) return;
       target.classList.remove("mdui-theme-monet");

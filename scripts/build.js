@@ -185,11 +185,14 @@ const monetCssBlock = `
   --mdui-monet-accent-a700: #304FFE;
 }
 
-/* Monet 页面背景与文字色 (MD3 Background) */
+/* Monet 页面背景与文字色 (MD3 Background: 亮色 Tone 98 / 暗色 Tone 6 优雅种子微调底色) */
 body.mdui-theme-monet,
-.mdui-theme-monet {
-  background-color: var(--mdui-monet-background, #FEF7FF) !important;
-  color: var(--mdui-monet-on-background, #1D1B20) !important;
+.mdui-theme-monet,
+body.mdui-theme-monet.mdui-theme-layout-dark,
+.mdui-theme-monet.mdui-theme-layout-dark,
+.mdui-theme-monet .mdui-theme-layout-dark {
+  background-color: var(--mdui-monet-background) !important;
+  color: var(--mdui-monet-on-background) !important;
 }
 
 /* Monet 标题栏 (Appbar & Toolbar) 动态主色着色 (最高优先级) */
@@ -203,36 +206,47 @@ body.mdui-theme-monet .mdui-toolbar.mdui-color-theme {
   color: var(--mdui-monet-on-primary, #ffffff) !important;
 }
 
-/* Monet 卡片着色 (MD3 Surface Container) */
+/* Monet 卡片着色 (MD3 Surface Container: 亮色 Tone 94 / 暗色 Tone 12，绝非死灰 #212121) */
 .mdui-theme-monet .mdui-card,
-.mdui-theme-monet.mdui-card {
-  background-color: var(--mdui-monet-surface-container, #F3EDF7) !important;
-  color: var(--mdui-monet-on-surface, #1D1B20) !important;
+.mdui-theme-monet.mdui-card,
+.mdui-theme-monet.mdui-theme-layout-dark .mdui-card,
+.mdui-theme-monet .mdui-theme-layout-dark .mdui-card {
+  background-color: var(--mdui-monet-surface-container) !important;
+  color: var(--mdui-monet-on-surface) !important;
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.12) !important;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.12) !important;
 }
 .mdui-theme-monet .mdui-card-header-subtitle,
 .mdui-theme-monet .mdui-card-primary-subtitle {
-  color: var(--mdui-monet-on-surface-variant, #49454F) !important;
+  color: var(--mdui-monet-on-surface-variant) !important;
 }
 
-/* Monet 抽屉栏、对话框、菜单、面板着色 */
-.mdui-theme-monet .mdui-drawer {
-  background-color: var(--mdui-monet-surface-container-low, var(--mdui-monet-surface, #FEF7FF)) !important;
-  color: var(--mdui-monet-on-surface, #1D1B20) !important;
+/* Monet 抽屉栏、对话框、菜单、折叠面板着色 (MD3 Surface Container Hierarchy) */
+.mdui-theme-monet .mdui-drawer,
+.mdui-theme-monet.mdui-theme-layout-dark .mdui-drawer {
+  background-color: var(--mdui-monet-surface-container-low, var(--mdui-monet-surface)) !important;
+  color: var(--mdui-monet-on-surface) !important;
 }
-.mdui-theme-monet .mdui-dialog {
-  background-color: var(--mdui-monet-surface-container-high, #ECE6F0) !important;
-  color: var(--mdui-monet-on-surface, #1D1B20) !important;
+.mdui-theme-monet .mdui-dialog,
+.mdui-theme-monet.mdui-theme-layout-dark .mdui-dialog {
+  background-color: var(--mdui-monet-surface-container-high) !important;
+  color: var(--mdui-monet-on-surface) !important;
 }
 .mdui-theme-monet .mdui-menu,
-.mdui-theme-monet .mdui-select-menu {
-  background-color: var(--mdui-monet-surface-container, #F3EDF7) !important;
-  color: var(--mdui-monet-on-surface, #1D1B20) !important;
+.mdui-theme-monet .mdui-select-menu,
+.mdui-theme-monet.mdui-theme-layout-dark .mdui-menu {
+  background-color: var(--mdui-monet-surface-container) !important;
+  color: var(--mdui-monet-on-surface) !important;
 }
-.mdui-theme-monet .mdui-table {
-  background-color: var(--mdui-monet-surface-container, #F3EDF7) !important;
-  color: var(--mdui-monet-on-surface, #1D1B20) !important;
+.mdui-theme-monet .mdui-panel-item,
+.mdui-theme-monet.mdui-theme-layout-dark .mdui-panel-item {
+  background-color: var(--mdui-monet-surface-container) !important;
+  color: var(--mdui-monet-on-surface) !important;
+}
+.mdui-theme-monet .mdui-table,
+.mdui-theme-monet.mdui-theme-layout-dark .mdui-table {
+  background-color: var(--mdui-monet-surface-container) !important;
+  color: var(--mdui-monet-on-surface) !important;
 }
 
 /* Monet 全局主色与强调色强制优先注入 */
