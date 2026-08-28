@@ -21,9 +21,10 @@ import {
 /**
  * MDUI Monet Dynamic Color Theme Engine
  * Full Android 12 - 17 Material You (Monet) implementation
+ * - Pure Material HCT Color Space dynamic schemes integration
+ * - Realtime Variant Switching (TonalSpot, Vibrant, Expressive, Neutral/Spritz, Rainbow, FruitSalad, Monochrome, Content, Fidelity)
  * - Strict CAM16/HCT Neutral Tone 4..24 MD3 Dark Surface hierarchy
- * - Subtle seed hue tinting in dark mode (Tone 4, 6, 10, 12, 17, 22, 24)
- * - Single, Dual, and Triple seed modes with Scheme variants
+ * - Single, Dual, and Triple seed modes
  */
 
 function rgbaFromArgb(argb, alpha = 1) {
@@ -80,16 +81,15 @@ function createMduiToneMap(palette, isDark = false) {
 }
 
 /**
- * Generate MD3 Surface Containers from Neutral & NeutralVariant palettes
- * Strict compliance with Material 3 Dark theme specification:
- * - background / surface: Tone 6 (Subtle seed hue tinted night shade)
- * - surfaceContainerLowest: Tone 4
- * - surfaceContainerLow: Tone 10
- * - surfaceContainer: Tone 12
- * - surfaceContainerHigh: Tone 17
- * - surfaceContainerHighest: Tone 22
- * - onSurface: Tone 90 (Soft high-contrast, not pure white)
- * - onSurfaceVariant: Tone 80
+ * Generate MD3 Surface Containers from HCT Neutral & NeutralVariant palettes
+ * - background / surface: Tone 6 (Subtle seed hue tinted night shade in dark)
+ * - surfaceContainerLowest: Tone 4 in dark / Tone 100 in light
+ * - surfaceContainerLow: Tone 10 in dark / Tone 96 in light
+ * - surfaceContainer: Tone 12 in dark / Tone 94 in light
+ * - surfaceContainerHigh: Tone 17 in dark / Tone 92 in light
+ * - surfaceContainerHighest: Tone 22 in dark / Tone 90 in light
+ * - onSurface: Tone 90 in dark / Tone 10 in light
+ * - onSurfaceVariant: Tone 80 in dark / Tone 30 in light
  */
 function createMd3Surfaces(palettes, isDark = false) {
   const n = palettes.neutral || palettes.neutral1;
@@ -134,7 +134,7 @@ function createMd3Surfaces(palettes, isDark = false) {
   }
 }
 
-// Variant Scheme Factory
+// Variant Scheme Factory (Material HCT Dynamic Schemes)
 const variantConstructors = {
   tonal_spot: SchemeTonalSpot,
   vibrant: SchemeVibrant,
@@ -191,6 +191,9 @@ export const monet = {
     return { primary: '#3F51B5', secondary: null, tertiary: null, mode: 'single' };
   },
 
+  /**
+   * Generate full Monet theme object using Material HCT Dynamic Scheme
+   */
   generateTheme(sourceInput, options = {}) {
     const { variant = activeVariant || 'tonal_spot', contrastLevel = 0 } = options;
     const norm = this.normalizeColors(sourceInput);
@@ -210,16 +213,16 @@ export const monet = {
       darkSchemeObj = fallback.schemes.dark;
     }
 
-    // Base palettes derived from primary HCT
+    // Extract HCT Palettes directly from the active DynamicScheme instance!
     const palettes = {
-      primary: TonalPalette.fromHueAndChroma(primaryHct.hue, Math.max(28, primaryHct.chroma)),
-      secondary: TonalPalette.fromHueAndChroma(primaryHct.hue, 16),
-      tertiary: TonalPalette.fromHueAndChroma((primaryHct.hue + 60) % 360, 24),
-      neutral: TonalPalette.fromHueAndChroma(primaryHct.hue, 4),
-      neutralVariant: TonalPalette.fromHueAndChroma(primaryHct.hue, 8)
+      primary: lightSchemeObj.primaryPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, Math.max(28, primaryHct.chroma)),
+      secondary: lightSchemeObj.secondaryPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 16),
+      tertiary: lightSchemeObj.tertiaryPalette || TonalPalette.fromHueAndChroma((primaryHct.hue + 60) % 360, 24),
+      neutral: lightSchemeObj.neutralPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 4),
+      neutralVariant: lightSchemeObj.neutralVariantPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 8)
     };
 
-    // Dual or Triple mode overrides
+    // If user explicitly provided secondary / tertiary seed in dual/triple mode, override corresponding palette
     if (norm.secondary) {
       const secArgb = parseColorToArgb(norm.secondary);
       const secHct = Hct.fromInt(secArgb);
@@ -232,6 +235,7 @@ export const monet = {
       palettes.tertiary = TonalPalette.fromHueAndChroma(tertHct.hue, Math.max(24, tertHct.chroma));
     }
 
+    // Android 12-17 5 Core Palettes aliases
     palettes.accent1 = palettes.primary;
     palettes.accent2 = palettes.secondary;
     palettes.accent3 = palettes.tertiary;

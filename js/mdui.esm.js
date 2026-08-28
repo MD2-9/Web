@@ -5984,6 +5984,7 @@ $(() => {
 
 
 
+
 // === Monet Dynamic Theme Module ===
 const monet = (() => {
   var mdui_monet_bundle = (() => {
@@ -12324,6 +12325,9 @@ const monet = (() => {
       }
       return { primary: "#3F51B5", secondary: null, tertiary: null, mode: "single" };
     },
+    /**
+     * Generate full Monet theme object using Material HCT Dynamic Scheme
+     */
     generateTheme(sourceInput, options = {}) {
       const { variant = activeVariant || "tonal_spot", contrastLevel = 0 } = options;
       const norm = this.normalizeColors(sourceInput);
@@ -12341,11 +12345,11 @@ const monet = (() => {
         darkSchemeObj = fallback.schemes.dark;
       }
       const palettes = {
-        primary: TonalPalette.fromHueAndChroma(primaryHct.hue, Math.max(28, primaryHct.chroma)),
-        secondary: TonalPalette.fromHueAndChroma(primaryHct.hue, 16),
-        tertiary: TonalPalette.fromHueAndChroma((primaryHct.hue + 60) % 360, 24),
-        neutral: TonalPalette.fromHueAndChroma(primaryHct.hue, 4),
-        neutralVariant: TonalPalette.fromHueAndChroma(primaryHct.hue, 8)
+        primary: lightSchemeObj.primaryPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, Math.max(28, primaryHct.chroma)),
+        secondary: lightSchemeObj.secondaryPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 16),
+        tertiary: lightSchemeObj.tertiaryPalette || TonalPalette.fromHueAndChroma((primaryHct.hue + 60) % 360, 24),
+        neutral: lightSchemeObj.neutralPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 4),
+        neutralVariant: lightSchemeObj.neutralVariantPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 8)
       };
       if (norm.secondary) {
         const secArgb = parseColorToArgb(norm.secondary);
