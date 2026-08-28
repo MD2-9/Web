@@ -1,0 +1,258 @@
+//
+// Copyright 2017 Google Inc.
+// Copyright 2026 unjal <unjal29@outlook.com> (Modified and Extended under Apache-2.0)
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Material Components for Web - Navigation Rail & Vertical Title
+// Modified and Crafted by unjal <unjal29@outlook.com>
+//
+
+@import "@material/theme/mixins";
+@import "@material/typography/mixins";
+@import "@material/rtl/mixins";
+
+$mdc-rail-drawer-width: 72px !default;
+$mdc-rail-drawer-expanded-width: 260px !default;
+
+.mdc-drawer--rail {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: $mdc-rail-drawer-width;
+  height: 100vh;
+  z-index: 100;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-radius: 0 !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: var(--mdc-theme-surface, #ffffff);
+  color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.87));
+  box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  // 展开态 (Hover 或手动点击展开)
+  &.mdc-drawer--rail-expandable:hover,
+  &.mdc-drawer--rail-expanded {
+    width: $mdc-rail-drawer-expanded-width;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+
+    .mdc-drawer__header-text,
+    .mdc-list-item__text,
+    .mdc-drawer__footer-content {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .mdc-drawer__vertical-title {
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+    }
+
+    .mdc-list-item__graphic {
+      margin-left: 0 !important;
+      margin-right: 16px !important;
+    }
+  }
+
+  // 顶部品牌区 (Brand Header)
+  .mdc-drawer__header {
+    display: flex;
+    align-items: center;
+    min-height: 64px;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    background-color: var(--mdc-theme-primary, #6200ee);
+    color: var(--mdc-theme-on-primary, #ffffff);
+    border-radius: 0;
+    flex-shrink: 0;
+  }
+
+  .mdc-drawer__header-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .mdc-drawer__header-text {
+    margin-left: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // 竖向标题栏 (Writing-mode: vertical-rl)
+  .mdc-drawer__vertical-title {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    letter-spacing: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--mdc-theme-primary, #6200ee);
+    padding: 16px 0;
+    margin: 0 auto;
+    user-select: none;
+    opacity: 0.9;
+    transform: translateY(0);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // 导航列表与图标适配
+  .mdc-list {
+    padding: 8px 0;
+    flex: 1;
+  }
+
+  .mdc-list-item {
+    height: 48px;
+    padding: 0 16px;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  .mdc-list-item__graphic {
+    margin-right: 0 !important;
+    margin-left: 8px !important;
+    color: var(--mdc-theme-primary, inherit);
+    flex-shrink: 0;
+  }
+
+  .mdc-list-item__text {
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // 底部配置区
+  .mdc-drawer__footer {
+    padding: 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    background: inherit;
+    flex-shrink: 0;
+  }
+
+  .mdc-drawer__footer-content {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+  }
+}
+
+// 主内容区域自适应
+.mdc-drawer-rail-layout {
+  padding-left: $mdc-rail-drawer-width;
+  transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// 桌面端彻底隐藏横向标题栏
+@media (min-width: 600px) {
+  .mdc-top-app-bar,
+  .mdc-toolbar {
+    display: none !important;
+  }
+  body {
+    padding-top: 0 !important;
+  }
+}
+
+// 移动端 (< 600px) 响应式转换为底部导航栏 (Bottom Navigation Bar)
+@media (max-width: 599.9px) {
+  .mdc-drawer-rail-layout {
+    padding-left: 0 !important;
+    padding-bottom: 56px !important;
+  }
+
+  .mdc-drawer--rail {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100% !important;
+    height: 56px !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.12);
+    border-right: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+
+    .mdc-drawer__header,
+    .mdc-drawer__vertical-title,
+    .mdc-drawer__footer {
+      display: none !important;
+    }
+
+    .mdc-list {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+      width: 100%;
+      padding: 0;
+    }
+
+    .mdc-list-item {
+      flex: 1;
+      height: 100%;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+
+      .mdc-list-item__graphic {
+        margin: 0 !important;
+        font-size: 20px;
+      }
+
+      .mdc-list-item__text {
+        opacity: 0.8 !important;
+        visibility: visible !important;
+        font-size: 10px;
+      }
+    }
+  }
+}

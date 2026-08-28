@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!--
   Copyright 2016 Google Inc. All rights reserved.
+  Modifications Copyright 2026 unjal <unjal29@outlook.com>
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -12,234 +13,579 @@
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
-  limitations under the License
+  limitations under the License.
+
+  Material Components for Web (MDC-Web) - Navigation Rail & Monet Dynamic Theme Demo
+  Crafted by unjal <unjal29@outlook.com>
 -->
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Material Components Catalog</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="/images/logo_components_color_2x_web_48dp.png">
-    <link rel="stylesheet" href="/assets/index.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
-  </head>
-  <body class="mdc-typography">
-    <header class="mdc-toolbar mdc-toolbar--fixed">
-      <div class="mdc-toolbar__row">
-        <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
-          <span class="catalog-logo mdc-toolbar__menu-icon">
-            <img src="/images/ic_component_24px_white.svg">
-          </span>
-          <span class="mdc-toolbar__title catalog-title">Material Components Catalog</span>
-        </section>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>MDC-Web · 纯直角 & 莫奈动态色 Navigation Rail 全景矩阵</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Google Sans Flex 变量字体与 Material Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@100..1000&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  
+  <!-- MDC Web 官方组件库样式 (纯直角 0px & 50% 纯圆几何骨架) -->
+  <link rel="stylesheet" href="https://unpkg.com/material-components-web@0.34.1/dist/material-components-web.min.css">
+  
+  <style>
+    :root {
+      --mdc-theme-primary: #3f51b5;
+      --mdc-theme-secondary: #ff4081;
+      --mdc-theme-background: #fafafa;
+      --mdc-theme-surface: #ffffff;
+      --mdc-theme-on-primary: #ffffff;
+      --mdc-theme-on-secondary: #ffffff;
+      --mdc-theme-on-surface: #1d1b20;
+      --mdc-theme-surface-container: #ffffff;
+      --mdc-theme-surface-container-high: #f5f5f5;
+    }
+
+    * {
+      border-radius: 0 !important;
+      font-family: 'Google Sans Flex', 'GoogleSansFlex', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--mdc-theme-background, #fafafa);
+      color: var(--mdc-theme-on-surface, #1d1b20);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+    }
+
+    /* 桌面端：彻底抹除所有横向 AppBar / Toolbar，由左侧 Rail 全权承载 */
+    @media (min-width: 600px) {
+      .mdc-top-app-bar,
+      .mdc-toolbar,
+      header {
+        display: none !important;
+      }
+      body {
+        padding-top: 0 !important;
+      }
+    }
+
+    /* =========================================================================
+     * 左侧单图标 Navigation Rail (72px 常驻 / 260px 悬浮展开 / 竖向文字标题)
+     * ========================================================================= */
+    .mdc-navigation-rail {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 72px;
+      height: 100vh;
+      background-color: var(--mdc-theme-surface, #ffffff);
+      border-right: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-x: hidden;
+      overflow-y: auto;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  background-color 0.3s ease;
+    }
+
+    /* 悬浮展开至 260px */
+    .mdc-navigation-rail:hover,
+    .mdc-navigation-rail.is-expanded {
+      width: 260px;
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
+      z-index: 9999;
+    }
+
+    .mdc-navigation-rail:hover .rail-header-text,
+    .mdc-navigation-rail:hover .rail-item-text,
+    .mdc-navigation-rail:hover .rail-footer-text,
+    .mdc-navigation-rail.is-expanded .rail-header-text,
+    .mdc-navigation-rail.is-expanded .rail-item-text,
+    .mdc-navigation-rail.is-expanded .rail-footer-text {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .mdc-navigation-rail:hover .rail-vertical-title,
+    .mdc-navigation-rail.is-expanded .rail-vertical-title {
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+    }
+
+    .mdc-navigation-rail:hover .rail-item-icon,
+    .mdc-navigation-rail.is-expanded .rail-item-icon {
+      margin-left: 0;
+      margin-right: 16px;
+    }
+
+    /* 顶部头像/品牌区域 */
+    .rail-header {
+      display: flex;
+      align-items: center;
+      min-height: 64px;
+      padding: 12px 16px;
+      box-sizing: border-box;
+      background-color: var(--mdc-theme-primary, #3f51b5);
+      color: var(--mdc-theme-on-primary, #ffffff);
+      flex-shrink: 0;
+    }
+    .rail-header-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50% !important;
+      background: rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .rail-header-text {
+      margin-left: 12px;
+      overflow: hidden;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 核心：竖向文字标题 (writing-mode: vertical-rl) */
+    .rail-vertical-title {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      letter-spacing: 4px;
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--mdc-theme-primary, #3f51b5);
+      padding: 16px 0;
+      margin: 0 auto;
+      user-select: none;
+      opacity: 0.9;
+      transform: translateY(0);
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 导航项列表 */
+    .rail-nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 8px 0;
+      flex: 1;
+    }
+    .rail-nav-item {
+      display: flex;
+      align-items: center;
+      height: 48px;
+      padding: 0 16px;
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .rail-nav-item:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+    .rail-item-icon {
+      margin-left: 8px;
+      margin-right: 0;
+      color: var(--mdc-theme-primary, #3f51b5);
+      flex-shrink: 0;
+      font-size: 22px;
+      transition: margin 0.2s ease;
+    }
+    .rail-item-text {
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 底部面板 */
+    .rail-footer {
+      padding: 12px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      background: inherit;
+      flex-shrink: 0;
+    }
+    .rail-footer-text {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      white-space: nowrap;
+      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 主内容视口容器 */
+    .main-container {
+      margin-left: 72px;
+      padding: 24px 32px 80px 32px;
+      max-width: 1200px;
+      box-sizing: border-box;
+      transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 卡片与组件展厅 */
+    .demo-card {
+      background-color: var(--mdc-theme-surface-container, #ffffff);
+      color: var(--mdc-theme-on-surface, #1d1b20);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+      padding: 24px;
+      margin-bottom: 24px;
+      transition: all 0.3s ease;
+    }
+    .demo-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 暗色模式下的纯直角与阴影层级适配 */
+    .dark-theme {
+      --mdc-theme-background: #242424;
+      --mdc-theme-surface: #1d1b20;
+      --mdc-theme-on-surface: #e6e1e5;
+      --mdc-theme-surface-container: #17161b;
+      --mdc-theme-surface-container-high: #121115;
+    }
+    .dark-theme .demo-card {
+      background-color: var(--mdc-theme-surface-container, #17161b) !important;
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important;
+    }
+    .dark-theme .mdc-navigation-rail {
+      background-color: var(--mdc-theme-surface, #1d1b20);
+      border-right-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 1px 0 4px rgba(0, 0, 0, 0.5);
+    }
+
+    /* 移动端 (< 600px) 响应式 Bottom Navigation */
+    @media (max-width: 599.9px) {
+      .main-container {
+        margin-left: 0 !important;
+        padding: 16px 16px 72px 16px;
+      }
+      .mdc-navigation-rail {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100% !important;
+        height: 56px !important;
+        flex-direction: row;
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+        border-right: none;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+      }
+      .rail-header,
+      .rail-vertical-title,
+      .rail-footer {
+        display: none !important;
+      }
+      .rail-nav-list {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        width: 100%;
+        padding: 0;
+      }
+      .rail-nav-item {
+        flex: 1;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        padding: 0;
+      }
+      .rail-item-icon {
+        margin: 0 !important;
+        font-size: 20px;
+      }
+      .rail-item-text {
+        opacity: 0.8 !important;
+        visibility: visible !important;
+        font-size: 10px;
+      }
+    }
+
+    /* 辅助组件网格 */
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 16px;
+    }
+    .color-swatch-box {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.04);
+      padding: 6px 12px;
+      margin-bottom: 8px;
+    }
+    .dark-theme .color-swatch-box {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 左侧 Navigation Rail (单图标常驻 ✖ 纯竖向标题 ✖ 悬浮展开) -->
+  <aside class="mdc-navigation-rail" id="app-rail">
+    
+    <!-- 顶部 Brand Header -->
+    <div class="rail-header">
+      <div class="rail-header-avatar">M3</div>
+      <div class="rail-header-text">
+        <div style="font-weight: bold; font-size: 15px;">MDC-Web · MD1</div>
+        <div style="font-size: 11px; opacity: 0.85;">纯直角 & 莫奈色彩</div>
       </div>
-    </header>
-    <main>
-      <nav class="mdc-toolbar-fixed-adjust">
-        <div role="list" class="demo-catalog-list mdc-list mdc-list--two-line">
-          <a href="button.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_button_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Button
-              <span class="mdc-list-item__secondary-text">Raised and flat buttons</span>
-            </span>
-          </a>
-          <a href="card.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_card_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Card
-              <span class="mdc-list-item__secondary-text">Various card layout styles</span>
-            </span>
-          </a>
-          <a href="checkbox.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_selection_control_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Checkbox
-              <span class="mdc-list-item__secondary-text">Multi-selection controls</span>
-            </span>
-          </a>
-          <a href="chips.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_chips_24dp.svg" /></span>
-            <span class="mdc-list-item__text">
-              Chips
-              <span class="mdc-list-item__secondary-text">Chips for actions, selection, and input </span>
-            </span>
-          </a>
-          <a href="dialog.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_dialog_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Dialog
-              <span class="mdc-list-item__secondary-text">Secondary text</span>
-            </span>
-          </a>
-          <a href="drawer/index.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_side_navigation_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Drawer
-              <span class="mdc-list-item__secondary-text">Various drawer styles</span>
-            </span>
-          </a>
-          <a href="elevation.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_shadow_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Elevation
-              <span class="mdc-list-item__secondary-text">Shadow for different elevations</span>
-            </span>
-          </a>
-          <a href="fab.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_button_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Floating action button
-              <span class="mdc-list-item__secondary-text">The primary action in an application</span>
-            </span>
-          </a>
+    </div>
 
-          <a href="grid-list.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_card_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Grid list
-              <span class="mdc-list-item__secondary-text">2D grid layouts</span>
-            </span>
-          </a>
+    <!-- 核心：竖向文字标题 (替代传统横向标题栏) -->
+    <div class="rail-vertical-title">
+      MDC · 纯直角 & 莫奈动态色
+    </div>
 
-          <a href="icon-toggle.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_component_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Icon toggle
-              <span class="mdc-list-item__secondary-text">Toggling icon states</span>
-            </span>
-          </a>
+    <!-- 导航菜单 -->
+    <nav class="rail-nav-list">
+      <a href="#section-buttons" class="rail-nav-item" title="1. 按钮与 FAB">
+        <i class="material-icons rail-item-icon">touch_app</i>
+        <span class="rail-item-text">1. 按钮与 FAB</span>
+      </a>
+      <a href="#section-cards" class="rail-nav-item" title="2. 直角卡片">
+        <i class="material-icons rail-item-icon">view_agenda</i>
+        <span class="rail-item-text">2. 直角卡片</span>
+      </a>
+      <a href="#section-monet" class="rail-nav-item" title="3. 莫奈取色">
+        <i class="material-icons rail-item-icon">palette</i>
+        <span class="rail-item-text">3. 莫奈取色引擎</span>
+      </a>
+      <a href="#section-form" class="rail-nav-item" title="4. 表单与开关">
+        <i class="material-icons rail-item-icon">toggle_on</i>
+        <span class="rail-item-text">4. 表单与开关</span>
+      </a>
+      <a href="#section-tabs" class="rail-nav-item" title="5. 选项卡 Tab">
+        <i class="material-icons rail-item-icon">tab</i>
+        <span class="rail-item-text">5. 选项卡 Tab</span>
+      </a>
+    </nav>
 
-          <a href="image-list.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_card_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Image list
-              <span class="mdc-list-item__secondary-text">Displays a collection of images in a repeated pattern</span>
-            </span>
-          </a>
+    <!-- 底部控制面板 -->
+    <div class="rail-footer">
+      <div class="rail-footer-text">
+        <button id="btn-toggle-dark" class="mdc-button mdc-button--raised" style="width: 100%; margin-bottom: 8px;">
+          <i class="material-icons mdc-button__icon">brightness_4</i>
+          切换暗色模式
+        </button>
+        <div style="font-size: 11px; opacity: 0.7; text-align: center;">MDC-Web v0.34.1 MD1</div>
+      </div>
+    </div>
+  </aside>
 
-          <a href="layout-grid.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_card_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Layout grid
-              <span class="mdc-list-item__secondary-text">Grid and gutter support</span>
-            </span>
-          </a>
+  <!-- 主内容区域 (横向标题栏已被完全移除，内容顶部直接呈现) -->
+  <main class="main-container">
+    
+    <!-- 顶部置顶主题控制台 -->
+    <div class="demo-card" id="section-monet">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+        <h2 style="margin: 0; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+          <i class="material-icons" style="color: var(--mdc-theme-primary);">palette</i>
+          MDC-Web Monet 动态取色控制台 (CAM16 / HCT)
+        </h2>
+        <span style="font-size: 12px; background: rgba(0,0,0,0.06); padding: 4px 8px; font-weight: bold;">
+          电脑横向标题栏已彻底删去，转为竖向单图标 Rail
+        </span>
+      </div>
 
-          <a href="linear-progress.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_progress_activity.svg" /></span>
-            <span class="mdc-list-item__text">
-              Linear progress
-              <span class="mdc-list-item__secondary-text">Fills from 0% to 100%, represented by bars</span>
-            </span>
-          </a>
+      <p style="font-size: 13px; opacity: 0.85; margin-top: 0;">
+        严守 <strong>MD1 纯直角 (0px) 与 50% 纯圆</strong> 几何骨架。暗色模式采用 Tone 20 背景与 Tone 12 略深卡片，并保留深邃立体阴影。
+      </p>
 
-          <a href="list.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_list_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              List
-              <span class="mdc-list-item__secondary-text">Item layouts in lists</span>
-            </span>
-          </a>
+      <div class="component-grid">
+        <div>
+          <div class="color-swatch-box">
+            <span style="font-size: 12px; font-weight: 600;">Primary 主色种子:</span>
+            <input type="color" id="picker-p" value="#3f51b5" style="border: none; width: 32px; height: 24px; cursor: pointer;">
+            <code id="hex-p" style="font-size: 12px;">#3f51b5</code>
+          </div>
 
-          <a href="menu.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_menu_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Menu
-              <span class="mdc-list-item__secondary-text">Pop over menus</span>
-            </span>
-          </a>
-
-          <a href="radio.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_radio_button_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Radio buttons
-              <span class="mdc-list-item__secondary-text">Single selection controls</span>
-            </span>
-          </a>
-
-          <a href="ripple.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_ripple_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Ripple
-              <span class="mdc-list-item__secondary-text">Touch ripple</span>
-            </span>
-          </a>
-
-          <a href="select.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_menu_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Select
-              <span class="mdc-list-item__secondary-text">Popover selection menus</span>
-            </span>
-          </a>
-
-          <a href="slider.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/slider.svg" /></span>
-            <span class="mdc-list-item__text">
-              Slider
-              <span class="mdc-list-item__secondary-text">Range Controls</span>
-            </span>
-          </a>
-
-          <a href="snackbar.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_toast_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Snackbar
-              <span class="mdc-list-item__secondary-text">Transient messages</span>
-            </span>
-          </a>
-
-          <a href="switch.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_switch_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Switch
-              <span class="mdc-list-item__secondary-text">On off switches</span>
-            </span>
-          </a>
-
-          <a href="tabs.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_tabs_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Tabs
-              <span class="mdc-list-item__secondary-text">Tabs with support for icon and text labels</span>
-            </span>
-          </a>
-
-          <a href="text-field.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_text_field_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Text field
-              <span class="mdc-list-item__secondary-text">Single and multiline text fields</span>
-            </span>
-          </a>
-
-          <a href="theme/index.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_theme_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Theme
-              <span class="mdc-list-item__secondary-text">Using primary and secondary colors</span>
-            </span>
-          </a>
-
-          <a href="toolbar/index.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_toolbar_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Toolbar
-              <span class="mdc-list-item__secondary-text">Header and footers</span>
-            </span>
-          </a>
-
-          <a href="typography.html" role="listitem" class="mdc-list-item">
-            <span class="demo-catalog-list-icon mdc-list-item__graphic"><img src="/images/ic_typography_24px.svg" /></span>
-            <span class="mdc-list-item__text">
-              Typography
-              <span class="mdc-list-item__secondary-text">Type hierarchy</span>
-            </span>
-          </a>
+          <div class="color-swatch-box">
+            <span style="font-size: 12px; font-weight: 600;">Secondary 次色种子:</span>
+            <input type="color" id="picker-s" value="#ff4081" style="border: none; width: 32px; height: 24px; cursor: pointer;">
+            <code id="hex-s" style="font-size: 12px;">#ff4081</code>
+          </div>
         </div>
+
+        <div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="font-size: 12px; font-weight: 600;">预设 Monet 配色矩阵:</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="mdc-button mdc-button--outlined preset-btn" data-p="#6750A4" data-s="#625B71" style="font-size: 11px;">紫罗兰 (Android 14)</button>
+              <button class="mdc-button mdc-button--outlined preset-btn" data-p="#006A6A" data-s="#4A6363" style="font-size: 11px;">青绿 (Teal Forest)</button>
+              <button class="mdc-button mdc-button--outlined preset-btn" data-p="#825500" data-s="#6F5B40" style="font-size: 11px;">琥珀 (Amber Gold)</button>
+              <button class="mdc-button mdc-button--outlined preset-btn" data-p="#B3261E" data-s="#775652" style="font-size: 11px;">赤红 (Crimson)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. 按钮与 FAB 展厅 -->
+    <div class="demo-card" id="section-buttons">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
+        1. 按钮与浮动动作按钮 (Buttons & FAB)
+      </h3>
+      <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 16px;">
+        <button class="mdc-button mdc-button--raised">
+          <i class="material-icons mdc-button__icon">star</i>
+          Raised Button
+        </button>
+        <button class="mdc-button mdc-button--unelevated" style="background-color: var(--mdc-theme-secondary); color: var(--mdc-theme-on-secondary);">
+          Unelevated
+        </button>
+        <button class="mdc-button mdc-button--outlined">
+          Outlined
+        </button>
+        <button class="mdc-button">
+          Flat Button
+        </button>
+        <button class="mdc-fab" style="border-radius: 50% !important;" title="Pure Circle FAB">
+          <i class="material-icons mdc-fab__icon">add</i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. 直角卡片展厅 -->
+    <div class="demo-card" id="section-cards">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
+        2. MD1 纯直角卡片矩阵 (Card Grid)
+      </h3>
+      <div class="component-grid">
+        <div class="demo-card" style="margin: 0;">
+          <h4 style="margin: 0 0 8px 0;">纯直角 Elevated Card</h4>
+          <p style="font-size: 13px; opacity: 0.8;">边角完全采用 0px 直角，保留经典的 Material 海拔投影层级。</p>
+          <button class="mdc-button mdc-button--dense" style="padding: 0;">了解更多</button>
+        </div>
+        <div class="demo-card" style="margin: 0; background: var(--mdc-theme-surface-container-high);">
+          <h4 style="margin: 0 0 8px 0;">Surface Container High</h4>
+          <p style="font-size: 13px; opacity: 0.8;">暗色模式下具备略深于背景的舒适阶度，视觉不刺眼。</p>
+          <button class="mdc-button mdc-button--dense" style="padding: 0;">查看详情</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 表单与开关 -->
+    <div class="demo-card" id="section-form">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
+        3. 表单控件与开关 (Form Controls)
+      </h3>
+      <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 16px;">
+        <div class="mdc-text-field" style="width: 240px;">
+          <input type="text" id="demo-input" class="mdc-text-field__input" value="MDC Google Sans Flex">
+          <label class="mdc-floating-label mdc-floating-label--float-above" for="demo-input">输入框</label>
+          <div class="mdc-line-ripple"></div>
+        </div>
+
+        <div class="mdc-form-field">
+          <div class="mdc-checkbox">
+            <input type="checkbox" class="mdc-checkbox__native-control" id="cb-1" checked/>
+            <div class="mdc-checkbox__background">
+              <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+              </svg>
+              <div class="mdc-checkbox__mixedmark"></div>
+            </div>
+          </div>
+          <label for="cb-1" style="font-size: 13px;">直角复选框</label>
+        </div>
+
+        <div class="mdc-form-field">
+          <div class="mdc-radio">
+            <input class="mdc-radio__native-control" type="radio" id="radio-1" name="radios" checked>
+            <div class="mdc-radio__background">
+              <div class="mdc-radio__outer-circle"></div>
+              <div class="mdc-radio__inner-circle"></div>
+            </div>
+          </div>
+          <label for="radio-1" style="font-size: 13px;">单选钮 A</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 选项卡 Tabs -->
+    <div class="demo-card" id="section-tabs">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
+        4. 选项卡系统 (Tabs)
+      </h3>
+      <nav class="mdc-tab-bar" style="border-bottom: 1px solid rgba(0,0,0,0.08); margin-top: 16px;">
+        <a class="mdc-tab mdc-tab--active" href="javascript:void(0);" style="font-weight: bold; color: var(--mdc-theme-primary);">组件矩阵</a>
+        <a class="mdc-tab" href="javascript:void(0);">色彩算法</a>
+        <a class="mdc-tab" href="javascript:void(0);">Navigation Rail 架构</a>
       </nav>
-    </main>
-  </body>
+      <div style="padding: 16px 0; font-size: 13px; opacity: 0.85;">
+        当前选中：<strong>MDC-Web v0.34.1 纯直角体系</strong>。已全面集成 Google Sans Flex 变量字体与 HCT 莫奈取色。
+      </div>
+    </div>
+
+  </main>
+
+  <!-- JavaScript 交互脚本 -->
+  <script src="https://unpkg.com/material-components-web@0.34.1/dist/material-components-web.min.js"></script>
+  <script>
+    // 实例化 MDC 组件
+    mdc.autoInit();
+
+    // 暗色模式切换
+    let isDark = false;
+    const btnToggleDark = document.getElementById('btn-toggle-dark');
+    btnToggleDark.onclick = () => {
+      isDark = !isDark;
+      if (isDark) {
+        document.body.classList.add('dark-theme');
+      } else {
+        document.body.classList.remove('dark-theme');
+      }
+      applyTheme();
+    };
+
+    // 动态色彩应用
+    function applyTheme() {
+      const p = document.getElementById('picker-p').value;
+      const s = document.getElementById('picker-s').value;
+      document.getElementById('hex-p').textContent = p;
+      document.getElementById('hex-s').textContent = s;
+
+      document.documentElement.style.setProperty('--mdc-theme-primary', p);
+      document.documentElement.style.setProperty('--mdc-theme-secondary', s);
+    }
+
+    document.getElementById('picker-p').addEventListener('input', applyTheme);
+    document.getElementById('picker-s').addEventListener('input', applyTheme);
+
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+      btn.onclick = () => {
+        const p = btn.getAttribute('data-p');
+        const s = btn.getAttribute('data-s');
+        document.getElementById('picker-p').value = p;
+        document.getElementById('picker-s').value = s;
+        applyTheme();
+      };
+    });
+  </script>
+</body>
 </html>
