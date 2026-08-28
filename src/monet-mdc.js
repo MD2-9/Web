@@ -160,15 +160,25 @@ export class MdcMonetEngine {
 
     const surfaces = createMd3Surfaces(palettes, isDark);
 
-    // 生成 MDC-Web 原生 CSS 变量字典
+    // 生成 MDC-Web 原生 CSS 变量字典 (完整覆盖 M3 Primary, Secondary, Tertiary 及 Container 色阶)
     const mdcVariables = {
       '--mdc-theme-primary': hexFromArgb(primaryPalette.tone(isDark ? 80 : 40)),
+      '--mdc-theme-primary-container': hexFromArgb(primaryPalette.tone(isDark ? 30 : 90)),
+      '--mdc-theme-on-primary': hexFromArgb(primaryPalette.tone(isDark ? 20 : 100)),
+      '--mdc-theme-on-primary-container': hexFromArgb(primaryPalette.tone(isDark ? 90 : 10)),
+
       '--mdc-theme-secondary': hexFromArgb(secondaryPalette.tone(isDark ? 80 : 40)),
+      '--mdc-theme-secondary-container': hexFromArgb(secondaryPalette.tone(isDark ? 30 : 90)),
+      '--mdc-theme-on-secondary': hexFromArgb(secondaryPalette.tone(isDark ? 20 : 100)),
+      '--mdc-theme-on-secondary-container': hexFromArgb(secondaryPalette.tone(isDark ? 90 : 10)),
+
       '--mdc-theme-tertiary': hexFromArgb(tertiaryPalette.tone(isDark ? 80 : 40)),
+      '--mdc-theme-tertiary-container': hexFromArgb(tertiaryPalette.tone(isDark ? 30 : 90)),
+      '--mdc-theme-on-tertiary': hexFromArgb(tertiaryPalette.tone(isDark ? 20 : 100)),
+      '--mdc-theme-on-tertiary-container': hexFromArgb(tertiaryPalette.tone(isDark ? 90 : 10)),
+
       '--mdc-theme-background': surfaces.background,
       '--mdc-theme-surface': surfaces.surface,
-      '--mdc-theme-on-primary': hexFromArgb(primaryPalette.tone(isDark ? 20 : 100)),
-      '--mdc-theme-on-secondary': hexFromArgb(secondaryPalette.tone(isDark ? 20 : 100)),
       '--mdc-theme-on-surface': surfaces.onSurface,
       '--mdc-theme-text-primary-on-background': surfaces.onBackground,
       '--mdc-theme-text-secondary-on-background': surfaces.onSurfaceVariant,

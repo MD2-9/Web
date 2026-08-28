@@ -68,6 +68,8 @@ autoInit();
 │ 双波形线性进度条      │ @material/linear-progress        │ MduiLinearProgress          │
 │ 手风琴折叠面板        │ @material/expansion-panel        │ MdcExpansionPanel           │
 │ MD1 胶囊滑动开关      │ @material/switch                 │ md1-switch 规范             │
+│ 日历与时钟选择器      │ @material/picker                 │ MdcDatePicker, TimePicker   │
+│ 莫奈动态三色与Container│ @material/theme, @material/monet │ M3 全局三色与Container规范  │
 │ 0px 纯直角几何体系    │ @material/button, card, dialog.. │ 全局 Straight Angle 规范    │
 └───────────────────────┴──────────────────────────────────┴─────────────────────────────┘
 ```
@@ -529,3 +531,163 @@ const containerRipple = new MduiOverscrollRipple(document.getElementById('my-scr
   <div class="secondary-overlay-content">...</div>
 </div>
 ```
+
+---
+
+### 9. 🕒 日历与时间选择器系统 (`@material/picker`)
+
+* **功能定位**：严格遵循 Google Material Design 3 官方时钟与日期选择器规范，结合 **0px 直角与 50% 纯圆几何体系**，打造深度物理交互与视效体验。
+* **引入路径**：
+  * SCSS: `@import "@material/picker/mdc-picker";`
+  * JS: `import { MdcDatePicker, MdcTimePicker } from '@material/picker';`
+
+#### 核心技术特性：
+1. **物理反色光栅滑块架构（Physical Inverted Indicator Mask）**：
+   - 顶部数字看板采用**双层同步镜像架构**：底层为普通中性灰文本层，顶层为搭载反向 `transform: translateX(...)` 的 `overflow: hidden` 绝对定位反色光栅层。
+   - 当主题色滑块在小时与分钟框之间移动时，被滑块覆盖的数字物理反色（深色模式自动根据对比度翻转为高对比度黑字 `#000000` 或纯白）。
+2. **蓄力 ➔ 弹射拉伸 ➔ 缓冲过冲 ➔ 阻尼归位（Non-linear Anticipation & Cushioning）**：
+   - 滑块动画长达 **0.8s (800ms)**，非线性贝塞尔曲线模拟物理形变：
+     - **0%~20% 蓄力（Anticipation）**：滑块向移动反方向产生微小挤压蓄力；
+     - **20%~60% 弹射与动态拉伸（Stretch & Launch）**：中途宽度扩展放大（如从 62px 膨胀至 84px），呈现高速流体拉伸张力；
+     - **60%~85% 缓冲与过冲（Cushioning & Overshoot）**：抵达目标边界产生轻微过冲缓冲；
+     - **85%~100% 阻尼归位（Settle）**：宽度平滑收敛回 62px 并精确吸附。
+3. **极速打断动效（52% Duration Reverse Interrupt）**：
+   - 在小时切换完成后的 0.3s 等待或 0.8s 滑块行进中，若用户再次触碰表盘小时区域，动画以当前进度即时反向倒放，且倒放时长按 `52%` 加速折算，实现极速跟手打断，零顿挫零跳帧。
+4. **严格时序协同（Sequential Animation Pipeline）**：
+   - 拖拽小时表盘松手 ➔ **1. 完整播放小时数字纵向滚动（~260ms）** ➔ **2. 执行完毕静止等待 0.3s (300ms)** ➔ **3. 启动 0.8s (800ms) 物理滑块反色过渡** ➔ **4. 自动无缝进入分钟表盘**。
+5. **分钟模式绝对锁定与精确匹配**：
+   - 24 小时制基准刻度 `[0, 3, 6, 9, 12, 15, 18, 21]`（360°/24 = 15°/小时）；
+   - 分钟基准刻度 `[0, 5, 10, 15.. 55]`（360°/60 = 6°/分钟），搭载**方向感知迟滞跟随算法**（顺时针在第 3 格切换，逆时针在第 2 格切换）；
+   - 一旦表盘完成过渡转入分钟模式，再次触碰/拖动表盘**绝对锁定在分钟模式，指针与角度精确对应 60 分钟刻度，绝不回退**。
+6. **AM/PM 切换遵循 Google M3 Tertiary Container 官方规范**：
+   - AM/PM 激活态采用第三色容器（`--mdc-theme-tertiary-container` / `--mdc-theme-on-tertiary-container`），与主色时分形成清晰的功能视觉解耦。
+
+#### JavaScript 调用示例
+```javascript
+import { MdcTimePicker, MdcDatePicker } from '@material/picker';
+
+// 实例化时间选择器
+const timePicker = new MdcTimePicker(document.querySelector('.mdc-time-picker'), {
+  initialHour: 9,
+  initialMinute: 30,
+  is24Hour: true,
+  onChange: ({ hour, minute, isPM }) => {
+    console.log(`当前时间更新: ${hour}:${minute} (PM: ${isPM})`);
+  }
+});
+
+// 实例化日期选择器
+const datePicker = new MdcDatePicker(document.querySelector('.mdc-date-picker'), {
+  initialDate: new Date(),
+  onSelect: (selectedDate) => {
+    console.log(`选定日期: ${selectedDate.toLocaleDateString()}`);
+  }
+});
+```
+
+---
+
+### 10. 🎨 Google Material Design 3 (M3) 三色体系与全局样式规范 (M3 3-Color System & Tokens)
+
+在 Material Design 3 官方体系中，色彩不是简单的单色调配，而是按照 **Primary (主色)**、**Secondary (次色)** 和 **Tertiary (第三色)** 及其衍生容器构建的严密层级网络。
+
+#### 1. 三色语义与设计职责
+
+| 色彩角色 | HCT / 算法定位 | 设计语义与职责 | 对应官方组件示例 |
+| :--- | :--- | :--- | :--- |
+| **Primary (主色)** | 核心种子色 (Tone 40/80) | **主导行动点**：页面最高视觉层级、核心控件焦点。 | 凸起按钮 (Raised/Filled)、FAB 悬浮按钮、时钟指针、单选日历选中圆点。 |
+| **Primary Container** | 浅层/深层低强容器 (Tone 90/30) | **主色容器**：核心信息块底色、高调选框。 | 时分数字看板激活底座。 |
+| **Secondary (次色)** | 主色同相、极低彩度 (Muted) | **辅助平衡**：低视觉冲击力，不喧宾夺主，保持与主色和谐共存。 | 次级开关、未激活滑块轨道、复选框。 |
+| **Secondary Container** | 低饱和容器 (Tone 90/30) | **伴生组件激活态**：柔和、耐看的次级高亮。 | **Navigation Rail 激活指示药丸**、**Segmented Button 分段按钮已选项**、**Filter Chips 过滤标签已选项**、日期范围选择区间。 |
+| **Tertiary (第三色)** | 偏移 60°~120° 的补色/对比色 | **对比强调与个性表达**：平衡冷暖感，为独立功能提供视觉分区。 | **TimePicker AM/PM 切换按钮**、通知小红点 / 数字徽标 (Badges)、特殊提示横条。 |
+| **Tertiary Container** | 对比色容器 (Tone 90/30) | **功能分区容器**：与主工作流形成鲜明对比但不过于刺眼。 | **时钟选择器「上午 / 下午 (AM/PM)」激活态**。 |
+
+#### 2. 全局 CSS 变量规范
+
+本项目已将全套 M3 官方 Token 同步写入 `@material/theme/_variables.scss`、`mdc-theme.scss` 以及全局 `:root` / `.dark-theme` 中：
+
+```scss
+:root {
+  /* Primary 主色系 */
+  --mdc-theme-primary: #6750a4;
+  --mdc-theme-primary-container: #eaddff;
+  --mdc-theme-on-primary: #ffffff;
+  --mdc-theme-on-primary-container: #21005d;
+
+  /* Secondary 次色系 */
+  --mdc-theme-secondary: #625b71;
+  --mdc-theme-secondary-container: #e8def8;
+  --mdc-theme-on-secondary: #ffffff;
+  --mdc-theme-on-secondary-container: #1d192b;
+
+  /* Tertiary 第三色系 */
+  --mdc-theme-tertiary: #7d5260;
+  --mdc-theme-tertiary-container: #ffd8e4;
+  --mdc-theme-on-tertiary: #ffffff;
+  --mdc-theme-on-tertiary-container: #31111d;
+
+  /* Surface 表面与容器 */
+  --mdc-theme-background: #fdf8fd;
+  --mdc-theme-surface: #ffffff;
+  --mdc-theme-on-surface: #1d1b20;
+  --mdc-theme-surface-container: #ffffff;
+  --mdc-theme-surface-container-high: #f7f2fa;
+}
+
+/* 官方原生暗色模式 (Dark Theme Tone 映射) */
+.dark-theme {
+  --mdc-theme-primary: #d0bcff;
+  --mdc-theme-primary-container: #4f378b;
+  --mdc-theme-on-primary: #000000;
+  --mdc-theme-on-primary-container: #eaddff;
+
+  --mdc-theme-secondary: #ccc2dc;
+  --mdc-theme-secondary-container: #4a4458;
+  --mdc-theme-on-secondary: #000000;
+  --mdc-theme-on-secondary-container: #e8def8;
+
+  --mdc-theme-tertiary: #efb8c8;
+  --mdc-theme-tertiary-container: #633b48;
+  --mdc-theme-on-tertiary: #000000;
+  --mdc-theme-on-tertiary-container: #ffd8e4;
+
+  --mdc-theme-background: #1f1e24;
+  --mdc-theme-surface: #19181e;
+  --mdc-theme-on-surface: #e6e1e5;
+  --mdc-theme-surface-container: #131217;
+  --mdc-theme-surface-container-high: #0d0c10;
+}
+```
+
+#### 3. 全局辅助类 (Utility Classes)
+
+在 SCSS 中引入 `@import "@material/theme/mdc-theme";` 后，可直接使用以下实用类：
+- `.mdc-theme--primary-bg` / `.mdc-theme--on-primary`
+- `.mdc-theme--secondary-bg` / `.mdc-theme--on-secondary`
+- `.mdc-theme--tertiary-bg` / `.mdc-theme--on-tertiary`
+- `.mdc-theme--primary-container-bg` / `.mdc-theme--on-primary-container`
+- `.mdc-theme--secondary-container-bg` / `.mdc-theme--on-secondary-container`
+- `.mdc-theme--tertiary-container-bg` / `.mdc-theme--on-tertiary-container`
+
+---
+
+#### 4. 色彩维度自由配置体系 (1 / 2 / 3 色动态切换机制)
+
+为了在“Google M3 官方多色层级”与“极简主义纯净单色调”之间取得完美平衡，项目提供了全局**色彩方案维度 (Color Palette Dimensions)** 可配置项，支持用户在设置抽屉面板与莫奈色彩实验室中随时无缝切换：
+
+1. **1色·单色极致模式 (`mode = 1`，默认纯净模式)**：
+   - **特点**：次色与第三色全量收敛为主色，所有容器（Container）统一采用主色衍生容器。
+   - **视觉效果**：Navigation Rail 药丸、Segmented Button、Chips、TimePicker AM/PM 等所有交互元素完全统一在同一高雅单色系中，告别多色杂乱，视觉极其纯净高级。
+2. **2色·双色中阶平衡模式 (`mode = 2`)**：
+   - **特点**：采用 Primary（主色）+ 同相低彩度 Secondary（次色），第三色自动并入次色。
+   - **视觉效果**：主行动点与指针为高饱和主色，常驻侧边栏与次级控件为低饱和内敛次色，沉稳耐看。
+3. **3色·三色全阶对比模式 (`mode = 3`)**：
+   - **特点**：完整呈现 Google Material Design 3 官方全阶标准，第三色产生 +60°~120° 色相对比。
+   - **视觉效果**：AM/PM 切换与徽标使用 Tertiary Container，与主色时分形成鲜明的跨维度功能视觉分区。
+
+##### API 调用与配置：
+```javascript
+// 切换色彩方案维度 (1: 单色统一, 2: 双色平衡, 3: 三色对比)
+setColorPaletteMode(1);
+```
+

@@ -17,19 +17,36 @@
 @import "./functions";
 
 //
-// Main theme colors for your brand.
+// Main theme colors for your brand (Google Material Design 3 / MD3.1 Token System).
 //
 // If you're a user customizing your color scheme in SASS, these are probably the only variables you need to change.
 //
 
-$mdc-theme-primary: #6200ee !default; // baseline purple, 500 tone
+// Primary (主色：高权重主行动点与核心状态)
+$mdc-theme-primary: #6750a4 !default;
+$mdc-theme-primary-container: #eaddff !default;
+$mdc-theme-on-primary: #ffffff !default;
+$mdc-theme-on-primary-container: #21005d !default;
 
-// The $mdc-theme-accent variable is DEPRECATED - it exists purely for backward compatibility.
-// The $mdc-theme-secondary* variables should be used for all new projects.
-$mdc-theme-accent: #018786 !default; // baseline teal, 600 tone
+// Secondary (次色：低饱和度中阶伴生元素、Navigation 激活指示药丸、Filter Chips、Segmented Buttons)
+$mdc-theme-accent: #625b71 !default;
 $mdc-theme-secondary: $mdc-theme-accent !default;
+$mdc-theme-secondary-container: #e8def8 !default;
+$mdc-theme-on-secondary: #ffffff !default;
+$mdc-theme-on-secondary-container: #1d192b !default;
 
-$mdc-theme-background: #fff !default; // White
+// Tertiary (第三色：顺时针/逆时针色相偏移的对比表达色、TimePicker AM/PM 切换、Badges 徽标、特色卡片)
+$mdc-theme-tertiary: #7d5260 !default;
+$mdc-theme-tertiary-container: #ffd8e4 !default;
+$mdc-theme-on-tertiary: #ffffff !default;
+$mdc-theme-on-tertiary-container: #31111d !default;
+
+// Surfaces & Background
+$mdc-theme-background: #fdf8fd !default;
+$mdc-theme-surface: #ffffff !default;
+$mdc-theme-on-surface: #1d1b20 !default;
+$mdc-theme-surface-container: #ffffff !default;
+$mdc-theme-surface-container-high: #f7f2fa !default;
 
 //
 // Text colors according to light vs dark and text type.
@@ -63,11 +80,29 @@ $mdc-theme-text-colors: (
 //
 
 $mdc-theme-property-values: (
-  /* Primary */
+  /* M3 Primary */
   primary: $mdc-theme-primary,
-  /* Secondary */
+  primary-container: $mdc-theme-primary-container,
+  on-primary: $mdc-theme-on-primary,
+  on-primary-container: $mdc-theme-on-primary-container,
+
+  /* M3 Secondary */
   secondary: $mdc-theme-secondary,
-  /* Background */
+  secondary-container: $mdc-theme-secondary-container,
+  on-secondary: $mdc-theme-on-secondary,
+  on-secondary-container: $mdc-theme-on-secondary-container,
+
+  /* M3 Tertiary */
+  tertiary: $mdc-theme-tertiary,
+  tertiary-container: $mdc-theme-tertiary-container,
+  on-tertiary: $mdc-theme-on-tertiary,
+  on-tertiary-container: $mdc-theme-on-tertiary-container,
+
+  /* M3 Surfaces */
+  surface: $mdc-theme-surface,
+  on-surface: $mdc-theme-on-surface,
+  surface-container: $mdc-theme-surface-container,
+  surface-container-high: $mdc-theme-surface-container-high,
   background: $mdc-theme-background,
   // Text-primary on "primary" background
   text-primary-on-primary: mdc-theme-ink-color-for-fill_(primary, $mdc-theme-primary),

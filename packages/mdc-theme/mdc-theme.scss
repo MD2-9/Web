@@ -35,9 +35,36 @@
   }
 }
 
-// CSS rules for using primary and secondary (plus light/dark variants) as background colors.
-@each $style in ("primary", "secondary") {
+// CSS rules for using primary, secondary, and tertiary (plus container variants) as background colors.
+@each $style in ("primary", "secondary", "tertiary", "primary-container", "secondary-container", "tertiary-container") {
   .mdc-theme--#{$style}-bg {
-    @include mdc-theme-prop(background-color, $style, true);
+    background-color: var(--mdc-theme-#{$style}) !important;
   }
+  .mdc-theme--on-#{$style} {
+    color: var(--mdc-theme-on-#{$style}) !important;
+  }
+}
+
+/* 🌟 M3 官方原生暗色模式全局变量映射表 */
+.dark-theme {
+  --mdc-theme-background: #1f1e24;
+  --mdc-theme-surface: #19181e;
+  --mdc-theme-on-surface: #e6e1e5;
+  --mdc-theme-surface-container: #131217;
+  --mdc-theme-surface-container-high: #0d0c10;
+
+  --mdc-theme-primary: #d0bcff;
+  --mdc-theme-primary-container: #4f378b;
+  --mdc-theme-on-primary: #000000;
+  --mdc-theme-on-primary-container: #eaddff;
+
+  --mdc-theme-secondary: #ccc2dc;
+  --mdc-theme-secondary-container: #4a4458;
+  --mdc-theme-on-secondary: #000000;
+  --mdc-theme-on-secondary-container: #e8def8;
+
+  --mdc-theme-tertiary: #efb8c8;
+  --mdc-theme-tertiary-container: #633b48;
+  --mdc-theme-on-tertiary: #000000;
+  --mdc-theme-on-tertiary-container: #ffd8e4;
 }
