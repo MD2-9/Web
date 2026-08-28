@@ -71,10 +71,10 @@ export class Md1Tabs {
     });
 
     this.updateIndicator(tab);
-    this.triggerTabContentRipple(tab, index);
+    this.triggerTabContentRipple(tab, index, isSlideRight);
   }
 
-  triggerTabContentRipple(tabElement, index) {
+  triggerTabContentRipple(tabElement, index, isSlideRight = true) {
     const activePanel = this.panels[index];
     if (!activePanel || !tabElement) return;
 
@@ -97,20 +97,16 @@ export class Md1Tabs {
     ) * 1.05;
 
     const wave = document.createElement('div');
-    wave.className = 'md1-tab-content-ripple';
+    wave.className = `md1-tab-content-ripple ${isSlideRight ? 'slide-right' : 'slide-left'}`;
     wave.style.width = `${maxRadius * 2}px`;
     wave.style.height = `${maxRadius * 2}px`;
     wave.style.left = `${originX}px`;
     wave.style.top = `${originY}px`;
     contentContainer.appendChild(wave);
 
-    requestAnimationFrame(() => {
-      wave.classList.add('is-active');
-      setTimeout(() => {
-        wave.classList.add('is-fading');
-        setTimeout(() => wave.remove(), 450);
-      }, 250);
-    });
+    setTimeout(() => {
+      if (wave.parentNode) wave.parentNode.removeChild(wave);
+    }, 650);
   }
 
   updateIndicator(tabElement) {

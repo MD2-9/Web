@@ -54,7 +54,7 @@ export function createRipple(e, container) {
  * 优先响应最近子交互元素（如按钮、标签），点击卡片空白区才作用于卡片自身，绝不向上重叠触发
  */
 export function attachRipples() {
-  const RIPPLE_SELECTOR = '.mdc-button, button, .surface-token-chip, .theme-tile, .rail-nav-item, .preview-img-box, .expansion-header, .demo-card';
+  const RIPPLE_SELECTOR = '.mdc-button, button, .mdc-icon-button, .segmented-button, .surface-token-chip, .theme-tile, .rail-nav-item, .preview-img-box, .expansion-header';
 
   window.addEventListener('pointerdown', (e) => {
     // 忽略表单输入框、单选、复选、滑块本身

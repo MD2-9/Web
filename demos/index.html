@@ -1045,21 +1045,48 @@
     .md1-tab-panel.is-active {
       display: block;
     }
+    // 目标 Tab 为起点向全内容扩散的水波纹 (仅在内容容器内显示，微小初始半径，移动方向与 Tab 横条一致)
     .md1-tab-content-ripple {
       position: absolute;
       border-radius: 50% !important;
       pointer-events: none;
       z-index: 1;
       background-color: var(--mdc-theme-primary, #6750a4);
-      opacity: 0.15;
-      transform: translate(-50%, -50%) scale(0);
-      transition: transform 0.55s cubic-bezier(0, 0, 0.2, 1), opacity 0.55s linear;
+      opacity: 0.2;
+      transform: translate(-50%, -50%) scale(0.01);
+      will-change: transform, opacity;
     }
-    .md1-tab-content-ripple.is-active {
-      transform: translate(-50%, -50%) scale(1);
+    .md1-tab-content-ripple.slide-right {
+      animation: tabRippleSlideRight 0.6s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
     }
-    .md1-tab-content-ripple.is-fading {
-      opacity: 0;
+    .md1-tab-content-ripple.slide-left {
+      animation: tabRippleSlideLeft 0.6s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+    }
+    @keyframes tabRippleSlideRight {
+      0% {
+        transform: translate(-50%, -50%) scale(0.01) translateX(-30px);
+        opacity: 0.22;
+      }
+      60% {
+        opacity: 0.16;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1) translateX(40px);
+        opacity: 0;
+      }
+    }
+    @keyframes tabRippleSlideLeft {
+      0% {
+        transform: translate(-50%, -50%) scale(0.01) translateX(30px);
+        opacity: 0.22;
+      }
+      60% {
+        opacity: 0.16;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1) translateX(-40px);
+        opacity: 0;
+      }
     }
     .md1-tab-panel.slide-right {
       animation: tabSlideRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -2653,7 +2680,7 @@
       setTimeout(removeRipple, 2400);
     }
 
-    // 统一精确水波纹委托选择器 (从最内层交互控件到最外层卡片)
+    // 统一精确水波纹委托选择器 (仅对具体可交互按钮/选项生效，外部卡片绝无水波纹)
     const RIPPLE_TARGETS_SELECTOR = [
       '.mdc-button',
       'button',
@@ -2663,8 +2690,7 @@
       '.theme-tile',
       '.rail-nav-item',
       '.preview-img-box',
-      '.expansion-header',
-      '.demo-card'
+      '.expansion-header'
     ].join(',');
 
     // 单一全局事件委托：精准获取最内层目标容器，点按钮仅按钮有涟漪，点卡片空白仅卡片自身有涟漪
@@ -2921,20 +2947,16 @@
           ) * 1.05;
 
           const wave = document.createElement('div');
-          wave.className = 'md1-tab-content-ripple';
+          wave.className = `md1-tab-content-ripple ${isSlideRight ? 'slide-right' : 'slide-left'}`;
           wave.style.width = `${maxRadius * 2}px`;
           wave.style.height = `${maxRadius * 2}px`;
           wave.style.left = `${originX}px`;
           wave.style.top = `${originY}px`;
           contentContainer.appendChild(wave);
 
-          requestAnimationFrame(() => {
-            wave.classList.add('is-active');
-            setTimeout(() => {
-              wave.classList.add('is-fading');
-              setTimeout(() => wave.remove(), 450);
-            }, 250);
-          });
+          setTimeout(() => {
+            if (wave.parentNode) wave.parentNode.removeChild(wave);
+          }, 650);
         }
       }
     }
