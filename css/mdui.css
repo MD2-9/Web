@@ -367,7 +367,7 @@ template {
 body {
   color: rgba(0, 0, 0, 0.87);
   font-size: 14px;
-  font-family: Roboto, Noto, Helvetica, Arial, sans-serif;
+  font-family: 'Google Sans Flex', 'GoogleSansFlex', Roboto, Noto, Helvetica, Arial, sans-serif;
   background-color: #fff;
 }
 @media (min-width: 600px) {
@@ -5192,7 +5192,7 @@ body.mdui-locked {
 }
 /* 圆角图片 */
 .mdui-img-rounded {
-  border-radius: 2px;
+  border-radius: 0;
 }
 /* 圆形图片 */
 .mdui-img-circle {
@@ -5215,92 +5215,28 @@ body.mdui-locked {
 }
 /**
  * =============================================================================
- * ************   Roboto 字体   ************
+ * ************   Google Sans Flex 字体   ************
  * =============================================================================
  */
 @font-face {
-  font-weight: 100;
-  font-family: 'Roboto';
+  font-family: 'Google Sans Flex';
   font-style: normal;
+  font-weight: 100 1000;
+  font-stretch: 100%;
   font-display: swap;
-  src: local('Roboto Thin'), local('Roboto-Thin'), url('../fonts/roboto/Roboto-Thin.woff2') format('woff2'), url('../fonts/roboto/Roboto-Thin.woff') format('woff');
+  src: local('Google Sans Flex'), local('GoogleSansFlex'),
+       url('../fonts/google-sans-flex/GoogleSansFlex.woff2') format('woff2'),
+       url('../fonts/google-sans-flex/GoogleSansFlex.ttf') format('truetype');
 }
 @font-face {
-  font-weight: 100;
-  font-family: 'Roboto';
-  font-style: italic;
-  font-display: swap;
-  src: local('Roboto ThinItalic'), local('Roboto-ThinItalic'), url('../fonts/roboto/Roboto-ThinItalic.woff2') format('woff2'), url('../fonts/roboto/Roboto-ThinItalic.woff') format('woff');
-}
-@font-face {
-  font-weight: 300;
-  font-family: 'Roboto';
+  font-family: 'GoogleSansFlex';
   font-style: normal;
+  font-weight: 100 1000;
+  font-stretch: 100%;
   font-display: swap;
-  src: local('Roboto Light'), local('Roboto-Light'), url('../fonts/roboto/Roboto-Light.woff2') format('woff2'), url('../fonts/roboto/Roboto-Light.woff') format('woff');
-}
-@font-face {
-  font-weight: 300;
-  font-family: 'Roboto';
-  font-style: italic;
-  font-display: swap;
-  src: local('Roboto LightItalic'), local('Roboto-LightItalic'), url('../fonts/roboto/Roboto-LightItalic.woff2') format('woff2'), url('../fonts/roboto/Roboto-LightItalic.woff') format('woff');
-}
-@font-face {
-  font-weight: 400;
-  font-family: 'Roboto';
-  font-style: normal;
-  font-display: swap;
-  src: local('Roboto Regular'), local('Roboto-Regular'), url('../fonts/roboto/Roboto-Regular.woff2') format('woff2'), url('../fonts/roboto/Roboto-Regular.woff') format('woff');
-}
-@font-face {
-  font-weight: 400;
-  font-family: 'Roboto';
-  font-style: italic;
-  font-display: swap;
-  src: local('Roboto RegularItalic'), local('Roboto-RegularItalic'), url('../fonts/roboto/Roboto-RegularItalic.woff2') format('woff2'), url('../fonts/roboto/Roboto-RegularItalic.woff') format('woff');
-}
-@font-face {
-  font-weight: 500;
-  font-family: 'Roboto';
-  font-style: normal;
-  font-display: swap;
-  src: local('Roboto Medium'), local('Roboto-Medium'), url('../fonts/roboto/Roboto-Medium.woff2') format('woff2'), url('../fonts/roboto/Roboto-Medium.woff') format('woff');
-}
-@font-face {
-  font-weight: 500;
-  font-family: 'Roboto';
-  font-style: italic;
-  font-display: swap;
-  src: local('Roboto MediumItalic'), local('Roboto-MediumItalic'), url('../fonts/roboto/Roboto-MediumItalic.woff2') format('woff2'), url('../fonts/roboto/Roboto-MediumItalic.woff') format('woff');
-}
-@font-face {
-  font-weight: 700;
-  font-family: 'Roboto';
-  font-style: normal;
-  font-display: swap;
-  src: local('Roboto Bold'), local('Roboto-Bold'), url('../fonts/roboto/Roboto-Bold.woff2') format('woff2'), url('../fonts/roboto/Roboto-Bold.woff') format('woff');
-}
-@font-face {
-  font-weight: 700;
-  font-family: 'Roboto';
-  font-style: italic;
-  font-display: swap;
-  src: local('Roboto BoldItalic'), local('Roboto-BoldItalic'), url('../fonts/roboto/Roboto-BoldItalic.woff2') format('woff2'), url('../fonts/roboto/Roboto-BoldItalic.woff') format('woff');
-}
-@font-face {
-  font-weight: 900;
-  font-family: 'Roboto';
-  font-style: normal;
-  font-display: swap;
-  src: local('Roboto Black'), local('Roboto-Black'), url('../fonts/roboto/Roboto-Black.woff2') format('woff2'), url('../fonts/roboto/Roboto-Black.woff') format('woff');
-}
-@font-face {
-  font-weight: 900;
-  font-family: 'Roboto';
-  font-style: italic;
-  font-display: swap;
-  src: local('Roboto BlackItalic'), local('Roboto-BlackItalic'), url('../fonts/roboto/Roboto-BlackItalic.woff2') format('woff2'), url('../fonts/roboto/Roboto-BlackItalic.woff') format('woff');
+  src: local('Google Sans Flex'), local('GoogleSansFlex'),
+       url('../fonts/google-sans-flex/GoogleSansFlex.woff2') format('woff2'),
+       url('../fonts/google-sans-flex/GoogleSansFlex.ttf') format('truetype');
 }
 /**
  * =============================================================================
@@ -5600,7 +5536,7 @@ body.mdui-locked {
   padding: 2px 6px;
   color: #c7254e;
   background-color: #f7f7f9;
-  border-radius: 2px;
+  border-radius: 0;
 }
 .mdui-typo pre code {
   padding: 0;
@@ -5636,7 +5572,7 @@ body.mdui-locked {
   padding: 12px 16px;
   overflow-x: auto;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 2px;
+  border-radius: 0;
   -webkit-overflow-scrolling: touch;
 }
 .mdui-typo kbd {
@@ -5644,7 +5580,7 @@ body.mdui-locked {
   color: #fff;
   font-size: 90%;
   background-color: #333;
-  border-radius: 2px;
+  border-radius: 0;
 }
 .mdui-typo ul {
   padding-left: 2em;
@@ -8295,7 +8231,7 @@ th.mdui-table-cell-checkbox .mdui-checkbox {
   width: 18px;
   height: 18px;
   border: 2px solid rgba(0, 0, 0, 0.54);
-  border-radius: 2px;
+  border-radius: 0;
   -webkit-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   content: ' ';
@@ -9784,7 +9720,7 @@ th.mdui-table-cell-checkbox .mdui-checkbox {
   vertical-align: middle;
   background: transparent;
   border: none;
-  border-radius: 2px;
+  border-radius: 0;
   outline: none;
   cursor: pointer;
   -webkit-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1), -webkit-box-shadow 0.2s cubic-bezier(0.4, 0, 1, 1);
@@ -10231,7 +10167,7 @@ input.mdui-btn[type="submit"] {
   padding-right: 24px;
   padding-left: 0;
   font-size: 16px;
-  font-family: Roboto, Noto, Helvetica, Arial, sans-serif;
+  font-family: 'Google Sans Flex', 'GoogleSansFlex', Roboto, Noto, Helvetica, Arial, sans-serif;
   vertical-align: middle;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M-.003 2.5l5 5 5-5h-10z' opacity='.54'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -10270,7 +10206,7 @@ input.mdui-btn[type="submit"] {
   background-color: #fff;
   /* stylelint-disable-next-line */
   background-position-x: calc(100% - 12px);
-  border-radius: 2px;
+  border-radius: 0;
 }
 .mdui-select-open.mdui-select-position-top {
   border-top: 1px solid rgba(0, 0, 0, 0.12);
@@ -10332,7 +10268,7 @@ input.mdui-btn[type="submit"] {
   overflow-y: scroll;
   color: rgba(0, 0, 0, 0.87);
   background-color: #fff;
-  border-radius: 2px;
+  border-radius: 0;
   -webkit-transform: scale(1, 0);
           transform: scale(1, 0);
   visibility: hidden;
@@ -10803,7 +10739,7 @@ select.mdui-select[multiple] option:last-child {
   overflow: hidden;
   color: #000;
   background-color: #fff;
-  border-radius: 2px;
+  border-radius: 0;
   -webkit-box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
           box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
@@ -11960,7 +11896,7 @@ body.mdui-loaded .mdui-drawer {
   overflow: hidden;
   color: #000;
   background-color: #fff;
-  border-radius: 2px;
+  border-radius: 0;
   -webkit-transform: scale(0.95);
           transform: scale(0.95);
   opacity: 0;
@@ -12176,7 +12112,7 @@ body.mdui-loaded .mdui-drawer {
   line-height: 22px;
   text-align: left;
   background-color: rgba(97, 97, 97, 0.9);
-  border-radius: 2px;
+  border-radius: 0;
   -webkit-transform: scale(0);
           transform: scale(0);
   opacity: 0;
@@ -12238,7 +12174,7 @@ body.mdui-loaded .mdui-drawer {
     width: auto;
     min-width: 288px;
     max-width: 568px;
-    border-radius: 2px;
+    border-radius: 0;
   }
 }
 .mdui-snackbar-bottom,
@@ -12688,7 +12624,7 @@ body.mdui-loaded .mdui-drawer {
   height: 4px;
   overflow: hidden;
   background-color: rgba(63, 81, 181, 0.2);
-  border-radius: 2px;
+  border-radius: 0;
 }
 /* 确定进度的线性进度条 */
 .mdui-progress-determinate {
@@ -13393,7 +13329,7 @@ body.mdui-loaded .mdui-drawer {
   font-size: 16px;
   list-style: none;
   background-color: #fff;
-  border-radius: 2px;
+  border-radius: 0;
   -webkit-transform: scale(0);
           transform: scale(0);
   visibility: hidden;
@@ -13557,3 +13493,169 @@ body.mdui-loaded .mdui-drawer {
 }
 
 /*# sourceMappingURL=mdui.css.map */
+
+
+/**
+ * =============================================================================
+ * ************   Monet (Material You) 动态取色主题系统   ************
+ * =============================================================================
+ */
+:root {
+  --mdui-monet-primary: #3F51B5;
+  --mdui-monet-on-primary: #FFFFFF;
+  --mdui-monet-primary-container: #E8DEF8;
+  --mdui-monet-on-primary-container: #1D192B;
+  --mdui-monet-secondary: #625B71;
+  --mdui-monet-on-secondary: #FFFFFF;
+  --mdui-monet-secondary-container: #E8DEF8;
+  --mdui-monet-on-secondary-container: #1D192B;
+  --mdui-monet-tertiary: #7D5260;
+  --mdui-monet-on-tertiary: #FFFFFF;
+  --mdui-monet-tertiary-container: #FFD8E4;
+  --mdui-monet-on-tertiary-container: #31111D;
+  --mdui-monet-surface: #FEF7FF;
+  --mdui-monet-on-surface: #1D1B20;
+  --mdui-monet-surface-variant: #E7E0EC;
+  --mdui-monet-on-surface-variant: #49454F;
+  --mdui-monet-background: #FEF7FF;
+  --mdui-monet-on-background: #1D1B20;
+  --mdui-monet-outline: #79747E;
+  --mdui-monet-outline-variant: #CAC4D0;
+  --mdui-monet-shadow: #000000;
+  --mdui-monet-scrim: #000000;
+
+  --mdui-monet-primary-50: #EEF0FA;
+  --mdui-monet-primary-100: #D5DAF3;
+  --mdui-monet-primary-200: #9FA8DA;
+  --mdui-monet-primary-300: #7986CB;
+  --mdui-monet-primary-400: #5C6BC0;
+  --mdui-monet-primary-500: #3F51B5;
+  --mdui-monet-primary-600: #3949AB;
+  --mdui-monet-primary-700: #303F9F;
+  --mdui-monet-primary-800: #283593;
+  --mdui-monet-primary-900: #1A237E;
+  --mdui-monet-accent-a100: #8C9EFF;
+  --mdui-monet-accent-a200: #536DFE;
+  --mdui-monet-accent-a400: #3D5AFE;
+  --mdui-monet-accent-a700: #304FFE;
+}
+
+/* Monet 动态主色与强调色适配 */
+.mdui-theme-monet .mdui-color-theme,
+.mdui-theme-monet.mdui-color-theme {
+  background-color: var(--mdui-monet-primary-500, var(--mdui-monet-primary)) !important;
+  color: var(--mdui-monet-on-primary, #ffffff) !important;
+}
+.mdui-theme-monet .mdui-color-theme-accent,
+.mdui-theme-monet.mdui-color-theme-accent {
+  background-color: var(--mdui-monet-accent-a400, var(--mdui-monet-tertiary, #ff4081)) !important;
+  color: var(--mdui-monet-on-tertiary, #ffffff) !important;
+}
+
+.mdui-theme-monet .mdui-text-color-theme,
+.mdui-theme-monet.mdui-text-color-theme {
+  color: var(--mdui-monet-primary-500, var(--mdui-monet-primary)) !important;
+}
+.mdui-theme-monet .mdui-text-color-theme-accent,
+.mdui-theme-monet.mdui-text-color-theme-accent {
+  color: var(--mdui-monet-accent-a400, var(--mdui-monet-tertiary, #ff4081)) !important;
+}
+
+/* Monet 阶度色彩 classes */
+.mdui-theme-monet .mdui-color-theme-50 { background-color: var(--mdui-monet-primary-50) !important; }
+.mdui-theme-monet .mdui-color-theme-100 { background-color: var(--mdui-monet-primary-100) !important; }
+.mdui-theme-monet .mdui-color-theme-200 { background-color: var(--mdui-monet-primary-200) !important; }
+.mdui-theme-monet .mdui-color-theme-300 { background-color: var(--mdui-monet-primary-300) !important; }
+.mdui-theme-monet .mdui-color-theme-400 { background-color: var(--mdui-monet-primary-400) !important; }
+.mdui-theme-monet .mdui-color-theme-500 { background-color: var(--mdui-monet-primary-500) !important; }
+.mdui-theme-monet .mdui-color-theme-600 { background-color: var(--mdui-monet-primary-600) !important; }
+.mdui-theme-monet .mdui-color-theme-700 { background-color: var(--mdui-monet-primary-700) !important; }
+.mdui-theme-monet .mdui-color-theme-800 { background-color: var(--mdui-monet-primary-800) !important; }
+.mdui-theme-monet .mdui-color-theme-900 { background-color: var(--mdui-monet-primary-900) !important; }
+
+.mdui-theme-monet .mdui-color-theme-a100 { background-color: var(--mdui-monet-accent-a100) !important; }
+.mdui-theme-monet .mdui-color-theme-a200 { background-color: var(--mdui-monet-accent-a200) !important; }
+.mdui-theme-monet .mdui-color-theme-a400 { background-color: var(--mdui-monet-accent-a400) !important; }
+.mdui-theme-monet .mdui-color-theme-a700 { background-color: var(--mdui-monet-accent-a700) !important; }
+
+.mdui-theme-monet .mdui-text-color-theme-50 { color: var(--mdui-monet-primary-50) !important; }
+.mdui-theme-monet .mdui-text-color-theme-100 { color: var(--mdui-monet-primary-100) !important; }
+.mdui-theme-monet .mdui-text-color-theme-200 { color: var(--mdui-monet-primary-200) !important; }
+.mdui-theme-monet .mdui-text-color-theme-300 { color: var(--mdui-monet-primary-300) !important; }
+.mdui-theme-monet .mdui-text-color-theme-400 { color: var(--mdui-monet-primary-400) !important; }
+.mdui-theme-monet .mdui-text-color-theme-500 { color: var(--mdui-monet-primary-500) !important; }
+.mdui-theme-monet .mdui-text-color-theme-600 { color: var(--mdui-monet-primary-600) !important; }
+.mdui-theme-monet .mdui-text-color-theme-700 { color: var(--mdui-monet-primary-700) !important; }
+.mdui-theme-monet .mdui-text-color-theme-800 { color: var(--mdui-monet-primary-800) !important; }
+.mdui-theme-monet .mdui-text-color-theme-900 { color: var(--mdui-monet-primary-900) !important; }
+
+.mdui-theme-monet .mdui-text-color-theme-a100 { color: var(--mdui-monet-accent-a100) !important; }
+.mdui-theme-monet .mdui-text-color-theme-a200 { color: var(--mdui-monet-accent-a200) !important; }
+.mdui-theme-monet .mdui-text-color-theme-a400 { color: var(--mdui-monet-accent-a400) !important; }
+.mdui-theme-monet .mdui-text-color-theme-a700 { color: var(--mdui-monet-accent-a700) !important; }
+
+/* 暗色模式下的背景与文字色适配 */
+.mdui-theme-monet.mdui-theme-layout-dark,
+.mdui-theme-monet .mdui-theme-layout-dark {
+  background-color: var(--mdui-monet-background, #121212);
+  color: var(--mdui-monet-on-background, rgba(255, 255, 255, 0.87));
+}
+
+/* Monet 各组件动态样式 */
+.mdui-theme-monet .mdui-appbar.mdui-color-theme {
+  background-color: var(--mdui-monet-primary-500, var(--mdui-monet-primary)) !important;
+  color: var(--mdui-monet-on-primary, #ffffff) !important;
+}
+
+.mdui-theme-monet .mdui-tab-indicator {
+  background-color: var(--mdui-monet-accent-a400, var(--mdui-monet-primary-500, var(--mdui-monet-primary))) !important;
+}
+
+.mdui-theme-monet .mdui-textfield-focus .mdui-textfield-input,
+.mdui-theme-monet .mdui-textfield-focus .mdui-textfield-label {
+  border-bottom-color: var(--mdui-monet-primary-500, var(--mdui-monet-primary)) !important;
+  color: var(--mdui-monet-primary-500, var(--mdui-monet-primary)) !important;
+}
+
+.mdui-theme-monet .mdui-checkbox input[type="checkbox"]:checked + .mdui-checkbox-icon::after {
+  background-color: var(--mdui-monet-accent-a400, var(--mdui-monet-primary-500, #ff4081)) !important;
+  border-color: var(--mdui-monet-accent-a400, var(--mdui-monet-primary-500, #ff4081)) !important;
+}
+
+.mdui-theme-monet .mdui-radio input[type="radio"]:checked + .mdui-radio-icon {
+  border-color: var(--mdui-monet-accent-a400, var(--mdui-monet-primary-500, #ff4081)) !important;
+}
+.mdui-theme-monet .mdui-radio input[type="radio"]:checked + .mdui-radio-icon::before {
+  background-color: var(--mdui-monet-accent-a400, var(--mdui-monet-primary-500, #ff4081)) !important;
+}
+
+.mdui-theme-monet .mdui-switch input[type="checkbox"]:checked + .mdui-switch-icon {
+  background-color: var(--mdui-monet-accent-a200, rgba(255, 64, 129, 0.5)) !important;
+}
+.mdui-theme-monet .mdui-switch input[type="checkbox"]:checked + .mdui-switch-icon::before {
+  background-color: var(--mdui-monet-accent-a400, var(--mdui-monet-tertiary, #ff4081)) !important;
+}
+
+.mdui-theme-monet .mdui-slider-track-fill {
+  background-color: var(--mdui-monet-accent-a400, var(--mdui-monet-primary-500, #ff4081)) !important;
+}
+.mdui-theme-monet .mdui-slider-thumb {
+  background-color: var(--mdui-monet-accent-a400, var(--mdui-monet-primary-500, #ff4081)) !important;
+}
+
+.mdui-theme-monet .mdui-progress-indeterminate .mdui-progress-item,
+.mdui-theme-monet .mdui-progress-determinate {
+  background-color: var(--mdui-monet-primary-500, var(--mdui-monet-primary)) !important;
+}
+
+.mdui-theme-monet .mdui-spinner-layer-1,
+.mdui-theme-monet .mdui-spinner-layer-2,
+.mdui-theme-monet .mdui-spinner-layer-3,
+.mdui-theme-monet .mdui-spinner-layer-4 {
+  border-color: var(--mdui-monet-primary-500, var(--mdui-monet-primary)) !important;
+}
+
+.mdui-theme-monet .mdui-chip {
+  background-color: var(--mdui-monet-surface-variant, #e0e0e0);
+  color: var(--mdui-monet-on-surface-variant, rgba(0, 0, 0, 0.87));
+}
