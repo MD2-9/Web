@@ -285,19 +285,30 @@
   <!-- 模式 1: 屏幕最左侧悬浮感应热区 -->
   <div id="drawer-edge-hover-zone"></div>
 
-  <!-- 左侧抽屉栏 (支持三大形态 ✖ 二级菜单 ✖ 底部完备配置) -->
+  <!-- 左侧抽屉栏 (支持三大形态 ✖ 竖排标题 ✖ 二级菜单 ✖ 底部完备配置) -->
   <div class="mdui-drawer mdui-drawer-close" id="left-drawer" style="display: flex; flex-direction: column; justify-content: space-between;">
     <!-- 抽屉栏上部滚动内容 -->
     <div style="overflow-y: auto; flex: 1;">
-      <!-- Header -->
-      <div class="mdui-p-a-2 mdui-color-theme" style="display: flex; align-items: center; gap: 12px; height: 80px; box-sizing: border-box;">
-        <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; flex-shrink: 0;">
-          M1
+      <!-- Header (展开态显示横排品牌与副标题；收纳态可展示上方竖排标题) -->
+      <div class="mdui-p-a-2 mdui-color-theme" style="display: flex; align-items: center; justify-content: space-between; min-height: 72px; box-sizing: border-box;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; flex-shrink: 0;">
+            M1
+          </div>
+          <div class="drawer-header-text" style="overflow: hidden;">
+            <div style="font-weight: bold; font-size: 15px; white-space: nowrap;">MDUI Angular</div>
+            <div style="font-size: 11px; opacity: 0.85; white-space: nowrap;">纯直角 & 莫奈动态色</div>
+          </div>
         </div>
-        <div class="drawer-header-text" style="overflow: hidden;">
-          <div style="font-weight: bold; font-size: 15px; white-space: nowrap;">MDUI Angular</div>
-          <div style="font-size: 11px; opacity: 0.85; white-space: nowrap;">纯直角 & 莫奈动态色</div>
-        </div>
+        <!-- 侧边栏内的快捷暗色切换图标按钮 -->
+        <button id="btn-drawer-toggle-dark" class="mdui-btn mdui-btn-icon drawer-header-text" title="切换暗色/亮色">
+          <i class="mdui-icon material-icons" style="color: #fff;">brightness_4</i>
+        </button>
+      </div>
+
+      <!-- 上方竖排标题位 (当处于模式 2 单图标且开启上方竖排时优雅呈现) -->
+      <div class="rail-vertical-title mdui-text-color-theme">
+        MDUI · 纯直角 & 莫奈
       </div>
 
       <!-- 导航列表 (支持一级与二级手风琴折叠) -->
@@ -362,18 +373,33 @@
       </div>
     </div>
 
-    <!-- 抽屉栏底部模式控制与配置选项 -->
+    <!-- 侧边栏底部模式控制与标题位置配置 -->
     <div class="mdui-p-a-2" style="border-top: 1px solid var(--mdui-monet-outline-variant, rgba(0,0,0,0.08)); background: var(--mdui-monet-surface-container, rgba(0,0,0,0.02));">
+      
+      <!-- 下方标题展示位 (当配置为下方标题时展示) -->
+      <div class="rail-bottom-title mdui-text-color-theme">
+        MDUI MD1 纯直角
+      </div>
+
       <div class="drawer-footer-text">
         <div class="mdui-typo-caption mdui-m-b-1"><strong>侧边栏模式切换:</strong></div>
         <div class="segmented-btn-group mdui-m-b-1" id="drawer-3mode-group" style="width: 100%; display: flex;">
-          <button type="button" data-mode="edge" style="flex: 1; padding: 4px 1px; font-size: 10.5px;" title="靠近屏幕边缘悬浮滑出">1.边缘悬浮</button>
-          <button type="button" data-mode="rail" style="flex: 1; padding: 4px 1px; font-size: 10.5px;" title="固定显示单图标">2.单图标Rail</button>
-          <button type="button" data-mode="classic" class="active" style="flex: 1; padding: 4px 1px; font-size: 10.5px;" title="原版抽屉栏">3.原版抽屉</button>
+          <button type="button" data-mode="edge" style="flex: 1; padding: 4px 1px; font-size: 10px;" title="靠近屏幕边缘悬浮滑出 (顶部标题栏隐藏)">1.边缘悬浮</button>
+          <button type="button" data-mode="rail" style="flex: 1; padding: 4px 1px; font-size: 10px;" title="固定显示单图标 (顶部标题栏隐藏)">2.单图标Rail</button>
+          <button type="button" data-mode="classic" class="active" style="flex: 1; padding: 4px 1px; font-size: 10px;" title="原版抽屉栏">3.原版抽屉</button>
         </div>
 
-        <!-- 模式 2 专属控制区 -->
-        <div id="rail-config-box" style="display: none; flex-direction: column; gap: 4px; padding-top: 4px; border-top: 1px dashed rgba(0,0,0,0.1);">
+        <!-- 模式 1/2 专属控制区 -->
+        <div id="rail-config-box" style="display: none; flex-direction: column; gap: 6px; padding-top: 6px; border-top: 1px dashed rgba(0,0,0,0.1);">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span class="mdui-typo-caption">标题显示位置:</span>
+            <select id="title-pos-select" class="mdui-select" style="font-size: 11px; height: 24px; padding: 0 4px;">
+              <option value="top">上方竖排 (Google Sans)</option>
+              <option value="bottom">下方展示</option>
+              <option value="none">不显示</option>
+            </select>
+          </div>
+
           <label class="mdui-switch" style="font-size: 11px; display: flex; align-items: center; gap: 6px;">
             <input type="checkbox" id="check-hover-expand" checked/>
             <i class="mdui-switch-icon"></i>
@@ -1636,6 +1662,7 @@
         }
         drawerElement.classList.add('mdui-drawer-open');
         railConfigBox.style.display = 'flex';
+        updateTitlePosition();
       } else {
         // 3. 原版侧边栏 (遮罩模态)
         drawerInst.options.overlay = true;
@@ -1643,6 +1670,24 @@
         document.body.classList.add('drawer-mode-classic');
         railConfigBox.style.display = 'none';
       }
+    }
+
+    // 标题位置配置 (上方竖排 / 下方展示 / 不显示)
+    const titlePosSelect = document.getElementById('title-pos-select');
+    function updateTitlePosition() {
+      const pos = titlePosSelect.value;
+      document.body.classList.remove('title-pos-top', 'title-pos-bottom', 'title-pos-none');
+      document.body.classList.add('title-pos-' + pos);
+    }
+    titlePosSelect.addEventListener('change', updateTitlePosition);
+    updateTitlePosition();
+
+    // 侧边栏内快捷暗色切换
+    const drawerDarkBtn = document.getElementById('btn-drawer-toggle-dark');
+    if (drawerDarkBtn) {
+      drawerDarkBtn.onclick = () => {
+        document.getElementById('btn-toggle-dark').click();
+      };
     }
 
     document.querySelectorAll('#drawer-3mode-group button').forEach(btn => {

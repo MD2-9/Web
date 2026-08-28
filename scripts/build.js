@@ -182,9 +182,48 @@ body.drawer-mode-rail .mdui-drawer.is-manually-expanded .drawer-rail-hidden {
   display: block !important;
 }
 
-/* 模式 3: 原版侧边栏 (Classic Modal Overlay Drawer) */
-body.drawer-mode-classic {
-  padding-left: 0 !important;
+/* 当启用模式 1 (边缘悬浮) 或模式 2 (单图标 Rail) 时，顶部标题栏自动优雅隐藏，内容全高沉浸 */
+body.drawer-mode-edge .mdui-appbar,
+body.drawer-mode-rail .mdui-appbar {
+  transform: translateY(-100%) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+body.drawer-mode-edge,
+body.drawer-mode-rail {
+  padding-top: 0 !important;
+}
+
+/* 侧边栏竖排文字标题系统 (writing-mode: vertical-rl) */
+.rail-vertical-title {
+  display: none;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 4px;
+  font-size: 13px;
+  font-weight: bold;
+  opacity: 0.85;
+  padding: 12px 0;
+  margin: 0 auto;
+  user-select: none;
+}
+/* 在模式 2 (72px 单图标收拢) 且配置为上方竖排时展示 */
+body.drawer-mode-rail.title-pos-top .mdui-drawer:not(:hover):not(.is-manually-expanded) .rail-vertical-title {
+  display: block !important;
+}
+
+/* 侧边栏底部横排标题展示位 */
+.rail-bottom-title {
+  display: none;
+  font-size: 12px;
+  font-weight: bold;
+  opacity: 0.85;
+  text-align: center;
+  padding: 6px 0;
+  border-top: 1px dashed rgba(0,0,0,0.08);
+}
+body.title-pos-bottom .rail-bottom-title {
+  display: block !important;
 }
 
 /* 抽屉二级菜单缩进与样式 */
