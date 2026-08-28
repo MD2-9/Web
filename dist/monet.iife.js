@@ -6266,7 +6266,7 @@ var mdui_monet_bundle = (() => {
       };
     } else {
       return {
-        surface: hexFromArgb(n.tone(6)),
+        surface: hexFromArgb(n.tone(10)),
         surfaceDim: hexFromArgb(n.tone(6)),
         surfaceBright: hexFromArgb(n.tone(24)),
         surfaceContainerLowest: hexFromArgb(n.tone(4)),
@@ -6277,7 +6277,7 @@ var mdui_monet_bundle = (() => {
         onSurface: hexFromArgb(n.tone(90)),
         surfaceVariant: hexFromArgb(nv.tone(30)),
         onSurfaceVariant: hexFromArgb(nv.tone(80)),
-        background: hexFromArgb(n.tone(6)),
+        background: hexFromArgb(n.tone(10)),
         onBackground: hexFromArgb(n.tone(90)),
         outline: hexFromArgb(nv.tone(60)),
         outlineVariant: hexFromArgb(nv.tone(30))
@@ -6336,9 +6336,6 @@ var mdui_monet_bundle = (() => {
       }
       return { primary: "#3F51B5", secondary: null, tertiary: null, mode: "single" };
     },
-    /**
-     * Generate full Monet theme object using Material HCT Dynamic Scheme
-     */
     generateTheme(sourceInput, options = {}) {
       const { variant = activeVariant || "tonal_spot", contrastLevel = 0 } = options;
       const norm = this.normalizeColors(sourceInput);
@@ -6359,8 +6356,8 @@ var mdui_monet_bundle = (() => {
         primary: lightSchemeObj.primaryPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, Math.max(28, primaryHct.chroma)),
         secondary: lightSchemeObj.secondaryPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 16),
         tertiary: lightSchemeObj.tertiaryPalette || TonalPalette.fromHueAndChroma((primaryHct.hue + 60) % 360, 24),
-        neutral: lightSchemeObj.neutralPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 4),
-        neutralVariant: lightSchemeObj.neutralVariantPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 8)
+        neutral: lightSchemeObj.neutralPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 6),
+        neutralVariant: lightSchemeObj.neutralVariantPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 10)
       };
       if (norm.secondary) {
         const secArgb = parseColorToArgb(norm.secondary);

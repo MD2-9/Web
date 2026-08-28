@@ -215,7 +215,7 @@ const monetCssBlock = `
   --mdui-monet-accent-a700: #304FFE;
 }
 
-/* Monet 页面背景与文字色 (MD3 Background: 亮色 Tone 98 / 暗色 Tone 6 优雅种子微调底色) */
+/* Monet 页面背景与文字色 (Material Web M3 Background: 亮色 Tone 98 / 暗色 Tone 10 种子优雅微醺底色) */
 body.mdui-theme-monet,
 .mdui-theme-monet,
 body.mdui-theme-monet.mdui-theme-layout-dark,
@@ -236,13 +236,14 @@ body.mdui-theme-monet .mdui-toolbar.mdui-color-theme {
   color: var(--mdui-monet-on-primary, #ffffff) !important;
 }
 
-/* Monet 卡片着色 (MD3 Surface Container: 亮色 Tone 94 / 暗色 Tone 12，绝非死灰 #212121) */
+/* Monet 卡片着色 (Material Web M3 Surface Container: 亮色 Tone 94 / 暗色 Tone 12，带精美 Outline 边框) */
 .mdui-theme-monet .mdui-card,
 .mdui-theme-monet.mdui-card,
 .mdui-theme-monet.mdui-theme-layout-dark .mdui-card,
 .mdui-theme-monet .mdui-theme-layout-dark .mdui-card {
   background-color: var(--mdui-monet-surface-container) !important;
   color: var(--mdui-monet-on-surface) !important;
+  border: 1px solid var(--mdui-monet-outline-variant, rgba(0, 0, 0, 0.08)) !important;
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.12) !important;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.12) !important;
 }
@@ -256,27 +257,32 @@ body.mdui-theme-monet .mdui-toolbar.mdui-color-theme {
 .mdui-theme-monet.mdui-theme-layout-dark .mdui-drawer {
   background-color: var(--mdui-monet-surface-container-low, var(--mdui-monet-surface)) !important;
   color: var(--mdui-monet-on-surface) !important;
+  border-right: 1px solid var(--mdui-monet-outline-variant, rgba(0, 0, 0, 0.08)) !important;
 }
 .mdui-theme-monet .mdui-dialog,
 .mdui-theme-monet.mdui-theme-layout-dark .mdui-dialog {
   background-color: var(--mdui-monet-surface-container-high) !important;
   color: var(--mdui-monet-on-surface) !important;
+  border: 1px solid var(--mdui-monet-outline-variant, rgba(0, 0, 0, 0.1)) !important;
 }
 .mdui-theme-monet .mdui-menu,
 .mdui-theme-monet .mdui-select-menu,
 .mdui-theme-monet.mdui-theme-layout-dark .mdui-menu {
   background-color: var(--mdui-monet-surface-container) !important;
   color: var(--mdui-monet-on-surface) !important;
+  border: 1px solid var(--mdui-monet-outline-variant, rgba(0, 0, 0, 0.08)) !important;
 }
 .mdui-theme-monet .mdui-panel-item,
 .mdui-theme-monet.mdui-theme-layout-dark .mdui-panel-item {
   background-color: var(--mdui-monet-surface-container) !important;
   color: var(--mdui-monet-on-surface) !important;
+  border: 1px solid var(--mdui-monet-outline-variant, rgba(0, 0, 0, 0.06)) !important;
 }
 .mdui-theme-monet .mdui-table,
 .mdui-theme-monet.mdui-theme-layout-dark .mdui-table {
   background-color: var(--mdui-monet-surface-container) !important;
   color: var(--mdui-monet-on-surface) !important;
+  border: 1px solid var(--mdui-monet-outline-variant, rgba(0, 0, 0, 0.08)) !important;
 }
 
 /* Monet 全局主色与强调色强制优先注入 */

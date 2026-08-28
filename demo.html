@@ -519,25 +519,179 @@
       </div>
     </div>
 
-    <!-- 3. 表单、开关、单选多选、滑块与进度条 -->
-    <div id="forms" class="demo-section">
-      <div class="mdui-typo-headline mdui-m-b-2">3. 表单与交互组件（直角复选框 / 纯圆单选 / 胶囊开关 / 直角进度条）</div>
+    <!-- 3. M3 官方组件交互全景矩阵 (参照 m3.material.io/develop/web) -->
+    <div id="components" class="demo-section">
+      <div class="mdui-typo-headline mdui-m-b-2">3. 🧩 Material 3 核心组件交互矩阵（纯直角 0px ✖ 纯圆 50% ✖ 莫奈全色系联动）</div>
 
-      <div class="mdui-card mdui-p-a-3 demo-card">
+      <!-- A. 5 大核心按钮体系 (Buttons: Elevated, Filled, Filled Tonal, Outlined, Text, Icon Buttons) -->
+      <div class="mdui-card demo-card mdui-p-a-3 mdui-m-b-3">
+        <div class="mdui-typo-title mdui-m-b-2">🔘 按钮体系 (5 种 Material 核心按钮变体 ✖ 纯直角 0px)</div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;" class="mdui-m-b-3">
+          <!-- Filled Button -->
+          <button class="mdui-btn mdui-btn-raised mdui-color-theme mdui-ripple">
+            <i class="mdui-icon material-icons mdui-icon-left">check</i>Filled Button
+          </button>
+
+          <!-- Filled Tonal Button -->
+          <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">
+            <i class="mdui-icon material-icons mdui-icon-left">auto_awesome</i>Filled Tonal
+          </button>
+
+          <!-- Elevated Button -->
+          <button class="mdui-btn mdui-btn-raised mdui-ripple" style="background: var(--mdui-monet-surface-container-high, #fff);">
+            <i class="mdui-icon material-icons mdui-icon-left">layers</i>Elevated Button
+          </button>
+
+          <!-- Outlined Button -->
+          <button class="mdui-btn mdui-ripple" style="border: 1px solid var(--mdui-monet-outline, rgba(0,0,0,0.2)); color: var(--mdui-monet-primary-500, #3f51b5);">
+            <i class="mdui-icon material-icons mdui-icon-left">crop_square</i>Outlined Button
+          </button>
+
+          <!-- Text Button -->
+          <button class="mdui-btn mdui-text-color-theme mdui-ripple">
+            Text Button
+          </button>
+
+          <!-- Dense Button -->
+          <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-color-theme mdui-ripple">
+            Dense 紧凑按钮
+          </button>
+        </div>
+
+        <!-- 纯圆操作指示类组件 (Circle 50% / Pill) -->
+        <div class="mdui-divider mdui-m-y-2"></div>
+        <div class="mdui-typo-subheading mdui-m-b-2">⚪ 纯圆指示/操作类组件 (FAB, Icon Buttons, Badges - 50% 纯圆)</div>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+          <!-- Standard FAB -->
+          <button class="mdui-fab mdui-color-theme mdui-ripple" title="标准 FAB (50% 纯圆)">
+            <i class="mdui-icon material-icons">add</i>
+          </button>
+
+          <!-- Mini FAB -->
+          <button class="mdui-fab mdui-fab-mini mdui-color-theme-accent mdui-ripple" title="Mini FAB">
+            <i class="mdui-icon material-icons">edit</i>
+          </button>
+
+          <!-- Icon Buttons (Filled, Tonal, Outlined, Standard) -->
+          <button class="mdui-btn mdui-btn-icon mdui-color-theme mdui-ripple" title="Filled Icon Button">
+            <i class="mdui-icon material-icons">thumb_up</i>
+          </button>
+          <button class="mdui-btn mdui-btn-icon mdui-color-theme-accent mdui-ripple" title="Tonal Icon Button">
+            <i class="mdui-icon material-icons">favorite</i>
+          </button>
+          <button class="mdui-btn mdui-btn-icon mdui-ripple" style="border: 1px solid var(--mdui-monet-outline-variant, rgba(0,0,0,0.12));" title="Outlined Icon Button">
+            <i class="mdui-icon material-icons">share</i>
+          </button>
+          <button class="mdui-btn mdui-btn-icon mdui-ripple" title="Standard Icon Button">
+            <i class="mdui-icon material-icons">settings</i>
+          </button>
+
+          <!-- 带徽章 Avatar -->
+          <div style="position: relative; display: inline-block;">
+            <div class="mdui-card-header-avatar" style="width: 42px; height: 42px; background: var(--mdui-monet-primary-500, #3f51b5); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 50%;">
+              M3
+            </div>
+            <span style="position: absolute; top: -2px; right: -2px; background: var(--mdui-monet-tertiary-500, #ff4081); color: #fff; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px;">9+</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- B. 4 大 Material 胶囊芯片体系 (Chips: Assist, Filter, Input, Suggestion) -->
+      <div class="mdui-card demo-card mdui-p-a-3 mdui-m-b-3">
+        <div class="mdui-typo-title mdui-m-b-2">🏷️ 芯片体系 (4 种 Material 胶囊 Chips)</div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <!-- Assist Chip -->
+          <div class="mdui-chip mdui-ripple">
+            <span class="mdui-chip-icon mdui-color-theme"><i class="mdui-icon material-icons">event</i></span>
+            <span class="mdui-chip-title">Assist 辅助: 添加到日历</span>
+          </div>
+
+          <!-- Filter Chip (激活状态) -->
+          <div class="mdui-chip mdui-color-theme mdui-ripple" style="cursor: pointer;">
+            <span class="mdui-chip-icon" style="background: rgba(255,255,255,0.2);"><i class="mdui-icon material-icons">done</i></span>
+            <span class="mdui-chip-title">Filter 筛选: 已启用 (Active)</span>
+          </div>
+
+          <!-- Filter Chip (未激活) -->
+          <div class="mdui-chip mdui-ripple" style="cursor: pointer;">
+            <span class="mdui-chip-title">Filter 筛选: 待选择</span>
+          </div>
+
+          <!-- Input Chip (带删除动作) -->
+          <div class="mdui-chip mdui-ripple">
+            <span class="mdui-chip-icon mdui-color-theme-accent"><i class="mdui-icon material-icons">person</i></span>
+            <span class="mdui-chip-title">Input 标签: material@google.com</span>
+            <span class="mdui-chip-delete" onclick="this.parentElement.style.display='none'"><i class="mdui-icon material-icons">cancel</i></span>
+          </div>
+
+          <!-- Suggestion Chip -->
+          <div class="mdui-chip mdui-ripple">
+            <span class="mdui-chip-icon"><i class="mdui-icon material-icons">lightbulb_outline</i></span>
+            <span class="mdui-chip-title">Suggestion 建议: 立即体验莫奈三色</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- C. 3 大卡片变体 (Elevated, Filled, Outlined Cards) -->
+      <div class="mdui-m-b-3">
+        <div class="mdui-typo-title mdui-m-b-2">🃏 卡片形态 (3 种 Material 卡片变体 ✖ 纯直角 0px)</div>
+        <div class="mdui-row">
+          <!-- Elevated Card -->
+          <div class="mdui-col-md-4 mdui-col-sm-12 mdui-m-b-2">
+            <div class="mdui-card demo-card" style="box-shadow: 0 4px 10px rgba(0,0,0,0.15); border-radius: 0; padding: 20px;">
+              <div class="mdui-typo-title mdui-m-b-1">1. Elevated Card</div>
+              <div class="mdui-typo-caption mdui-m-b-2">高程阴影直角卡片</div>
+              <p class="mdui-typo-body-1">采用标准 MD1 直角几何，搭配 Material Design 3 层级深度阴影。</p>
+              <div class="mdui-card-actions">
+                <button class="mdui-btn mdui-color-theme mdui-ripple">操作按钮</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filled Card (Surface Container) -->
+          <div class="mdui-col-md-4 mdui-col-sm-12 mdui-m-b-2">
+            <div class="mdui-card demo-card" style="background: var(--mdui-monet-surface-container-high, #f0f0f0); box-shadow: none; border-radius: 0; padding: 20px;">
+              <div class="mdui-typo-title mdui-m-b-1">2. Filled Card</div>
+              <div class="mdui-typo-caption mdui-m-b-2">填充表面容器卡片</div>
+              <p class="mdui-typo-body-1">使用 <code>surface-container-high</code> 阶度填充，无浮起阴影，依靠表面色差分层。</p>
+              <div class="mdui-card-actions">
+                <button class="mdui-btn mdui-color-theme-accent mdui-ripple">次要操作</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Outlined Card -->
+          <div class="mdui-col-md-4 mdui-col-sm-12 mdui-m-b-2">
+            <div class="mdui-card demo-card" style="background: transparent; box-shadow: none; border: 1px solid var(--mdui-monet-outline, rgba(0,0,0,0.16)); border-radius: 0; padding: 20px;">
+              <div class="mdui-typo-title mdui-m-b-1">3. Outlined Card</div>
+              <div class="mdui-typo-caption mdui-m-b-2">纯直角描边卡片</div>
+              <p class="mdui-typo-body-1">采用 <code>outline</code> 边框勾勒，适合极简现代 Material 排版。</p>
+              <div class="mdui-card-actions">
+                <button class="mdui-btn mdui-text-color-theme mdui-ripple">详细信息</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D. 表单与控制组件 (Textfields, Checkboxes, Radios, Switches, Sliders, Progress) -->
+      <div class="mdui-card demo-card mdui-p-a-3">
+        <div class="mdui-typo-title mdui-m-b-2">📝 表单选择与进度控制 (纯直角 0px ✖ 纯圆 50%)</div>
         <div class="mdui-row">
           <div class="mdui-col-md-6 mdui-col-sm-12">
-            <div class="mdui-textfield mdui-textfield-floating-label">
-              <label class="mdui-textfield-label">用户名 (直角聚焦指示)</label>
-              <input class="mdui-textfield-input" type="text" value="MaterialDesign">
+            <!-- Outlined Textfield -->
+            <div class="mdui-textfield mdui-textfield-floating-label mdui-m-b-2">
+              <label class="mdui-textfield-label">浮动标签输入框 (MD3 Focus 主色高亮)</label>
+              <input class="mdui-textfield-input" type="text" value="Google Material Design 3"/>
             </div>
 
-            <div class="mdui-m-t-3">
+            <!-- Checkbox & Radio -->
+            <div class="mdui-m-t-2">
               <label class="mdui-checkbox mdui-m-r-2">
                 <input type="checkbox" checked/>
                 <i class="mdui-checkbox-icon"></i>
                 直角复选框 (0px)
               </label>
-
               <label class="mdui-checkbox">
                 <input type="checkbox"/>
                 <i class="mdui-checkbox-icon"></i>
@@ -560,14 +714,16 @@
           </div>
 
           <div class="mdui-col-md-6 mdui-col-sm-12">
+            <!-- Switch (胶囊形) -->
             <div class="mdui-m-b-2">
               <label class="mdui-switch mdui-m-r-2">
                 <input type="checkbox" checked/>
                 <i class="mdui-switch-icon"></i>
               </label>
-              <span>胶囊形开关 (Pill / Circle)</span>
+              <span>胶囊形开关 (Pill / Circle 50%)</span>
             </div>
 
+            <!-- Slider -->
             <div class="mdui-m-y-2">
               <div class="mdui-typo-caption">滑块 (纯圆滑块):</div>
               <label class="mdui-slider mdui-slider-discrete">

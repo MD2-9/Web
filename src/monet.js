@@ -20,11 +20,20 @@ import {
 
 /**
  * MDUI Monet Dynamic Color Theme Engine
- * Full Android 12 - 17 Material You (Monet) implementation
- * - Pure Material HCT Color Space dynamic schemes integration
- * - Realtime Variant Switching (TonalSpot, Vibrant, Expressive, Neutral/Spritz, Rainbow, FruitSalad, Monochrome, Content, Fidelity)
- * - Strict CAM16/HCT Neutral Tone 4..24 MD3 Dark Surface hierarchy
- * - Single, Dual, and Triple seed modes
+ * Strict Material Design 3 (M3 / Material Web 1.x) Specification
+ * - Real CAM16/HCT Dynamic Schemes with authentic Chroma tinting (never pure dead black #000/#121212)
+ * - M3 Official Dark Surface Tier System:
+ *     Surface: Tone 10 (~#141218 with seed hue tint)
+ *     Surface Container Lowest: Tone 4 (~#0F0D13)
+ *     Surface Container Low: Tone 10 (~#1D1B20)
+ *     Surface Container (Cards/Panels): Tone 12 (~#211F26)
+ *     Surface Container High (Dialogs/Toolbars): Tone 17 (~#2B2930)
+ *     Surface Container Highest (Highlights/Pickers): Tone 22 (~#36343B)
+ *     Surface Bright: Tone 24 (~#3B383E)
+ * - OnSurface: Tone 90 (~#E6E1E5)
+ * - OnSurfaceVariant: Tone 80 (~#CAC4D0)
+ * - Outline: Tone 60 (~#938F99)
+ * - OutlineVariant: Tone 30 (~#49454F)
  */
 
 function rgbaFromArgb(argb, alpha = 1) {
@@ -81,15 +90,7 @@ function createMduiToneMap(palette, isDark = false) {
 }
 
 /**
- * Generate MD3 Surface Containers from HCT Neutral & NeutralVariant palettes
- * - background / surface: Tone 6 (Subtle seed hue tinted night shade in dark)
- * - surfaceContainerLowest: Tone 4 in dark / Tone 100 in light
- * - surfaceContainerLow: Tone 10 in dark / Tone 96 in light
- * - surfaceContainer: Tone 12 in dark / Tone 94 in light
- * - surfaceContainerHigh: Tone 17 in dark / Tone 92 in light
- * - surfaceContainerHighest: Tone 22 in dark / Tone 90 in light
- * - onSurface: Tone 90 in dark / Tone 10 in light
- * - onSurfaceVariant: Tone 80 in dark / Tone 30 in light
+ * Generate Material 3 (Material Web / Android 14) Official Surface System
  */
 function createMd3Surfaces(palettes, isDark = false) {
   const n = palettes.neutral || palettes.neutral1;
@@ -114,8 +115,9 @@ function createMd3Surfaces(palettes, isDark = false) {
       outlineVariant: hexFromArgb(nv.tone(80))
     };
   } else {
+    // Official M3 / Material Web Dark Surface tokens
     return {
-      surface: hexFromArgb(n.tone(6)),
+      surface: hexFromArgb(n.tone(10)),
       surfaceDim: hexFromArgb(n.tone(6)),
       surfaceBright: hexFromArgb(n.tone(24)),
       surfaceContainerLowest: hexFromArgb(n.tone(4)),
@@ -126,7 +128,7 @@ function createMd3Surfaces(palettes, isDark = false) {
       onSurface: hexFromArgb(n.tone(90)),
       surfaceVariant: hexFromArgb(nv.tone(30)),
       onSurfaceVariant: hexFromArgb(nv.tone(80)),
-      background: hexFromArgb(n.tone(6)),
+      background: hexFromArgb(n.tone(10)),
       onBackground: hexFromArgb(n.tone(90)),
       outline: hexFromArgb(nv.tone(60)),
       outlineVariant: hexFromArgb(nv.tone(30))
@@ -134,7 +136,7 @@ function createMd3Surfaces(palettes, isDark = false) {
   }
 }
 
-// Variant Scheme Factory (Material HCT Dynamic Schemes)
+// Variant Scheme Factory
 const variantConstructors = {
   tonal_spot: SchemeTonalSpot,
   vibrant: SchemeVibrant,
@@ -191,9 +193,6 @@ export const monet = {
     return { primary: '#3F51B5', secondary: null, tertiary: null, mode: 'single' };
   },
 
-  /**
-   * Generate full Monet theme object using Material HCT Dynamic Scheme
-   */
   generateTheme(sourceInput, options = {}) {
     const { variant = activeVariant || 'tonal_spot', contrastLevel = 0 } = options;
     const norm = this.normalizeColors(sourceInput);
@@ -213,16 +212,15 @@ export const monet = {
       darkSchemeObj = fallback.schemes.dark;
     }
 
-    // Extract HCT Palettes directly from the active DynamicScheme instance!
+    // Authentic HCT Palettes from Scheme
     const palettes = {
       primary: lightSchemeObj.primaryPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, Math.max(28, primaryHct.chroma)),
       secondary: lightSchemeObj.secondaryPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 16),
       tertiary: lightSchemeObj.tertiaryPalette || TonalPalette.fromHueAndChroma((primaryHct.hue + 60) % 360, 24),
-      neutral: lightSchemeObj.neutralPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 4),
-      neutralVariant: lightSchemeObj.neutralVariantPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 8)
+      neutral: lightSchemeObj.neutralPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 6),
+      neutralVariant: lightSchemeObj.neutralVariantPalette || TonalPalette.fromHueAndChroma(primaryHct.hue, 10)
     };
 
-    // If user explicitly provided secondary / tertiary seed in dual/triple mode, override corresponding palette
     if (norm.secondary) {
       const secArgb = parseColorToArgb(norm.secondary);
       const secHct = Hct.fromInt(secArgb);
@@ -235,7 +233,6 @@ export const monet = {
       palettes.tertiary = TonalPalette.fromHueAndChroma(tertHct.hue, Math.max(24, tertHct.chroma));
     }
 
-    // Android 12-17 5 Core Palettes aliases
     palettes.accent1 = palettes.primary;
     palettes.accent2 = palettes.secondary;
     palettes.accent3 = palettes.tertiary;
