@@ -197,27 +197,74 @@
     }
 
     .mdc-navigation-rail:hover .rail-header-text,
-    .mdc-navigation-rail:hover .rail-item-text,
     .mdc-navigation-rail:hover .rail-footer-text,
     .mdc-navigation-rail.is-expanded .rail-header-text,
-    .mdc-navigation-rail.is-expanded .rail-item-text,
     .mdc-navigation-rail.is-expanded .rail-footer-text {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
     }
 
+    /* 展开或二级菜单激活时彻底移除竖向标题占位，避免挤压导致项目折行 */
     .mdc-navigation-rail:hover .rail-vertical-title,
-    .mdc-navigation-rail.is-expanded .rail-vertical-title {
-      opacity: 0;
-      transform: translateY(-8px);
-      pointer-events: none;
+    .mdc-navigation-rail.is-expanded .rail-vertical-title,
+    .mdc-navigation-rail.mobile-open .rail-vertical-title {
+      display: none !important;
     }
 
-    .mdc-navigation-rail:hover .rail-item-icon,
-    .mdc-navigation-rail.is-expanded .rail-item-icon {
-      margin-left: 0;
-      margin-right: 16px;
+    /* 在 72px 紧凑态下文本彻底 display: none，从文档流中完全移除，杜绝宽度溢出与任何异常缩进折行 */
+    .rail-item-text {
+      display: none !important;
+      margin-left: 16px !important;
+      white-space: nowrap !important;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* 展开或二级菜单激活时展示文本 */
+    .mdc-navigation-rail:hover .rail-item-text,
+    .mdc-navigation-rail.is-expanded .rail-item-text,
+    .mdc-navigation-rail.mobile-open .rail-item-text,
+    .secondary-overlay-panel .rail-item-text {
+      display: inline-block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+    }
+
+    /* 图标在任何状态下都保持固定 24x24 尺寸，零外边距 */
+    .rail-item-icon {
+      width: 24px !important;
+      height: 24px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      margin: 0 !important;
+      color: var(--mdc-theme-primary, #6750a4);
+      flex-shrink: 0;
+      font-size: 24px !important;
+    }
+
+    /* 一级导航项固定左右各 24px 内边距 (24+24+24=72px 绝对对称居中) */
+    .rail-nav-item {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      width: 100% !important;
+      height: 48px !important;
+      padding: 0 24px !important;
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-sizing: border-box !important;
+      margin: 0 !important;
+    }
+    .rail-nav-item:hover {
+      background-color: rgba(0, 0, 0, 0.05);
     }
 
     /* 抽屉导航常驻主容器 */
@@ -297,65 +344,6 @@
       text-overflow: ellipsis;
     }
 
-    /* 展开或二级菜单激活时彻底移除竖向标题占位，避免挤压导致项目折行 */
-    .mdc-navigation-rail:hover .rail-vertical-title,
-    .mdc-navigation-rail.is-expanded .rail-vertical-title,
-    .mdc-navigation-rail.mobile-open .rail-vertical-title {
-      display: none !important;
-    }
-
-    /* 一级导航菜单 (主页, 目录, 设置, 关于 - 极其纯净紧凑) */
-    .rail-nav-list {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      padding: 6px 0;
-      flex: 1;
-      overflow-y: auto;
-      overflow-x: hidden !important;
-      scrollbar-width: none;
-    }
-    .rail-nav-list::-webkit-scrollbar {
-      display: none;
-    }
-
-    .rail-nav-item {
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      width: 100% !important;
-      height: 48px;
-      padding: 0 16px;
-      color: inherit;
-      text-decoration: none;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-      white-space: nowrap;
-      overflow: hidden;
-      flex-shrink: 0;
-      box-sizing: border-box !important;
-    }
-    .rail-nav-item:hover {
-      background-color: rgba(0, 0, 0, 0.05);
-    }
-    .rail-item-icon {
-      margin-left: 8px;
-      margin-right: 0;
-      color: var(--mdc-theme-primary, #6750a4);
-      flex-shrink: 0;
-      font-size: 22px;
-      transition: margin 0.2s ease;
-    }
-    .rail-item-text {
-      white-space: nowrap;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      font-size: 14px;
-      font-weight: 600;
-      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
     /* 二级面板内的导航项样式 (完全无缩进瑕疵) */
     .secondary-overlay-panel .rail-nav-item {
       width: 100% !important;
@@ -364,15 +352,16 @@
       align-items: center !important;
       justify-content: flex-start !important;
       height: 46px !important;
-      padding: 0 16px !important;
+      padding: 0 20px !important;
       box-sizing: border-box !important;
     }
     .secondary-overlay-panel .rail-nav-item .rail-item-icon {
-      margin-right: 14px !important;
+      margin-right: 0 !important;
       margin-left: 0 !important;
       flex-shrink: 0 !important;
     }
     .secondary-overlay-panel .rail-nav-item .rail-item-text {
+      margin-left: 14px !important;
       opacity: 1 !important;
       visibility: visible !important;
       pointer-events: auto !important;
@@ -478,28 +467,33 @@
       justify-content: center;
     }
 
+    /* 调色盘无缝拼接色块网格 (0 间距 ✖ 双行文本) */
     .theme-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      width: 100%;
-      padding: 0;
-      margin: 0;
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 0 !important;
+      width: 100% !important;
+      padding: 0 !important;
+      margin: 0 !important;
       overflow-x: hidden;
+      border: none !important;
     }
     .theme-tile {
-      height: 46px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding-left: 14px;
-      font-size: 12.5px;
-      font-weight: bold;
-      letter-spacing: 0.2px;
+      height: 50px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      justify-content: center !important;
+      padding: 0 12px !important;
+      margin: 0 !important;
+      border: none !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
       cursor: pointer;
       user-select: none;
       transition: filter 0.15s ease;
       position: relative;
+      box-sizing: border-box !important;
     }
     .theme-tile:hover {
       filter: brightness(1.08);
@@ -508,12 +502,28 @@
     .theme-tile.active::after {
       content: '';
       position: absolute;
-      right: 10px;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
       width: 8px;
       height: 8px;
       border-radius: 50% !important;
       background-color: currentColor;
       box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    }
+    .theme-tile-cn {
+      font-size: 12.5px;
+      font-weight: 700;
+      line-height: 1.2;
+      pointer-events: none;
+    }
+    .theme-tile-en {
+      font-size: 10px;
+      font-weight: 500;
+      opacity: 0.85;
+      line-height: 1.2;
+      margin-top: 2px;
+      pointer-events: none;
     }
 
     /* 移动端 (< 600px)：左边缘向右滑动 / 静止悬浮按钮呼出 */
@@ -967,7 +977,7 @@
         <div class="rail-header-avatar">M3</div>
         <div class="rail-header-text">
           <div style="font-weight: bold; font-size: 15px;">MD3.1 · MDC-Web</div>
-          <div style="font-size: 11px; opacity: 0.85;">🎨 点击取色</div>
+          <div style="font-size: 11px; opacity: 0.85;">点击取色</div>
         </div>
       </div>
 
@@ -982,25 +992,25 @@
         <!-- 1. 主页 -->
         <a href="#section-overview" class="rail-nav-item" title="主页 (Overview)">
           <i class="material-icons rail-item-icon">home</i>
-          <span class="rail-item-text">🏠 主页</span>
+          <span class="rail-item-text">主页</span>
         </a>
 
         <!-- 2. 目录 (点击触发水波纹扩散覆盖一级菜单，展开 9 大模块) -->
         <div class="rail-nav-item" onclick="openOverlay('catalogSubmenuPanel')" title="目录 (点击展开二级全景组件)">
           <i class="material-icons rail-item-icon" style="color: var(--mdc-theme-primary);">list_alt</i>
-          <span class="rail-item-text">📑 目录</span>
+          <span class="rail-item-text">目录</span>
         </div>
 
         <!-- 3. 设置 (点击触发水波纹覆盖，展开主题与暗色设置) -->
         <div class="rail-nav-item" onclick="openOverlay('settingsSubmenuPanel')" title="设置 (暗色与主题配置)">
           <i class="material-icons rail-item-icon">settings</i>
-          <span class="rail-item-text">⚙️ 设置</span>
+          <span class="rail-item-text">设置</span>
         </div>
 
         <!-- 4. 关于 -->
         <div class="rail-nav-item" onclick="openOverlay('aboutSubmenuPanel')" title="关于项目">
           <i class="material-icons rail-item-icon">info</i>
-          <span class="rail-item-text">ℹ️ 关于</span>
+          <span class="rail-item-text">关于</span>
         </div>
 
       </nav>
@@ -1021,53 +1031,53 @@
       </div>
     </div>
 
-    <!-- 2. 二级菜单：📑 目录全景组件 (水波纹覆盖一级菜单 ✖ 底部返回按钮) -->
+    <!-- 2. 二级菜单：组件全景目录 (水波纹覆盖一级菜单 ✖ 底部返回按钮) -->
     <div id="catalogSubmenuPanel" class="secondary-overlay-panel">
       <div class="overlay-top-bar">
         <div class="overlay-header-title">
           <button class="mdc-button mdc-button--dense" onclick="closeOverlay('catalogSubmenuPanel')" style="color: #fff; min-width: 32px; padding: 0 4px;" title="返回一级菜单">
             <i class="material-icons">arrow_back</i>
           </button>
-          <span>📑 组件全景目录</span>
+          <span>组件全景目录</span>
         </div>
       </div>
       
       <nav class="rail-nav-list" style="padding: 8px 0;">
         <a href="#section-buttons" class="rail-nav-item" onclick="handleNavClick()" title="1. 按钮与 FAB">
           <i class="material-icons rail-item-icon">touch_app</i>
-          <span class="rail-item-text" style="opacity: 1; visibility: visible;">1. 按钮与 FAB</span>
+          <span class="rail-item-text">1. 按钮与 FAB</span>
         </a>
         <a href="#section-cards" class="rail-nav-item" onclick="handleNavClick()" title="2. 直角卡片">
           <i class="material-icons rail-item-icon">view_agenda</i>
-          <span class="rail-item-text" style="opacity: 1; visibility: visible;">2. 直角卡片</span>
+          <span class="rail-item-text">2. 直角卡片</span>
         </a>
         <a href="#section-chips" class="rail-nav-item" onclick="handleNavClick()" title="3. 标签与胶囊">
           <i class="material-icons rail-item-icon">label</i>
-          <span class="rail-item-text" style="opacity: 1; visibility: visible;">3. 标签与胶囊</span>
+          <span class="rail-item-text">3. 标签与胶囊</span>
         </a>
         <a href="#section-form" class="rail-nav-item" onclick="handleNavClick()" title="4. 表单与开关">
           <i class="material-icons rail-item-icon">toggle_on</i>
-          <span class="rail-item-text" style="opacity: 1; visibility: visible;">4. 表单与开关</span>
+          <span class="rail-item-text">4. 表单与开关</span>
         </a>
         <a href="#section-list" class="rail-nav-item" onclick="handleNavClick()" title="5. 列表与手风琴">
           <i class="material-icons rail-item-icon">format_list_bulleted</i>
-          <span class="rail-item-text" style="opacity: 1; visibility: visible;">5. 列表与手风琴</span>
+          <span class="rail-item-text">5. 列表与手风琴</span>
         </a>
         <a href="#section-dialogs" class="rail-nav-item" onclick="handleNavClick()" title="6. 对话框与菜单">
           <i class="material-icons rail-item-icon">aspect_ratio</i>
-          <span class="rail-item-text" style="opacity: 1; visibility: visible;">6. 对话框与菜单</span>
+          <span class="rail-item-text">6. 对话框与菜单</span>
         </a>
         <a href="#section-tabs" class="rail-nav-item" onclick="handleNavClick()" title="7. 选项卡 Tab">
           <i class="material-icons rail-item-icon">tab</i>
-          <span class="rail-item-text" style="opacity: 1; visibility: visible;">7. 选项卡 Tab</span>
+          <span class="rail-item-text">7. 选项卡 Tab</span>
         </a>
         <a href="#section-progress" class="rail-nav-item" onclick="handleNavClick()" title="8. 进度与提示">
           <i class="material-icons rail-item-icon">hourglass_empty</i>
-          <span class="rail-item-text" style="opacity: 1; visibility: visible;">8. 进度与提示</span>
+          <span class="rail-item-text">8. 进度与提示</span>
         </a>
         <a href="#section-monet-lab" class="rail-nav-item" onclick="handleNavClick()" title="9. 莫奈色彩实验室">
           <i class="material-icons rail-item-icon">wallpaper</i>
-          <span class="rail-item-text" style="opacity: 1; visibility: visible;">9. 莫奈实验室</span>
+          <span class="rail-item-text">9. 莫奈色彩实验室</span>
         </a>
       </nav>
 
@@ -1080,25 +1090,25 @@
       </div>
     </div>
 
-    <!-- 3. 二级菜单：⚙️ 设置面板 -->
+    <!-- 3. 二级菜单：设置面板 -->
     <div id="settingsSubmenuPanel" class="secondary-overlay-panel">
       <div class="overlay-top-bar">
         <div class="overlay-header-title">
           <button class="mdc-button mdc-button--dense" onclick="closeOverlay('settingsSubmenuPanel')" style="color: #fff; min-width: 32px; padding: 0 4px;" title="返回一级菜单">
             <i class="material-icons">arrow_back</i>
           </button>
-          <span>⚙️ 全局设置</span>
+          <span>全局设置</span>
         </div>
       </div>
       <div style="padding: 16px; display: flex; flex-direction: column; gap: 16px; flex: 1;">
         <div>
-          <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">🎨 莫奈调色盘</div>
+          <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">莫奈调色盘</div>
           <button class="mdc-button mdc-button--raised" onclick="closeOverlay('settingsSubmenuPanel'); openOverlay('themePickerPanel');" style="width: 100%;">
             打开 3-Step 取色盘
           </button>
         </div>
         <div>
-          <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">🌙 暗色模式切换</div>
+          <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">暗色模式切换</div>
           <button class="mdc-button mdc-button--outlined" onclick="toggleThemeMode()" style="width: 100%;">
             切换亮 / 暗模式
           </button>
@@ -1112,14 +1122,14 @@
       </div>
     </div>
 
-    <!-- 4. 二级菜单：ℹ️ 关于面板 -->
+    <!-- 4. 二级菜单：关于面板 -->
     <div id="aboutSubmenuPanel" class="secondary-overlay-panel">
       <div class="overlay-top-bar">
         <div class="overlay-header-title">
           <button class="mdc-button mdc-button--dense" onclick="closeOverlay('aboutSubmenuPanel')" style="color: #fff; min-width: 32px; padding: 0 4px;" title="返回一级菜单">
             <i class="material-icons">arrow_back</i>
           </button>
-          <span>ℹ️ 关于 MDC-Web</span>
+          <span>关于 MDC-Web</span>
         </div>
       </div>
       <div style="padding: 16px; font-size: 13px; line-height: 1.6; opacity: 0.9; flex: 1;">
@@ -1730,27 +1740,35 @@
     }, { passive: true });
 
     // =========================================================================
-    // 真实莫奈 (Material You / CAM16 & HCT) 色彩调色盘矩阵 (18 经典种子)
+    // 真实莫奈 (Material You / CAM16 & HCT) 色彩调色盘矩阵 (包含深色、鲜亮色与浅色粉彩)
     // =========================================================================
     const MONET_PALETTES = [
-      { name: '薰衣紫 (Pixel Default)', color: '#6750A4', text: '#FFFFFF' },
-      { name: '莫奈靛蓝 (Indigo)', color: '#4F5B92', text: '#FFFFFF' },
-      { name: '极光蔚蓝 (Cyan)', color: '#006874', text: '#FFFFFF' },
-      { name: '鼠尾草青 (Sage Teal)', color: '#006A6A', text: '#FFFFFF' },
-      { name: '深林翠绿 (Forest)', color: '#386A20', text: '#FFFFFF' },
-      { name: '橄榄青绿 (Olive)', color: '#5B6400', text: '#FFFFFF' },
-      { name: '暖阳金珀 (Amber)', color: '#765B00', text: '#FFFFFF' },
-      { name: '夕照暖橙 (Orange)', color: '#8C5000', text: '#FFFFFF' },
-      { name: '陶瓦砖红 (Terracotta)', color: '#8B502A', text: '#FFFFFF' },
-      { name: '绯红赤玉 (Crimson)', color: '#904A42', text: '#FFFFFF' },
-      { name: '玫瑰暮粉 (Rose)', color: '#984061', text: '#FFFFFF' },
-      { name: '锦葵凝紫 (Mauve)', color: '#824C71', text: '#FFFFFF' },
-      { name: '黑莓李紫 (Plum)', color: '#794F69', text: '#FFFFFF' },
-      { name: '板岩冷蓝 (Slate)', color: '#525F7F', text: '#FFFFFF' },
-      { name: '薄荷冰绿 (Mint)', color: '#1B6C5D', text: '#FFFFFF' },
-      { name: '深海湛蓝 (Ocean)', color: '#0061A4', text: '#FFFFFF' },
-      { name: '流沙雅金 (Sand Gold)', color: '#715B2F', text: '#FFFFFF' },
-      { name: '素雅冷灰 (Neutral)', color: '#5E5E62', text: '#FFFFFF' }
+      { cn: '薰衣紫', en: 'Lavender', color: '#6750A4', text: '#FFFFFF' },
+      { cn: '莫奈靛蓝', en: 'Indigo', color: '#4F5B92', text: '#FFFFFF' },
+      { cn: '极光蔚蓝', en: 'Cyan Teal', color: '#006874', text: '#FFFFFF' },
+      { cn: '鼠尾草青', en: 'Sage Teal', color: '#006A6A', text: '#FFFFFF' },
+      { cn: '深林翠绿', en: 'Forest Green', color: '#386A20', text: '#FFFFFF' },
+      { cn: '橄榄青绿', en: 'Olive Green', color: '#5B6400', text: '#FFFFFF' },
+      { cn: '暖阳金珀', en: 'Amber Gold', color: '#765B00', text: '#FFFFFF' },
+      { cn: '夕照暖橙', en: 'Sunset Orange', color: '#8C5000', text: '#FFFFFF' },
+      { cn: '陶瓦砖红', en: 'Terracotta', color: '#8B502A', text: '#FFFFFF' },
+      { cn: '绯红赤玉', en: 'Crimson Red', color: '#904A42', text: '#FFFFFF' },
+      { cn: '玫瑰暮粉', en: 'Rose Pink', color: '#984061', text: '#FFFFFF' },
+      { cn: '锦葵凝紫', en: 'Mauve Violet', color: '#824C71', text: '#FFFFFF' },
+      { cn: '黑莓李紫', en: 'Plum Berry', color: '#794F69', text: '#FFFFFF' },
+      { cn: '板岩冷蓝', en: 'Slate Blue', color: '#525F7F', text: '#FFFFFF' },
+      { cn: '薄荷冰绿', en: 'Mint Green', color: '#1B6C5D', text: '#FFFFFF' },
+      { cn: '深海湛蓝', en: 'Ocean Blue', color: '#0061A4', text: '#FFFFFF' },
+      { cn: '流沙雅金', en: 'Sand Gold', color: '#715B2F', text: '#FFFFFF' },
+      { cn: '素雅冷灰', en: 'Neutral Gray', color: '#5E5E62', text: '#FFFFFF' },
+      
+      // 鲜亮与浅色粉彩系列 (Light & Pastel Tones)
+      { cn: '樱花浅粉', en: 'Sakura Light', color: '#F48FB1', text: '#4A0021' },
+      { cn: '薄荷淡青', en: 'Mint Pastel', color: '#80CBC4', text: '#00332C' },
+      { cn: '晨曦暖黄', en: 'Morning Sun', color: '#FFE082', text: '#3E2723' },
+      { cn: '天际蔚蓝', en: 'Sky Pastel', color: '#90CAF9', text: '#0D47A1' },
+      { cn: '香芋淡紫', en: 'Taro Pastel', color: '#CE93D8', text: '#38004D' },
+      { cn: '杏仁暖橘', en: 'Apricot Peach', color: '#FFCC80', text: '#4E2600' }
     ];
 
     let currentStep = 1; // 1: Primary, 2: Secondary, 3: Tertiary
@@ -1770,10 +1788,10 @@
         stepSub.textContent = '点击莫奈色块设置核心主基调';
       } else if (currentStep === 2) {
         stepTitle.textContent = '第 2 步: 选择次色 (Secondary)';
-        stepSub.textContent = '选择次色，或点击跳过算法协同';
+        stepSub.textContent = '选择次色，或点击跳过直接完成';
       } else {
         stepTitle.textContent = '第 3 步: 选择第三色 (Tertiary)';
-        stepSub.textContent = '选择第三色，或点击跳过算法协同';
+        stepSub.textContent = '选择第三色，或点击跳过直接完成';
       }
 
       MONET_PALETTES.forEach(t => {
@@ -1781,25 +1799,33 @@
         tile.className = 'theme-tile' + (t.color.toUpperCase() === selectedPrimary.toUpperCase() && currentStep === 1 ? ' active' : '');
         tile.style.backgroundColor = t.color;
         tile.style.color = t.text;
-        tile.textContent = t.name;
+        tile.innerHTML = `<div class="theme-tile-cn">${t.cn}</div><div class="theme-tile-en">${t.en}</div>`;
 
         tile.onclick = () => handleSelectColor(t.color);
         grid.appendChild(tile);
       });
 
+      // 默认黑白 / 直接跳过 (点击后直接跳过全流程完成取色)
       const specialTile = document.createElement('div');
       specialTile.className = 'theme-tile';
       if (currentStep === 1) {
         specialTile.style.backgroundColor = '#1D1B20';
         specialTile.style.color = '#FFFFFF';
-        specialTile.textContent = '默认黑灰 (Neutral)';
-        specialTile.onclick = () => handleSelectColor('#1D1B20');
+        specialTile.innerHTML = '<div class="theme-tile-cn">默认黑白</div><div class="theme-tile-en">Black & White</div>';
+        specialTile.onclick = () => {
+          selectedPrimary = '#1D1B20';
+          selectedSecondary = null;
+          selectedTertiary = null;
+          finishMonetSelection(); // 一键跳过全流程！
+        };
       } else {
         specialTile.style.backgroundColor = '#FFFFFF';
         specialTile.style.color = '#1D1B20';
         specialTile.style.border = '1px dashed #79747E';
-        specialTile.textContent = '⏩ 跳过 (算法协同)';
-        specialTile.onclick = () => handleSkipStep();
+        specialTile.innerHTML = '<div class="theme-tile-cn">⏩ 直接跳过</div><div class="theme-tile-en">Skip All</div>';
+        specialTile.onclick = () => {
+          finishMonetSelection(); // 后面直接跳过全流程！
+        };
       }
       grid.appendChild(specialTile);
     }
@@ -1820,14 +1846,8 @@
     }
 
     function handleSkipStep() {
-      if (currentStep === 2) {
-        selectedSecondary = null;
-        currentStep = 3;
-        renderThemeTiles();
-      } else if (currentStep === 3) {
-        selectedTertiary = null;
-        finishMonetSelection();
-      }
+      // 点击跳过直接完成全流程
+      finishMonetSelection();
     }
 
     function finishMonetSelection() {
