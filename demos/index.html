@@ -267,16 +267,20 @@
       background-color: rgba(0, 0, 0, 0.05);
     }
 
-    /* 抽屉导航常驻主容器 */
+    /* 抽屉导航常驻主容器 (纵向两端完全对齐均匀分布) */
     .drawer-nav-section {
       display: flex;
       flex-direction: column;
       height: 100%;
       width: 100%;
+      justify-content: space-between;
+      align-items: center;
       position: relative;
       z-index: 1;
       overflow: hidden !important;
       transition: opacity 0.25s ease, transform 0.25s ease;
+      box-sizing: border-box;
+      padding: 0 0 8px 0;
     }
     .drawer-nav-section.anim-out {
       opacity: 0;
@@ -293,6 +297,7 @@
       display: flex;
       align-items: center;
       min-height: 64px;
+      width: 100%;
       padding: 12px 16px;
       box-sizing: border-box;
       background-color: var(--mdc-theme-primary, #6750a4);
@@ -324,24 +329,46 @@
       transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* 核心：上/下双竖向动态文字标题 */
+    /* 核心：上/下双竖向动态文字标题 (宽度占侧边栏 72%，字号加大，纵向居中) */
     .rail-vertical-title {
+      width: 72% !important;
+      max-width: 52px;
+      min-height: 40px;
+      max-height: 140px;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
       writing-mode: vertical-rl;
       text-orientation: mixed;
-      letter-spacing: 2px;
-      font-size: 11.5px;
-      font-weight: 700;
+      letter-spacing: 4px;
+      font-size: 14px !important;
+      font-weight: 800 !important;
       color: var(--mdc-theme-primary, #6750a4);
-      padding: 6px 0;
-      margin: 0 auto;
+      padding: 8px 0;
+      margin: 6px auto !important;
+      text-align: center;
       user-select: none;
-      opacity: 0.9;
-      transition: opacity 0.25s ease, color 0.3s ease;
+      opacity: 0.95;
       flex-shrink: 0;
       white-space: nowrap;
-      max-height: 120px;
       overflow: hidden;
       text-overflow: ellipsis;
+      transition: opacity 0.25s ease, color 0.3s ease;
+    }
+
+    /* 一级导航菜单容器 (两端居中与纵向均衡排布) */
+    .drawer-nav-section .rail-nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 8px 0;
+      flex: 1;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      overflow-y: auto;
+      overflow-x: hidden !important;
+      scrollbar-width: none;
     }
 
     /* 二级面板内的导航项样式 (完全无缩进瑕疵) */
