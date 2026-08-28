@@ -1,0 +1,11 @@
+{
+  "name": "@material/badge",
+  "version": "0.34.1",
+  "description": "Material Components for the web Badge component (Numbers and Dot Badges)",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "style": "mdc-badge.css",
+  "dependencies": {
+    "@material/theme": "^0.34.1"
+  }
+}

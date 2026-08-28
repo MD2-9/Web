@@ -741,6 +741,57 @@
       opacity: 0;
     }
 
+    /* =========================================================================
+     * Android 5.0 ~ 11.0 经典触顶/触底边缘水波纹泛光 (Overscroll Edge Glow)
+     * ========================================================================= */
+    .md1-overscroll-glow {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 120px;
+      pointer-events: none;
+      z-index: 99999;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.35s cubic-bezier(0, 0, 0.2, 1);
+    }
+    .md1-overscroll-glow--fixed {
+      position: fixed !important;
+      z-index: 999999 !important;
+    }
+    .md1-overscroll-glow__arc {
+      position: absolute;
+      left: -25%;
+      right: -25%;
+      height: 100%;
+      transform: scaleY(0);
+      transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1);
+    }
+    .md1-overscroll-glow--top {
+      top: 0;
+    }
+    .md1-overscroll-glow--top .md1-overscroll-glow__arc {
+      top: 0;
+      transform-origin: top center;
+      background: radial-gradient(ellipse 65% 100% at 50% 0%, var(--mdc-theme-primary, #6750a4) 0%, rgba(103, 80, 164, 0.4) 40%, rgba(103, 80, 164, 0) 75%);
+    }
+    .md1-overscroll-glow--bottom {
+      bottom: 0;
+    }
+    .md1-overscroll-glow--bottom .md1-overscroll-glow__arc {
+      bottom: 0;
+      transform-origin: bottom center;
+      background: radial-gradient(ellipse 65% 100% at 50% 100%, var(--mdc-theme-primary, #6750a4) 0%, rgba(103, 80, 164, 0.4) 40%, rgba(103, 80, 164, 0) 75%);
+    }
+    .md1-overscroll-glow.is-active {
+      opacity: 0.9;
+      transition: opacity 0.06s ease;
+    }
+    .md1-overscroll-glow.is-active .md1-overscroll-glow__arc {
+      transform: scaleY(1);
+      transition: transform 0.12s cubic-bezier(0, 0, 0.2, 1);
+    }
+
     /* 卡片与组件展厅 (纯直角 0px) */
     .demo-card {
       background-color: var(--mdc-theme-surface-container, #ffffff);
@@ -979,14 +1030,36 @@
       will-change: left, width;
       z-index: 2;
     }
+    .md1-tab-content-container {
+      position: relative;
+      overflow: hidden;
+    }
     .md1-tab-panel {
       padding: 20px 0;
       font-size: 13px;
       line-height: 1.6;
       display: none;
+      position: relative;
+      z-index: 2;
     }
     .md1-tab-panel.is-active {
       display: block;
+    }
+    .md1-tab-content-ripple {
+      position: absolute;
+      border-radius: 50% !important;
+      pointer-events: none;
+      z-index: 1;
+      background-color: var(--mdc-theme-primary, #6750a4);
+      opacity: 0.15;
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform 0.55s cubic-bezier(0, 0, 0.2, 1), opacity 0.55s linear;
+    }
+    .md1-tab-content-ripple.is-active {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .md1-tab-content-ripple.is-fading {
+      opacity: 0;
     }
     .md1-tab-panel.slide-right {
       animation: tabSlideRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -1406,6 +1479,10 @@
       position: absolute;
       top: -8px !important;
       left: 12px !important;
+      width: auto !important;
+      max-width: fit-content !important;
+      height: auto !important;
+      display: inline-block !important;
       background-color: var(--mdc-theme-surface, #ffffff);
       padding: 0 4px;
       font-size: 11px;
@@ -1539,7 +1616,7 @@
 
         <!-- 2. 目录 (点击触发水波纹扩散覆盖一级菜单，展开 9 大模块) -->
         <div class="rail-nav-item" onclick="openOverlay('catalogSubmenuPanel')" title="目录 (点击展开二级全景组件)">
-          <i class="material-icons rail-item-icon" style="color: var(--mdc-theme-primary);">list_alt</i>
+          <i class="material-icons rail-item-icon" style="color: var(--mdc-theme-primary);">toc</i>
           <span class="rail-item-text">目录</span>
         </div>
 
@@ -1598,7 +1675,7 @@
           <span class="rail-item-text">3. 标签与徽标</span>
         </a>
         <a href="#section-form" class="rail-nav-item" onclick="handleNavClick()" title="4. 表单与开关">
-          <i class="material-icons rail-item-icon">toggle_on</i>
+          <i class="material-icons rail-item-icon">tune</i>
           <span class="rail-item-text">4. 表单与开关</span>
         </a>
         <a href="#section-list" class="rail-nav-item" onclick="handleNavClick()" title="5. 列表与手风琴">
@@ -1939,7 +2016,7 @@
     <!-- 📝 模块 4: 表单输入、选择器、滑块与开关 (Form Controls) -->
     <div class="demo-card" id="section-form">
       <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
-        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">toggle_on</i>
+        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">tune</i>
         4. 表单输入、选择器、滑块与开关 (Form Controls)
       </h3>
       <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 16px;">
@@ -2192,20 +2269,22 @@
         <div class="md1-tab-indicator" id="md1TabIndicator"></div>
       </div>
 
-      <!-- 选项卡内容面板 -->
-      <div class="md1-tab-panel is-active" id="tab-panel-0">
-        <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【面板 1】MDC-Web v0.34.1 纯直角全功能矩阵</h4>
-        <p>所有组件边角坚守 0px 直角，保留纯正 MD1 工业美学与 Google Sans Flex 变量字体。</p>
-      </div>
+      <!-- 选项卡内容面板 (水波纹以目标Tab为起点在内部扩散) -->
+      <div class="md1-tab-content-container" id="tabContentContainer">
+        <div class="md1-tab-panel is-active" id="tab-panel-0">
+          <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【面板 1】MDC-Web v0.34.1 纯直角全功能矩阵</h4>
+          <p>所有组件边角坚守 0px 直角，保留纯正 MD1 工业美学与 Google Sans Flex 变量字体。</p>
+        </div>
 
-      <div class="md1-tab-panel" id="tab-panel-1">
-        <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【面板 2】Google Material Color Utilities (CAM16 / HCT)</h4>
-        <p>基于真正的感知色彩模型，支持单色、双色、三色及壁纸种子提取，在亮暗模式下自适应生成和谐全色阶。</p>
-      </div>
+        <div class="md1-tab-panel" id="tab-panel-1">
+          <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【面板 2】Google Material Color Utilities (CAM16 / HCT)</h4>
+          <p>基于真正的感知色彩模型，支持单色、双色、三色及壁纸种子提取，在亮暗模式下自适应生成和谐全色阶。</p>
+        </div>
 
-      <div class="md1-tab-panel" id="tab-panel-2">
-        <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【面板 3】Navigation Rail 紧凑与水波纹二级架构</h4>
-        <p>左侧 72px 常驻单图标，展开 260px，一级菜单仅含主页、目录、设置与关于，点击目录以水波纹涟漪平滑覆盖展开二级菜单！</p>
+        <div class="md1-tab-panel" id="tab-panel-2">
+          <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【面板 3】Navigation Rail 紧凑与水波纹二级架构</h4>
+          <p>左侧 72px 常驻单图标，展开 260px，一级菜单仅含主页、目录、设置与关于，点击目录以水波纹涟漪平滑覆盖展开二级菜单！</p>
+        </div>
       </div>
     </div>
 
@@ -2827,6 +2906,37 @@
         indicator.style.width = `${tabElement.offsetWidth}px`;
         indicator.style.left = `${tabElement.offsetLeft}px`;
       }
+
+      // 目标 Tab 为起点向内容容器扩散的水波纹 (只在 Tab 内容容器内部显示，Tab 头部不显示)
+      if (tabElement) {
+        const contentContainer = document.getElementById('tabContentContainer');
+        if (contentContainer) {
+          const tabRect = tabElement.getBoundingClientRect();
+          const containerRect = contentContainer.getBoundingClientRect();
+          const originX = (tabRect.left + tabRect.width / 2) - containerRect.left;
+          const originY = 0;
+          const maxRadius = Math.hypot(
+            Math.max(originX, containerRect.width - originX),
+            containerRect.height
+          ) * 1.05;
+
+          const wave = document.createElement('div');
+          wave.className = 'md1-tab-content-ripple';
+          wave.style.width = `${maxRadius * 2}px`;
+          wave.style.height = `${maxRadius * 2}px`;
+          wave.style.left = `${originX}px`;
+          wave.style.top = `${originY}px`;
+          contentContainer.appendChild(wave);
+
+          requestAnimationFrame(() => {
+            wave.classList.add('is-active');
+            setTimeout(() => {
+              wave.classList.add('is-fading');
+              setTimeout(() => wave.remove(), 450);
+            }, 250);
+          });
+        }
+      }
     }
 
     function initMd1TabIndicator() {
@@ -3040,6 +3150,144 @@
         indicator.style.left = `${firstTab.offsetLeft}px`;
       }
     }, 100);
+
+    // =========================================================================
+    // Android 5.0 ~ 11.0 经典触顶/触底边缘水波纹泛光控制器 (全容器自动支持)
+    // =========================================================================
+    class MduiOverscrollGlow {
+      constructor() {
+        this.rootTop = document.createElement('div');
+        this.rootTop.className = 'md1-overscroll-glow md1-overscroll-glow--top md1-overscroll-glow--fixed';
+        this.rootTop.innerHTML = '<div class="md1-overscroll-glow__arc"></div>';
+        document.body.appendChild(this.rootTop);
+
+        this.rootBottom = document.createElement('div');
+        this.rootBottom.className = 'md1-overscroll-glow md1-overscroll-glow--bottom md1-overscroll-glow--fixed';
+        this.rootBottom.innerHTML = '<div class="md1-overscroll-glow__arc"></div>';
+        document.body.appendChild(this.rootBottom);
+
+        this.containerMap = new WeakMap();
+        this.timeouts = new WeakMap();
+        this.touchStartY = 0;
+        this.touchTarget = null;
+        this.bindEvents();
+      }
+
+      getGlow(container) {
+        if (!container || container === document.body || container === document.documentElement) {
+          return { top: this.rootTop, bottom: this.rootBottom };
+        }
+        if (this.containerMap.has(container)) return this.containerMap.get(container);
+
+        if (window.getComputedStyle(container).position === 'static') {
+          container.style.position = 'relative';
+        }
+        let topEl = container.querySelector(':scope > .md1-overscroll-glow--top');
+        if (!topEl) {
+          topEl = document.createElement('div');
+          topEl.className = 'md1-overscroll-glow md1-overscroll-glow--top';
+          topEl.innerHTML = '<div class="md1-overscroll-glow__arc"></div>';
+          container.insertBefore(topEl, container.firstChild);
+        }
+        let bottomEl = container.querySelector(':scope > .md1-overscroll-glow--bottom');
+        if (!bottomEl) {
+          bottomEl = document.createElement('div');
+          bottomEl.className = 'md1-overscroll-glow md1-overscroll-glow--bottom';
+          bottomEl.innerHTML = '<div class="md1-overscroll-glow__arc"></div>';
+          container.appendChild(bottomEl);
+        }
+        const pair = { top: topEl, bottom: bottomEl };
+        this.containerMap.set(container, pair);
+        return pair;
+      }
+
+      trigger(el, isTop, intensity = 1) {
+        if (!el) return;
+        const key = isTop ? 't' : 'b';
+        let timers = this.timeouts.get(el) || {};
+        clearTimeout(timers[key]);
+
+        el.classList.add('is-active');
+        el.style.opacity = `${Math.min(0.95, 0.45 + intensity * 0.5)}`;
+        const arc = el.querySelector('.md1-overscroll-glow__arc');
+        if (arc) arc.style.transform = `scaleY(${Math.min(1.5, 0.7 + intensity * 0.5)})`;
+
+        timers[key] = setTimeout(() => {
+          el.classList.remove('is-active');
+          el.style.opacity = '';
+          if (arc) arc.style.transform = '';
+        }, 280);
+        this.timeouts.set(el, timers);
+      }
+
+      findScrollable(target) {
+        let el = target;
+        while (el && el !== document.body && el !== document.documentElement) {
+          const style = window.getComputedStyle(el);
+          const isScrollable = (style.overflowY === 'auto' || style.overflowY === 'scroll') && el.scrollHeight > el.clientHeight;
+          if (isScrollable) return el;
+          el = el.parentElement;
+        }
+        return null;
+      }
+
+      bindEvents() {
+        window.addEventListener('wheel', (e) => {
+          const scrollable = this.findScrollable(e.target);
+          if (scrollable) {
+            const scrollTop = scrollable.scrollTop;
+            const maxScroll = scrollable.scrollHeight - scrollable.clientHeight;
+            const pair = this.getGlow(scrollable);
+            if (scrollTop <= 1 && e.deltaY < 0) {
+              this.trigger(pair.top, true, Math.min(1, Math.abs(e.deltaY) / 100));
+            } else if (scrollTop >= maxScroll - 2 && e.deltaY > 0) {
+              this.trigger(pair.bottom, false, Math.min(1, Math.abs(e.deltaY) / 100));
+            }
+          } else {
+            const scrollY = window.scrollY || document.documentElement.scrollTop;
+            const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+            if (scrollY <= 1 && e.deltaY < 0) {
+              this.trigger(this.rootTop, true, Math.min(1, Math.abs(e.deltaY) / 100));
+            } else if (scrollY >= maxScrollY - 2 && e.deltaY > 0) {
+              this.trigger(this.rootBottom, false, Math.min(1, Math.abs(e.deltaY) / 100));
+            }
+          }
+        }, { passive: true });
+
+        window.addEventListener('touchstart', (e) => {
+          if (e.touches && e.touches.length > 0) {
+            this.touchStartY = e.touches[0].clientY;
+            this.touchTarget = e.target;
+          }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+          if (!e.touches || e.touches.length === 0) return;
+          const deltaY = e.touches[0].clientY - this.touchStartY;
+          const scrollable = this.findScrollable(this.touchTarget || e.target);
+          if (scrollable) {
+            const scrollTop = scrollable.scrollTop;
+            const maxScroll = scrollable.scrollHeight - scrollable.clientHeight;
+            const pair = this.getGlow(scrollable);
+            if (scrollTop <= 0 && deltaY > 8) {
+              this.trigger(pair.top, true, Math.min(1, deltaY / 140));
+            } else if (scrollTop >= maxScroll - 2 && deltaY < -8) {
+              this.trigger(pair.bottom, false, Math.min(1, Math.abs(deltaY) / 140));
+            }
+          } else {
+            const scrollY = window.scrollY || document.documentElement.scrollTop;
+            const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+            if (scrollY <= 0 && deltaY > 8) {
+              this.trigger(this.rootTop, true, Math.min(1, deltaY / 140));
+            } else if (scrollY >= maxScrollY - 2 && deltaY < -8) {
+              this.trigger(this.rootBottom, false, Math.min(1, Math.abs(deltaY) / 140));
+            }
+          }
+        }, { passive: true });
+      }
+    }
+
+    const overscrollGlow = new MduiOverscrollGlow();
   </script>
 </body>
 </html>

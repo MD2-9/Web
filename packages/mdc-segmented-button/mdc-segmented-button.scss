@@ -1,0 +1,61 @@
+//
+// Copyright 2026 unjal <unjal29@outlook.com>
+// Licensed under the Apache License, Version 2.0
+//
+// Material Components Web - Segmented Button (0px Straight Angle Edition)
+//
+
+@import "@material/theme/variables";
+@import "@material/theme/mixins";
+
+.segmented-button-group {
+  display: inline-flex;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  user-select: none;
+  border-radius: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.dark-theme .segmented-button-group {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.segmented-button {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  background-color: transparent;
+  color: inherit;
+  border: none;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  &:last-child {
+    border-right: none;
+  }
+
+  &.is-selected {
+    background-color: var(--mdc-theme-primary, #6750a4);
+    color: var(--mdc-theme-on-primary, #ffffff);
+  }
+}
+
+.dark-theme .segmented-button {
+  border-right-color: rgba(255, 255, 255, 0.12);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+}

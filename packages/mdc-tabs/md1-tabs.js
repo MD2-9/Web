@@ -5,7 +5,7 @@
  */
 
 /**
- * MD1 选项卡系统控制器 (Sliding Indicator ✖ 方向感知平滑切换)
+ * MD1 选项卡系统控制器 (Sliding Indicator ✖ 方向感知平滑切换 ✖ 目标Tab为起点扩散至全内容水波纹)
  */
 export class Md1Tabs {
   /**
@@ -36,11 +36,11 @@ export class Md1Tabs {
   }
 
   /**
-   * 切换到指定 Tab 索引
+   * 切换到指定 Tab 索引并以目标 Tab 为原点在内容容器内扩散水波纹
    * @param {number} index
-   * @param {Event} [e]
+   * @param {Event|HTMLElement} [eventOrElement]
    */
-  switchTo(index, e) {
+  switchTo(index, eventOrElement) {
     if (index < 0 || index >= this.tabs.length) return;
 
     const isSlideRight = index >= this.currentIndex;
@@ -71,6 +71,46 @@ export class Md1Tabs {
     });
 
     this.updateIndicator(tab);
+    this.triggerTabContentRipple(tab, index);
+  }
+
+  triggerTabContentRipple(tabElement, index) {
+    const activePanel = this.panels[index];
+    if (!activePanel || !tabElement) return;
+
+    const contentContainer = activePanel.closest('.md1-tab-content-container') || activePanel.parentElement;
+    if (!contentContainer) return;
+
+    if (window.getComputedStyle(contentContainer).position === 'static') {
+      contentContainer.style.position = 'relative';
+    }
+    contentContainer.style.overflow = 'hidden';
+
+    const tabRect = tabElement.getBoundingClientRect();
+    const containerRect = contentContainer.getBoundingClientRect();
+    const originX = (tabRect.left + tabRect.width / 2) - containerRect.left;
+    const originY = 0;
+
+    const maxRadius = Math.hypot(
+      Math.max(originX, containerRect.width - originX),
+      containerRect.height
+    ) * 1.05;
+
+    const wave = document.createElement('div');
+    wave.className = 'md1-tab-content-ripple';
+    wave.style.width = `${maxRadius * 2}px`;
+    wave.style.height = `${maxRadius * 2}px`;
+    wave.style.left = `${originX}px`;
+    wave.style.top = `${originY}px`;
+    contentContainer.appendChild(wave);
+
+    requestAnimationFrame(() => {
+      wave.classList.add('is-active');
+      setTimeout(() => {
+        wave.classList.add('is-fading');
+        setTimeout(() => wave.remove(), 450);
+      }, 250);
+    });
   }
 
   updateIndicator(tabElement) {

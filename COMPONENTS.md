@@ -29,9 +29,13 @@ import {
   MduiLinearProgress,
   createRipple,
   attachRipples,
+  MduiOverscrollGlow,
+  attachOverscrollGlow,
   dialog,
   card,
-  button
+  button,
+  select,
+  textField
 } from 'material-components-web';
 
 // 一键自动实例化页面中所有已声明 data-mdc-auto-init 的组件
@@ -52,10 +56,16 @@ autoInit();
 ├───────────────────────┼──────────────────────────────────┼─────────────────────────────┤
 │ 莫奈动态色彩与调色盘  │ @material/monet                  │ MdcMonetEngine, Picker     │
 │ 竖向导航栏 (Nav Rail) │ @material/navigation-rail        │ MdcNavigationRail           │
+│ 触顶触底水波纹泛光    │ @material/ripple                 │ MduiOverscrollGlow          │
+│ 纯圆目标隔离水波纹    │ @material/ripple                 │ createRipple, attachRipples │
+│ 0px 纯直角分段按钮组  │ @material/segmented-button       │ segmented-button 规范       │
+│ 0px 纯直角自定义下拉  │ @material/select                 │ mdc-select-custom 规范      │
+│ 徽标与计数角标        │ @material/badge                  │ badge-container 规范        │
+│ 0px 直角提示框        │ @material/tooltip                │ tooltip-wrapper 规范        │
+│ 分割线                │ @material/divider                │ mdc-divider 规范            │
 │ 离散大头针滑块        │ @material/slider                 │ Md1Slider                   │
 │ 方向感知平滑选项卡    │ @material/tabs                   │ Md1Tabs                     │
 │ 双波形线性进度条      │ @material/linear-progress        │ MduiLinearProgress          │
-│ 纯圆水波纹涟漪动效    │ @material/ripple                 │ createRipple, attachRipples │
 │ 手风琴折叠面板        │ @material/expansion-panel        │ MdcExpansionPanel           │
 │ MD1 胶囊滑动开关      │ @material/switch                 │ md1-switch 规范             │
 │ 0px 纯直角几何体系    │ @material/button, card, dialog.. │ 全局 Straight Angle 规范    │
@@ -98,306 +108,375 @@ const picker = new MdcMonetPicker({
   container: document.getElementById('themeGrid'),
   stepTitle: document.getElementById('pickerStepTitle'),
   stepSub: document.getElementById('pickerStepSub'),
-  onSelect: ({ primary, secondary, tertiary }) => {
-    MdcMonetEngine.applyTheme({ primary, secondary, tertiary });
+  onComplete: (colors) => {
+    console.log('用户调色完成:', colors);
   }
 });
-picker.render();
 ```
 
 ---
 
-### 2. 🧭 竖向导航栏与二级覆层抽屉 (`@material/navigation-rail`)
+### 2. 📱 Android 5.0 ~ 11.0 触顶/触底边缘水波纹泛光 (`@material/ripple`)
 
-* **功能定位**：现代桌面端 72px 紧凑单图标栏（常驻上下对仗双竖排标题），鼠标悬停或点击平滑展开为 260px 悬浮面板；支持水波纹扩散展开二级全景子菜单，内置移动端左边缘右滑唤出、静止 2.5s 浮现悬浮按钮（FAB）。
+* **功能定位**：完美重现 Android 5.0 (Lollipop) 至 Android 11 (R) 系统经典的 `EdgeEffect` 边缘水波纹与泛光弧线。**自动适用于全局页面视口以及所有内部可滚动容器**（如侧边栏抽屉、模态弹窗滚动区、手风琴内容区等）。
+* **引入路径**：
+  * SCSS: `@import "@material/ripple/mdui-overscroll-glow";`
+  * JS: `import { MduiOverscrollGlow, attachOverscrollGlow } from '@material/ripple';`
+
+#### HTML 结构 (自动挂载或手动声明)
+```html
+<!-- 全局视口泛光弧线 (会自动创建，亦可显式挂载) -->
+<div class="md1-overscroll-glow md1-overscroll-glow--top md1-overscroll-glow--fixed">
+  <div class="md1-overscroll-glow__arc"></div>
+</div>
+<div class="md1-overscroll-glow md1-overscroll-glow--bottom md1-overscroll-glow--fixed">
+  <div class="md1-overscroll-glow__arc"></div>
+</div>
+```
+
+#### JavaScript 调用
+```javascript
+import { attachOverscrollGlow } from '@material/ripple';
+
+// 一键初始化全页面与所有滚动容器的边缘水波纹监听
+const overscrollController = attachOverscrollGlow();
+
+// 亦可手动触发特定容器的边缘泛光
+overscrollController.triggerGlow(document.querySelector('.my-scroll-box'), true /* isTop */, 1.0 /* intensity */);
+```
+
+---
+
+### 3. 🌊 精准隔离与速率放慢 3/5 水波纹动效 (`@material/ripple`)
+
+* **功能定位**：将水波纹扩散速率调慢 3/5（动画时长由 0.4s 扩展至 0.65s），并实现**点击精确目标隔离**——点击按钮只有按钮产生涟漪，绝不连带触发卡片或父容器。
+* **引入路径**：
+  * SCSS: `@import "@material/ripple/mdui-ripple";`
+  * JS: `import { createRipple, attachRipples } from '@material/ripple';`
+
+#### HTML 结构
+```html
+<!-- 声明 data-mdui-ripple 即可拥有独立隔离水波纹 -->
+<button class="mdc-button mdc-button--raised" data-mdui-ripple>
+  Raised Button
+</button>
+```
+
+#### JavaScript 调用
+```javascript
+import { attachRipples } from '@material/ripple';
+
+// 初始化页面内所有带有 data-mdui-ripple 的元素
+attachRipples();
+```
+
+---
+
+### 4. 🔲 0px 纯直角分段按钮组 (`@material/segmented-button`)
+
+* **功能定位**：严格遵循 0px 纯直角规范的分段按钮组，支持单选/多选状态切换与图标排版。
+* **引入路径**：
+  * SCSS: `@import "@material/segmented-button/mdc-segmented-button";`
+
+#### HTML 结构
+```html
+<div class="segmented-button-group" id="demoSegmentedGroup">
+  <button class="segmented-button is-selected" onclick="toggleSegmented(this)">
+    <i class="material-icons" style="font-size: 16px;">view_module</i> 全景视图
+  </button>
+  <button class="segmented-button" onclick="toggleSegmented(this)">
+    <i class="material-icons" style="font-size: 16px;">view_compact</i> 紧凑网格
+  </button>
+  <button class="segmented-button" onclick="toggleSegmented(this)">
+    <i class="material-icons" style="font-size: 16px;">view_list</i> 详细列表
+  </button>
+</div>
+```
+
+---
+
+### 5. 📐 0px 纯直角自定义下拉选择器 (`@material/select`)
+
+* **功能定位**：彻底摆脱原生 `<select>` 简陋样式的纯直角浮动菜单选择器，具备 Material Floating Label、旋转箭头与 Elevation 8 浮层阴影。
+* **引入路径**：
+  * SCSS: `@import "@material/select/mdc-select";`
+
+#### HTML 结构
+```html
+<div class="mdc-select-custom" id="customSelectDemo">
+  <div class="mdc-select-custom__surface" onclick="toggleMdcSelect(event)">
+    <span class="mdc-select-custom__label">选择主题算法</span>
+    <span class="mdc-select-custom__selected-text" id="selectCustomText">Tonal Spot (标准莫奈)</span>
+    <i class="material-icons mdc-select-custom__icon">arrow_drop_down</i>
+  </div>
+  <div class="mdc-select-custom__menu" id="selectCustomMenu">
+    <div class="mdc-select-custom__item is-selected" onclick="selectMdcOption('tonal_spot', this)">
+      <span>Tonal Spot (标准莫奈)</span>
+      <i class="material-icons" style="font-size: 18px; color: var(--mdc-theme-primary);">check</i>
+    </div>
+    <div class="mdc-select-custom__item" onclick="selectMdcOption('vibrant', this)">
+      <span>Vibrant (高饱和活力)</span>
+    </div>
+  </div>
+</div>
+```
+
+---
+
+### 6. 🏷️ 徽标与计数角标 (`@material/badge`)
+
+* **功能定位**：红点提醒（Dot Badge）与数字计数角标（Count Badge），支持纯圆与胶囊几何。
+* **引入路径**：
+  * SCSS: `@import "@material/badge/mdc-badge";`
+
+#### HTML 结构
+```html
+<!-- 红点徽标 -->
+<div class="badge-container">
+  <button class="mdc-icon-button material-icons">notifications</button>
+  <span class="badge-dot"></span>
+</div>
+
+<!-- 数字计数徽标 -->
+<div class="badge-container">
+  <button class="mdc-icon-button material-icons">email</button>
+  <span class="badge-number">9+</span>
+</div>
+```
+
+---
+
+### 7. 💬 0px 直角提示框 (`@material/tooltip`)
+
+* **功能定位**：悬浮提示气泡，纯直角 0px 剪裁与 Elevation 4 阴影。
+* **引入路径**：
+  * SCSS: `@import "@material/tooltip/mdc-tooltip";`
+
+#### HTML 结构
+```html
+<div class="tooltip-wrapper">
+  <button class="mdc-button mdc-button--outlined">Hover Me</button>
+  <div class="tooltip-box">纯直角 Material 提示框</div>
+</div>
+```
+
+---
+
+### 8. ➖ 分割线 (`@material/divider`)
+
+* **功能定位**：全宽分割线与缩进 56px 列表分割线。
+* **引入路径**：
+  * SCSS: `@import "@material/divider/mdc-divider";`
+
+#### HTML 结构
+```html
+<!-- 全宽分割线 -->
+<hr class="mdc-divider">
+
+<!-- 列表前缀图标对齐缩进分割线 -->
+<hr class="mdc-divider mdc-divider--inset">
+```
+
+---
+
+### 9. 🧭 竖向导航栏与二级抽屉 (`@material/navigation-rail`)
+
+* **功能定位**：72px 桌面端常驻竖向导轨，支持点击一级菜单平滑唤出二级抽屉面板（进出同款统一动画 `scale(0.96) -> scale(1)` 与 `opacity 0 -> 1`）。
 * **引入路径**：
   * SCSS: `@import "@material/navigation-rail/mdc-navigation-rail";`
   * JS: `import { MdcNavigationRail } from '@material/navigation-rail';`
 
-#### HTML 结构
-```html
-<aside class="mdc-navigation-rail" id="app-rail">
-  <!-- 一级主导航区 -->
-  <div class="drawer-nav-section" id="drawerNavSection">
-    <div class="rail-header">
-      <div class="rail-header-avatar">M3</div>
-      <div class="rail-header-text">MD3.1 System</div>
-    </div>
-    
-    <!-- 顶部竖向动态标题 -->
-    <div class="rail-vertical-title" id="railVerticalTitleTop">MD3.1</div>
-
-    <nav class="rail-nav-list">
-      <a href="#home" class="rail-nav-item">
-        <i class="material-icons rail-item-icon">home</i>
-        <span class="rail-item-text">主页</span>
-      </a>
-      <div class="rail-nav-item" onclick="rail.openOverlay('catalogSubmenuPanel')">
-        <i class="material-icons rail-item-icon">list_alt</i>
-        <span class="rail-item-text">目录</span>
-      </div>
-    </nav>
-
-    <!-- 底部竖向动态标题 (精准悬浮在底部正方形上方) -->
-    <div class="rail-vertical-title" id="railVerticalTitleBottom">安秋</div>
-
-    <div class="rail-footer">
-      <div class="rail-footer-text">
-        <button class="mdc-button mdc-button--raised">切换主题</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 二级覆层抽屉 (垂直居中 ✖ 水波纹覆盖展开) -->
-  <div id="catalogSubmenuPanel" class="secondary-overlay-panel">
-    <div class="overlay-top-bar">
-      <div class="overlay-header-title">
-        <button onclick="rail.closeOverlay('catalogSubmenuPanel')"><i class="material-icons">arrow_back</i></button>
-        <span>组件全景目录</span>
-      </div>
-    </div>
-    <nav class="rail-nav-list" style="justify-content: center;">
-      <a href="#buttons" class="rail-nav-item">1. 按钮与 FAB</a>
-      <a href="#cards" class="rail-nav-item">2. 直角卡片</a>
-    </nav>
-    <div class="overlay-bottom-bar">
-      <button class="mdc-button mdc-button--outlined" onclick="rail.closeOverlay('catalogSubmenuPanel')">返回一级菜单</button>
-    </div>
-  </div>
-</aside>
-```
-
-#### JavaScript 调用
-```javascript
-import { MdcNavigationRail } from '@material/navigation-rail';
-
-const rail = new MdcNavigationRail(document.getElementById('app-rail'), {
-  idleTimeoutSeconds: 2.5 // 移动端静止 N 秒浮现悬浮按钮
-});
-
-// 打开 / 关闭二级覆层面板
-rail.openOverlay('catalogSubmenuPanel');
-rail.closeOverlay('catalogSubmenuPanel');
-
-// 动态联动上下双竖排标题
-rail.setTitles('MD3.1 · 按钮', '1. 按钮与 FAB');
-```
-
 ---
 
-### 3. 🎚️ 经典离散滑块 (`@material/slider` / `Md1Slider`)
+### 10. 📑 方向感知选项卡与目标扩散水波纹 (`@material/tabs`)
 
-* **功能定位**：迁移并重构 MD1 / MDUI 经典 Discrete Slider 规范。常态为精致微圆点，在悬停、聚焦或拖拽时平滑膨胀变形为**经典泪滴气泡大头针**，正向显示当前数值。
-* **引入路径**：
-  * SCSS: `@import "@material/slider/md1-slider";`
-  * JS: `import { Md1Slider } from '@material/slider/md1-slider';`
-
-#### HTML 结构
-```html
-<div class="md1-slider-container">
-  <span>色阶滑块:</span>
-  <div class="md1-slider" id="mySlider">
-    <input type="range" min="10" max="90" value="40">
-    <div class="md1-slider-track"></div>
-    <div class="md1-slider-fill"></div>
-    <div class="md1-slider-thumb-wrapper">
-      <div class="md1-slider-thumb">
-        <span>40</span>
-      </div>
-    </div>
-  </div>
-  <span id="slider-val">Tone 40</span>
-</div>
-```
-
-#### JavaScript 调用
-```javascript
-import { Md1Slider } from '@material/slider/md1-slider';
-
-// 实例化单个滑块
-const slider = new Md1Slider(document.getElementById('mySlider'));
-
-// 或批量自动初始化页面内全部离散滑块
-Md1Slider.initAll();
-```
-
----
-
-### 4. 📑 方向感知平滑选项卡 (`@material/tabs` / `Md1Tabs`)
-
-* **功能定位**：配备 Material 动态贝塞尔缓动下划线滑条，并内置**方向感知**：向右切换（前往高索引）时内容从右侧平滑滑入，向左切换（前往低索引）时内容从左侧平滑滑入。
+* **功能定位**：具备 Sliding Indicator 动态滑块、方向感知滑动动画（左滑/右滑），并支持**以目标 Tab 按钮为原点向 Tab 内容容器全景扩散水波纹（Tab 按钮本身不显示涟漪，仅在内容容器内部显示）**。
 * **引入路径**：
   * SCSS: `@import "@material/tabs/md1-tabs";`
-  * JS: `import { Md1Tabs } from '@material/tabs/md1-tabs';`
+  * JS: `import { Md1Tabs } from '@material/tabs';`
 
 #### HTML 结构
 ```html
 <div class="md1-tabs-bar" id="myTabsBar">
-  <div class="md1-tab-item is-active"><i class="material-icons">palette</i>色彩</div>
-  <div class="md1-tab-item"><i class="material-icons">layers</i>卡片</div>
-  <div class="md1-tab-item"><i class="material-icons">navigation</i>导航</div>
-  <div class="md1-tab-indicator"></div>
+  <div class="md1-tab-item is-active" onclick="switchMd1Tab(0, this)">
+    <i class="material-icons">widgets</i>
+    <span>Tab 1</span>
+  </div>
+  <div class="md1-tab-item" onclick="switchMd1Tab(1, this)">
+    <i class="material-icons">palette</i>
+    <span>Tab 2</span>
+  </div>
+  <div class="md1-tab-indicator" id="myTabIndicator"></div>
 </div>
 
-<div id="myTabsContent">
-  <div class="md1-tab-panel is-active">【面板 1】莫奈色彩内容</div>
-  <div class="md1-tab-panel">【面板 2】直角卡片内容</div>
-  <div class="md1-tab-panel">【面板 3】Navigation Rail 内容</div>
+<!-- Tab 内容容器 (水波纹以点击 Tab 为起点在此容器内部扩散) -->
+<div class="md1-tab-content-container" id="myTabContent">
+  <div class="md1-tab-panel is-active" id="tab-panel-0">内容 1</div>
+  <div class="md1-tab-panel" id="tab-panel-1">内容 2</div>
 </div>
 ```
 
 #### JavaScript 调用
 ```javascript
-import { Md1Tabs } from '@material/tabs/md1-tabs';
+import { Md1Tabs } from '@material/tabs';
 
+// 实例化选项卡控制器
 const tabs = new Md1Tabs(
   document.getElementById('myTabsBar'),
-  document.getElementById('myTabsContent')
+  document.getElementById('myTabContent')
 );
-
-// 编程式切换到第 2 个 Tab
-tabs.switchTo(1);
 ```
 
 ---
 
-### 5. ⏳ 双波形线性进度条 (`@material/linear-progress` / `MduiLinearProgress`)
+## 第二部分：官方原版组件 (0px 纯直角 & 50% 纯圆几何规范)
 
-* **功能定位**：迁移并重构 MDUI 经典双波形纯 CSS 不确定进度条（双 wave keyframes 无缝穿梭），同时支持确定型进度条平滑宽度过渡。
-* **引入路径**：
-  * SCSS: `@import "@material/linear-progress/mdui-linear-progress";`
-  * JS: `import { MduiLinearProgress } from '@material/linear-progress/mdui-linear-progress';`
+本部分汇总所有官方原生组件的纯直角重构版本与标准使用范例。
 
-#### HTML 结构
+---
+
+### 1. 🔲 按钮系列 (`@material/button`, `@material/fab`)
+
+#### 普通按钮 (0px 纯直角)
 ```html
-<!-- 双波形不确定型进度条 -->
-<div class="mdui-progress">
-  <div class="mdui-progress-indeterminate"></div>
-</div>
+<!-- 文字按钮 -->
+<button class="mdc-button">Flat Button</button>
 
-<!-- 确定型进度条 -->
-<div class="mdui-progress" id="determinateProgress">
-  <div class="mdui-progress-determinate" style="width: 65%;"></div>
-</div>
+<!-- 填充按钮 -->
+<button class="mdc-button mdc-button--raised">Raised Button</button>
+
+<!-- 描边按钮 -->
+<button class="mdc-button mdc-button--outlined">Outlined Button</button>
 ```
 
-#### JavaScript 调用
-```javascript
-import { MduiLinearProgress } from '@material/linear-progress/mdui-linear-progress';
-
-const progress = new MduiLinearProgress(document.getElementById('determinateProgress'));
-progress.setProgress(85); // 动态更新至 85%
-```
-
----
-
-### 6. 💧 纯圆水波纹涟漪动效 (`@material/ripple` / `createRipple`)
-
-* **功能定位**：支持在卡片、图片框、菜单栏及任意可点击容器上生成 50% 纯圆水波纹涟漪。点击时以点击位置为中心向外扩散，松开后平滑淡出，支持亮暗主题自适应。
-* **引入路径**：
-  * SCSS: `@import "@material/ripple/mdui-ripple";`
-  * JS: `import { createRipple, attachRipples } from '@material/ripple/mdui-ripple';`
-
-#### JavaScript 调用
-```javascript
-import { attachRipples, createRipple } from '@material/ripple/mdui-ripple';
-
-// 自动为所有卡片与交互元素绑定水波纹
-attachRipples('.demo-card, .preview-img-box, .theme-tile, .expansion-panel');
-
-// 或在特定事件中手动触发
-myElement.addEventListener('pointerdown', (e) => createRipple(e, myElement));
-```
-
----
-
-### 7. 📂 手风琴折叠面板 (`@material/expansion-panel`)
-
-* **功能定位**：轻量级手风琴面板组件，包含 0px 直角外框、旋转箭头指示器与平滑内容展开折叠动画。
-* **引入路径**：
-  * SCSS: `@import "@material/expansion-panel/mdc-expansion-panel";`
-  * JS: `import { MdcExpansionPanel } from '@material/expansion-panel';`
-
-#### HTML 结构
+#### 浮动操作按钮 FAB (50% 纯圆)
 ```html
-<div class="expansion-panel" id="myAccordion">
-  <div class="expansion-header">
-    <span>折叠面板标题</span>
-    <i class="material-icons expansion-arrow">expand_more</i>
+<!-- 标准 FAB -->
+<button class="mdc-fab" style="border-radius: 50% !important;">
+  <i class="material-icons mdc-fab__icon">add</i>
+</button>
+
+<!-- 迷你 FAB -->
+<button class="mdc-fab mdc-fab--mini" style="border-radius: 50% !important;">
+  <i class="material-icons mdc-fab__icon">edit</i>
+</button>
+
+<!-- 扩展 FAB -->
+<button class="mdc-fab mdc-fab--extended" style="border-radius: 28px !important; padding: 0 20px;">
+  <i class="material-icons mdc-fab__icon">send</i>
+  <span class="mdc-fab__label">Extended FAB</span>
+</button>
+```
+
+---
+
+### 2. 🃏 卡片系列 (`@material/card`)
+
+```html
+<div class="mdc-card" style="border-radius: 0; padding: 16px;">
+  <div class="mdc-card__primary-action" style="border-radius: 0;">
+    <h3 style="margin: 0 0 8px;">纯直角卡片标题</h3>
+    <p style="margin: 0; opacity: 0.85;">遵循 0px 纯直角与 Elevation 深度分层规范。</p>
   </div>
-  <div class="expansion-body">
-    折叠面板内部丰富内容...
+  <div class="mdc-card__actions" style="margin-top: 16px;">
+    <button class="mdc-button mdc-card__action mdc-card__action--button">阅读更多</button>
   </div>
 </div>
 ```
 
-#### JavaScript 调用
-```javascript
-import { MdcExpansionPanel } from '@material/expansion-panel';
+---
 
-// 初始化单个面板
-const panel = new MdcExpansionPanel(document.getElementById('myAccordion'));
+### 3. 📝 输入框系列 (`@material/textfield`)
 
-// 或批量自动初始化
-MdcExpansionPanel.initAll();
+#### Filled 填充型 (带前缀图标)
+```html
+<div class="mdc-text-field mdc-text-field--with-leading-icon" style="width: 240px;">
+  <i class="material-icons mdc-text-field__icon">edit</i>
+  <input type="text" id="tf-filled" class="mdc-text-field__input" value="Google Sans Flex">
+  <label class="mdc-floating-label mdc-floating-label--float-above" for="tf-filled">Filled 输入框</label>
+  <div class="mdc-line-ripple"></div>
+</div>
+```
+
+#### Outlined 描边型 (带前缀图标与自动缺口标签)
+```html
+<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon" style="width: 240px;">
+  <i class="material-icons mdc-text-field__icon">tune</i>
+  <input type="text" id="tf-outlined" class="mdc-text-field__input" value="Outlined Style">
+  <label class="mdc-floating-label" for="tf-outlined">Outlined 框</label>
+</div>
 ```
 
 ---
 
-### 8. 🎛️ MD1 纯正胶囊滑动开关 (`@material/switch` / `md1-switch`)
+### 4. 🎚️ 选择控件 (`@material/checkbox`, `@material/radio`, `@material/switch`)
 
-* **功能定位**：经典 MD1 滑动开关规范，7px 胶囊轨道与 50% 纯圆浮动滑块，开启时自适应莫奈主色扩散。
-* **引入路径**：
-  * SCSS: `@import "@material/switch/md1-switch";`
-
-#### HTML 结构
 ```html
+<!-- 复选框 (0px 直角) -->
+<div class="mdc-checkbox">
+  <input type="checkbox" class="mdc-checkbox__native-control" id="cb1" checked/>
+  <div class="mdc-checkbox__background" style="border-radius: 0;">
+    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+      <path class="mdc-checkbox__checkmark-path" fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+    </svg>
+  </div>
+</div>
+
+<!-- 单选框 (纯圆) -->
+<div class="mdc-radio">
+  <input class="mdc-radio__native-control" type="radio" id="radio1" name="radios" checked>
+  <div class="mdc-radio__background">
+    <div class="mdc-radio__outer-circle"></div>
+    <div class="mdc-radio__inner-circle"></div>
+  </div>
+</div>
+
+<!-- MD1 经典滑动开关 -->
 <label class="md1-switch">
   <input type="checkbox" checked>
-  <span class="md1-switch-track">
-    <span class="md1-switch-thumb"></span>
-  </span>
-  <span>开关标签文本</span>
+  <span class="md1-switch-track"></span>
+  <span class="md1-switch-thumb"></span>
 </label>
 ```
 
 ---
 
-## 第二部分：官方原生组件清单 (Official Pure MDC Components)
+### 5. 💬 模态对话框 (`@material/dialog`)
 
-以下为继承自官方 MDC-Web 规范的基础原子组件，在本项目中均已**全量同步并适配 0px 纯直角与 50% 纯圆几何体系**：
-
-| 组件名称 | NPM 包路径 | 核心 SCSS 文件 | 核心 JavaScript Class | 样式特征与定制改动 |
-| :--- | :--- | :--- | :--- | :--- |
-| **按钮 (Button)** | `@material/button` | `mdc-button.scss` | `MDCButton` | 默认边角重构为 `0px` 纯直角；支持 Raised, Outlined, Flat |
-| **浮动按钮 (FAB)** | `@material/fab` | `mdc-fab.scss` | `MDCRipple` (FAB) | 常规与 Mini FAB 严格保持 `50%` 纯圆，Extended FAB 保持 `24px` 胶囊形 |
-| **卡片 (Card)** | `@material/card` | `mdc-card.scss` | `MDCCard` | 默认 `0px` 直角边框与阴影系统，内置 Primary Action 涟漪层 |
-| **标签 (Chips)** | `@material/chips` | `mdc-chips.scss` | `MDCChip`, `MDCChipSet` | 胶囊形 `16px` 标签与过滤选择集 |
-| **复选框 (Checkbox)** | `@material/checkbox` | `mdc-checkbox.scss` | `MDCCheckbox` | 0px 方形选框与 SVG 勾选路径动画 |
-| **单选框 (Radio)** | `@material/radio` | `mdc-radio.scss` | `MDCRadio` | 严格保持 `50%` 纯圆外环与内圈 |
-| **对话框 (Dialog)** | `@material/dialog` | `mdc-dialog.scss` | `MDCDialog` | 弹窗主体 Surface 重构为 `0px` 纯直角 |
-| **列表 (List)** | `@material/list` | `mdc-list.scss` | `MDCList` | 单行、双行列表项与 Graphic / Meta 插槽 |
-| **菜单 (Menu)** | `@material/menu` | `mdc-menu.scss` | `MDCMenu` | 下拉弹出菜单与锚点定位 |
-| **输入框 (Text Field)** | `@material/textfield` | `mdc-text-field.scss` | `MDCTextField` | 包含 Filled、Outlined 与 Floating Label 浮动标签 |
-| **轻量提示 (Snackbar)** | `@material/snackbar` | `mdc-snackbar.scss` | `MDCSnackbar` | 底部提示条重构为 `0px` 直角边角 |
-| **应用栏 (Top App Bar)**| `@material/top-app-bar`| `mdc-top-app-bar.scss`| `MDCTopAppBar` | 顶部导航标题栏与滚动收缩联动 |
-| **栅格布局 (Layout Grid)**| `@material/layout-grid`| `mdc-layout-grid.scss`| 纯 CSS | 12 列响应式栅格系统 |
-| **图像列表 (Image List)**| `@material/image-list`| `mdc-image-list.scss` | 纯 CSS | 标规格网格与瀑布流图像列表 |
-| **排版 (Typography)** | `@material/typography`| `mdc-typography.scss` | 纯 CSS | 默认适配 Google Sans Flex 现代无衬线字阶 |
+```html
+<aside id="my-dialog" class="mdc-dialog" role="alertdialog" aria-labelledby="dialog-title" aria-describedby="dialog-content">
+  <div class="mdc-dialog__surface" style="border-radius: 0; box-shadow: 0 11px 15px -7px rgba(0,0,0,0.2), 0 24px 38px 3px rgba(0,0,0,0.14);">
+    <header class="mdc-dialog__header">
+      <h2 id="dialog-title" class="mdc-dialog__header__title">直角对话框标题</h2>
+    </header>
+    <section id="dialog-content" class="mdc-dialog__body">
+      这是遵循 MD3.1 直角体系的沉浸式对话框内容。
+    </section>
+    <footer class="mdc-dialog__footer">
+      <button type="button" class="mdc-button mdc-dialog__footer__button--cancel">取消</button>
+      <button type="button" class="mdc-button mdc-dialog__footer__button--accept">确认</button>
+    </footer>
+  </div>
+  <div class="mdc-dialog__backdrop"></div>
+</aside>
+```
 
 ---
 
-## 自动化打包与验证 (Build & Testing)
+### 6. 🔤 Google Sans Flex 排版体系 (`@material/typography`)
 
-本组件库支持通过 Webpack 独立构建或作为源码子模块引入：
+全库采用官方 Google Sans Flex 可变字体（支持 `wght 100~1000`, `GRAD -200~150`, `opsz 6~144`, `ROND 0~100` 等全轴微调）。
 
-```bash
-# 安装依赖
-npm.cmd install
-
-# 编译生成全部 CSS / JS 分发文件至 build/
-npm.cmd run dist
-
-# 启动全景展厅预览服务器 (127.0.0.1:2929)
-node server.js
+```css
+body {
+  font-family: 'Google Sans Flex', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
 ```
+
+| 级别 | 标签 / 类名 | 字号 | 行高 | 字重 (Weight) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Headline 1** | `<h1>`, `.mdc-typography--headline1` | 32px | 40px | 700 (Bold) |
+| **Headline 2** | `<h2>`, `.mdc-typography--headline2` | 24px | 32px | 700 (Bold) |
+| **Headline 3** | `<h3>`, `.mdc-typography--headline3` | 18px | 24px | 600 (SemiBold) |
+| **Body 1** | `<p>`, `.mdc-typography--body1` | 14px | 20px | 400 (Regular) |
+| **Caption** | `<small>`, `.mdc-typography--caption` | 12px | 16px | 400 (Regular) |

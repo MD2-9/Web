@@ -15,6 +15,10 @@
 // limitations under the License.
 //
 
+@import "@material/badge/mdc-badge";
+@import "@material/divider/mdc-divider";
+@import "@material/segmented-button/mdc-segmented-button";
+@import "@material/tooltip/mdc-tooltip";
 @import "@material/theme/mdc-theme";
 @import "@material/typography/mdc-typography";
 @import "@material/button/mdc-button";
@@ -43,6 +47,7 @@
 @import "@material/radio/mdc-radio";
 @import "@material/ripple/mdc-ripple";
 @import "@material/ripple/mdui-ripple";
+@import "@material/ripple/mdui-overscroll-glow";
 @import "@material/select/mdc-select";
 @import "@material/slider/mdc-slider";
 @import "@material/slider/md1-slider";

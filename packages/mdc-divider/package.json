@@ -1,0 +1,11 @@
+{
+  "name": "@material/divider",
+  "version": "0.34.1",
+  "description": "Material Components for the web Divider component (Full and Inset Dividers)",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "style": "mdc-divider.css",
+  "dependencies": {
+    "@material/theme": "^0.34.1"
+  }
+}

@@ -247,3 +247,51 @@
 @include mdc-floating-label-shake-keyframes(text-field-outlined-leading-icon, $mdc-text-field-outlined-label-position-y, $mdc-text-field-outlined-with-leading-icon-label-position-x);
 @include mdc-floating-label-shake-keyframes(text-field-outlined-leading-icon-dense, $mdc-text-field-outlined-dense-label-position-y, $mdc-text-field-outlined-dense-with-leading-icon-label-position-x, $mdc-text-field-dense-label-scale);
 @include mdc-floating-label-shake-keyframes(textarea, $mdc-text-field-textarea-label-position-y, 0%, $mdc-text-field-textarea-label-scale);
+
+// Outlined Text Field with Leading Icon enhancements (0px Straight Angle)
+.mdc-text-field--outlined.mdc-text-field--with-leading-icon {
+  border-radius: 0;
+
+  .mdc-text-field__icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .mdc-text-field__input {
+    height: 100%;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 54px;
+    padding-left: 44px;
+    font-size: 14px;
+  }
+
+  .mdc-floating-label {
+    position: absolute;
+    top: -8px;
+    left: 12px;
+    width: auto;
+    max-width: fit-content;
+    height: auto;
+    display: inline-block;
+    background-color: var(--mdc-theme-surface, #ffffff);
+    padding: 0 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mdc-theme-primary);
+    z-index: 5;
+    transform: none;
+    line-height: 1;
+    pointer-events: none;
+  }
+}
+
+.dark-theme .mdc-text-field--outlined.mdc-text-field--with-leading-icon .mdc-floating-label {
+  background-color: #19181e;
+  color: var(--mdc-theme-primary);
+}

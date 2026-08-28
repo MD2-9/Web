@@ -146,4 +146,12 @@ RippleCapableSurface.prototype.unbounded;
  */
 RippleCapableSurface.prototype.disabled;
 
-export {MDCRipple, MDCRippleFoundation, RippleCapableSurface, util};
+export {
+  MDCRipple,
+  MDCRippleFoundation,
+  RippleCapableSurface,
+  util
+};
+
+export { createRipple, attachRipples } from './mdui-ripple';
+export { MduiOverscrollGlow, attachOverscrollGlow } from './mdui-overscroll-glow';

@@ -1,0 +1,11 @@
+{
+  "name": "@material/tooltip",
+  "version": "0.34.1",
+  "description": "Material Components for the web Tooltip component (0px Straight Angle Edition)",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "style": "mdc-tooltip.css",
+  "dependencies": {
+    "@material/theme": "^0.34.1"
+  }
+}

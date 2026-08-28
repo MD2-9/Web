@@ -1,0 +1,69 @@
+//
+// Copyright 2026 unjal <unjal29@outlook.com>
+// Licensed under the Apache License, Version 2.0
+//
+// Material Design (Android 5.0 - 11.0 Lollipop ~ R) Overscroll Edge Glow / Ripple Wave
+// Supports both global window viewport and any nested scrollable containers.
+//
+
+.md1-overscroll-glow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 120px;
+  pointer-events: none;
+  z-index: 99999;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.35s cubic-bezier(0, 0, 0.2, 1);
+
+  // 全局视口特化定位
+  &--fixed {
+    position: fixed !important;
+    z-index: 999999 !important;
+  }
+
+  &__arc {
+    position: absolute;
+    left: -25%;
+    right: -25%;
+    height: 100%;
+    transform: scaleY(0);
+    transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  &--top {
+    top: 0;
+
+    .md1-overscroll-glow__arc {
+      top: 0;
+      transform-origin: top center;
+      background: radial-gradient(ellipse 65% 100% at 50% 0%, var(--mdc-theme-primary, #6750a4) 0%, rgba(103, 80, 164, 0.4) 40%, rgba(103, 80, 164, 0) 75%);
+    }
+  }
+
+  &--bottom {
+    bottom: 0;
+
+    .md1-overscroll-glow__arc {
+      bottom: 0;
+      transform-origin: bottom center;
+      background: radial-gradient(ellipse 65% 100% at 50% 100%, var(--mdc-theme-primary, #6750a4) 0%, rgba(103, 80, 164, 0.4) 40%, rgba(103, 80, 164, 0) 75%);
+    }
+  }
+
+  &.is-active {
+    opacity: 0.9;
+    transition: opacity 0.06s ease;
+
+    .md1-overscroll-glow__arc {
+      transform: scaleY(1);
+      transition: transform 0.12s cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+}
+
+// 确保可滚动容器具备相对定位以容纳局部水波纹
+.has-overscroll-glow {
+  position: relative;
+}

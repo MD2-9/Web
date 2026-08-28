@@ -1,0 +1,44 @@
+//
+// Copyright 2026 unjal <unjal29@outlook.com>
+// Licensed under the Apache License, Version 2.0
+//
+// Material Components Web - Badges (Dot and Count Badges)
+//
+
+@import "@material/theme/variables";
+@import "@material/theme/mixins";
+
+.badge-container {
+  position: relative;
+  display: inline-flex;
+}
+
+.badge-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--mdc-theme-error, #b3261e);
+  border-radius: 50% !important;
+  border: 1.5px solid var(--mdc-theme-surface, #ffffff);
+  box-sizing: content-box;
+}
+
+.badge-number {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background-color: var(--mdc-theme-error, #b3261e);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 8px !important;
+  border: 1.5px solid var(--mdc-theme-surface, #ffffff);
+  box-sizing: border-box;
+}
