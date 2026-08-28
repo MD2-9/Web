@@ -21,10 +21,10 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <title>MDC-Web · 纯直角 & 莫奈动态色 Navigation Rail 全景矩阵</title>
+  <title>MDC-Web · 纯直角 & 莫奈动态色 Navigation Rail 全景展厅</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
-  <!-- 本地稳定字体与图标库 (严守离线高可用规范，彻底杜绝外网 CDN 阻塞) -->
+  <!-- 本地高可用字体与 Material Icons (完全脱离外网 CDN 依赖) -->
   <style>
     @font-face {
       font-family: 'Google Sans Flex';
@@ -62,6 +62,7 @@
       direction: ltr;
       -webkit-font-feature-settings: 'liga';
       -webkit-font-smoothing: antialiased;
+      user-select: none;
     }
   </style>
   
@@ -70,16 +71,16 @@
   
   <style>
     :root {
-      --mdc-theme-primary: #3f51b5;
-      --mdc-theme-secondary: #ff4081;
-      --mdc-theme-tertiary: #009688;
-      --mdc-theme-background: #fafafa;
+      --mdc-theme-primary: #6750a4;
+      --mdc-theme-secondary: #625b71;
+      --mdc-theme-tertiary: #7d5260;
+      --mdc-theme-background: #fdf8fd;
       --mdc-theme-surface: #ffffff;
       --mdc-theme-on-primary: #ffffff;
       --mdc-theme-on-secondary: #ffffff;
       --mdc-theme-on-surface: #1d1b20;
       --mdc-theme-surface-container: #ffffff;
-      --mdc-theme-surface-container-high: #f5f5f5;
+      --mdc-theme-surface-container-high: #f7f2fa;
     }
 
     * {
@@ -88,29 +89,108 @@
       box-sizing: border-box;
     }
 
-    body {
+    html, body {
       margin: 0;
       padding: 0;
-      background-color: var(--mdc-theme-background, #fafafa);
+      background-color: var(--mdc-theme-background, #fdf8fd);
       color: var(--mdc-theme-on-surface, #1d1b20);
       transition: background-color 0.3s ease, color 0.3s ease;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* 桌面端：彻底抹除所有横向 AppBar / Toolbar，由左侧 Rail 全权承载 */
-    @media (min-width: 600px) {
-      .mdc-top-app-bar,
-      .mdc-toolbar,
-      header.app-bar {
+    /* 桌面端：彻底删除所有横向标题栏 */
+    .mdc-top-app-bar,
+    .mdc-toolbar,
+    header.app-bar {
+      display: none !important;
+    }
+    body {
+      padding-top: 0 !important;
+    }
+
+    /* 移动端 (< 600px)：平时隐藏侧边栏，左下角悬浮按钮在页面静止 n 秒后浮现呼出 */
+    @media (max-width: 599.9px) {
+      .main-container {
+        margin-left: 0 !important;
+        padding: 16px !important;
+      }
+      
+      /* 移动端侧边栏为 260px 模态滑入 */
+      .mdc-navigation-rail {
+        display: flex !important;
+        transform: translateX(-100%);
+        width: 260px !important;
+        box-shadow: none;
+        transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1), box-shadow 0.3s ease;
+        z-index: 99999;
+      }
+      .mdc-navigation-rail.mobile-open {
+        transform: translateX(0) !important;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5) !important;
+      }
+      .mdc-navigation-rail.mobile-open .rail-header-text,
+      .mdc-navigation-rail.mobile-open .rail-item-text,
+      .mdc-navigation-rail.mobile-open .rail-footer-text {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+      }
+      .mdc-navigation-rail.mobile-open .rail-vertical-title {
         display: none !important;
       }
-      body {
-        padding-top: 0 !important;
+      .mdc-navigation-rail.mobile-open .rail-item-icon {
+        margin-left: 0 !important;
+        margin-right: 16px !important;
+      }
+
+      /* 移动端半透明遮罩 */
+      .mobile-drawer-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99990;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      .mobile-drawer-backdrop.is-active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* 左下角悬浮按钮：页面静止 n 秒后平滑浮现 */
+      .mobile-floating-menu-btn {
+        display: flex !important;
+        position: fixed;
+        bottom: 24px;
+        left: 24px;
+        z-index: 9000;
+        background-color: var(--mdc-theme-primary, #6750a4);
+        color: var(--mdc-theme-on-primary, #ffffff);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+        border-radius: 50% !important;
+        width: 48px;
+        height: 48px;
+        opacity: 0;
+        transform: scale(0.8) translateY(16px);
+        pointer-events: none;
+        transition: opacity 0.35s cubic-bezier(0, 0, 0.2, 1),
+                    transform 0.35s cubic-bezier(0, 0, 0.2, 1),
+                    background-color 0.3s ease;
+      }
+      body.page-is-idle .mobile-floating-menu-btn {
+        opacity: 0.95;
+        transform: scale(1) translateY(0);
+        pointer-events: auto;
+      }
+      body.page-is-idle .mobile-floating-menu-btn:active {
+        transform: scale(0.92);
       }
     }
 
     /* =========================================================================
-     * 左侧单图标 Navigation Rail (72px 常驻 / 260px 悬浮展开 / 竖向文字标题)
+     * 左侧单图标 Navigation Rail (72px 紧凑 / 260px 平滑展开 / 竖向文字标题)
      * ========================================================================= */
     .mdc-navigation-rail {
       position: fixed;
@@ -126,7 +206,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      overflow: hidden;
+      overflow: hidden !important;
       transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                   box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                   background-color 0.3s ease;
@@ -164,7 +244,7 @@
       margin-right: 16px;
     }
 
-    /* 抽屉导航常驻主容器 */
+    /* 抽屉导航常驻主容器 (彻底清除所有内部滚动条) */
     .drawer-nav-section {
       display: flex;
       flex-direction: column;
@@ -172,11 +252,12 @@
       width: 100%;
       position: relative;
       z-index: 1;
+      overflow: hidden !important;
       transition: opacity 0.25s ease, transform 0.25s ease;
     }
     .drawer-nav-section.anim-out {
       opacity: 0;
-      transform: translateY(40px);
+      transform: translateY(30px);
       pointer-events: none;
     }
     .drawer-nav-section.anim-in {
@@ -184,17 +265,19 @@
       transform: translateY(0);
     }
 
-    /* 顶部头像/品牌区域 */
+    /* 顶部 Brand Header (点击触发调色盘水波纹) */
     .rail-header {
       display: flex;
       align-items: center;
       min-height: 64px;
       padding: 12px 16px;
       box-sizing: border-box;
-      background-color: var(--mdc-theme-primary, #3f51b5);
+      background-color: var(--mdc-theme-primary, #6750a4);
       color: var(--mdc-theme-on-primary, #ffffff);
       flex-shrink: 0;
       cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
     }
     .rail-header-avatar {
       width: 40px;
@@ -205,7 +288,7 @@
       align-items: center;
       justify-content: center;
       font-weight: bold;
-      font-size: 16px;
+      font-size: 15px;
       flex-shrink: 0;
     }
     .rail-header-text {
@@ -218,41 +301,52 @@
       transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* 核心：竖向文字标题 (writing-mode: vertical-rl) */
+    /* 核心：竖向文字标题 (占位紧凑，无滚动条溢出) */
     .rail-vertical-title {
       writing-mode: vertical-rl;
       text-orientation: mixed;
-      letter-spacing: 4px;
-      font-size: 13px;
+      letter-spacing: 3px;
+      font-size: 12px;
       font-weight: bold;
-      color: var(--mdc-theme-primary, #3f51b5);
-      padding: 16px 0;
+      color: var(--mdc-theme-primary, #6750a4);
+      padding: 10px 0;
       margin: 0 auto;
       user-select: none;
       opacity: 0.9;
       transform: translateY(0);
       transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                   transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0;
     }
 
-    /* 导航项列表 */
+    /* 导航项列表 (隐藏所有滚动条) */
     .rail-nav-list {
       display: flex;
       flex-direction: column;
       gap: 2px;
-      padding: 8px 0;
+      padding: 4px 0;
       flex: 1;
       overflow-y: auto;
+      overflow-x: hidden !important;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE 10+ */
     }
+    .rail-nav-list::-webkit-scrollbar {
+      display: none; /* WebKit */
+    }
+
     .rail-nav-item {
       display: flex;
       align-items: center;
-      height: 48px;
+      height: 44px;
       padding: 0 16px;
       color: inherit;
       text-decoration: none;
       cursor: pointer;
       transition: background-color 0.2s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      flex-shrink: 0;
     }
     .rail-nav-item:hover {
       background-color: rgba(0, 0, 0, 0.05);
@@ -260,7 +354,7 @@
     .rail-item-icon {
       margin-left: 8px;
       margin-right: 0;
-      color: var(--mdc-theme-primary, #3f51b5);
+      color: var(--mdc-theme-primary, #6750a4);
       flex-shrink: 0;
       font-size: 22px;
       transition: margin 0.2s ease;
@@ -270,17 +364,18 @@
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* 底部面板 */
+    /* 底部面板 (固定紧凑) */
     .rail-footer {
-      padding: 12px;
+      padding: 8px;
       border-top: 1px solid rgba(0, 0, 0, 0.08);
       background: inherit;
       flex-shrink: 0;
+      overflow: hidden;
     }
     .rail-footer-text {
       opacity: 0;
@@ -291,7 +386,7 @@
     }
 
     /* =========================================================================
-     * 侧边栏水波纹覆层莫奈调色盘系统 (参考 ADM 雏形升级 3-Step 莫奈取色)
+     * 侧边栏水波纹覆层莫奈调色盘 (3-Step CAM16/HCT 莫奈取色)
      * ========================================================================= */
     .theme-picker-panel {
       position: absolute;
@@ -304,9 +399,13 @@
       display: none;
       flex-direction: column;
       overflow-y: auto;
+      overflow-x: hidden !important;
       z-index: 20;
       padding: 0;
-      box-sizing: border-box;
+      scrollbar-width: none;
+    }
+    .theme-picker-panel::-webkit-scrollbar {
+      display: none;
     }
 
     /* 水波纹扩散动画 (Ripple Expand / Dismiss) */
@@ -315,7 +414,7 @@
       animation: rippleExpand 0.35s cubic-bezier(0.0, 0, 0.2, 1) forwards;
     }
     .theme-picker-panel.anim-out {
-      animation: rippleDismiss 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation: rippleDismiss 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
     @keyframes rippleExpand {
@@ -344,9 +443,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      min-height: 56px;
+      min-height: 54px;
       padding: 8px 12px;
-      background: var(--mdc-theme-primary, #3f51b5);
+      background: var(--mdc-theme-primary, #6750a4);
       color: var(--mdc-theme-on-primary, #ffffff);
       flex-shrink: 0;
     }
@@ -368,20 +467,20 @@
       width: 100%;
       padding: 0;
       margin: 0;
+      overflow-x: hidden;
     }
     .theme-tile {
-      height: 48px;
+      height: 46px;
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      padding-left: 16px;
-      font-size: 13.5px;
+      padding-left: 14px;
+      font-size: 12.5px;
       font-weight: bold;
       letter-spacing: 0.2px;
       cursor: pointer;
       user-select: none;
       transition: filter 0.15s ease;
-      box-sizing: border-box;
       position: relative;
     }
     .theme-tile:hover {
@@ -394,7 +493,7 @@
     .theme-tile.active::after {
       content: '';
       position: absolute;
-      right: 12px;
+      right: 10px;
       width: 8px;
       height: 8px;
       border-radius: 50% !important;
@@ -405,13 +504,13 @@
     /* 主内容视口容器 */
     .main-container {
       margin-left: 72px;
-      padding: 24px 32px 80px 32px;
+      padding: 28px 36px 80px 36px;
       max-width: 1200px;
       box-sizing: border-box;
       transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* 卡片与组件展厅 */
+    /* 卡片与组件展厅 (纯直角 0px) */
     .demo-card {
       background-color: var(--mdc-theme-surface-container, #ffffff);
       color: var(--mdc-theme-on-surface, #1d1b20);
@@ -425,77 +524,28 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    /* 暗色模式下的纯直角与阴影层级适配 */
+    /* =========================================================================
+     * 暗色模式 (Tone 20 背景 ✖ Tone 12 略深卡片 ✖ 深邃立体阴影)
+     * ========================================================================= */
     .dark-theme {
-      --mdc-theme-background: #242424;
-      --mdc-theme-surface: #1d1b20;
+      --mdc-theme-background: #1f1e24;
+      --mdc-theme-surface: #19181e;
       --mdc-theme-on-surface: #e6e1e5;
-      --mdc-theme-surface-container: #17161b;
-      --mdc-theme-surface-container-high: #121115;
+      --mdc-theme-surface-container: #131217;
+      --mdc-theme-surface-container-high: #0d0c10;
     }
     .dark-theme .demo-card {
-      background-color: var(--mdc-theme-surface-container, #17161b) !important;
+      background-color: var(--mdc-theme-surface-container, #131217) !important;
       border-color: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65) !important;
     }
     .dark-theme .mdc-navigation-rail {
-      background-color: var(--mdc-theme-surface, #1d1b20);
+      background-color: var(--mdc-theme-surface, #19181e);
       border-right-color: rgba(255, 255, 255, 0.08);
-      box-shadow: 1px 0 4px rgba(0, 0, 0, 0.5);
+      box-shadow: 1px 0 6px rgba(0, 0, 0, 0.6);
     }
     .dark-theme .theme-picker-panel {
-      background-color: #1d1b20;
-    }
-
-    /* 移动端 (< 600px) 响应式 Bottom Navigation */
-    @media (max-width: 599.9px) {
-      .main-container {
-        margin-left: 0 !important;
-        padding: 16px 16px 72px 16px;
-      }
-      .mdc-navigation-rail {
-        top: auto;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 100% !important;
-        height: 56px !important;
-        flex-direction: row;
-        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
-        border-right: none;
-        border-top: 1px solid rgba(0, 0, 0, 0.08);
-        overflow: hidden;
-      }
-      .rail-header,
-      .rail-vertical-title,
-      .rail-footer,
-      .theme-picker-panel {
-        display: none !important;
-      }
-      .rail-nav-list {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-around;
-        width: 100%;
-        padding: 0;
-      }
-      .rail-nav-item {
-        flex: 1;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        padding: 0;
-      }
-      .rail-item-icon {
-        margin: 0 !important;
-        font-size: 20px;
-      }
-      .rail-item-text {
-        opacity: 0.8 !important;
-        visibility: visible !important;
-        font-size: 10px;
-      }
+      background-color: #19181e;
     }
 
     /* 辅助组件网格 */
@@ -504,6 +554,117 @@
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
       margin-top: 16px;
+    }
+
+    /* 色彩调色板展台 */
+    .palette-row {
+      margin-bottom: 12px;
+    }
+    .palette-swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      margin-top: 4px;
+    }
+    .palette-swatch {
+      flex: 1;
+      min-width: 48px;
+      height: 38px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 2px rgba(0,0,0,0.6);
+    }
+
+    .surface-token-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      margin: 3px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(0,0,0,0.03);
+    }
+    .dark-theme .surface-token-chip {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.1);
+    }
+    .surface-token-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 50% !important;
+      display: inline-block;
+      border: 1px solid rgba(0,0,0,0.2);
+    }
+
+    /* 图像取色样本 */
+    .preview-img-box {
+      width: 100%;
+      height: 110px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .preview-img-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    .preview-img-box span {
+      position: absolute;
+      bottom: 6px;
+      left: 6px;
+      background: rgba(0,0,0,0.75);
+      color: #fff;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* 折叠面板手风琴样式 */
+    .expansion-panel {
+      border: 1px solid rgba(0,0,0,0.08);
+      margin-bottom: 8px;
+    }
+    .dark-theme .expansion-panel {
+      border-color: rgba(255,255,255,0.08);
+    }
+    .expansion-header {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(0,0,0,0.02);
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .dark-theme .expansion-header {
+      background: rgba(255,255,255,0.03);
+    }
+    .expansion-body {
+      padding: 16px;
+      display: none;
+      font-size: 13px;
+      border-top: 1px solid rgba(0,0,0,0.05);
+      line-height: 1.6;
+    }
+    .expansion-panel.is-open .expansion-body {
+      display: block;
+    }
+    .expansion-panel.is-open .expansion-arrow {
+      transform: rotate(180deg);
+    }
+    .expansion-arrow {
+      transition: transform 0.2s ease;
     }
   </style>
 </head>
@@ -520,7 +681,7 @@
         <div class="rail-header-avatar">M3</div>
         <div class="rail-header-text">
           <div style="font-weight: bold; font-size: 15px;">MDC-Web · MD1</div>
-          <div style="font-size: 11px; opacity: 0.85;">🎨 点击切换色彩</div>
+          <div style="font-size: 11px; opacity: 0.85;">🎨 点击取色</div>
         </div>
       </div>
 
@@ -529,7 +690,7 @@
         MDC · 纯直角 & 莫奈动态色
       </div>
 
-      <!-- 导航菜单 -->
+      <!-- 导航菜单 (9 大核心模块锚点定位) -->
       <nav class="rail-nav-list">
         <div class="rail-nav-item" onclick="openThemePicker(event)" title="🎨 莫奈动态调色盘 (3步提取)">
           <i class="material-icons rail-item-icon" style="color: var(--mdc-theme-secondary);">palette</i>
@@ -543,29 +704,48 @@
           <i class="material-icons rail-item-icon">view_agenda</i>
           <span class="rail-item-text">2. 直角卡片</span>
         </a>
-        <a href="#section-form" class="rail-nav-item" title="3. 表单与开关">
-          <i class="material-icons rail-item-icon">toggle_on</i>
-          <span class="rail-item-text">3. 表单与开关</span>
+        <a href="#section-chips" class="rail-nav-item" title="3. 标签与胶囊">
+          <i class="material-icons rail-item-icon">label</i>
+          <span class="rail-item-text">3. 标签与胶囊</span>
         </a>
-        <a href="#section-tabs" class="rail-nav-item" title="4. 选项卡 Tab">
+        <a href="#section-form" class="rail-nav-item" title="4. 表单与开关">
+          <i class="material-icons rail-item-icon">toggle_on</i>
+          <span class="rail-item-text">4. 表单与开关</span>
+        </a>
+        <a href="#section-list" class="rail-nav-item" title="5. 列表与手风琴">
+          <i class="material-icons rail-item-icon">format_list_bulleted</i>
+          <span class="rail-item-text">5. 列表与手风琴</span>
+        </a>
+        <a href="#section-dialogs" class="rail-nav-item" title="6. 对话框与菜单">
+          <i class="material-icons rail-item-icon">aspect_ratio</i>
+          <span class="rail-item-text">6. 对话框与菜单</span>
+        </a>
+        <a href="#section-tabs" class="rail-nav-item" title="7. 选项卡 Tab">
           <i class="material-icons rail-item-icon">tab</i>
-          <span class="rail-item-text">4. 选项卡 Tab</span>
+          <span class="rail-item-text">7. 选项卡 Tab</span>
+        </a>
+        <a href="#section-progress" class="rail-nav-item" title="8. 进度与提示">
+          <i class="material-icons rail-item-icon">hourglass_empty</i>
+          <span class="rail-item-text">8. 进度与提示</span>
+        </a>
+        <a href="#section-monet-lab" class="rail-nav-item" title="9. 莫奈色彩实验室">
+          <i class="material-icons rail-item-icon">wallpaper</i>
+          <span class="rail-item-text">9. 莫奈实验室</span>
         </a>
       </nav>
 
       <!-- 底部控制面板 -->
       <div class="rail-footer">
         <div class="rail-footer-text">
-          <button id="btn-toggle-dark" class="mdc-button mdc-button--raised" style="width: 100%; margin-bottom: 8px;">
+          <button id="btn-toggle-dark" class="mdc-button mdc-button--raised" style="width: 100%;">
             <i class="material-icons mdc-button__icon">brightness_4</i>
             切换暗色模式
           </button>
-          <div style="font-size: 11px; opacity: 0.7; text-align: center;">by unjal &lt;unjal29@outlook.com&gt;</div>
         </div>
       </div>
     </div>
 
-    <!-- 2. 水波纹覆层莫奈调色盘系统 (覆盖侧边栏，支持 3 次选择与跳过) -->
+    <!-- 2. 水波纹覆层莫奈调色盘 (覆盖侧边栏，支持 3 次选择与跳过) -->
     <div id="themePickerPanel" class="theme-picker-panel">
       <div class="picker-top-bar">
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -574,12 +754,12 @@
           </button>
           <div class="picker-step-indicator">
             <span id="pickerStepTitle">第 1 步: 选择主色 (Primary)</span>
-            <span class="picker-step-sub" id="pickerStepSub">点击下方色块设置主基调</span>
+            <span class="picker-step-sub" id="pickerStepSub">点击莫奈色块设置核心主基调</span>
           </div>
         </div>
       </div>
       <div class="theme-grid" id="themeGrid">
-        <!-- 动态渲染 19 色 + 跳过/自定义选项 -->
+        <!-- 动态渲染真实 Monet 色阶与跳过选项 -->
       </div>
     </div>
 
@@ -590,7 +770,7 @@
     
     <!-- 顶部置顶主题卡片 -->
     <div class="demo-card">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
         <h2 style="margin: 0; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
           <i class="material-icons" style="color: var(--mdc-theme-primary);">palette</i>
           MDC-Web Monet 动态取色控制台 (CAM16 / HCT)
@@ -602,34 +782,34 @@
       </div>
 
       <p style="font-size: 13px; opacity: 0.85; margin-top: 0;">
-        严守 <strong>MD1 纯直角 (0px) 与 50% 纯圆</strong> 几何骨架。点击侧边栏调色盘将以<strong>水波纹涟漪动效</strong>平滑覆盖原菜单，并支持 3 次连续取色（主色、次色、第三色，后两次支持跳过协同）。
+        严守 <strong>MD1 纯直角 (0px) 与 50% 纯圆</strong> 几何骨架。点击侧边栏调色盘将以<strong>水波纹涟漪动效</strong>平滑覆盖原菜单，并支持 3 次连续取色（主色、次色、第三色，后两次支持跳过自动协同）。
       </p>
 
       <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
-        <div style="font-size: 13px; padding: 6px 12px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
-          <span>当前 Primary:</span>
-          <strong id="label-cur-p" style="color: var(--mdc-theme-primary);">#3F51B5</strong>
+        <div style="font-size: 13px; padding: 6px 14px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
+          <span>Primary 主色:</span>
+          <strong id="label-cur-p" style="color: var(--mdc-theme-primary);">#6750A4</strong>
         </div>
-        <div style="font-size: 13px; padding: 6px 12px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
-          <span>当前 Secondary:</span>
-          <strong id="label-cur-s" style="color: var(--mdc-theme-secondary);">#FF4081</strong>
+        <div style="font-size: 13px; padding: 6px 14px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
+          <span>Secondary 次色:</span>
+          <strong id="label-cur-s" style="color: var(--mdc-theme-secondary);">#625B71</strong>
         </div>
-        <div style="font-size: 13px; padding: 6px 12px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
-          <span>当前 Tertiary:</span>
-          <strong id="label-cur-t" style="color: var(--mdc-theme-tertiary);">#009688</strong>
+        <div style="font-size: 13px; padding: 6px 14px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
+          <span>Tertiary 第三色:</span>
+          <strong id="label-cur-t" style="color: var(--mdc-theme-tertiary);">#7D5260</strong>
         </div>
       </div>
     </div>
 
-    <!-- 1. 按钮与 FAB 展厅 -->
+    <!-- 🔘 模块 1: 按钮与 FAB 展厅 -->
     <div class="demo-card" id="section-buttons">
       <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
-        1. 按钮与浮动动作按钮 (Buttons & FAB)
+        1. 按钮与浮动动作按钮矩阵 (Buttons & FAB)
       </h3>
       <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 16px;">
         <button class="mdc-button mdc-button--raised">
           <i class="material-icons mdc-button__icon">star</i>
-          Raised Button
+          Primary Raised
         </button>
         <button class="mdc-button mdc-button--unelevated" style="background-color: var(--mdc-theme-secondary); color: var(--mdc-theme-on-secondary);">
           <i class="material-icons mdc-button__icon">favorite</i>
@@ -640,18 +820,30 @@
           Outlined
         </button>
         <button class="mdc-button">
-          Flat Button
+          Flat Text Button
         </button>
-        <button class="mdc-fab" style="border-radius: 50% !important;" title="Pure Circle FAB">
+        <button class="mdc-button mdc-button--dense mdc-button--raised">
+          Dense Button
+        </button>
+        
+        <!-- 纯圆 FAB 矩阵 -->
+        <button class="mdc-fab" style="border-radius: 50% !important;" title="Standard FAB">
           <i class="material-icons mdc-fab__icon">add</i>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" style="border-radius: 50% !important;" title="Mini FAB">
+          <i class="material-icons mdc-fab__icon">edit</i>
+        </button>
+        <button class="mdc-fab mdc-fab--extended" style="border-radius: 28px !important; padding: 0 20px;">
+          <i class="material-icons mdc-fab__icon">send</i>
+          <span class="mdc-fab__label">Extended FAB</span>
         </button>
       </div>
     </div>
 
-    <!-- 2. 直角卡片展厅 -->
+    <!-- 🃏 模块 2: 直角卡片全形态矩阵 -->
     <div class="demo-card" id="section-cards">
       <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
-        2. MD1 纯直角卡片矩阵 (Card Grid)
+        2. MD1 纯直角卡片全形态矩阵 (Card Grid)
       </h3>
       <div class="component-grid">
         <div class="demo-card" style="margin: 0;">
@@ -660,34 +852,78 @@
             纯直角 Elevated Card
           </h4>
           <p style="font-size: 13px; opacity: 0.8;">边角完全采用 0px 直角，保留经典的 Material 海拔投影层级。</p>
-          <button class="mdc-button mdc-button--dense" style="padding: 0;">了解更多</button>
+          <div style="display: flex; gap: 8px;">
+            <button class="mdc-button mdc-button--dense mdc-button--raised">操作 A</button>
+            <button class="mdc-button mdc-button--dense">操作 B</button>
+          </div>
         </div>
+
+        <div class="demo-card" style="margin: 0; border: 1px solid var(--mdc-theme-primary);">
+          <h4 style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;">
+            <i class="material-icons" style="font-size: 18px; color: var(--mdc-theme-primary);">crop_square</i>
+            Outlined Card (描边型)
+          </h4>
+          <p style="font-size: 13px; opacity: 0.8;">采用主色描边，无悬浮投影，呈现极致极简的平整工业质感。</p>
+          <button class="mdc-button mdc-button--dense mdc-button--outlined">查看详情</button>
+        </div>
+
         <div class="demo-card" style="margin: 0; background: var(--mdc-theme-surface-container-high);">
           <h4 style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;">
             <i class="material-icons" style="font-size: 18px; color: var(--mdc-theme-secondary);">layers</i>
             Surface Container High
           </h4>
           <p style="font-size: 13px; opacity: 0.8;">暗色模式下具备略深于背景的舒适阶度，视觉立体不刺眼。</p>
-          <button class="mdc-button mdc-button--dense" style="padding: 0;">查看详情</button>
+          <button class="mdc-button mdc-button--dense" style="padding: 0;">展开参数</button>
         </div>
       </div>
     </div>
 
-    <!-- 3. 表单与开关 -->
+    <!-- 🏷️ 模块 3: 标签与胶囊芯片 (Chips) -->
+    <div class="demo-card" id="section-chips">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
+        3. 标签与胶囊芯片矩阵 (Chips)
+      </h3>
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span style="font-size: 13px; font-weight: 600; width: 100px;">Action Chips:</span>
+          <span class="surface-token-chip" style="cursor: pointer;"><i class="material-icons" style="font-size: 16px;">event</i> 添加日程</span>
+          <span class="surface-token-chip" style="cursor: pointer;"><i class="material-icons" style="font-size: 16px;">bookmark</i> 收藏项目</span>
+          <span class="surface-token-chip" style="cursor: pointer;"><i class="material-icons" style="font-size: 16px;">share</i> 分享链接</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span style="font-size: 13px; font-weight: 600; width: 100px;">Filter Chips:</span>
+          <span class="surface-token-chip" style="border-color: var(--mdc-theme-primary); color: var(--mdc-theme-primary); font-weight: 600;"><i class="material-icons" style="font-size: 16px;">check</i> 已启用 Monet</span>
+          <span class="surface-token-chip"><i class="material-icons" style="font-size: 16px;">check_box_outline_blank</i> 离线渲染</span>
+          <span class="surface-token-chip"><i class="material-icons" style="font-size: 16px;">check_box_outline_blank</i> 变量字体</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span style="font-size: 13px; font-weight: 600; width: 100px;">Input Chips:</span>
+          <span class="surface-token-chip">Google Sans Flex <i class="material-icons" style="font-size: 14px; cursor: pointer;">close</i></span>
+          <span class="surface-token-chip">MDC-Web v0.34.1 <i class="material-icons" style="font-size: 14px; cursor: pointer;">close</i></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📝 模块 4: 表单与输入控件全矩阵 -->
     <div class="demo-card" id="section-form">
       <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
-        3. 表单控件与开关 (Form Controls)
+        4. 表单、输入框、滑块与选择器 (Form Controls)
       </h3>
       <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 16px;">
+        
+        <!-- 填充型输入框 -->
         <div class="mdc-text-field" style="width: 240px;">
-          <input type="text" id="demo-input" class="mdc-text-field__input" value="MDC Google Sans Flex">
-          <label class="mdc-floating-label mdc-floating-label--float-above" for="demo-input">输入框</label>
+          <input type="text" id="input-filled" class="mdc-text-field__input" value="Google Sans Flex">
+          <label class="mdc-floating-label mdc-floating-label--float-above" for="input-filled">Filled 输入框</label>
           <div class="mdc-line-ripple"></div>
         </div>
 
+        <!-- 纯直角复选框 -->
         <div class="mdc-form-field">
           <div class="mdc-checkbox">
-            <input type="checkbox" class="mdc-checkbox__native-control" id="cb-1" checked/>
+            <input type="checkbox" class="mdc-checkbox__native-control" id="cb-demo-1" checked/>
             <div class="mdc-checkbox__background">
               <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
                 <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
@@ -695,84 +931,288 @@
               <div class="mdc-checkbox__mixedmark"></div>
             </div>
           </div>
-          <label for="cb-1" style="font-size: 13px;">直角复选框</label>
+          <label for="cb-demo-1" style="font-size: 13px;">直角复选框</label>
         </div>
 
+        <!-- 纯圆单选按钮 -->
         <div class="mdc-form-field">
           <div class="mdc-radio">
-            <input class="mdc-radio__native-control" type="radio" id="radio-1" name="radios" checked>
+            <input class="mdc-radio__native-control" type="radio" id="radio-opt-1" name="radios-demo" checked>
             <div class="mdc-radio__background">
               <div class="mdc-radio__outer-circle"></div>
               <div class="mdc-radio__inner-circle"></div>
             </div>
           </div>
-          <label for="radio-1" style="font-size: 13px;">单选钮 A</label>
+          <label for="radio-opt-1" style="font-size: 13px;">单选 A</label>
+        </div>
+        <div class="mdc-form-field">
+          <div class="mdc-radio">
+            <input class="mdc-radio__native-control" type="radio" id="radio-opt-2" name="radios-demo">
+            <div class="mdc-radio__background">
+              <div class="mdc-radio__outer-circle"></div>
+              <div class="mdc-radio__inner-circle"></div>
+            </div>
+          </div>
+          <label for="radio-opt-2" style="font-size: 13px;">单选 B</label>
+        </div>
+
+        <!-- 滑动开关 -->
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="switch-demo" checked style="cursor: pointer; width: 18px; height: 18px;">
+          <label for="switch-demo" style="font-size: 13px; cursor: pointer;">动态色渲染开关</label>
+        </div>
+
+        <!-- 滑块演示 -->
+        <div style="display: flex; align-items: center; gap: 12px; width: 260px;">
+          <span style="font-size: 12px; font-weight: 600;">色阶滑块:</span>
+          <input type="range" id="slider-tone" min="10" max="90" value="40" style="flex: 1; cursor: pointer;">
+          <span id="slider-val" style="font-size: 12px; font-family: monospace; font-weight: bold;">Tone 40</span>
         </div>
       </div>
     </div>
 
-    <!-- 4. 选项卡 Tabs -->
+    <!-- 📂 模块 5: 列表与手风琴折叠面板 -->
+    <div class="demo-card" id="section-list">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
+        5. 列表与手风琴折叠面板 (List & Accordion)
+      </h3>
+      <div class="component-grid">
+        
+        <!-- 双行列表 -->
+        <div class="demo-card" style="margin: 0; padding: 12px;">
+          <h4 style="margin: 0 0 8px 0; font-size: 14px;">双行列表项 (Two-line List)</h4>
+          <ul class="mdc-list mdc-list--two-line" style="padding: 0;">
+            <li class="mdc-list-item" style="height: 56px;">
+              <span class="mdc-list-item__graphic material-icons" style="color: var(--mdc-theme-primary);">folder</span>
+              <span class="mdc-list-item__text">
+                核心色彩模块
+                <span class="mdc-list-item__secondary-text">CAM16 / HCT 色彩空间引擎</span>
+              </span>
+            </li>
+            <li class="mdc-list-item" style="height: 56px;">
+              <span class="mdc-list-item__graphic material-icons" style="color: var(--mdc-theme-secondary);">dashboard</span>
+              <span class="mdc-list-item__text">
+                Navigation Rail 架构
+                <span class="mdc-list-item__secondary-text">72px 紧凑 / 260px 悬浮展开</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 手风琴折叠面板 -->
+        <div>
+          <div class="expansion-panel is-open" onclick="toggleExpansion(this)">
+            <div class="expansion-header">
+              <span>折叠项 1: 纯直角设计原则</span>
+              <i class="material-icons expansion-arrow">keyboard_arrow_down</i>
+            </div>
+            <div class="expansion-body">
+              坚守纯正 MD1 骨架，圆角半径严格为 0px，所有组件均以利落切角与丰富海拔阴影呈现。
+            </div>
+          </div>
+
+          <div class="expansion-panel" onclick="toggleExpansion(this)">
+            <div class="expansion-header">
+              <span>折叠项 2: 莫奈暗色色阶标准</span>
+              <i class="material-icons expansion-arrow">keyboard_arrow_down</i>
+            </div>
+            <div class="expansion-body">
+              暗色模式采用 Tone 20 雅致背景与 Tone 12 略深卡片，告别死黑，提供绝佳阅读层次感。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 💬 模块 6: 直角对话框与浮动菜单 -->
+    <div class="demo-card" id="section-dialogs">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
+        6. 直角对话框与菜单交互 (Dialogs & Menus)
+      </h3>
+      <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 16px;">
+        <button class="mdc-button mdc-button--raised" onclick="openDemoDialog()">
+          <i class="material-icons mdc-button__icon">open_in_new</i>
+          打开标准直角确认对话框
+        </button>
+
+        <button class="mdc-button mdc-button--outlined" onclick="showDemoToast()">
+          <i class="material-icons mdc-button__icon">notifications</i>
+          触发轻量 Snackbar 提示
+        </button>
+      </div>
+
+      <!-- 模拟直角对话框 (弹窗) -->
+      <div id="demoDialogOverlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99999; display: none; align-items: center; justify-content: center;">
+        <div class="demo-card" style="width: 400px; margin: 0; box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12);">
+          <h3 style="margin-top: 0; display: flex; align-items: center; gap: 8px;">
+            <i class="material-icons" style="color: var(--mdc-theme-primary);">info</i>
+            标准 MD1 纯直角对话框
+          </h3>
+          <p style="font-size: 13px; opacity: 0.85; line-height: 1.6;">
+            本对话框严格采用 0px 纯直角边缘，配合 Material 海拔 Elevation 24 投影。点击确认或取消关闭。
+          </p>
+          <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px;">
+            <button class="mdc-button" onclick="closeDemoDialog()">取消</button>
+            <button class="mdc-button mdc-button--raised" onclick="closeDemoDialog()">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📑 模块 7: 选项卡系统 -->
     <div class="demo-card" id="section-tabs">
       <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
-        4. 选项卡系统 (Tabs)
+        7. 选项卡联动系统 (Tabs & Tab Bar)
       </h3>
       <nav class="mdc-tab-bar" style="border-bottom: 1px solid rgba(0,0,0,0.08); margin-top: 16px;">
-        <a class="mdc-tab mdc-tab--active" href="javascript:void(0);" style="font-weight: bold; color: var(--mdc-theme-primary);">组件矩阵</a>
-        <a class="mdc-tab" href="javascript:void(0);">色彩算法</a>
-        <a class="mdc-tab" href="javascript:void(0);">Navigation Rail 架构</a>
+        <a class="mdc-tab mdc-tab--active" id="tab-btn-1" onclick="switchTab(1)" href="javascript:void(0);" style="font-weight: bold; color: var(--mdc-theme-primary);">组件全景</a>
+        <a class="mdc-tab" id="tab-btn-2" onclick="switchTab(2)" href="javascript:void(0);">CAM16 色彩算法</a>
+        <a class="mdc-tab" id="tab-btn-3" onclick="switchTab(3)" href="javascript:void(0);">Navigation Rail 架构</a>
       </nav>
-      <div style="padding: 16px 0; font-size: 13px; opacity: 0.85;">
-        当前展示：<strong>MDC-Web v0.34.1 纯直角体系</strong>。已全面集成 Google Sans Flex 变量字体与 HCT 莫奈取色。
+      <div id="tab-content-1" style="padding: 16px 0; font-size: 13px; opacity: 0.85;">
+        【选项卡 1】当前展示：<strong>MDC-Web v0.34.1 纯直角全功能矩阵</strong>。已全面集成 Google Sans Flex 变量字体。
       </div>
+      <div id="tab-content-2" style="padding: 16px 0; font-size: 13px; opacity: 0.85; display: none;">
+        【选项卡 2】采用正统 Google Material Color Utilities，支持单/双/三色种子及壁纸实时量化提取。
+      </div>
+      <div id="tab-content-3" style="padding: 16px 0; font-size: 13px; opacity: 0.85; display: none;">
+        【选项卡 3】左侧 72px 常驻单图标，悬浮平滑展开至 260px，彻底清除横向滚动条，移动端彻底隐藏。
+      </div>
+    </div>
+
+    <!-- ⏳ 模块 8: 进度指示器与轻量提示 -->
+    <div class="demo-card" id="section-progress">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
+        8. 进度指示器与轻量提示 (Progress & Snackbar)
+      </h3>
+      <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px;">
+        <div>
+          <div style="font-size: 12px; font-weight: 600; margin-bottom: 6px;">线性进度条 (Linear Progress):</div>
+          <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate" style="height: 4px; background: rgba(0,0,0,0.08);">
+            <div class="mdc-linear-progress__buffering-dots"></div>
+            <div class="mdc-linear-progress__buffer"></div>
+            <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar" style="background-color: var(--mdc-theme-primary); transform: scaleX(0.65);">
+              <span class="mdc-linear-progress__bar-inner"></span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <div style="font-size: 12px; font-weight: 600;">环形指示器:</div>
+          <div style="width: 28px; height: 28px; border: 3px solid rgba(0,0,0,0.1); border-top-color: var(--mdc-theme-primary); border-radius: 50% !important; animation: spin 1s linear infinite;"></div>
+          <span style="font-size: 12px; opacity: 0.8;">Material 纯圆旋转动画</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🎨 模块 9: 莫奈色彩全景实验室 -->
+    <div class="demo-card" id="section-monet-lab">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
+        9. 莫奈动态色彩全景实验室 (Monet Color Laboratory)
+      </h3>
+      
+      <!-- 色阶调色板展示 -->
+      <div id="monet-swatches-container" style="margin-top: 16px;">
+        <!-- 动态生成 Primary, Secondary, Tertiary 50~900 色阶 -->
+      </div>
+
+      <!-- 壁纸取色实战样本 -->
+      <div style="margin-top: 20px;">
+        <h4 style="margin: 0 0 12px 0; font-size: 14px;">壁纸图像实时提取莫奈色阶 (点击图片提取):</h4>
+        <div class="component-grid">
+          <div class="preview-img-box" onclick="extractFromSample('#4259A8', '#605D71', '#7D5260')" style="background-image: url('https://picsum.photos/id/1018/400/200');">
+            <span>山脉黎明 (Mountain)</span>
+          </div>
+          <div class="preview-img-box" onclick="extractFromSample('#006A6A', '#4A6363', '#4B607C')" style="background-image: url('https://picsum.photos/id/1015/400/200');">
+            <span>苍翠森林 (Forest)</span>
+          </div>
+          <div class="preview-img-box" onclick="extractFromSample('#825500', '#6F5B40', '#5B6400')" style="background-image: url('https://picsum.photos/id/1040/400/200');">
+            <span>秋日麦浪 (Autumn)</span>
+          </div>
+          <div class="preview-img-box" onclick="extractFromSample('#8E4957', '#74565F', '#7C5635')" style="background-image: url('https://picsum.photos/id/1025/400/200');">
+            <span>玫瑰暮光 (Sunset)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 局部双主题隔离容器对比 -->
+      <div style="margin-top: 24px;">
+        <h4 style="margin: 0 0 12px 0; font-size: 14px;">局部双主题隔离容器 (Local Theme Isolation):</h4>
+        <div class="component-grid">
+          <div class="demo-card" style="margin: 0; --mdc-theme-primary: #006A6A; --mdc-theme-secondary: #006874; --mdc-theme-surface-container: #E6F5F5; border-color: #006A6A;">
+            <h4 style="margin: 0 0 6px 0; color: #006A6A;">独立容器 A (翡翠绿主题)</h4>
+            <p style="font-size: 12px; opacity: 0.85;">该容器内部独立隔离，不随全局主题变化而受污染。</p>
+            <button class="mdc-button mdc-button--raised" style="background-color: #006A6A;">独立按钮</button>
+          </div>
+
+          <div class="demo-card" style="margin: 0; --mdc-theme-primary: #825500; --mdc-theme-secondary: #8C5000; --mdc-theme-surface-container: #FFF8F0; border-color: #825500;">
+            <h4 style="margin: 0 0 6px 0; color: #825500;">独立容器 B (暖琥珀主题)</h4>
+            <p style="font-size: 12px; opacity: 0.85;">支持局部独立定义不同的 CAM16/HCT 种子与表面层级。</p>
+            <button class="mdc-button mdc-button--raised" style="background-color: #825500;">独立按钮</button>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </main>
 
-  <!-- JavaScript 交互脚本 -->
+  <!-- 轻量提示 Snackbar -->
+  <div id="demoSnackbar" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #323232; color: #fff; padding: 12px 24px; font-size: 13px; z-index: 99999; display: flex; align-items: center; gap: 16px; box-shadow: 0 3px 8px rgba(0,0,0,0.3); transition: transform 0.3s cubic-bezier(0,0,0.2,1);">
+    <span>MDC-Web 纯直角与莫奈动态色彩已就绪！</span>
+    <button class="mdc-button mdc-button--dense" onclick="hideDemoToast()" style="color: var(--mdc-theme-primary); font-weight: bold; min-width: auto; padding: 0;">知道了</button>
+  </div>
+
+  <style>
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+  </style>
+
+  <!-- 引入 Monet MDC 核心算法脚本与 MDC 官方 JS -->
+  <script src="/dist/monet-mdc.iife.js"></script>
   <script src="https://unpkg.com/material-components-web@0.34.1/dist/material-components-web.min.js"></script>
   <script>
     // 实例化 MDC 组件
     if (window.mdc && mdc.autoInit) mdc.autoInit();
 
-    // 暗色模式切换
-    let isDark = false;
+    // 暗色模式状态
+    let isDarkMode = false;
     const btnToggleDark = document.getElementById('btn-toggle-dark');
     btnToggleDark.onclick = () => {
-      isDark = !isDark;
-      if (isDark) {
+      isDarkMode = !isDarkMode;
+      if (isDarkMode) {
         document.body.classList.add('dark-theme');
       } else {
         document.body.classList.remove('dark-theme');
       }
+      applyMonetTheme();
     };
 
     // =========================================================================
-    // 莫奈 3 步水波纹调色盘引擎 (Primary -> Secondary -> Tertiary)
+    // 真实莫奈 (Material You / CAM16 & HCT) 色彩调色盘矩阵 (18 经典种子)
     // =========================================================================
-    const MD_THEMES = [
-      { id: 'red', name: 'Red 赤红', color: '#F44336', text: '#FFFFFF' },
-      { id: 'pink', name: 'Pink 粉红', color: '#E91E63', text: '#FFFFFF' },
-      { id: 'purple', name: 'Purple 紫色', color: '#9C27B0', text: '#FFFFFF' },
-      { id: 'deep-purple', name: 'DeepPurple 深紫', color: '#673AB7', text: '#FFFFFF' },
-      { id: 'indigo', name: 'Indigo 靛蓝', color: '#3F51B5', text: '#FFFFFF' },
-      { id: 'blue', name: 'Blue 蓝色', color: '#2196F3', text: '#FFFFFF' },
-      { id: 'light-blue', name: 'LightBlue 浅蓝', color: '#03A9F4', text: '#FFFFFF' },
-      { id: 'cyan', name: 'Cyan 青色', color: '#00BCD4', text: '#FFFFFF' },
-      { id: 'teal', name: 'Teal 鸭绿', color: '#009688', text: '#FFFFFF' },
-      { id: 'green', name: 'Green 绿色', color: '#4CAF50', text: '#FFFFFF' },
-      { id: 'light-green', name: 'LightGreen 浅绿', color: '#8BC34A', text: '#000000' },
-      { id: 'lime', name: 'Lime 柠檬绿', color: '#CDDC39', text: '#000000' },
-      { id: 'yellow', name: 'Yellow 黄色', color: '#FFEB3B', text: '#000000' },
-      { id: 'amber', name: 'Amber 琥珀', color: '#FFC107', text: '#000000' },
-      { id: 'orange', name: 'Orange 橙色', color: '#FF9800', text: '#000000' },
-      { id: 'deep-orange', name: 'DeepOrange 深橙', color: '#FF5722', text: '#FFFFFF' },
-      { id: 'brown', name: 'Brown 棕色', color: '#795548', text: '#FFFFFF' },
-      { id: 'grey', name: 'Grey 灰色', color: '#9E9E9E', text: '#FFFFFF' },
-      { id: 'blue-grey', name: 'BlueGrey 蓝灰', color: '#607D8B', text: '#FFFFFF' }
+    const MONET_PALETTES = [
+      { name: '薰衣紫 (Pixel Default)', color: '#6750A4', text: '#FFFFFF' },
+      { name: '莫奈靛蓝 (Indigo)', color: '#4F5B92', text: '#FFFFFF' },
+      { name: '极光蔚蓝 (Cyan)', color: '#006874', text: '#FFFFFF' },
+      { name: '鼠尾草青 (Sage Teal)', color: '#006A6A', text: '#FFFFFF' },
+      { name: '深林翠绿 (Forest)', color: '#386A20', text: '#FFFFFF' },
+      { name: '橄榄青绿 (Olive)', color: '#5B6400', text: '#FFFFFF' },
+      { name: '暖阳金珀 (Amber)', color: '#765B00', text: '#FFFFFF' },
+      { name: '夕照暖橙 (Orange)', color: '#8C5000', text: '#FFFFFF' },
+      { name: '陶瓦砖红 (Terracotta)', color: '#8B502A', text: '#FFFFFF' },
+      { name: '绯红赤玉 (Crimson)', color: '#904A42', text: '#FFFFFF' },
+      { name: '玫瑰暮粉 (Rose)', color: '#984061', text: '#FFFFFF' },
+      { name: '锦葵凝紫 (Mauve)', color: '#824C71', text: '#FFFFFF' },
+      { name: '黑莓李紫 (Plum)', color: '#794F69', text: '#FFFFFF' },
+      { name: '板岩冷蓝 (Slate)', color: '#525F7F', text: '#FFFFFF' },
+      { name: '薄荷冰绿 (Mint)', color: '#1B6C5D', text: '#FFFFFF' },
+      { name: '深海湛蓝 (Ocean)', color: '#0061A4', text: '#FFFFFF' },
+      { name: '流沙雅金 (Sand Gold)', color: '#715B2F', text: '#FFFFFF' },
+      { name: '素雅冷灰 (Neutral)', color: '#5E5E62', text: '#FFFFFF' }
     ];
 
     let currentStep = 1; // 1: Primary, 2: Secondary, 3: Tertiary
-    let selectedPrimary = '#3F51B5';
+    let selectedPrimary = '#6750A4';
     let selectedSecondary = null;
     let selectedTertiary = null;
     let isThemePickerOpen = false;
@@ -786,19 +1226,19 @@
 
       if (currentStep === 1) {
         stepTitle.textContent = '第 1 步: 选择主色 (Primary)';
-        stepSub.textContent = '点击色块设置核心主色调';
+        stepSub.textContent = '点击莫奈色块设置核心主基调';
       } else if (currentStep === 2) {
         stepTitle.textContent = '第 2 步: 选择次色 (Secondary)';
-        stepSub.textContent = '可选择次色，或点击跳过自动协同';
+        stepSub.textContent = '选择次色，或点击跳过算法协同';
       } else {
         stepTitle.textContent = '第 3 步: 选择第三色 (Tertiary)';
-        stepSub.textContent = '可选择第三色，或点击跳过完成取色';
+        stepSub.textContent = '选择第三色，或点击跳过算法协同';
       }
 
-      // 渲染 19 种标准 Material 色块
-      MD_THEMES.forEach(t => {
+      // 渲染 18 种正统 Monet Material You 纯正色块
+      MONET_PALETTES.forEach(t => {
         const tile = document.createElement('div');
-        tile.className = 'theme-tile';
+        tile.className = 'theme-tile' + (t.color.toUpperCase() === selectedPrimary.toUpperCase() && currentStep === 1 ? ' active' : '');
         tile.style.backgroundColor = t.color;
         tile.style.color = t.text;
         tile.textContent = t.name;
@@ -807,18 +1247,18 @@
         grid.appendChild(tile);
       });
 
-      // 最后一个色块：Step 1 时为自定义/重置，Step 2 和 Step 3 时为“跳过 (算法协同)”
+      // 最后一个色块：Step 1 时为默认黑灰，Step 2 和 Step 3 时为“跳过 (算法协同)”
       const specialTile = document.createElement('div');
       specialTile.className = 'theme-tile';
       if (currentStep === 1) {
-        specialTile.style.backgroundColor = '#212121';
+        specialTile.style.backgroundColor = '#1D1B20';
         specialTile.style.color = '#FFFFFF';
-        specialTile.textContent = 'None 默认黑灰';
-        specialTile.onclick = () => handleSelectColor('#212121');
+        specialTile.textContent = '默认黑灰 (Neutral)';
+        specialTile.onclick = () => handleSelectColor('#1D1B20');
       } else {
         specialTile.style.backgroundColor = '#FFFFFF';
-        specialTile.style.color = '#212121';
-        specialTile.style.border = '1px dashed #9E9E9E';
+        specialTile.style.color = '#1D1B20';
+        specialTile.style.border = '1px dashed #79747E';
         specialTile.textContent = '⏩ 跳过 (算法协同)';
         specialTile.onclick = () => handleSkipStep();
       }
@@ -852,21 +1292,68 @@
     }
 
     function finishMonetSelection() {
-      // 应用选定的色彩
-      document.documentElement.style.setProperty('--mdc-theme-primary', selectedPrimary);
-      if (selectedSecondary) {
-        document.documentElement.style.setProperty('--mdc-theme-secondary', selectedSecondary);
+      applyMonetTheme();
+      setTimeout(closeThemePicker, 180);
+    }
+
+    function extractFromSample(p, s, t) {
+      selectedPrimary = p;
+      selectedSecondary = s;
+      selectedTertiary = t;
+      applyMonetTheme();
+      showDemoToast(`已成功从壁纸提取并应用莫奈三色: P(${p})`);
+    }
+
+    function renderTonalSwatches(theme) {
+      const container = document.getElementById('monet-swatches-container');
+      if (!container || !theme || !theme.tones) return;
+      container.innerHTML = '';
+
+      function buildRow(title, toneMap) {
+        const row = document.createElement('div');
+        row.className = 'palette-row';
+        row.innerHTML = `<div style="font-size: 12px; font-weight: 600;">${title}</div>`;
+        const swatches = document.createElement('div');
+        swatches.className = 'palette-swatches';
+        for (const [deg, hex] of Object.entries(toneMap)) {
+          const sw = document.createElement('div');
+          sw.className = 'palette-swatch';
+          sw.style.backgroundColor = hex;
+          sw.title = `${deg}: ${hex}`;
+          sw.innerHTML = `<span>${deg}</span><span style="font-size:8px; opacity:0.85;">${hex.slice(1,4)}</span>`;
+          swatches.appendChild(sw);
+        }
+        row.appendChild(swatches);
+        return row;
       }
-      if (selectedTertiary) {
-        document.documentElement.style.setProperty('--mdc-theme-tertiary', selectedTertiary);
+
+      container.appendChild(buildRow('Primary 主色 50~900 全色阶 (CAM16):', theme.tones.primary));
+      container.appendChild(buildRow('Secondary 次色 50~900 全色阶:', theme.tones.secondary));
+      container.appendChild(buildRow('Tertiary 第三色 50~900 全色阶:', theme.tones.tertiary));
+    }
+
+    function applyMonetTheme() {
+      let theme;
+      if (window.MdcMonet && MdcMonet.MdcMonetEngine) {
+        theme = MdcMonet.MdcMonetEngine.applyTheme({
+          primary: selectedPrimary,
+          secondary: selectedSecondary,
+          tertiary: selectedTertiary
+        }, {
+          target: document.documentElement,
+          dark: isDarkMode,
+          variant: 'tonal_spot'
+        });
+        renderTonalSwatches(theme);
+      } else {
+        document.documentElement.style.setProperty('--mdc-theme-primary', selectedPrimary);
+        if (selectedSecondary) document.documentElement.style.setProperty('--mdc-theme-secondary', selectedSecondary);
+        if (selectedTertiary) document.documentElement.style.setProperty('--mdc-theme-tertiary', selectedTertiary);
       }
 
       document.getElementById('label-cur-p').textContent = selectedPrimary;
       document.getElementById('label-cur-s').textContent = selectedSecondary || '算法协同';
       document.getElementById('label-cur-t').textContent = selectedTertiary || '算法协同';
-
-      // 退出调色盘
-      setTimeout(closeThemePicker, 180);
     }
 
     function openThemePicker(event) {
@@ -907,6 +1394,345 @@
         isThemePickerOpen = false;
       }, 240);
     }
+
+    // 选项卡切换
+    function switchTab(num) {
+      for (let i = 1; i <= 3; i++) {
+        const btn = document.getElementById(`tab-btn-${i}`);
+        const content = document.getElementById(`tab-content-${i}`);
+        if (i === num) {
+          btn.classList.add('mdc-tab--active');
+          btn.style.color = 'var(--mdc-theme-primary)';
+          content.style.display = 'block';
+        } else {
+          btn.classList.remove('mdc-tab--active');
+          btn.style.color = 'inherit';
+          content.style.display = 'none';
+        }
+      }
+    }
+
+    // 手风琴折叠展开
+    function toggleExpansion(el) {
+      el.classList.toggle('is-open');
+    }
+
+  <!-- 移动端侧边栏半透明遮罩与左下角悬浮按钮 -->
+  <div id="mobileDrawerBackdrop" class="mobile-drawer-backdrop" onclick="closeMobileDrawer()"></div>
+  <button id="btnMobileFloatingMenu" class="mobile-floating-menu-btn mdc-fab" onclick="openMobileDrawer()" title="打开侧边栏菜单">
+    <i class="material-icons mdc-fab__icon">menu</i>
+  </button>
+
+  <!-- 轻量提示 Snackbar -->
+  <div id="demoSnackbar" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #323232; color: #fff; padding: 12px 24px; font-size: 13px; z-index: 99999; display: flex; align-items: center; gap: 16px; box-shadow: 0 3px 8px rgba(0,0,0,0.3); transition: transform 0.3s cubic-bezier(0,0,0.2,1);">
+    <span>MDC-Web 纯直角与莫奈动态色彩已就绪！</span>
+    <button class="mdc-button mdc-button--dense" onclick="hideDemoToast()" style="color: var(--mdc-theme-primary); font-weight: bold; min-width: auto; padding: 0;">知道了</button>
+  </div>
+
+  <style>
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+  </style>
+
+  <!-- 引入 Monet MDC 核心算法脚本与 MDC 官方 JS -->
+  <script src="/dist/monet-mdc.iife.js"></script>
+  <script src="https://unpkg.com/material-components-web@0.34.1/dist/material-components-web.min.js"></script>
+  <script>
+    // 实例化 MDC 组件
+    if (window.mdc && mdc.autoInit) mdc.autoInit();
+
+    // 暗色模式状态
+    let isDarkMode = false;
+    const btnToggleDark = document.getElementById('btn-toggle-dark');
+    btnToggleDark.onclick = () => {
+      isDarkMode = !isDarkMode;
+      if (isDarkMode) {
+        document.body.classList.add('dark-theme');
+      } else {
+        document.body.classList.remove('dark-theme');
+      }
+      applyMonetTheme();
+    };
+
+    // =========================================================================
+    // 移动端交互系统：左边缘右滑唤出 + 左下角悬浮按钮 (静止 N 秒浮现)
+    // =========================================================================
+    let idleTimeoutSeconds = 2.5;
+    let idleTimer = null;
+
+    function resetIdleTimer() {
+      document.body.classList.remove('page-is-idle');
+      if (idleTimer) clearTimeout(idleTimer);
+
+      idleTimer = setTimeout(() => {
+        document.body.classList.add('page-is-idle');
+      }, idleTimeoutSeconds * 1000);
+    }
+
+    ['mousemove', 'mousedown', 'keydown', 'touchstart', 'touchmove', 'scroll', 'wheel'].forEach(evt => {
+      window.addEventListener(evt, resetIdleTimer, { passive: true });
+    });
+    resetIdleTimer();
+
+    function openMobileDrawer() {
+      const rail = document.getElementById('app-rail');
+      const backdrop = document.getElementById('mobileDrawerBackdrop');
+      rail.classList.add('mobile-open');
+      backdrop.classList.add('is-active');
+    }
+
+    function closeMobileDrawer() {
+      const rail = document.getElementById('app-rail');
+      const backdrop = document.getElementById('mobileDrawerBackdrop');
+      rail.classList.remove('mobile-open');
+      backdrop.classList.remove('is-active');
+      closeThemePicker();
+    }
+
+    // 移动端边缘滑动唤出与收起手势
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    window.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = Math.abs(touchEndY - touchStartY);
+
+      // 从屏幕左边缘 (< 35px) 向右滑动 > 45px 唤出侧边栏
+      if (touchStartX < 35 && deltaX > 45 && deltaY < 80) {
+        openMobileDrawer();
+      }
+      // 侧边栏开启状态下，向左滑动 > 50px 收起侧边栏
+      else if (touchStartX > 40 && deltaX < -50 && deltaY < 80) {
+        const rail = document.getElementById('app-rail');
+        if (rail.classList.contains('mobile-open')) {
+          closeMobileDrawer();
+        }
+      }
+    }, { passive: true });
+
+    // 点击侧边栏内的导航链接时在移动端自动收起
+    document.querySelectorAll('.rail-nav-item[href]').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth < 600) {
+          closeMobileDrawer();
+        }
+      });
+    });
+
+    // =========================================================================
+    // 真实莫奈 (Material You / CAM16 & HCT) 色彩调色盘矩阵 (18 经典种子)
+    // =========================================================================
+    const MONET_PALETTES = [
+      { name: '薰衣紫 (Pixel Default)', color: '#6750A4', text: '#FFFFFF' },
+      { name: '莫奈靛蓝 (Indigo)', color: '#4F5B92', text: '#FFFFFF' },
+      { name: '极光蔚蓝 (Cyan)', color: '#006874', text: '#FFFFFF' },
+      { name: '鼠尾草青 (Sage Teal)', color: '#006A6A', text: '#FFFFFF' },
+      { name: '深林翠绿 (Forest)', color: '#386A20', text: '#FFFFFF' },
+      { name: '橄榄青绿 (Olive)', color: '#5B6400', text: '#FFFFFF' },
+      { name: '暖阳金珀 (Amber)', color: '#765B00', text: '#FFFFFF' },
+      { name: '夕照暖橙 (Orange)', color: '#8C5000', text: '#FFFFFF' },
+      { name: '陶瓦砖红 (Terracotta)', color: '#8B502A', text: '#FFFFFF' },
+      { name: '绯红赤玉 (Crimson)', color: '#904A42', text: '#FFFFFF' },
+      { name: '玫瑰暮粉 (Rose)', color: '#984061', text: '#FFFFFF' },
+      { name: '锦葵凝紫 (Mauve)', color: '#824C71', text: '#FFFFFF' },
+      { name: '黑莓李紫 (Plum)', color: '#794F69', text: '#FFFFFF' },
+      { name: '板岩冷蓝 (Slate)', color: '#525F7F', text: '#FFFFFF' },
+      { name: '薄荷冰绿 (Mint)', color: '#1B6C5D', text: '#FFFFFF' },
+      { name: '深海湛蓝 (Ocean)', color: '#0061A4', text: '#FFFFFF' },
+      { name: '流沙雅金 (Sand Gold)', color: '#715B2F', text: '#FFFFFF' },
+      { name: '素雅冷灰 (Neutral)', color: '#5E5E62', text: '#FFFFFF' }
+    ];
+
+    let currentStep = 1; // 1: Primary, 2: Secondary, 3: Tertiary
+    let selectedPrimary = '#6750A4';
+    let selectedSecondary = null;
+    let selectedTertiary = null;
+    let isThemePickerOpen = false;
+
+    function renderThemeTiles() {
+      const grid = document.getElementById('themeGrid');
+      const stepTitle = document.getElementById('pickerStepTitle');
+      const stepSub = document.getElementById('pickerStepSub');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      if (currentStep === 1) {
+        stepTitle.textContent = '第 1 步: 选择主色 (Primary)';
+        stepSub.textContent = '点击莫奈色块设置核心主基调';
+      } else if (currentStep === 2) {
+        stepTitle.textContent = '第 2 步: 选择次色 (Secondary)';
+        stepSub.textContent = '选择次色，或点击跳过算法协同';
+      } else {
+        stepTitle.textContent = '第 3 步: 选择第三色 (Tertiary)';
+        stepSub.textContent = '选择第三色，或点击跳过算法协同';
+      }
+
+      // 渲染 18 种正统 Monet Material You 纯正色块
+      MONET_PALETTES.forEach(t => {
+        const tile = document.createElement('div');
+        tile.className = 'theme-tile' + (t.color.toUpperCase() === selectedPrimary.toUpperCase() && currentStep === 1 ? ' active' : '');
+        tile.style.backgroundColor = t.color;
+        tile.style.color = t.text;
+        tile.textContent = t.name;
+
+        tile.onclick = () => handleSelectColor(t.color);
+        grid.appendChild(tile);
+      });
+
+      // 最后一个色块：Step 1 时为默认黑灰，Step 2 和 Step 3 时为“跳过 (算法协同)”
+      const specialTile = document.createElement('div');
+      specialTile.className = 'theme-tile';
+      if (currentStep === 1) {
+        specialTile.style.backgroundColor = '#1D1B20';
+        specialTile.style.color = '#FFFFFF';
+        specialTile.textContent = '默认黑灰 (Neutral)';
+        specialTile.onclick = () => handleSelectColor('#1D1B20');
+      } else {
+        specialTile.style.backgroundColor = '#FFFFFF';
+        specialTile.style.color = '#1D1B20';
+        specialTile.style.border = '1px dashed #79747E';
+        specialTile.textContent = '⏩ 跳过 (算法协同)';
+        specialTile.onclick = () => handleSkipStep();
+      }
+      grid.appendChild(specialTile);
+    }
+
+    function handleSelectColor(hex) {
+      if (currentStep === 1) {
+        selectedPrimary = hex;
+        currentStep = 2;
+        renderThemeTiles();
+      } else if (currentStep === 2) {
+        selectedSecondary = hex;
+        currentStep = 3;
+        renderThemeTiles();
+      } else {
+        selectedTertiary = hex;
+        finishMonetSelection();
+      }
+    }
+
+    function handleSkipStep() {
+      if (currentStep === 2) {
+        selectedSecondary = null;
+        currentStep = 3;
+        renderThemeTiles();
+      } else if (currentStep === 3) {
+        selectedTertiary = null;
+        finishMonetSelection();
+      }
+    }
+
+    function finishMonetSelection() {
+      applyMonetTheme();
+      setTimeout(closeThemePicker, 180);
+    }
+
+    function extractFromSample(p, s, t) {
+      selectedPrimary = p;
+      selectedSecondary = s;
+      selectedTertiary = t;
+      applyMonetTheme();
+      showDemoToast(`已成功从壁纸提取并应用莫奈三色: P(${p})`);
+    }
+
+    function renderTonalSwatches(theme) {
+      const container = document.getElementById('monet-swatches-container');
+      if (!container || !theme || !theme.tones) return;
+      container.innerHTML = '';
+
+      function buildRow(title, toneMap) {
+        const row = document.createElement('div');
+        row.className = 'palette-row';
+        row.innerHTML = `<div style="font-size: 12px; font-weight: 600;">${title}</div>`;
+        const swatches = document.createElement('div');
+        swatches.className = 'palette-swatches';
+        for (const [deg, hex] of Object.entries(toneMap)) {
+          const sw = document.createElement('div');
+          sw.className = 'palette-swatch';
+          sw.style.backgroundColor = hex;
+          sw.title = `${deg}: ${hex}`;
+          sw.innerHTML = `<span>${deg}</span><span style="font-size:8px; opacity:0.85;">${hex.slice(1,4)}</span>`;
+          swatches.appendChild(sw);
+        }
+        row.appendChild(swatches);
+        return row;
+      }
+
+      container.appendChild(buildRow('Primary 主色 50~900 全色阶 (CAM16):', theme.tones.primary));
+      container.appendChild(buildRow('Secondary 次色 50~900 全色阶:', theme.tones.secondary));
+      container.appendChild(buildRow('Tertiary 第三色 50~900 全色阶:', theme.tones.tertiary));
+    }
+
+    function applyMonetTheme() {
+      let theme;
+      if (window.MdcMonet && MdcMonet.MdcMonetEngine) {
+        theme = MdcMonet.MdcMonetEngine.applyTheme({
+          primary: selectedPrimary,
+          secondary: selectedSecondary,
+          tertiary: selectedTertiary
+        }, {
+          target: document.documentElement,
+          dark: isDarkMode,
+          variant: 'tonal_spot'
+        });
+        renderTonalSwatches(theme);
+      } else {
+        document.documentElement.style.setProperty('--mdc-theme-primary', selectedPrimary);
+        if (selectedSecondary) document.documentElement.style.setProperty('--mdc-theme-secondary', selectedSecondary);
+        if (selectedTertiary) document.documentElement.style.setProperty('--mdc-theme-tertiary', selectedTertiary);
+      }
+
+      document.getElementById('label-cur-p').textContent = selectedPrimary;
+      document.getElementById('label-cur-s').textContent = selectedSecondary || '算法协同';
+      document.getElementById('label-cur-t').textContent = selectedTertiary || '算法协同';
+    }
+
+    function openThemePicker(event) {
+      const navSec = document.getElementById('drawerNavSection');
+      const panel = document.getElementById('themePickerPanel');
+      const rail = document.getElementById('app-rail');
+      if (!navSec || !panel) return;
+
+      currentStep = 1;
+      selectedSecondary = null;
+      selectedTertiary = null;
+      renderThemeTiles();
+
+      rail.classList.add('is-expanded');
+      navSec.classList.remove('anim-in');
+      navSec.classList.add('anim-out');
+
+      panel.style.display = 'flex';
+      panel.classList.remove('anim-out');
+      panel.classList.add('anim-in');
+      isThemePickerOpen = true;
+    }
+
+    function closeThemePicker() {
+      const navSec = document.getElementById('drawerNavSection');
+      const panel = document.getElementById('themePickerPanel');
+      const rail = document.getElementById('app-rail');
+      if (!navSec || !panel) return;
+
+      panel.classList.remove('anim-in');
+      panel.classList.add('anim-out');
+
+      setTimeout(() => {
+        panel.style.display = 'none';
+        navSec.classList.remove('anim-out');
+        navSec.classList.add('anim-in');
+        rail.classList.remove('is-expanded');
+        isThemePickerOpen = false;
+      }, 240);
+    }
+
   </script>
 </body>
 </html>
