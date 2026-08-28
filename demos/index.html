@@ -890,21 +890,6 @@
       --mdc-theme-on-surface: #e6e1e5;
       --mdc-theme-surface-container: #131217;
       --mdc-theme-surface-container-high: #0d0c10;
-
-      --mdc-theme-primary: #d0bcff;
-      --mdc-theme-primary-container: #4f378b;
-      --mdc-theme-on-primary: #000000;
-      --mdc-theme-on-primary-container: #eaddff;
-
-      --mdc-theme-secondary: #ccc2dc;
-      --mdc-theme-secondary-container: #4a4458;
-      --mdc-theme-on-secondary: #000000;
-      --mdc-theme-on-secondary-container: #e8def8;
-
-      --mdc-theme-tertiary: #efb8c8;
-      --mdc-theme-tertiary-container: #633b48;
-      --mdc-theme-on-tertiary: #000000;
-      --mdc-theme-on-tertiary-container: #ffd8e4;
     }
     .dark-theme .demo-card {
       background-color: var(--mdc-theme-surface-container, #131217) !important;
@@ -2011,8 +1996,8 @@
       border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     }
     .mdc-time-picker__ampm-btn.is-active {
-      background-color: var(--mdc-theme-tertiary-container, #ffd8e4);
-      color: var(--mdc-theme-on-tertiary-container, #31111d);
+      background-color: var(--mdc-theme-primary);
+      color: var(--mdc-theme-on-primary, #ffffff);
     }
     .mdc-time-picker__dial-container {
       display: flex;
@@ -2155,13 +2140,14 @@
       background-color: #1c1a22;
     }
 
-    /* 🌟 Google M3 官方规范：AM/PM 激活态采用 Tertiary Container 色阶 */
+    /* 🌟 激活的上午/下午按钮采用主色 */
     .dark-theme .mdc-time-picker__ampm-btn.is-active {
-      background-color: var(--mdc-theme-tertiary-container, #633b48) !important;
-      color: var(--mdc-theme-on-tertiary-container, #ffd8e4) !important;
+      background-color: var(--mdc-theme-primary) !important;
+      color: var(--mdc-theme-on-primary, #000000) !important;
     }
 
     /* 🌟 暗色模式下所有被浅色主题主色填充的文字统统变黑色 (#000000) */
+    .dark-theme .mdc-time-picker__ampm-btn.is-active,
     .dark-theme .mdc-time-picker__digit-indicator,
     .dark-theme .mdc-time-picker__digital-content--inverted,
     .dark-theme .mdc-time-picker__digital-content--inverted *,
@@ -3311,7 +3297,7 @@
 
     function resetIdleTimer(e) {
       // 若触摸/点击来自悬浮按钮、侧边栏或遮罩，直接放行，避免瞬间隐藏悬浮按钮
-      if (e && e.target && (e.target.closest('#btnMobileFloatingMenu') || e.target.closest('#app-rail') || e.target.closest('#mobileDrawerBackdrop'))) {
+      if (e && e.target && typeof e.target.closest === 'function' && (e.target.closest('#btnMobileFloatingMenu') || e.target.closest('#app-rail') || e.target.closest('#mobileDrawerBackdrop'))) {
         return;
       }
       document.body.classList.remove('page-is-idle');
@@ -3436,8 +3422,12 @@
       '.md1-tab-item',
       '.mdc-fab'
     ].join(',');
+    const CARD_CONTAINER_SELECTOR = '.demo-card';
+
     // 单一全局事件委托：精准获取最内层目标容器，点按钮仅按钮有涟漪，点卡片空白仅卡片自身有涟漪
     document.addEventListener('pointerdown', (e) => {
+      if (!e || !e.target || typeof e.target.closest !== 'function') return;
+
       // 1. 忽略原生输入框、单选、复选、滑块、自定义选择框以及 Picker 与复合控件区域
       if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-checkbox, .mdc-radio, .mdc-select-custom, .mdc-date-picker, .mdc-time-picker, .expansion-panel')) {
         const btn = e.target.closest('.mdc-button, button, .mdc-date-picker__nav-btn');
@@ -3503,12 +3493,15 @@
       if (!grid) return;
       grid.innerHTML = '';
 
-      if (currentStep === 1) {
+      if (colorPaletteMode === 1) {
+        stepTitle.textContent = '单色模式: 选择核心主色 (Primary)';
+        stepSub.textContent = '点击色块一键应用主色及全套衍生色阶 (严格只允许主色色阶)';
+      } else if (currentStep === 1) {
         stepTitle.textContent = '第 1 步: 选择主色 (Primary)';
         stepSub.textContent = '点击莫奈色块设置核心主基调';
       } else if (currentStep === 2) {
         stepTitle.textContent = '第 2 步: 选择次色 (Secondary)';
-        stepSub.textContent = '选择次色，或点击跳过直接完成';
+        stepSub.textContent = colorPaletteMode === 2 ? '选择次色后即完成双色调配' : '选择次色，或点击跳过直接完成';
       } else {
         stepTitle.textContent = '第 3 步: 选择第三色 (Tertiary)';
         stepSub.textContent = '选择第三色，或点击跳过直接完成';
@@ -3528,7 +3521,7 @@
       // 默认黑白 / 直接跳过 (点击后直接跳过全流程完成取色)
       const specialTile = document.createElement('div');
       specialTile.className = 'theme-tile';
-      if (currentStep === 1) {
+      if (currentStep === 1 || colorPaletteMode === 1) {
         specialTile.style.backgroundColor = '#1D1B20';
         specialTile.style.color = '#FFFFFF';
         specialTile.innerHTML = '<div class="theme-tile-cn">默认黑白</div><div class="theme-tile-en">Black & White</div>';
@@ -3551,12 +3544,25 @@
     }
 
     function handleSelectColor(hex) {
+      if (colorPaletteMode === 1) {
+        // 🌟 单色模式：严格只允许主色的色阶配色，选择主色后直接完成！
+        selectedPrimary = hex;
+        selectedSecondary = hex;
+        selectedTertiary = hex;
+        finishMonetSelection();
+        return;
+      }
       if (currentStep === 1) {
         selectedPrimary = hex;
         currentStep = 2;
         renderThemeTiles();
       } else if (currentStep === 2) {
         selectedSecondary = hex;
+        if (colorPaletteMode === 2) {
+          selectedTertiary = hex;
+          finishMonetSelection();
+          return;
+        }
         currentStep = 3;
         renderThemeTiles();
       } else {
@@ -3665,12 +3671,33 @@
     }
 
     function applyMonetTheme() {
+      // 🌟 1. 色彩维度自由配置与色相收敛
+      const [hp, sp, lp] = hexToHsl(selectedPrimary);
+      
+      let sHex, tHex;
+      if (colorPaletteMode === 1) {
+        // 🌟 单色模式：严格只允许主色的色阶配色，次色与第三色绝对收敛至主色
+        sHex = selectedPrimary;
+        tHex = selectedPrimary;
+      } else if (colorPaletteMode === 2) {
+        // 🌟 双色模式：主色 + 同相低彩度次色，第三色收敛至次色
+        sHex = selectedSecondary || hslToHex(hp, Math.max(16, sp * 0.35), lp);
+        tHex = sHex;
+      } else {
+        // 🌟 三色模式：全套官方三色，第三色产生 +60° 色相偏转
+        sHex = selectedSecondary || hslToHex(hp, Math.max(16, sp * 0.35), lp);
+        tHex = selectedTertiary || hslToHex(hp + 60, Math.min(85, sp * 0.9), lp);
+      }
+
+      const [hs, ss, ls] = hexToHsl(sHex);
+      const [ht, st, lt] = hexToHsl(tHex);
+
       let theme;
       if (window.MdcMonet && MdcMonet.MdcMonetEngine) {
         theme = MdcMonet.MdcMonetEngine.applyTheme({
           primary: selectedPrimary,
-          secondary: selectedSecondary,
-          tertiary: selectedTertiary
+          secondary: sHex,
+          tertiary: tHex
         }, {
           target: document.documentElement,
           dark: isDarkMode,
@@ -3679,105 +3706,117 @@
         renderTonalSwatches(theme);
       }
 
-      // 🌟 1 / 2 / 3 色维度自由配置
-      const [hp, sp, lp] = hexToHsl(selectedPrimary);
-      
-      let sHex, tHex;
-      if (colorPaletteMode === 1) {
-        // 🌟 1色模式：次色与第三色全量收敛为主色，视觉纯净统一
-        sHex = selectedPrimary;
-        tHex = selectedPrimary;
-      } else if (colorPaletteMode === 2) {
-        // 🌟 2色模式：仅使用主色 + 低饱和同相次色，第三色并入次色
-        sHex = selectedSecondary || hslToHex(hp, Math.max(16, sp * 0.35), lp);
-        tHex = sHex;
-      } else {
-        // 🌟 3色模式：官方全套三色，第三色产生 +60° 色相对比
-        sHex = selectedSecondary || hslToHex(hp, Math.max(16, sp * 0.35), lp);
-        tHex = selectedTertiary || hslToHex(hp + 60, Math.min(85, sp * 0.9), lp);
-      }
-
-      const [hs, ss, ls] = hexToHsl(sHex);
-      const [ht, st, lt] = hexToHsl(tHex);
-
-      const target = document.documentElement;
-      target.style.setProperty('--mdc-theme-primary', selectedPrimary);
-      target.style.setProperty('--mdc-theme-secondary', sHex);
-      target.style.setProperty('--mdc-theme-tertiary', tHex);
+      // 🌟 2. 根据亮/暗模式与维度计算完整 M3 色阶
+      let finalPrimary, finalSecondary, finalTertiary;
+      let pCont, onPrimary, onPCont;
+      let sCont, onSecondary, onSCont;
+      let tCont, onTertiary, onTCont;
 
       if (isDarkMode) {
-        const pCont = hslToHex(hp, sp * 0.45, 30);
-        const onPCont = hslToHex(hp, sp * 0.5, 90);
-        target.style.setProperty('--mdc-theme-primary-container', pCont);
-        target.style.setProperty('--mdc-theme-on-primary', '#000000');
-        target.style.setProperty('--mdc-theme-on-primary-container', onPCont);
+        // 🌙 暗色模式：Primary/Secondary/Tertiary 采用 Tone 80 柔和浅色调，保证配合 #000000 文字拥有极致对比度
+        finalPrimary = hslToHex(hp, Math.min(100, Math.max(25, sp * 0.85)), 78);
+        onPrimary = '#000000';
+        pCont = hslToHex(hp, Math.min(100, sp * 0.5), 32);
+        onPCont = hslToHex(hp, Math.min(100, sp * 0.5), 90);
 
         if (colorPaletteMode === 1) {
-          target.style.setProperty('--mdc-theme-secondary-container', pCont);
-          target.style.setProperty('--mdc-theme-on-secondary', '#000000');
-          target.style.setProperty('--mdc-theme-on-secondary-container', onPCont);
+          // 单色模式：次色与第三色全色阶完全使用主色色阶
+          finalSecondary = finalPrimary;
+          onSecondary = onPrimary;
+          sCont = pCont;
+          onSCont = onPCont;
 
-          target.style.setProperty('--mdc-theme-tertiary-container', pCont);
-          target.style.setProperty('--mdc-theme-on-tertiary', '#000000');
-          target.style.setProperty('--mdc-theme-on-tertiary-container', onPCont);
+          finalTertiary = finalPrimary;
+          onTertiary = onPrimary;
+          tCont = pCont;
+          onTCont = onPCont;
         } else if (colorPaletteMode === 2) {
-          const sCont = hslToHex(hs, ss * 0.35, 28);
-          const onSCont = hslToHex(hs, ss * 0.4, 88);
-          target.style.setProperty('--mdc-theme-secondary-container', sCont);
-          target.style.setProperty('--mdc-theme-on-secondary', '#000000');
-          target.style.setProperty('--mdc-theme-on-secondary-container', onSCont);
+          finalSecondary = hslToHex(hs, Math.min(100, Math.max(20, ss * 0.8)), 78);
+          onSecondary = '#000000';
+          sCont = hslToHex(hs, Math.min(100, ss * 0.4), 30);
+          onSCont = hslToHex(hs, Math.min(100, ss * 0.4), 88);
 
-          target.style.setProperty('--mdc-theme-tertiary-container', sCont);
-          target.style.setProperty('--mdc-theme-on-tertiary', '#000000');
-          target.style.setProperty('--mdc-theme-on-tertiary-container', onSCont);
+          finalTertiary = finalSecondary;
+          onTertiary = onSecondary;
+          tCont = sCont;
+          onTCont = onSCont;
         } else {
-          target.style.setProperty('--mdc-theme-secondary-container', hslToHex(hs, ss * 0.35, 28));
-          target.style.setProperty('--mdc-theme-on-secondary', '#000000');
-          target.style.setProperty('--mdc-theme-on-secondary-container', hslToHex(hs, ss * 0.4, 88));
+          finalSecondary = hslToHex(hs, Math.min(100, Math.max(20, ss * 0.8)), 78);
+          onSecondary = '#000000';
+          sCont = hslToHex(hs, Math.min(100, ss * 0.4), 30);
+          onSCont = hslToHex(hs, Math.min(100, ss * 0.4), 88);
 
-          target.style.setProperty('--mdc-theme-tertiary-container', hslToHex(ht, st * 0.4, 28));
-          target.style.setProperty('--mdc-theme-on-tertiary', '#000000');
-          target.style.setProperty('--mdc-theme-on-tertiary-container', hslToHex(ht, st * 0.45, 88));
+          finalTertiary = hslToHex(ht, Math.min(100, Math.max(25, st * 0.85)), 78);
+          onTertiary = '#000000';
+          tCont = hslToHex(ht, Math.min(100, st * 0.4), 30);
+          onTCont = hslToHex(ht, Math.min(100, st * 0.45), 88);
         }
       } else {
-        const pCont = hslToHex(hp, sp * 0.45, 90);
-        const onPCont = hslToHex(hp, sp * 0.6, 15);
-        target.style.setProperty('--mdc-theme-primary-container', pCont);
-        target.style.setProperty('--mdc-theme-on-primary', '#ffffff');
-        target.style.setProperty('--mdc-theme-on-primary-container', onPCont);
+        // ☀️ 亮色模式：主色使用 Tone 40，Container 采用 Tone 90，On-Container 采用 Tone 10
+        finalPrimary = selectedPrimary;
+        onPrimary = '#ffffff';
+        pCont = hslToHex(hp, Math.min(100, sp * 0.45), 90);
+        onPCont = hslToHex(hp, Math.min(100, sp * 0.6), 15);
 
         if (colorPaletteMode === 1) {
-          target.style.setProperty('--mdc-theme-secondary-container', pCont);
-          target.style.setProperty('--mdc-theme-on-secondary', '#ffffff');
-          target.style.setProperty('--mdc-theme-on-secondary-container', onPCont);
+          finalSecondary = finalPrimary;
+          onSecondary = onPrimary;
+          sCont = pCont;
+          onSCont = onPCont;
 
-          target.style.setProperty('--mdc-theme-tertiary-container', pCont);
-          target.style.setProperty('--mdc-theme-on-tertiary', '#ffffff');
-          target.style.setProperty('--mdc-theme-on-tertiary-container', onPCont);
+          finalTertiary = finalPrimary;
+          onTertiary = onPrimary;
+          tCont = pCont;
+          onTCont = onPCont;
         } else if (colorPaletteMode === 2) {
-          const sCont = hslToHex(hs, ss * 0.35, 90);
-          const onSCont = hslToHex(hs, ss * 0.5, 15);
-          target.style.setProperty('--mdc-theme-secondary-container', sCont);
-          target.style.setProperty('--mdc-theme-on-secondary', '#ffffff');
-          target.style.setProperty('--mdc-theme-on-secondary-container', onSCont);
+          finalSecondary = sHex;
+          onSecondary = '#ffffff';
+          sCont = hslToHex(hs, Math.min(100, ss * 0.35), 90);
+          onSCont = hslToHex(hs, Math.min(100, ss * 0.5), 15);
 
-          target.style.setProperty('--mdc-theme-tertiary-container', sCont);
-          target.style.setProperty('--mdc-theme-on-tertiary', '#ffffff');
-          target.style.setProperty('--mdc-theme-on-tertiary-container', onSCont);
+          finalTertiary = finalSecondary;
+          onTertiary = onSecondary;
+          tCont = sCont;
+          onTCont = onSCont;
         } else {
-          target.style.setProperty('--mdc-theme-secondary-container', hslToHex(hs, ss * 0.35, 90));
-          target.style.setProperty('--mdc-theme-on-secondary', '#ffffff');
-          target.style.setProperty('--mdc-theme-on-secondary-container', hslToHex(hs, ss * 0.5, 15));
+          finalSecondary = sHex;
+          onSecondary = '#ffffff';
+          sCont = hslToHex(hs, Math.min(100, ss * 0.35), 90);
+          onSCont = hslToHex(hs, Math.min(100, ss * 0.5), 15);
 
-          target.style.setProperty('--mdc-theme-tertiary-container', hslToHex(ht, st * 0.4, 90));
-          target.style.setProperty('--mdc-theme-on-tertiary', '#ffffff');
-          target.style.setProperty('--mdc-theme-on-tertiary-container', hslToHex(ht, st * 0.5, 15));
+          finalTertiary = tHex;
+          onTertiary = '#ffffff';
+          tCont = hslToHex(ht, Math.min(100, st * 0.4), 90);
+          onTCont = hslToHex(ht, Math.min(100, st * 0.5), 15);
         }
       }
 
-      document.getElementById('label-cur-p').textContent = selectedPrimary;
-      document.getElementById('label-cur-s').textContent = colorPaletteMode === 1 ? '单色统一' : (selectedSecondary || sHex);
-      document.getElementById('label-cur-t').textContent = colorPaletteMode === 1 ? '单色统一' : (colorPaletteMode === 2 ? '并入次色' : (selectedTertiary || tHex));
+      // 🌟 3. 同步注入至 documentElement 与 body，彻底消除暗色模式失效问题
+      [document.documentElement, document.body].forEach(target => {
+        if (!target) return;
+        target.style.setProperty('--mdc-theme-primary', finalPrimary);
+        target.style.setProperty('--mdc-theme-secondary', finalSecondary);
+        target.style.setProperty('--mdc-theme-tertiary', finalTertiary);
+
+        target.style.setProperty('--mdc-theme-primary-container', pCont);
+        target.style.setProperty('--mdc-theme-on-primary', onPrimary);
+        target.style.setProperty('--mdc-theme-on-primary-container', onPCont);
+
+        target.style.setProperty('--mdc-theme-secondary-container', sCont);
+        target.style.setProperty('--mdc-theme-on-secondary', onSecondary);
+        target.style.setProperty('--mdc-theme-on-secondary-container', onSCont);
+
+        target.style.setProperty('--mdc-theme-tertiary-container', tCont);
+        target.style.setProperty('--mdc-theme-on-tertiary', onTertiary);
+        target.style.setProperty('--mdc-theme-on-tertiary-container', onTCont);
+      });
+
+      const pLabel = document.getElementById('label-cur-p');
+      const sLabel = document.getElementById('label-cur-s');
+      const tLabel = document.getElementById('label-cur-t');
+      if (pLabel) pLabel.textContent = finalPrimary;
+      if (sLabel) sLabel.textContent = colorPaletteMode === 1 ? '主色色阶' : finalSecondary;
+      if (tLabel) tLabel.textContent = colorPaletteMode === 1 ? '主色色阶' : (colorPaletteMode === 2 ? '次色色阶' : finalTertiary);
     }
 
     // =========================================================================
@@ -4041,6 +4080,8 @@
     // 外部双竖排标题动态联动系统 (上部 MD3.1 / 下部 安秋，随页面与 Tab 自动变化)
     // =========================================================================
     const titleTopEl = document.getElementById('railVerticalTitleTop');
+    const titleBottomEl = document.getElementById('railVerticalTitleBottom');
+
     // 分段按钮点击切换选中态
     function toggleSegmented(btn) {
       const group = btn.closest('.segmented-button-group');

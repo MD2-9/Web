@@ -339,8 +339,8 @@
     }
 
     &.is-active {
-      background-color: var(--mdc-theme-tertiary-container, #ffd8e4);
-      color: var(--mdc-theme-on-tertiary-container, #31111d);
+      background-color: var(--mdc-theme-primary);
+      color: var(--mdc-theme-on-primary, #ffffff);
     }
   }
 
@@ -506,13 +506,14 @@
     background-color: #1c1a22;
   }
 
-  // 🌟 Google M3 官方规范：AM/PM 激活态采用 Tertiary Container 色阶
+  // 🌟 激活的上午/下午按钮采用主色
   .mdc-time-picker__ampm-btn.is-active {
-    background-color: var(--mdc-theme-tertiary-container, #633b48) !important;
-    color: var(--mdc-theme-on-tertiary-container, #ffd8e4) !important;
+    background-color: var(--mdc-theme-primary) !important;
+    color: var(--mdc-theme-on-primary, #000000) !important;
   }
 
   // 🌟 暗色模式下所有被浅色主题主色填充的文字统统变黑色 (#000000)
+  .mdc-time-picker__ampm-btn.is-active,
   .mdc-time-picker__digit-indicator,
   .mdc-time-picker__digital-content--inverted,
   .mdc-time-picker__digital-content--inverted *,

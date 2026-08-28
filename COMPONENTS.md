@@ -559,8 +559,8 @@ const containerRipple = new MduiOverscrollRipple(document.getElementById('my-scr
    - 24 小时制基准刻度 `[0, 3, 6, 9, 12, 15, 18, 21]`（360°/24 = 15°/小时）；
    - 分钟基准刻度 `[0, 5, 10, 15.. 55]`（360°/60 = 6°/分钟），搭载**方向感知迟滞跟随算法**（顺时针在第 3 格切换，逆时针在第 2 格切换）；
    - 一旦表盘完成过渡转入分钟模式，再次触碰/拖动表盘**绝对锁定在分钟模式，指针与角度精确对应 60 分钟刻度，绝不回退**。
-6. **AM/PM 切换遵循 Google M3 Tertiary Container 官方规范**：
-   - AM/PM 激活态采用第三色容器（`--mdc-theme-tertiary-container` / `--mdc-theme-on-tertiary-container`），与主色时分形成清晰的功能视觉解耦。
+6. **AM/PM 切换采用 Primary 主色规范**：
+   - AM/PM 激活态采用主色（`--mdc-theme-primary` / `--mdc-theme-on-primary`），与时钟核心时分选框保持完全同一的高级视觉焦点。
 
 #### JavaScript 调用示例
 ```javascript
@@ -595,12 +595,12 @@ const datePicker = new MdcDatePicker(document.querySelector('.mdc-date-picker'),
 
 | 色彩角色 | HCT / 算法定位 | 设计语义与职责 | 对应官方组件示例 |
 | :--- | :--- | :--- | :--- |
-| **Primary (主色)** | 核心种子色 (Tone 40/80) | **主导行动点**：页面最高视觉层级、核心控件焦点。 | 凸起按钮 (Raised/Filled)、FAB 悬浮按钮、时钟指针、单选日历选中圆点。 |
+| **Primary (主色)** | 核心种子色 (Tone 40/80) | **主导行动点**：页面最高视觉层级、核心控件焦点。 | 凸起按钮 (Raised/Filled)、FAB 悬浮按钮、时钟指针、单选日历选中圆点、**时钟选择器「上午 / 下午 (AM/PM)」激活项**。 |
 | **Primary Container** | 浅层/深层低强容器 (Tone 90/30) | **主色容器**：核心信息块底色、高调选框。 | 时分数字看板激活底座。 |
 | **Secondary (次色)** | 主色同相、极低彩度 (Muted) | **辅助平衡**：低视觉冲击力，不喧宾夺主，保持与主色和谐共存。 | 次级开关、未激活滑块轨道、复选框。 |
 | **Secondary Container** | 低饱和容器 (Tone 90/30) | **伴生组件激活态**：柔和、耐看的次级高亮。 | **Navigation Rail 激活指示药丸**、**Segmented Button 分段按钮已选项**、**Filter Chips 过滤标签已选项**、日期范围选择区间。 |
-| **Tertiary (第三色)** | 偏移 60°~120° 的补色/对比色 | **对比强调与个性表达**：平衡冷暖感，为独立功能提供视觉分区。 | **TimePicker AM/PM 切换按钮**、通知小红点 / 数字徽标 (Badges)、特殊提示横条。 |
-| **Tertiary Container** | 对比色容器 (Tone 90/30) | **功能分区容器**：与主工作流形成鲜明对比但不过于刺眼。 | **时钟选择器「上午 / 下午 (AM/PM)」激活态**。 |
+| **Tertiary (第三色)** | 偏移 60°~120° 的补色/对比色 | **对比强调与个性表达**：平衡冷暖感，为独立功能提供视觉跳脱感。 | 通知小红点 / 数字徽标 (Badges)、特殊提示横条。 |
+| **Tertiary Container** | 对比色容器 (Tone 90/30) | **功能分区容器**：与主工作流形成鲜明对比但不过于刺眼。 | 警告提示盒、特殊标定卡片。 |
 
 #### 2. 全局 CSS 变量规范
 
