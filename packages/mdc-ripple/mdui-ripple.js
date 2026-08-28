@@ -5,16 +5,13 @@
  */
 
 /**
- * Material 核心动态水波纹涟漪发生器
+ * Material 核心动态水波纹涟漪发生器 (速率已调慢 3/5，支持高精度目标定位)
  * @param {PointerEvent|MouseEvent|TouchEvent} e
  * @param {HTMLElement} container
  */
 export function createRipple(e, container) {
   if (!container) return;
-  // 忽略直接点击在表单控件或原生按钮内部
-  if (e.target && e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-button, button, a')) {
-    return;
-  }
+
   const rect = container.getBoundingClientRect();
   const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : rect.left + rect.width / 2);
   const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : rect.top + rect.height / 2);
@@ -22,6 +19,7 @@ export function createRipple(e, container) {
   const x = clientX - rect.left;
   const y = clientY - rect.top;
 
+  // 计算覆盖当前目标容器所需的最大圆半径
   const radius = Math.hypot(Math.max(x, rect.width - x), Math.max(y, rect.height - y));
 
   const wave = document.createElement('div');
@@ -41,22 +39,33 @@ export function createRipple(e, container) {
     wave.classList.add('is-fading');
     setTimeout(() => {
       if (wave.parentNode) wave.parentNode.removeChild(wave);
-    }, 450);
+    }, 850);
     window.removeEventListener('pointerup', removeRipple);
     window.removeEventListener('pointercancel', removeRipple);
   }
 
   window.addEventListener('pointerup', removeRipple, { once: true });
   window.addEventListener('pointercancel', removeRipple, { once: true });
-  setTimeout(removeRipple, 1200);
+  setTimeout(removeRipple, 2400);
 }
 
 /**
- * 自动为指定选择器容器绑定水波纹
- * @param {string} selector
+ * 全局统一精确水波纹委托绑定器
+ * 优先响应最近子交互元素（如按钮、标签），点击卡片空白区才作用于卡片自身，绝不向上重叠触发
  */
-export function attachRipples(selector = '.demo-card, .preview-img-box, .secondary-overlay-panel .rail-nav-item, .theme-tile, .expansion-panel, .surface-token-chip') {
-  document.querySelectorAll(selector).forEach(el => {
-    el.addEventListener('pointerdown', (e) => createRipple(e, el));
+export function attachRipples() {
+  const RIPPLE_SELECTOR = '.mdc-button, button, .surface-token-chip, .theme-tile, .rail-nav-item, .preview-img-box, .expansion-header, .demo-card';
+
+  window.addEventListener('pointerdown', (e) => {
+    // 忽略表单输入框、单选、复选、滑块本身
+    if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-checkbox, .mdc-radio')) {
+      return;
+    }
+
+    // 查找当前点击坐标下最近的涟漪目标容器（按钮优先于卡片）
+    const target = e.target.closest(RIPPLE_SELECTOR);
+    if (!target) return;
+
+    createRipple(e, target);
   });
 }

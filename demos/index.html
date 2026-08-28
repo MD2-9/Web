@@ -22,9 +22,9 @@
 <head>
   <meta charset="utf-8">
   <title>MDC-Web · 纯直角 & 莫奈动态色 Navigation Rail 全景展厅</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <!-- 本地高可用字体与 Material Icons 官方 CDN 双重高可用库 -->
+  <!-- 本地高可用字体与 Material Icons 官方与本地双重高可用库 -->
+  <link rel="stylesheet" href="../icons/material-icons/material-icons.css">
+  <link rel="stylesheet" href="/icons/material-icons/material-icons.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://unpkg.com/material-design-icons@3.0.1/iconfont/material-icons.css">
   
@@ -499,34 +499,21 @@
       display: none;
     }
 
-    /* 水波纹涟漪扩散动效 */
-    .secondary-overlay-panel.anim-in {
-      display: flex;
-      animation: rippleExpand 0.32s cubic-bezier(0, 0, 0.2, 1) forwards;
-    }
+    /* 二级菜单进入与退出统一使用同款动画 (不作区分) */
+    .secondary-overlay-panel.anim-in,
     .secondary-overlay-panel.anim-out {
-      animation: rippleDismiss 0.22s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      display: flex;
+      animation: overlayUniformAnim 0.25s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
     }
 
-    @keyframes rippleExpand {
+    @keyframes overlayUniformAnim {
       0% {
-        clip-path: circle(0% at 36px 80px);
-        opacity: 0.5;
-      }
-      100% {
-        clip-path: circle(150% at 36px 80px);
-        opacity: 1;
-      }
-    }
-
-    @keyframes rippleDismiss {
-      0% {
-        clip-path: circle(150% at 36px 80px);
-        opacity: 1;
-      }
-      100% {
-        clip-path: circle(0% at 36px 80px);
         opacity: 0;
+        transform: scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
       }
     }
 
@@ -713,7 +700,7 @@
     }
 
     /* =========================================================================
-     * Material 水波纹涟漪动画 (Ripple Effect from Master)
+     * Material 水波纹涟漪动画 (Ripple Effect - 精准范围 ✖ 速率放缓 3/5)
      * ========================================================================= */
     .demo-card,
     .preview-img-box,
@@ -721,7 +708,9 @@
     .rail-nav-item,
     .surface-token-chip,
     .expansion-panel,
-    .theme-tile {
+    .theme-tile,
+    .mdc-button,
+    button {
       position: relative;
       overflow: hidden;
     }
@@ -737,7 +726,7 @@
       background-color: rgba(103, 80, 164, 0.16);
       border-radius: 50% !important;
       transform: translate3d(0, 0, 0) scale(0);
-      transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.45s cubic-bezier(0.2, 0.8, 0.25, 1);
+      transition: transform 1.35s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.85s cubic-bezier(0.2, 0.8, 0.25, 1);
       pointer-events: none;
       will-change: transform, opacity;
     }
@@ -1213,6 +1202,156 @@
     .expansion-arrow {
       transition: transform 0.2s ease;
     }
+
+    /* 分段按钮 (Segmented Button Group) */
+    .segmented-button-group {
+      display: inline-flex;
+      border: 1px solid rgba(0,0,0,0.12);
+      user-select: none;
+    }
+    .dark-theme .segmented-button-group {
+      border-color: rgba(255,255,255,0.12);
+    }
+    .segmented-button {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: inherit;
+      border-right: 1px solid rgba(0,0,0,0.12);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    .dark-theme .segmented-button {
+      border-right-color: rgba(255,255,255,0.12);
+    }
+    .segmented-button:last-child {
+      border-right: none;
+    }
+    .segmented-button.is-selected {
+      background-color: var(--mdc-theme-primary);
+      color: var(--mdc-theme-on-primary, #ffffff);
+    }
+
+    /* 徽标 Badges (Dot & Number) */
+    .badge-container {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .badge-number {
+      position: absolute;
+      top: -4px;
+      right: -6px;
+      background-color: #ba1a1a;
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 10px !important;
+      line-height: 1.2;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      pointer-events: none;
+    }
+    .badge-dot {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 8px;
+      height: 8px;
+      background-color: #ba1a1a;
+      border-radius: 50% !important;
+      pointer-events: none;
+    }
+
+    /* 丰富的悬停工具提示 (Tooltips) */
+    .tooltip-wrapper {
+      position: relative;
+      display: inline-flex;
+    }
+    .tooltip-box {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background-color: #313033;
+      color: #f4eff4;
+      padding: 6px 12px;
+      font-size: 12px;
+      white-space: nowrap;
+      border-radius: 0 !important;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s cubic-bezier(0,0,0.2,1), transform 0.2s cubic-bezier(0,0,0.2,1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+    .tooltip-wrapper:hover .tooltip-box {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* 分隔线 (Dividers) */
+    .mdc-divider {
+      height: 1px;
+      width: 100%;
+      background-color: rgba(0,0,0,0.08);
+      margin: 16px 0;
+    }
+    .dark-theme .mdc-divider {
+      background-color: rgba(255,255,255,0.08);
+    }
+    .mdc-divider--inset {
+      margin-left: 56px;
+      width: calc(100% - 56px);
+    }
+
+    /* 下拉选择器 (Select) */
+    .mdc-custom-select {
+      display: inline-flex;
+      align-items: center;
+      position: relative;
+      background: rgba(0,0,0,0.04);
+      border-bottom: 2px solid var(--mdc-theme-primary);
+      height: 48px;
+      padding: 0 12px;
+    }
+    .dark-theme .mdc-custom-select {
+      background: rgba(255,255,255,0.06);
+    }
+    .mdc-custom-select select {
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 500;
+      color: inherit;
+      outline: none;
+      cursor: pointer;
+      padding-right: 20px;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    /* 排版表格 */
+    .type-scale-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .type-scale-table th, .type-scale-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      text-align: left;
+    }
+    .dark-theme .type-scale-table th, .dark-theme .type-scale-table td {
+      border-bottom-color: rgba(255,255,255,0.06);
+    }
+
   </style>
 </head>
 <body>
@@ -1302,9 +1441,9 @@
           <i class="material-icons rail-item-icon">view_agenda</i>
           <span class="rail-item-text">2. 直角卡片</span>
         </a>
-        <a href="#section-chips" class="rail-nav-item" onclick="handleNavClick()" title="3. 标签与胶囊">
+        <a href="#section-chips" class="rail-nav-item" onclick="handleNavClick()" title="3. 标签与徽标">
           <i class="material-icons rail-item-icon">label</i>
-          <span class="rail-item-text">3. 标签与胶囊</span>
+          <span class="rail-item-text">3. 标签与徽标</span>
         </a>
         <a href="#section-form" class="rail-nav-item" onclick="handleNavClick()" title="4. 表单与开关">
           <i class="material-icons rail-item-icon">toggle_on</i>
@@ -1322,13 +1461,17 @@
           <i class="material-icons rail-item-icon">tab</i>
           <span class="rail-item-text">7. 选项卡 Tab</span>
         </a>
-        <a href="#section-progress" class="rail-nav-item" onclick="handleNavClick()" title="8. 进度与提示">
+        <a href="#section-progress" class="rail-nav-item" onclick="handleNavClick()" title="8. 进度指示器">
           <i class="material-icons rail-item-icon">hourglass_empty</i>
-          <span class="rail-item-text">8. 进度与提示</span>
+          <span class="rail-item-text">8. 进度指示器</span>
         </a>
         <a href="#section-monet-lab" class="rail-nav-item" onclick="handleNavClick()" title="9. 莫奈色彩实验室">
           <i class="material-icons rail-item-icon">wallpaper</i>
           <span class="rail-item-text">9. 莫奈色彩实验室</span>
+        </a>
+        <a href="#section-typography" class="rail-nav-item" onclick="handleNavClick()" title="10. 排版与变量字体">
+          <i class="material-icons rail-item-icon">text_fields</i>
+          <span class="rail-item-text">10. 排版与变量字体</span>
         </a>
       </nav>
 
@@ -1414,93 +1557,102 @@
         <!-- 动态渲染真实 Monet 色阶与跳过选项 -->
       </div>
       <div class="overlay-bottom-bar">
-        <button class="mdc-button mdc-button--outlined" onclick="closeOverlay('themePickerPanel')" style="width: 100%;">
-          <i class="material-icons mdc-button__icon">arrow_back</i>
-          返回一级菜单
-        </button>
-      </div>
-    </div>
-
-  </aside>
-
-  <!-- 主内容区域 (横向标题栏已被完全移除，内容顶部直接呈现) -->
-  <main class="main-container">
-    
-    <!-- 顶部置顶主题总览卡片 (主页) -->
-    <div class="demo-card" id="section-overview">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
-        <h2 style="margin: 0; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-          <i class="material-icons" style="color: var(--mdc-theme-primary);">palette</i>
-          MDC-Web Monet 动态取色控制台 (CAM16 / HCT)
-        </h2>
-        <button class="mdc-button mdc-button--raised" onclick="openOverlay('themePickerPanel')" style="background-color: var(--mdc-theme-primary);">
-          <i class="material-icons mdc-button__icon">color_lens</i>
-          打开水波纹 3 步调色盘
-        </button>
-      </div>
-
-      <p style="font-size: 13px; opacity: 0.85; margin-top: 0;">
-        严守 <strong>MD1 纯直角 (0px) 与 50% 纯圆</strong> 几何骨架。侧边栏以<strong>一级菜单 (主页/目录/设置/关于)</strong>为基准，点击目录或调色盘将以<strong>水波纹涟漪动效</strong>平滑覆盖展开二级功能面板。
-      </p>
-
-      <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
-        <div style="font-size: 13px; padding: 6px 14px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
-          <span>Primary 主色:</span>
-          <strong id="label-cur-p" style="color: var(--mdc-theme-primary);">#6750A4</strong>
-        </div>
-        <div style="font-size: 13px; padding: 6px 14px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
-          <span>Secondary 次色:</span>
-          <strong id="label-cur-s" style="color: var(--mdc-theme-secondary);">#625B71</strong>
-        </div>
-        <div style="font-size: 13px; padding: 6px 14px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
-          <span>Tertiary 第三色:</span>
-          <strong id="label-cur-t" style="color: var(--mdc-theme-tertiary);">#7D5260</strong>
-        </div>
-      </div>
-    </div>
-
-    <!-- 🔘 模块 1: 按钮与 FAB 展厅 -->
+           <!-- 🔘 模块 1: 按钮、FAB、分段按钮与图标按钮 (Buttons & Actions) -->
     <div class="demo-card" id="section-buttons">
-      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
-        1. 按钮与浮动动作按钮矩阵 (Buttons & FAB)
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">touch_app</i>
+        1. 按钮、浮动动作按钮与分段控制矩阵 (Buttons & Actions)
       </h3>
-      <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 16px;">
+      
+      <!-- 基础常用按钮 (Common Buttons) -->
+      <div style="font-size: 12px; font-weight: 600; margin-top: 12px; opacity: 0.85;">基础形态与海拔层级:</div>
+      <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
         <button class="mdc-button mdc-button--raised">
           <i class="material-icons mdc-button__icon">star</i>
           Primary Raised
         </button>
         <button class="mdc-button mdc-button--unelevated" style="background-color: var(--mdc-theme-secondary); color: var(--mdc-theme-on-secondary);">
           <i class="material-icons mdc-button__icon">favorite</i>
-          Secondary Unelevated
+          Secondary Tonal
         </button>
         <button class="mdc-button mdc-button--outlined">
           <i class="material-icons mdc-button__icon">bookmark</i>
           Outlined
         </button>
         <button class="mdc-button">
-          Flat Text Button
+          Flat Text
         </button>
         <button class="mdc-button mdc-button--dense mdc-button--raised">
           Dense Button
         </button>
+        <button class="mdc-button mdc-button--raised" disabled>
+          Disabled
+        </button>
+      </div>
+
+      <!-- 图标按钮与徽标结合 (Icon Buttons & Badges) -->
+      <div style="font-size: 12px; font-weight: 600; margin-top: 16px; opacity: 0.85;">图标按钮与动态徽标 (Icon Buttons & Badges):</div>
+      <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
+        <button class="mdc-button mdc-button--outlined" style="min-width: 44px; padding: 0 10px;" title="收藏">
+          <i class="material-icons">favorite_border</i>
+        </button>
+        <button class="mdc-button mdc-button--outlined" style="min-width: 44px; padding: 0 10px;" title="分享">
+          <i class="material-icons">share</i>
+        </button>
         
-        <!-- 纯圆 FAB 矩阵 -->
+        <!-- 带数字角标的消息图标按钮 -->
+        <div class="badge-container">
+          <button class="mdc-button mdc-button--raised" style="min-width: 44px; padding: 0 10px;" title="未读消息">
+            <i class="material-icons">email</i>
+          </button>
+          <span class="badge-number">3</span>
+        </div>
+
+        <!-- 带红点角标的通知图标按钮 -->
+        <div class="badge-container">
+          <button class="mdc-button mdc-button--outlined" style="min-width: 44px; padding: 0 10px;" title="系统通知">
+            <i class="material-icons">notifications</i>
+          </button>
+          <span class="badge-dot"></span>
+        </div>
+      </div>
+
+      <!-- 分段按钮组 (Segmented Buttons) -->
+      <div style="font-size: 12px; font-weight: 600; margin-top: 16px; opacity: 0.85;">分段控制按钮组 (Segmented Buttons):</div>
+      <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
+        <div class="segmented-button-group" id="demoSegmentedGroup">
+          <button class="segmented-button is-selected" onclick="toggleSegmented(this)">
+            <i class="material-icons" style="font-size: 16px;">view_module</i> 全景视图
+          </button>
+          <button class="segmented-button" onclick="toggleSegmented(this)">
+            <i class="material-icons" style="font-size: 16px;">grid_view</i> 紧凑网格
+          </button>
+          <button class="segmented-button" onclick="toggleSegmented(this)">
+            <i class="material-icons" style="font-size: 16px;">view_list</i> 详细列表
+          </button>
+        </div>
+      </div>
+
+      <!-- 纯圆 FAB 矩阵 (Floating Action Buttons) -->
+      <div style="font-size: 12px; font-weight: 600; margin-top: 16px; opacity: 0.85;">纯圆浮动动作按钮 (FABs):</div>
+      <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
         <button class="mdc-fab" style="border-radius: 50% !important;" title="Standard FAB">
           <i class="material-icons mdc-fab__icon">add</i>
         </button>
         <button class="mdc-fab mdc-fab--mini" style="border-radius: 50% !important;" title="Mini FAB">
           <i class="material-icons mdc-fab__icon">edit</i>
         </button>
-        <button class="mdc-fab mdc-fab--extended" style="border-radius: 28px !important; padding: 0 20px;">
+        <button class="mdc-fab mdc-fab--extended" style="border-radius: 28px !important; padding: 0 20px;" title="Extended FAB">
           <i class="material-icons mdc-fab__icon">send</i>
           <span class="mdc-fab__label">Extended FAB</span>
         </button>
       </div>
     </div>
 
-    <!-- 🃏 模块 2: 直角卡片全形态矩阵 -->
+    <!-- 🃏 模块 2: 直角卡片全形态矩阵 (Cards) -->
     <div class="demo-card" id="section-cards">
-      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">view_agenda</i>
         2. MD1 纯直角卡片全形态矩阵 (Card Grid)
       </h3>
       <div class="component-grid">
@@ -1510,7 +1662,7 @@
             纯直角 Elevated Card
           </h4>
           <p style="font-size: 13px; opacity: 0.8;">边角完全采用 0px 直角，保留经典的 Material 海拔投影层级。</p>
-          <div style="display: flex; gap: 8px;">
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
             <button class="mdc-button mdc-button--dense mdc-button--raised">操作 A</button>
             <button class="mdc-button mdc-button--dense">操作 B</button>
           </div>
@@ -1522,7 +1674,7 @@
             Outlined Card (描边型)
           </h4>
           <p style="font-size: 13px; opacity: 0.8;">采用主色描边，无悬浮投影，呈现极致极简的平整工业质感。</p>
-          <button class="mdc-button mdc-button--dense mdc-button--outlined">查看详情</button>
+          <button class="mdc-button mdc-button--dense mdc-button--outlined" style="margin-top: 12px;">查看详情</button>
         </div>
 
         <div class="demo-card" style="margin: 0; background: var(--mdc-theme-surface-container-high);">
@@ -1531,77 +1683,146 @@
             Surface Container High
           </h4>
           <p style="font-size: 13px; opacity: 0.8;">暗色模式下具备略深于背景的舒适阶度，视觉立体不刺眼。</p>
-          <button class="mdc-button mdc-button--dense" style="padding: 0;">展开参数</button>
+          <button class="mdc-button mdc-button--dense" style="padding: 0; margin-top: 12px;">展开参数</button>
+        </div>
+
+        <!-- 横向图文媒体卡片 (Horizontal Media Card) -->
+        <div class="demo-card" style="margin: 0; grid-column: 1 / -1; display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+          <div style="width: 120px; height: 80px; background-color: var(--mdc-theme-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold;">
+            <i class="material-icons" style="font-size: 32px;">image</i>
+          </div>
+          <div style="flex: 1; min-width: 220px;">
+            <h4 style="margin: 0 0 4px 0;">图文媒体横向复合卡片 (Media Card)</h4>
+            <p style="font-size: 12px; margin: 0; opacity: 0.85;">集成了左侧固定媒体区、文本描述段落与右侧动作响应插槽。</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="mdc-button mdc-button--dense mdc-button--raised">主动作</button>
+            <button class="mdc-button mdc-button--dense mdc-button--outlined">辅助</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 🏷️ 模块 3: 标签与胶囊芯片 (Chips) -->
+    <!-- 🏷️ 模块 3: 标签、胶囊芯片与徽标 (Chips & Badges) -->
     <div class="demo-card" id="section-chips">
-      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
-        3. 标签与胶囊芯片矩阵 (Chips)
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">label</i>
+        3. 标签、胶囊芯片与徽标矩阵 (Chips & Badges)
       </h3>
-      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+      <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 16px;">
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <span style="font-size: 13px; font-weight: 600; width: 100px;">Action Chips:</span>
+          <span style="font-size: 13px; font-weight: 600; width: 120px;">Action Chips:</span>
           <span class="surface-token-chip" style="cursor: pointer;"><i class="material-icons" style="font-size: 16px;">event</i> 添加日程</span>
           <span class="surface-token-chip" style="cursor: pointer;"><i class="material-icons" style="font-size: 16px;">bookmark</i> 收藏项目</span>
           <span class="surface-token-chip" style="cursor: pointer;"><i class="material-icons" style="font-size: 16px;">share</i> 分享链接</span>
         </div>
 
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <span style="font-size: 13px; font-weight: 600; width: 100px;">Filter Chips:</span>
+          <span style="font-size: 13px; font-weight: 600; width: 120px;">Filter Chips:</span>
           <span class="surface-token-chip" style="border-color: var(--mdc-theme-primary); color: var(--mdc-theme-primary); font-weight: 600;"><i class="material-icons" style="font-size: 16px;">check</i> 已启用 Monet</span>
           <span class="surface-token-chip"><i class="material-icons" style="font-size: 16px;">check_box_outline_blank</i> 离线渲染</span>
           <span class="surface-token-chip"><i class="material-icons" style="font-size: 16px;">check_box_outline_blank</i> 变量字体</span>
         </div>
 
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <span style="font-size: 13px; font-weight: 600; width: 100px;">Input Chips:</span>
-          <span class="surface-token-chip">Google Sans Flex <i class="material-icons" style="font-size: 14px; cursor: pointer;">close</i></span>
-          <span class="surface-token-chip">MDC-Web v0.34.1 <i class="material-icons" style="font-size: 14px; cursor: pointer;">close</i></span>
+          <span style="font-size: 13px; font-weight: 600; width: 120px;">Input Chips:</span>
+          <span class="surface-token-chip">Google Sans Flex <i class="material-icons" style="font-size: 14px; cursor: pointer;" onclick="this.parentElement.remove()">close</i></span>
+          <span class="surface-token-chip">MDC-Web v0.34.1 <i class="material-icons" style="font-size: 14px; cursor: pointer;" onclick="this.parentElement.remove()">close</i></span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span style="font-size: 13px; font-weight: 600; width: 120px;">Suggestion Chips:</span>
+          <span class="surface-token-chip" style="border-style: dashed;">Material 3.1</span>
+          <span class="surface-token-chip" style="border-style: dashed;">CAM16 色彩空间</span>
+          <span class="surface-token-chip" style="border-style: dashed;">Android 15 原生</span>
         </div>
       </div>
     </div>
 
-    <!-- 📝 模块 4: 表单与输入控件全矩阵 (纯正 MD1 规范滑块与开关) -->
+    <!-- 📝 模块 4: 表单输入、选择器、滑块与开关 (Form Controls) -->
     <div class="demo-card" id="section-form">
-      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
-        4. 表单、输入框、MD1 纯正滑块与开关 (Form Controls)
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">toggle_on</i>
+        4. 表单输入、选择器、滑块与开关 (Form Controls)
       </h3>
       <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 16px;">
         
-        <!-- 填充型输入框 -->
-        <div class="mdc-text-field" style="width: 220px;">
+        <!-- 填充型输入框 (带图标) -->
+        <div class="mdc-text-field" style="width: 230px; display: inline-flex; align-items: center;">
+          <i class="material-icons" style="margin-left: 12px; margin-right: -4px; color: var(--mdc-theme-primary); font-size: 20px;">edit</i>
           <input type="text" id="input-filled" class="mdc-text-field__input" value="Google Sans Flex">
           <label class="mdc-floating-label mdc-floating-label--float-above" for="input-filled">Filled 输入框</label>
           <div class="mdc-line-ripple"></div>
         </div>
 
-        <!-- 纯直角复选框 -->
-        <div class="mdc-form-field">
-          <div class="mdc-checkbox">
-            <input type="checkbox" class="mdc-checkbox__native-control" id="cb-demo-1" checked/>
-            <div class="mdc-checkbox__background">
-              <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
-              </svg>
-              <div class="mdc-checkbox__mixedmark"></div>
-            </div>
-          </div>
-          <label for="cb-demo-1" style="font-size: 13px;">直角复选框</label>
+        <!-- 描边型输入框 (Outlined Text Field) -->
+        <div style="position: relative; width: 200px; display: inline-flex; align-items: center; border: 1px solid rgba(0,0,0,0.24); padding: 12px 14px; box-sizing: border-box;">
+          <input type="text" value="Outlined Style" style="border: none; background: transparent; outline: none; font-size: 14px; width: 100%; color: inherit;">
+          <label style="position: absolute; top: -8px; left: 10px; background: var(--mdc-theme-surface-container, #fff); padding: 0 4px; font-size: 11px; color: var(--mdc-theme-primary); font-weight: 600;">Outlined 框</label>
         </div>
 
-        <!-- 纯圆单选按钮 -->
-        <div class="mdc-form-field">
-          <div class="mdc-radio">
-            <input class="mdc-radio__native-control" type="radio" id="radio-opt-1" name="radios-demo" checked>
-            <div class="mdc-radio__background">
-              <div class="mdc-radio__outer-circle"></div>
-              <div class="mdc-radio__inner-circle"></div>
+        <!-- 下拉选择器 (Select Component) -->
+        <div class="mdc-custom-select">
+          <select>
+            <option>选项 1: 莫奈算法色阶</option>
+            <option>选项 2: Google 变量字体</option>
+            <option>选项 3: 纯直角骨架体系</option>
+          </select>
+          <i class="material-icons" style="font-size: 20px; pointer-events: none; margin-left: -20px;">arrow_drop_down</i>
+        </div>
+
+        <!-- 纯直角复选框 (Checked, Unchecked, Indeterminate) -->
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <div class="mdc-form-field">
+            <div class="mdc-checkbox">
+              <input type="checkbox" class="mdc-checkbox__native-control" id="cb-demo-1" checked/>
+              <div class="mdc-checkbox__background">
+                <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                  <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                </svg>
+                <div class="mdc-checkbox__mixedmark"></div>
+              </div>
             </div>
+            <label for="cb-demo-1" style="font-size: 13px;">已勾选</label>
           </div>
-          <label for="radio-opt-1" style="font-size: 13px;">单选 A</label>
+
+          <div class="mdc-form-field">
+            <div class="mdc-checkbox">
+              <input type="checkbox" class="mdc-checkbox__native-control" id="cb-demo-2"/>
+              <div class="mdc-checkbox__background">
+                <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                  <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                </svg>
+                <div class="mdc-checkbox__mixedmark"></div>
+              </div>
+            </div>
+            <label for="cb-demo-2" style="font-size: 13px;">未勾选</label>
+          </div>
+        </div>
+
+        <!-- 纯圆单选按钮 (Radio Buttons) -->
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <div class="mdc-form-field">
+            <div class="mdc-radio">
+              <input class="mdc-radio__native-control" type="radio" id="radio-opt-1" name="radios-demo" checked>
+              <div class="mdc-radio__background">
+                <div class="mdc-radio__outer-circle"></div>
+                <div class="mdc-radio__inner-circle"></div>
+              </div>
+            </div>
+            <label for="radio-opt-1" style="font-size: 13px;">单选 A</label>
+          </div>
+
+          <div class="mdc-form-field">
+            <div class="mdc-radio">
+              <input class="mdc-radio__native-control" type="radio" id="radio-opt-2" name="radios-demo">
+              <div class="mdc-radio__background">
+                <div class="mdc-radio__outer-circle"></div>
+                <div class="mdc-radio__inner-circle"></div>
+              </div>
+            </div>
+            <label for="radio-opt-2" style="font-size: 13px;">单选 B</label>
+          </div>
         </div>
 
         <!-- MD1 纯正规范滑动开关 -->
@@ -1632,14 +1853,15 @@
       </div>
     </div>
 
-    <!-- 📂 模块 5: 列表与手风琴折叠面板 -->
+    <!-- 📂 模块 5: 列表、手风琴折叠面板与分隔线 (List, Accordion & Dividers) -->
     <div class="demo-card" id="section-list">
-      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
-        5. 列表与手风琴折叠面板 (List & Accordion)
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">format_list_bulleted</i>
+        5. 列表、手风琴折叠面板与分隔线 (List, Accordion & Dividers)
       </h3>
       <div class="component-grid">
         
-        <!-- 双行列表 -->
+        <!-- 双行列表与开关插槽 -->
         <div class="demo-card" style="margin: 0; padding: 12px;">
           <h4 style="margin: 0 0 8px 0; font-size: 14px;">双行列表项 (Two-line List)</h4>
           <ul class="mdc-list mdc-list--two-line" style="padding: 0;">
@@ -1650,6 +1872,7 @@
                 <span class="mdc-list-item__secondary-text">CAM16 / HCT 色彩空间引擎</span>
               </span>
             </li>
+            <div class="mdc-divider mdc-divider--inset" style="margin: 0;"></div>
             <li class="mdc-list-item" style="height: 56px;">
               <span class="mdc-list-item__graphic material-icons" style="color: var(--mdc-theme-secondary);">dashboard</span>
               <span class="mdc-list-item__text">
@@ -1660,7 +1883,7 @@
           </ul>
         </div>
 
-        <!-- 手风琴折叠面板 -->
+        <!-- 手风琴折叠面板 (Accordion) -->
         <div>
           <div class="expansion-panel is-open" onclick="toggleExpansion(this)">
             <div class="expansion-header">
@@ -1685,10 +1908,11 @@
       </div>
     </div>
 
-    <!-- 💬 模块 6: 直角对话框与浮动菜单 -->
+    <!-- 💬 模块 6: 直角对话框、浮动菜单与工具提示 (Dialogs, Menus & Tooltips) -->
     <div class="demo-card" id="section-dialogs">
-      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
-        6. 直角对话框与菜单交互 (Dialogs & Menus)
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">aspect_ratio</i>
+        6. 直角对话框、浮动菜单与工具提示 (Dialogs, Menus & Tooltips)
       </h3>
       <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 16px;">
         <button class="mdc-button mdc-button--raised" onclick="openDemoDialog()">
@@ -1700,6 +1924,17 @@
           <i class="material-icons mdc-button__icon">notifications</i>
           触发轻量 Snackbar 提示
         </button>
+
+        <!-- 工具提示 (Tooltips) 悬停演示 -->
+        <div class="tooltip-wrapper">
+          <button class="mdc-button mdc-button--unelevated" style="background-color: var(--mdc-theme-secondary); color: var(--mdc-theme-on-secondary);">
+            <i class="material-icons mdc-button__icon">help_outline</i>
+            悬停查看 Tooltip
+          </button>
+          <div class="tooltip-box">
+            这是一个 0px 纯直角 Material 工具提示！
+          </div>
+        </div>
       </div>
 
       <!-- 模拟直角对话框 (弹窗) -->
@@ -1722,7 +1957,8 @@
 
     <!-- 📑 模块 7: 选项卡联动系统 (标准 MD1 Indicator 下划线滑块与平滑切换) -->
     <div class="demo-card" id="section-tabs">
-      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">tab</i>
         7. 选项卡联动系统 (MD1 Tabs & Sliding Indicator)
       </h3>
       
@@ -1760,9 +1996,10 @@
       </div>
     </div>
 
-    <!-- ⏳ 模块 8: 进度指示器与轻量提示 -->
+    <!-- ⏳ 模块 8: 进度指示器与轻量提示 (Progress Indicators) -->
     <div class="demo-card" id="section-progress">
-      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">hourglass_empty</i>
         8. 进度指示器与轻量提示 (Progress & Snackbar)
       </h3>
       <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 16px;">
@@ -1801,7 +2038,8 @@
 
     <!-- 🎨 模块 9: 莫奈色彩全景实验室 -->
     <div class="demo-card" id="section-monet-lab">
-      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px;">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">wallpaper</i>
         9. 莫奈动态色彩全景实验室 (Monet Color Laboratory)
       </h3>
       
@@ -1846,7 +2084,67 @@
           </div>
         </div>
       </div>
+    </div>
 
+    <!-- 🔤 模块 10: 排版字阶与 Google Sans Flex 变量字体 (Typography & Variable Fonts) -->
+    <div class="demo-card" id="section-typography">
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">text_fields</i>
+        10. 排版字阶与 Google Sans Flex 变量字体 (Typography Scale)
+      </h3>
+      
+      <!-- 变量字体粗细实时渐变演示 -->
+      <div style="margin-top: 16px;">
+        <div style="font-size: 12px; font-weight: 600; margin-bottom: 8px;">Google Sans Flex 变量字重演示 (Weight 100 ~ 900):</div>
+        <div style="display: flex; flex-direction: column; gap: 6px; padding: 12px; background: rgba(0,0,0,0.02);">
+          <div style="font-weight: 100; font-size: 15px;">Google Sans Flex 100 Thin · 优雅纤细</div>
+          <div style="font-weight: 300; font-size: 15px;">Google Sans Flex 300 Light · 舒适轻盈</div>
+          <div style="font-weight: 400; font-size: 15px;">Google Sans Flex 400 Regular · 标准正文字体</div>
+          <div style="font-weight: 500; font-size: 15px;">Google Sans Flex 500 Medium · 交互强调与控件</div>
+          <div style="font-weight: 700; font-size: 15px;">Google Sans Flex 700 Bold · 标题与焦点呈现</div>
+          <div style="font-weight: 900; font-size: 15px;">Google Sans Flex 900 Black · 极具冲击力的大标题</div>
+        </div>
+      </div>
+
+      <!-- M3 标准字阶表格 -->
+      <div style="margin-top: 16px; overflow-x: auto;">
+        <table class="type-scale-table">
+          <thead>
+            <tr style="background: rgba(0,0,0,0.04);">
+              <th>字阶名称 (Role)</th>
+              <th>字号 / 行高</th>
+              <th>视觉预览样本</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Display Large</strong></td>
+              <td>57px / 64px</td>
+              <td style="font-size: 28px; font-weight: 400; line-height: 1.2;">Display Lg</td>
+            </tr>
+            <tr>
+              <td><strong>Headline Large</strong></td>
+              <td>32px / 40px</td>
+              <td style="font-size: 20px; font-weight: 400;">Headline Lg 页面主标题</td>
+            </tr>
+            <tr>
+              <td><strong>Title Medium</strong></td>
+              <td>16px / 24px</td>
+              <td style="font-size: 16px; font-weight: 500;">Title Medium 模块标题</td>
+            </tr>
+            <tr>
+              <td><strong>Body Large</strong></td>
+              <td>16px / 24px</td>
+              <td style="font-size: 14px; font-weight: 400;">Body Large 标准正文排版说明</td>
+            </tr>
+            <tr>
+              <td><strong>Label Large</strong></td>
+              <td>14px / 20px</td>
+              <td style="font-size: 13px; font-weight: 600; text-transform: uppercase;">Button Label 控件标签</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
   </main>
@@ -2021,13 +2319,11 @@
     }, { passive: true });
 
     // =========================================================================
-    // Material 核心卡片点击水波纹涟漪动效 (Ripple System from Master)
+    // Material 核心精确水波纹涟漪系统 (速率放缓 3/5 ✖ 严格单目标捕获 ✖ 绝不牵连父容器)
     // =========================================================================
     function createRipple(e, container) {
-      // 忽略直接点击在 input/slider/switch/button/a 自身的情况
-      if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-button, button, a')) {
-        return;
-      }
+      if (!container) return;
+
       const rect = container.getBoundingClientRect();
       const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : rect.left + rect.width / 2);
       const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : rect.top + rect.height / 2);
@@ -2035,7 +2331,7 @@
       const x = clientX - rect.left;
       const y = clientY - rect.top;
       
-      // 计算覆盖整个卡片容器所需的最大圆半径
+      // 计算覆盖当前容器所需的最大圆半径
       const radius = Math.hypot(Math.max(x, rect.width - x), Math.max(y, rect.height - y));
       
       const wave = document.createElement('div');
@@ -2055,21 +2351,41 @@
         wave.classList.add('is-fading');
         setTimeout(() => {
           if (wave.parentNode) wave.parentNode.removeChild(wave);
-        }, 450);
+        }, 850);
         window.removeEventListener('pointerup', removeRipple);
         window.removeEventListener('pointercancel', removeRipple);
       }
       
       window.addEventListener('pointerup', removeRipple, { once: true });
       window.addEventListener('pointercancel', removeRipple, { once: true });
-      setTimeout(removeRipple, 1200);
+      setTimeout(removeRipple, 2400);
     }
 
-    // 绑定水波纹到所有卡片与交互容器
-    document.querySelectorAll('.demo-card, .preview-img-box, .secondary-overlay-panel .rail-nav-item, .theme-tile, .expansion-panel, .surface-token-chip').forEach(el => {
-      el.addEventListener('pointerdown', (e) => {
-        createRipple(e, el);
-      });
+    // 统一精确水波纹委托选择器 (从最内层交互控件到最外层卡片)
+    const RIPPLE_TARGETS_SELECTOR = [
+      '.mdc-button',
+      'button',
+      '.mdc-icon-button',
+      '.segmented-button',
+      '.surface-token-chip',
+      '.theme-tile',
+      '.rail-nav-item',
+      '.preview-img-box',
+      '.expansion-header',
+      '.demo-card'
+    ].join(',');
+
+    // 单一全局事件委托：精准获取最内层目标容器，点按钮仅按钮有涟漪，点卡片空白仅卡片自身有涟漪
+    document.addEventListener('pointerdown', (e) => {
+      // 忽略直接操作原生输入表单控件
+      if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-checkbox, .mdc-radio')) {
+        return;
+      }
+
+      const target = e.target.closest(RIPPLE_TARGETS_SELECTOR);
+      if (!target) return;
+
+      createRipple(e, target);
     });
 
     // =========================================================================
@@ -2419,19 +2735,27 @@
     // 外部双竖排标题动态联动系统 (上部 MD3.1 / 下部 安秋，随页面与 Tab 自动变化)
     // =========================================================================
     const titleTopEl = document.getElementById('railVerticalTitleTop');
-    const titleBottomEl = document.getElementById('railVerticalTitleBottom');
+    // 分段按钮点击切换选中态
+    function toggleSegmented(btn) {
+      const group = btn.closest('.segmented-button-group');
+      if (group) {
+        group.querySelectorAll('.segmented-button').forEach(b => b.classList.remove('is-selected'));
+        btn.classList.add('is-selected');
+      }
+    }
 
     const SECTION_TITLE_MAP = [
       { id: 'section-overview', top: 'MD3.1', bottom: '安秋' },
       { id: 'section-buttons', top: 'MD3.1 · 按钮', bottom: '1. 按钮与 FAB' },
       { id: 'section-cards', top: 'MD3.1 · 卡片', bottom: '2. 直角卡片' },
-      { id: 'section-chips', top: 'MD3.1 · 标签', bottom: '3. 标签与胶囊' },
+      { id: 'section-chips', top: 'MD3.1 · 标签', bottom: '3. 标签与徽标' },
       { id: 'section-form', top: 'MD3.1 · 表单', bottom: '4. 表单与开关' },
       { id: 'section-list', top: 'MD3.1 · 列表', bottom: '5. 列表与手风琴' },
       { id: 'section-dialogs', top: 'MD3.1 · 弹窗', bottom: '6. 对话框与菜单' },
       { id: 'section-tabs', top: 'MD3.1 · 选项卡', bottom: '7. 选项卡 Tab' },
-      { id: 'section-progress', top: 'MD3.1 · 进度', bottom: '8. 进度与提示' },
-      { id: 'section-monet-lab', top: 'MD3.1 · 色彩', bottom: '9. 莫奈实验室' }
+      { id: 'section-progress', top: 'MD3.1 · 进度', bottom: '8. 进度指示器' },
+      { id: 'section-monet-lab', top: 'MD3.1 · 色彩', bottom: '9. 莫奈实验室' },
+      { id: 'section-typography', top: 'MD3.1 · 排版', bottom: '10. 排版与变量字体' }
     ];
 
     function updateDynamicTitles(topText, bottomText) {

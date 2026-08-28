@@ -249,12 +249,9 @@ $mdc-rail-width-expanded: 260px !default;
   z-index: 1005;
   overflow: hidden;
 
-  &.anim-in {
-    animation: overlayFadeIn 0.25s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
-  }
-
+  &.anim-in,
   &.anim-out {
-    animation: overlayFadeOut 0.2s cubic-bezier(0.4, 0, 1, 1) forwards;
+    animation: overlayUniformAnim 0.25s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
   }
 }
 
@@ -262,7 +259,7 @@ $mdc-rail-width-expanded: 260px !default;
   background-color: #19181e;
 }
 
-@keyframes overlayFadeIn {
+@keyframes overlayUniformAnim {
   from {
     opacity: 0;
     transform: scale(0.96);
@@ -270,17 +267,6 @@ $mdc-rail-width-expanded: 260px !default;
   to {
     opacity: 1;
     transform: scale(1);
-  }
-}
-
-@keyframes overlayFadeOut {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.96);
   }
 }
 
