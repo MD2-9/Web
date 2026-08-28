@@ -87,6 +87,28 @@ const drawerAppbarFix = `
   box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12) !important;
 }
 
+/* 纯直角折叠面板 (Expansion Panels) */
+.mdui-panel-item,
+.mdui-panel-item-header,
+.mdui-panel-item-body {
+  border-radius: 0 !important;
+}
+
+/* 主题背景 Tab 条在宽屏/大屏响应式自适应居中 */
+@media (min-width: 600px) {
+  .mdui-tab.mdui-tab-scrollable,
+  .mdui-tab.mdui-tab-centered {
+    display: -webkit-box !important;
+    display: -webkit-flex !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
+    -webkit-box-pack: center !important;
+    -webkit-justify-content: center !important;
+    -ms-flex-pack: center !important;
+    justify-content: center !important;
+  }
+}
+
 /* MDUI Tab 绑定内容容器平滑切换动画 (Material Fade & Slide-In) */
 .mdui-tab-panel-active {
   animation: mduiTabPanelFadeIn 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;

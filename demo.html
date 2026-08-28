@@ -297,103 +297,116 @@
         <i class="mdui-list-item-icon mdui-icon material-icons">tab</i>
         <div class="mdui-list-item-content">7. 多 Tab 选项卡系统</div>
       </li>
+      <li class="mdui-list-item mdui-ripple" onclick="location.hash='#collapse'">
+        <i class="mdui-list-item-icon mdui-icon material-icons">unfold_more</i>
+        <div class="mdui-list-item-content">8. 内容折叠与手风琴面板</div>
+      </li>
     </ul>
   </div>
 
   <div class="mdui-container">
 
-    <!-- 顶部置顶主题控制器 (已修复 Sticky 遮挡 Bug，支持单色/双色/三色自由切换) -->
-    <div class="theme-controller-panel mdui-card">
-      <div class="mdui-row">
-        <div class="mdui-col-md-4 mdui-col-sm-12">
-          <div class="mdui-typo-subheading mdui-m-b-1">
-            <strong>🎨 主题模式切换</strong>
-            <span id="active-mode-label" class="code-badge">当前: 原生 19 色模式</span>
-          </div>
-          <div>
-            <button id="btn-use-classic" class="mdui-btn mdui-btn-raised mdui-color-theme mdui-ripple mdui-m-r-1">
-              原生 MD 19 色
-            </button>
-            <button id="btn-use-monet" class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">
-              莫奈 (Android 12-17)
-            </button>
-          </div>
+    <!-- 顶部置顶主题控制器 (支持一键折叠到仅标题栏) -->
+    <div class="theme-controller-panel mdui-card" id="theme-panel">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+        <div class="mdui-typo-subheading" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <strong>🎨 主题模式控制台</strong>
+          <span id="active-mode-label" class="code-badge">当前: 原生 19 色模式</span>
         </div>
+        <button id="btn-toggle-panel" class="mdui-btn mdui-btn-icon" title="折叠/展开控制台" style="flex-shrink: 0;">
+          <i class="mdui-icon material-icons" id="icon-toggle-panel">expand_less</i>
+        </button>
+      </div>
 
-        <div class="mdui-col-md-8 mdui-col-sm-12">
-          <!-- 原生 19 色选择盘 -->
-          <div id="classic-controls">
-            <div class="mdui-typo-caption mdui-m-b-1">快速选择 19 色主色 (Primary):</div>
-            <div id="classic-dots"></div>
+      <!-- 可折叠的主体内容区域 -->
+      <div id="theme-panel-body">
+        <div class="mdui-row">
+          <div class="mdui-col-md-4 mdui-col-sm-12">
+            <div class="mdui-m-b-1">
+              <button id="btn-use-classic" class="mdui-btn mdui-btn-raised mdui-color-theme mdui-ripple mdui-m-r-1">
+                原生 MD 19 色
+              </button>
+              <button id="btn-use-monet" class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">
+                莫奈 (Android 12-17)
+              </button>
+            </div>
           </div>
 
-          <!-- 莫奈 Android 12-17 动态取色选择盘 (支持 单色 / 双色 / 三色 自由选择) -->
-          <div id="monet-controls" style="display: none;">
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
-              <div style="display: flex; align-items: center; gap: 6px;">
-                <span class="mdui-typo-caption"><strong>主题配色模式:</strong></span>
-                <div class="segmented-btn-group" id="color-mode-group">
-                  <button type="button" data-mode="single">单色主题</button>
-                  <button type="button" data-mode="dual">双色主题</button>
-                  <button type="button" data-mode="triple" class="active">三色主题</button>
+          <div class="mdui-col-md-8 mdui-col-sm-12">
+            <!-- 原生 19 色选择盘 -->
+            <div id="classic-controls">
+              <div class="mdui-typo-caption mdui-m-b-1">快速选择 19 色主色 (Primary):</div>
+              <div id="classic-dots"></div>
+            </div>
+
+            <!-- 莫奈 Android 12-17 动态取色选择盘 (支持 单色 / 双色 / 三色 自由选择) -->
+            <div id="monet-controls" style="display: none;">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span class="mdui-typo-caption"><strong>主题配色模式:</strong></span>
+                  <div class="segmented-btn-group" id="color-mode-group">
+                    <button type="button" data-mode="single">单色主题</button>
+                    <button type="button" data-mode="dual">双色主题</button>
+                    <button type="button" data-mode="triple" class="active">三色主题</button>
+                  </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span class="mdui-typo-caption">风格:</span>
+                  <select id="monet-variant-select" class="mdui-select" style="font-size: 12px; height: 28px; line-height: 28px; padding: 0 6px;">
+                    <option value="tonal_spot">Tonal Spot (平衡)</option>
+                    <option value="vibrant">Vibrant (鲜艳)</option>
+                    <option value="expressive">Expressive (表现力)</option>
+                    <option value="spritz">Neutral / Spritz (低饱和)</option>
+                    <option value="fruit_salad">Fruit Salad (水果沙拉)</option>
+                    <option value="rainbow">Rainbow (彩虹)</option>
+                    <option value="monochrome">Monochrome (黑白)</option>
+                  </select>
                 </div>
               </div>
 
-              <div style="display: flex; align-items: center; gap: 6px;">
-                <span class="mdui-typo-caption">风格:</span>
-                <select id="monet-variant-select" class="mdui-select" style="font-size: 12px; height: 28px; line-height: 28px; padding: 0 6px;">
-                  <option value="tonal_spot">Tonal Spot (平衡)</option>
-                  <option value="vibrant">Vibrant (鲜艳)</option>
-                  <option value="expressive">Expressive (表现力)</option>
-                  <option value="spritz">Neutral / Spritz (低饱和)</option>
-                  <option value="fruit_salad">Fruit Salad (水果沙拉)</option>
-                  <option value="rainbow">Rainbow (彩虹)</option>
-                  <option value="monochrome">Monochrome (黑白)</option>
-                </select>
+              <!-- 1~3 个拾色器 (根据模式动态展开/收起) -->
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;" class="mdui-m-b-1">
+                <div class="seed-picker-group" id="picker-group-1">
+                  <span class="mdui-typo-caption"><strong>主色 Primary:</strong></span>
+                  <input type="color" id="monet-picker-1" value="#3F51B5" style="width: 28px; height: 28px; border: none; cursor: pointer; padding: 0; background: none;">
+                  <span id="monet-hex-1" class="code-badge">#3F51B5</span>
+                </div>
+                <div class="seed-picker-group" id="picker-group-2">
+                  <span class="mdui-typo-caption"><strong>次色 Secondary:</strong></span>
+                  <input type="color" id="monet-picker-2" value="#009688" style="width: 28px; height: 28px; border: none; cursor: pointer; padding: 0; background: none;">
+                  <span id="monet-hex-2" class="code-badge">#009688</span>
+                </div>
+                <div class="seed-picker-group" id="picker-group-3">
+                  <span class="mdui-typo-caption"><strong>第三色 Tertiary:</strong></span>
+                  <input type="color" id="monet-picker-3" value="#FF4081" style="width: 28px; height: 28px; border: none; cursor: pointer; padding: 0; background: none;">
+                  <span id="monet-hex-3" class="code-badge">#FF4081</span>
+                </div>
               </div>
-            </div>
 
-            <!-- 1~3 个拾色器 (根据模式动态展开/收起) -->
-            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;" class="mdui-m-b-1">
-              <div class="seed-picker-group" id="picker-group-1">
-                <span class="mdui-typo-caption"><strong>主色 Primary:</strong></span>
-                <input type="color" id="monet-picker-1" value="#3F51B5" style="width: 28px; height: 28px; border: none; cursor: pointer; padding: 0; background: none;">
-                <span id="monet-hex-1" class="code-badge">#3F51B5</span>
+              <!-- 经典配色预设快捷键 -->
+              <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                <span class="mdui-typo-caption">精选预设:</span>
+                <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple preset-monet-combo" data-mode="single" data-p="#6750A4" style="font-size: 11px;">单色·紫罗兰</button>
+                <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple preset-monet-combo" data-mode="dual" data-p="#006A60" data-s="#4A635F" style="font-size: 11px;">双色·松石黛</button>
+                <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple preset-monet-combo" data-mode="triple" data-p="#1B5E20" data-s="#0288D1" data-t="#E65100" style="font-size: 11px;">三色·自然之境</button>
+                <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple preset-monet-combo" data-mode="triple" data-p="#3F51B5" data-s="#009688" data-t="#E91E63" style="font-size: 11px;">三色·经典 Material</button>
               </div>
-              <div class="seed-picker-group" id="picker-group-2">
-                <span class="mdui-typo-caption"><strong>次色 Secondary:</strong></span>
-                <input type="color" id="monet-picker-2" value="#009688" style="width: 28px; height: 28px; border: none; cursor: pointer; padding: 0; background: none;">
-                <span id="monet-hex-2" class="code-badge">#009688</span>
-              </div>
-              <div class="seed-picker-group" id="picker-group-3">
-                <span class="mdui-typo-caption"><strong>第三色 Tertiary:</strong></span>
-                <input type="color" id="monet-picker-3" value="#FF4081" style="width: 28px; height: 28px; border: none; cursor: pointer; padding: 0; background: none;">
-                <span id="monet-hex-3" class="code-badge">#FF4081</span>
-              </div>
-            </div>
-
-            <!-- 经典配色预设快捷键 -->
-            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-              <span class="mdui-typo-caption">精选预设:</span>
-              <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple preset-monet-combo" data-mode="single" data-p="#6750A4" style="font-size: 11px;">单色·紫罗兰</button>
-              <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple preset-monet-combo" data-mode="dual" data-p="#006A60" data-s="#4A635F" style="font-size: 11px;">双色·松石黛</button>
-              <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple preset-monet-combo" data-mode="triple" data-p="#1B5E20" data-s="#0288D1" data-t="#E65100" style="font-size: 11px;">三色·自然之境</button>
-              <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple preset-monet-combo" data-mode="triple" data-p="#3F51B5" data-s="#009688" data-t="#E91E63" style="font-size: 11px;">三色·经典 Material</button>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- 莫奈动态取色色阶与 MD3 Surface 着色可视化 -->
-      <div id="monet-palette-view" class="mdui-m-t-2" style="display: none;">
-        <div class="mdui-divider mdui-m-b-1"></div>
-        <div class="mdui-row">
-          <div class="mdui-col-md-8 mdui-col-sm-12">
-            <div id="monet-swatches-wrapper"></div>
-          </div>
-          <div class="mdui-col-md-4 mdui-col-sm-12">
-            <div class="mdui-typo-caption"><strong>MD3 Surface 表面着色体系:</strong></div>
-            <div id="monet-surface-tokens" style="margin-top: 4px;"></div>
+        <!-- 莫奈动态取色色阶与 MD3 Surface 着色可视化 -->
+        <div id="monet-palette-view" class="mdui-m-t-2" style="display: none;">
+          <div class="mdui-divider mdui-m-b-1"></div>
+          <div class="mdui-row">
+            <div class="mdui-col-md-8 mdui-col-sm-12">
+              <div id="monet-swatches-wrapper"></div>
+            </div>
+            <div class="mdui-col-md-4 mdui-col-sm-12">
+              <div class="mdui-typo-caption"><strong>MD3 Surface 表面着色体系:</strong></div>
+              <div id="monet-surface-tokens" style="margin-top: 4px;"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -818,7 +831,7 @@
 
       <!-- 主题色背景 Tab 条 (Primary Colored Tabs) -->
       <div class="mdui-m-t-3">
-        <div class="mdui-typo-subheading mdui-m-b-1"><strong>主题背景 Tab 条 (Primary Color Toolbar Tabs):</strong></div>
+        <div class="mdui-typo-subheading mdui-m-b-1"><strong>主题背景 Tab 条 (在宽屏下响应式居中，窄屏自动横向滑动):</strong></div>
         <div class="mdui-tab mdui-color-theme mdui-tab-scrollable" mdui-tab>
           <a href="javascript:;" class="mdui-ripple mdui-tab-active"><i class="mdui-icon material-icons">mail</i>收件箱</a>
           <a href="javascript:;" class="mdui-ripple"><i class="mdui-icon material-icons">star</i>星标邮件</a>
@@ -826,6 +839,92 @@
           <a href="javascript:;" class="mdui-ripple"><i class="mdui-icon material-icons">drafts</i>草稿箱</a>
           <a href="javascript:;" class="mdui-ripple"><i class="mdui-icon material-icons">delete</i>已删除</a>
         </div>
+      </div>
+    </div>
+
+    <!-- 8. 内容折叠与手风琴面板 (MD1 纯直角 Expansion Panels & Collapse) -->
+    <div id="collapse" class="demo-section">
+      <div class="mdui-typo-headline mdui-m-b-2">8. 内容折叠与手风琴面板（MD1 纯直角 Expansion Panels）</div>
+
+      <div class="mdui-card demo-card mdui-p-a-3">
+        <div class="mdui-m-b-2">
+          <strong>手风琴折叠面板 (Accordion Panels / 单开与多开模式) - <code>border-radius: 0</code></strong>
+        </div>
+
+        <div class="mdui-panel mdui-panel-popout" mdui-panel>
+          <!-- 折叠项 1 -->
+          <div class="mdui-panel-item mdui-panel-item-open">
+            <div class="mdui-panel-item-header">
+              <i class="mdui-panel-item-icon mdui-icon material-icons mdui-text-color-theme">layers</i>
+              <div class="mdui-panel-item-title">纯直角几何秩序 (MD1 Lollipop)</div>
+              <div class="mdui-panel-item-summary">直角面板 / 0px 圆角 / 秩序井然</div>
+              <i class="mdui-panel-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+            </div>
+            <div class="mdui-panel-item-body">
+              <p>所有折叠面板条目（<code>.mdui-panel-item</code>）严格采用 <code>border-radius: 0</code>，展开时拥有标准 Material Design 8dp 浮起高程阴影。</p>
+              <div class="mdui-panel-item-actions">
+                <button class="mdui-btn mdui-ripple mdui-panel-item-close">收起面板</button>
+                <button class="mdui-btn mdui-ripple mdui-color-theme">确认了解</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 折叠项 2 -->
+          <div class="mdui-panel-item">
+            <div class="mdui-panel-item-header">
+              <i class="mdui-panel-item-icon mdui-icon material-icons mdui-text-color-theme-accent">palette</i>
+              <div class="mdui-panel-item-title">莫奈动态取色联动 (Material You)</div>
+              <div class="mdui-panel-item-summary">背景容器色 Surface 自适应匹配</div>
+              <i class="mdui-panel-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+            </div>
+            <div class="mdui-panel-item-body">
+              <p>面板展开后的主体区域（<code>.mdui-panel-item-body</code>）自动继承当前主题色彩变量，在暗色与莫奈模式下均呈现舒适的对比度与层级。</p>
+              <div class="mdui-panel-item-actions">
+                <button class="mdui-btn mdui-ripple mdui-panel-item-close">收起面板</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 折叠项 3 -->
+          <div class="mdui-panel-item">
+            <div class="mdui-panel-item-header">
+              <i class="mdui-panel-item-icon mdui-icon material-icons">tune</i>
+              <div class="mdui-panel-item-title">高级折叠内容与表单内嵌</div>
+              <div class="mdui-panel-item-summary">支持内嵌任意表单、表格与复杂组件</div>
+              <i class="mdui-panel-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+            </div>
+            <div class="mdui-panel-item-body">
+              <div class="mdui-textfield">
+                <label class="mdui-textfield-label">折叠面板内输入框</label>
+                <input class="mdui-textfield-input" type="text" value="Material Design Expansion Panel">
+              </div>
+              <div class="mdui-panel-item-actions">
+                <button class="mdui-btn mdui-ripple mdui-panel-item-close">取消</button>
+                <button class="mdui-btn mdui-ripple mdui-color-theme">保存设置</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 基础内容折叠 (Collapse Trigger) -->
+        <div class="mdui-divider mdui-m-y-3"></div>
+        <div class="mdui-m-b-2">
+          <strong>基础内容折叠触发器 (Inline Collapse):</strong>
+        </div>
+        <div>
+          <button class="mdui-btn mdui-btn-raised mdui-color-theme mdui-ripple mdui-m-b-2" mdui-collapse="{target: '#basic-collapse-box'}">
+            点击切换折叠内容 <i class="mdui-icon material-icons mdui-icon-right">unfold_more</i>
+          </button>
+          <div class="mdui-collapse-item" id="basic-collapse-box" style="display: none;">
+            <div class="mdui-card mdui-p-a-3 mdui-color-theme-50" style="border: 1px dashed var(--mdui-monet-primary-500, #3f51b5);">
+              <div class="mdui-typo-title mdui-m-b-1">✨ 这是被折叠/展开的内容块</div>
+              <p class="mdui-typo-body-1">
+                使用 <code>mdui-collapse="{target: '#id'}"</code> 可自由绑定页面中的任意直角卡片或容器，轻量实现丝滑的内容折叠展示。
+              </p>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -1153,12 +1252,19 @@
       dark: false
     });
 
-    // Snackbar 演示
-    document.getElementById('btn-snackbar').onclick = () => {
-      mdui.snackbar({
-        message: '这是经典的 MD1 直角 Snackbar 消息条 (border-radius: 0)',
-        position: 'bottom'
-      });
+    // 置顶控制台折叠/展开到仅标题功能
+    let isPanelCollapsed = false;
+    document.getElementById('btn-toggle-panel').onclick = () => {
+      isPanelCollapsed = !isPanelCollapsed;
+      const body = document.getElementById('theme-panel-body');
+      const icon = document.getElementById('icon-toggle-panel');
+      if (isPanelCollapsed) {
+        body.style.display = 'none';
+        icon.textContent = 'expand_more';
+      } else {
+        body.style.display = 'block';
+        icon.textContent = 'expand_less';
+      }
     };
   </script>
 </body>
