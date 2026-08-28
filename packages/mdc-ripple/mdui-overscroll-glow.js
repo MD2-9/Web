@@ -2,27 +2,21 @@
 // Copyright 2026 unjal <unjal29@outlook.com>
 // Licensed under the Apache License, Version 2.0
 //
-// Android 5.0 (Lollipop) ~ Android 11.0 (R) Material EdgeEffect Controller
-// Implements AOSP EdgeEffect.java state machine (PULL -> ABSORB -> RECEDE) with touch displacement.
+// Android 5.0 ~ 11.0 经典页面边界水波纹控制器 (与 Material Ripple 涟漪特效风格完全一致)
 //
 
-export class MduiEdgeEffect {
+export class MduiOverscrollRipple {
   /**
    * @param {HTMLElement} [container] 目标滚动容器，默认 window/viewport
    */
   constructor(container = null) {
     this.isWindow = !container || container === document.body || container === document.documentElement;
     this.container = this.isWindow ? document.body : container;
-    
     this.wrapper = null;
-    this.topEffect = null;
-    this.bottomEffect = null;
-    this.topGlow = null;
-    this.bottomGlow = null;
-    
+    this.activeWaves = new Set();
     this.touchStartY = 0;
     this.touchStartX = 0;
-    this.recedeTimers = { top: null, bottom: null };
+    this.lastTriggerTime = 0;
 
     this.initDOM();
     this.bindEvents();
@@ -30,28 +24,7 @@ export class MduiEdgeEffect {
 
   initDOM() {
     this.wrapper = document.createElement('div');
-    this.wrapper.className = `md1-edge-effect-container ${this.isWindow ? 'md1-edge-effect-container--fixed' : ''}`;
-
-    // 顶部 EdgeEffect
-    this.topEffect = document.createElement('div');
-    this.topEffect.className = 'md1-edge-effect md1-edge-effect--top';
-    this.topEffect.innerHTML = `
-      <div class="md1-edge-effect__arc"></div>
-      <div class="md1-edge-effect__glow"></div>
-    `;
-    this.topGlow = this.topEffect.querySelector('.md1-edge-effect__glow');
-
-    // 底部 EdgeEffect
-    this.bottomEffect = document.createElement('div');
-    this.bottomEffect.className = 'md1-edge-effect md1-edge-effect--bottom';
-    this.bottomEffect.innerHTML = `
-      <div class="md1-edge-effect__arc"></div>
-      <div class="md1-edge-effect__glow"></div>
-    `;
-    this.bottomGlow = this.bottomEffect.querySelector('.md1-edge-effect__glow');
-
-    this.wrapper.appendChild(this.topEffect);
-    this.wrapper.appendChild(this.bottomEffect);
+    this.wrapper.className = `md1-overscroll-ripple-container ${this.isWindow ? 'md1-overscroll-ripple-container--fixed' : ''}`;
 
     if (this.isWindow) {
       document.body.appendChild(this.wrapper);
@@ -64,108 +37,54 @@ export class MduiEdgeEffect {
   }
 
   /**
-   * 触发吸收冲击水波纹 (onAbsorb)
-   * @param {boolean} isTop
-   * @param {number} velocity
-   * @param {number} clientX
+   * 触发边界水波纹 (Material Ripple 同款扩散涟漪)
+   * @param {boolean} isTop 顶部或底部
+   * @param {number} [clientX] 触碰点横坐标
    */
-  onAbsorb(isTop, velocity = 1, clientX = window.innerWidth / 2) {
-    const effect = isTop ? this.topEffect : this.bottomEffect;
-    const glow = isTop ? this.topGlow : this.bottomGlow;
-    const timerKey = isTop ? 'top' : 'bottom';
-    if (!effect || !glow) return;
-
-    clearTimeout(this.recedeTimers[timerKey]);
+  trigger(isTop, clientX = window.innerWidth / 2) {
+    const now = Date.now();
+    if (now - this.lastTriggerTime < 180) return;
+    this.lastTriggerTime = now;
 
     const rect = this.isWindow 
-      ? { left: 0, width: window.innerWidth, height: window.innerHeight }
+      ? { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight }
       : this.container.getBoundingClientRect();
 
-    const displacementX = Math.max(0, Math.min(rect.width, clientX - rect.left));
-    const glowWidth = Math.max(rect.width * 0.75, 260);
-    const glowHeight = Math.min(180, glowWidth * 0.45);
+    const originX = Math.max(0, Math.min(rect.width, clientX - rect.left));
+    const originY = isTop ? 0 : rect.height;
 
-    glow.style.width = `${glowWidth}px`;
-    glow.style.height = `${glowHeight}px`;
-    glow.style.left = `${displacementX}px`;
+    // 计算覆盖边界视口所需的最大水波纹半径
+    const radius = Math.hypot(
+      Math.max(originX, rect.width - originX),
+      Math.min(rect.height * 0.65, 360)
+    ) * 1.15;
 
-    // 状态 1: ABSORB 冲击展开
-    effect.classList.remove('is-receding');
-    effect.classList.add('is-active');
-    
-    const intensity = Math.min(1.4, Math.max(0.6, velocity));
-    glow.style.transition = 'transform 0.12s cubic-bezier(0, 0, 0.2, 1), opacity 0.12s ease';
-    glow.style.transform = `translate(-50%, 0) scale(${intensity})`;
-    glow.style.opacity = `${Math.min(0.85, 0.4 + intensity * 0.35)}`;
+    const wave = document.createElement('div');
+    wave.className = 'md1-overscroll-ripple-wave';
+    wave.style.width = `${radius * 2}px`;
+    wave.style.height = `${radius * 2}px`;
+    wave.style.left = `${originX}px`;
+    wave.style.top = `${originY}px`;
 
-    // 状态 2: RECEDE 衰减消退
-    this.recedeTimers[timerKey] = setTimeout(() => {
-      effect.classList.remove('is-active');
-      effect.classList.add('is-receding');
-      glow.style.transition = 'transform 0.45s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.45s ease-out';
-      glow.style.transform = `translate(-50%, 0) scale(${intensity * 1.35})`;
-      glow.style.opacity = '0';
-    }, 180);
-  }
+    this.wrapper.appendChild(wave);
+    this.activeWaves.add(wave);
 
-  /**
-   * 持续拉动水波纹 (onPull)
-   * @param {boolean} isTop
-   * @param {number} deltaY
-   * @param {number} clientX
-   */
-  onPull(isTop, deltaY, clientX = window.innerWidth / 2) {
-    const effect = isTop ? this.topEffect : this.bottomEffect;
-    const glow = isTop ? this.topGlow : this.bottomGlow;
-    if (!effect || !glow) return;
-
-    const rect = this.isWindow 
-      ? { left: 0, width: window.innerWidth, height: window.innerHeight }
-      : this.container.getBoundingClientRect();
-
-    const displacementX = Math.max(0, Math.min(rect.width, clientX - rect.left));
-    const glowWidth = Math.max(rect.width * 0.75, 260);
-    const glowHeight = Math.min(180, glowWidth * 0.45);
-
-    glow.style.width = `${glowWidth}px`;
-    glow.style.height = `${glowHeight}px`;
-    glow.style.left = `${displacementX}px`;
-
-    effect.classList.remove('is-receding');
-    effect.classList.add('is-active');
-
-    const pullDistance = Math.abs(deltaY);
-    const scale = Math.min(1.5, Math.sqrt(pullDistance / 80));
-    const alpha = Math.min(0.75, 0.25 + pullDistance / 180);
-
-    glow.style.transition = 'transform 0.05s linear, opacity 0.05s linear';
-    glow.style.transform = `translate(-50%, 0) scale(${scale})`;
-    glow.style.opacity = `${alpha}`;
-  }
-
-  /**
-   * 释放拉动 (onRelease)
-   * @param {boolean} isTop
-   */
-  onRelease(isTop) {
-    const effect = isTop ? this.topEffect : this.bottomEffect;
-    const glow = isTop ? this.topGlow : this.bottomGlow;
-    const timerKey = isTop ? 'top' : 'bottom';
-    if (!effect || !glow) return;
-
-    clearTimeout(this.recedeTimers[timerKey]);
-    effect.classList.remove('is-active');
-    effect.classList.add('is-receding');
-
-    glow.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.4s ease-out';
-    glow.style.transform = `translate(-50%, 0) scale(1.3)`;
-    glow.style.opacity = '0';
+    requestAnimationFrame(() => {
+      wave.classList.add('is-active');
+      setTimeout(() => {
+        wave.classList.add('is-fading');
+        setTimeout(() => {
+          if (wave.parentNode) wave.parentNode.removeChild(wave);
+          this.activeWaves.delete(wave);
+        }, 450);
+      }, 250);
+    });
   }
 
   bindEvents() {
-    // 1. 鼠标滚轮滚到头/底 (Wheel onAbsorb)
     const targetEl = this.isWindow ? window : this.container;
 
+    // 1. 鼠标滚轮边界监听
     targetEl.addEventListener('wheel', (e) => {
       let isTopBoundary = false;
       let isBottomBoundary = false;
@@ -183,13 +102,13 @@ export class MduiEdgeEffect {
       }
 
       if (isTopBoundary) {
-        this.onAbsorb(true, Math.min(1.5, Math.abs(e.deltaY) / 75), e.clientX);
+        this.trigger(true, e.clientX);
       } else if (isBottomBoundary) {
-        this.onAbsorb(false, Math.min(1.5, Math.abs(e.deltaY) / 75), e.clientX);
+        this.trigger(false, e.clientX);
       }
     }, { passive: true });
 
-    // 2. 触控手势拉动与释放 (Touch onPull / onRelease)
+    // 2. 触控手势边界监听
     targetEl.addEventListener('touchstart', (e) => {
       if (e.touches && e.touches.length > 0) {
         this.touchStartY = e.touches[0].clientY;
@@ -209,35 +128,30 @@ export class MduiEdgeEffect {
       if (this.isWindow) {
         const scrollY = window.scrollY || document.documentElement.scrollTop;
         const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
-        isTop = scrollY <= 0 && deltaY > 0;
-        isBottom = scrollY >= maxScrollY - 2 && deltaY < 0;
+        isTop = scrollY <= 0 && deltaY > 8;
+        isBottom = scrollY >= maxScrollY - 2 && deltaY < -8;
       } else {
         const scrollTop = this.container.scrollTop;
         const maxScroll = this.container.scrollHeight - this.container.clientHeight;
-        isTop = scrollTop <= 0 && deltaY > 0;
-        isBottom = scrollTop >= maxScroll - 2 && deltaY < 0;
+        isTop = scrollTop <= 0 && deltaY > 8;
+        isBottom = scrollTop >= maxScroll - 2 && deltaY < -8;
       }
 
       if (isTop) {
-        this.onPull(true, deltaY, currentX);
+        this.trigger(true, currentX);
       } else if (isBottom) {
-        this.onPull(false, deltaY, currentX);
+        this.trigger(false, currentX);
       }
-    }, { passive: true });
-
-    targetEl.addEventListener('touchend', () => {
-      this.onRelease(true);
-      this.onRelease(false);
     }, { passive: true });
   }
 }
 
 /**
- * 全局一键自动挂载视口与所有滚动容器的 Android 5-11 EdgeEffect
+ * 全局一键自动挂载视口与所有滚动容器的 Android 5-11 边界水波纹
  */
-export class MduiEdgeEffectManager {
+export class MduiOverscrollRippleManager {
   constructor() {
-    this.rootEffect = new MduiEdgeEffect(null);
+    this.rootRipple = new MduiOverscrollRipple(null);
     this.containerMap = new WeakMap();
     this.bindDelegation();
   }
@@ -246,10 +160,10 @@ export class MduiEdgeEffectManager {
     window.addEventListener('wheel', (e) => {
       const scrollable = this.findScrollable(e.target);
       if (scrollable) {
-        let effect = this.containerMap.get(scrollable);
-        if (!effect) {
-          effect = new MduiEdgeEffect(scrollable);
-          this.containerMap.set(scrollable, effect);
+        let ripple = this.containerMap.get(scrollable);
+        if (!ripple) {
+          ripple = new MduiOverscrollRipple(scrollable);
+          this.containerMap.set(scrollable, ripple);
         }
       }
     }, { passive: true });
@@ -267,7 +181,12 @@ export class MduiEdgeEffectManager {
   }
 }
 
-export function attachEdgeEffect(container) {
-  if (container) return new MduiEdgeEffect(container);
-  return new MduiEdgeEffectManager();
+export function attachOverscrollRipple(container) {
+  if (container) return new MduiOverscrollRipple(container);
+  return new MduiOverscrollRippleManager();
 }
+
+export const MduiEdgeEffect = MduiOverscrollRipple;
+export const MduiOverscrollGlow = MduiOverscrollRipple;
+export const attachEdgeEffect = attachOverscrollRipple;
+export const attachOverscrollGlow = attachOverscrollRipple;

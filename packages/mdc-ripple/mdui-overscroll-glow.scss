@@ -2,10 +2,10 @@
 // Copyright 2026 unjal <unjal29@outlook.com>
 // Licensed under the Apache License, Version 2.0
 //
-// Android 5.0 (Lollipop) ~ Android 11.0 (R) Material EdgeEffect
-// Authentic 1:1 replication of AOSP android.widget.EdgeEffect (Arc + Radial Glow Dome)
+// Android 5.0 (Lollipop) ~ Android 11.0 (R) 经典页面边界水波纹特效 (Material Ripple 同款涟漪风格)
 //
 
+.md1-overscroll-ripple-container,
 .md1-edge-effect-container {
   position: absolute;
   top: 0;
@@ -22,95 +22,24 @@
   }
 }
 
-.md1-edge-effect {
+// 纯正 Material 涟漪波纹实体 (与按钮/Tab水波纹风格完全一致)
+.md1-overscroll-ripple-wave,
+.md1-edge-effect__glow {
   position: absolute;
-  left: 0;
-  width: 100%;
+  border-radius: 50% !important;
   pointer-events: none;
-  overflow: hidden;
-  opacity: 0;
-  transition: opacity 0.15s ease-out;
+  z-index: 99999;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  opacity: 0.22;
+  transform: translate(-50%, -50%) scale(0.01);
+  will-change: transform, opacity;
+  transition: transform 0.45s cubic-bezier(0, 0, 0.2, 1), opacity 0.45s linear;
 
-  // 顶部边缘水波纹穹顶
-  &--top {
-    top: 0;
-    height: 180px;
-  }
-
-  // 底部边缘水波纹穹顶
-  &--bottom {
-    bottom: 0;
-    height: 180px;
-  }
-
-  // Android 5-11 核心半圆水波纹泛光实体 (基于 touch X 水平位移动态定位)
-  &__glow {
-    position: absolute;
-    width: 240px;
-    height: 120px;
-    border-radius: 50% / 100% 100% 0 0;
-    transform: translate(-50%, 0) scale(0);
-    will-change: transform, opacity;
-    background: radial-gradient(
-      ellipse 60% 90% at 50% 0%,
-      var(--mdc-theme-primary, #6750a4) 0%,
-      rgba(103, 80, 164, 0.45) 45%,
-      rgba(103, 80, 164, 0.1) 75%,
-      transparent 100%
-    );
-  }
-
-  &--bottom &__glow {
-    border-radius: 50% / 0 0 100% 100%;
-    bottom: 0;
-    background: radial-gradient(
-      ellipse 60% 90% at 50% 100%,
-      var(--mdc-theme-primary, #6750a4) 0%,
-      rgba(103, 80, 164, 0.45) 45%,
-      rgba(103, 80, 164, 0.1) 75%,
-      transparent 100%
-    );
-  }
-
-  // 边缘极细高亮接触弧线 (Edge Arc)
-  &__arc {
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 4px;
-    opacity: 0;
-    background: radial-gradient(
-      ellipse 50% 100% at 50% 0%,
-      var(--mdc-theme-primary, #6750a4) 0%,
-      transparent 80%
-    );
-  }
-
-  &--top &__arc {
-    top: 0;
-  }
-
-  &--bottom &__arc {
-    bottom: 0;
-    background: radial-gradient(
-      ellipse 50% 100% at 50% 100%,
-      var(--mdc-theme-primary, #6750a4) 0%,
-      transparent 80%
-    );
-  }
-
-  // 吸收/拉动状态 (PULL / ABSORB)
   &.is-active {
-    opacity: 1;
-
-    .md1-edge-effect__arc {
-      opacity: 0.9;
-    }
+    transform: translate(-50%, -50%) scale(1);
   }
 
-  // 释放淡出状态 (RECEDE)
-  &.is-receding {
+  &.is-fading {
     opacity: 0;
-    transition: opacity 0.45s cubic-bezier(0.2, 0.8, 0.25, 1);
   }
 }

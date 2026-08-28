@@ -482,23 +482,23 @@ body {
 
 ---
 
-### 7. 🌊 Android 5.0 ~ 11.0 经典边缘水波纹泛光 (`@material/ripple/mdui-overscroll-glow`)
+### 7. 🌊 Android 5.0 ~ 11.0 经典页面边界水波纹 (`@material/ripple/mdui-overscroll-glow`)
 
-1:1 深度复刻 AOSP 原生 `android.widget.EdgeEffect` 状态机（`PULL` ➔ `ABSORB` ➔ `RECEDE`）与触控水平位移（`displacement`）半圆穹顶泛光。
+与 Material Ripple 涟漪完全同款风格的页面触顶/触底边界水波纹涟漪动效。
 
 #### 核心特性：
-- **边缘高亮弧线 (Edge Arc)**：4px 边缘受力指示。
-- **动态位移泛光穹顶 (Glow Dome)**：基于滚轮/触碰 `clientX` 坐标动态对齐半圆几何体（`border-radius: 50% / 100% 100% 0 0`）。
+- **纯正 Material 涟漪波纹**：遵循与按钮/Tab水波纹完全一致的实体圆形涟漪（`border-radius: 50%`，`var(--mdc-theme-primary)`），无伪造渐变光弧，纯净自然。
+- **触点动态位移定位**：根据滚轮或手势在边界上的实时水平横坐标（`clientX`）对齐水波纹圆心。
 - **全容器自动支持**：自动适配全局视口与页面内所有 `overflow-y: auto / scroll` 滚动容器。
 
 ```javascript
-import { MduiEdgeEffect, attachEdgeEffect } from '@material/ripple';
+import { MduiOverscrollRipple, attachOverscrollRipple } from '@material/ripple';
 
 // 1. 全局视口自动挂载
-attachEdgeEffect();
+attachOverscrollRipple();
 
 // 2. 指定容器单独挂载
-const containerEffect = new MduiEdgeEffect(document.getElementById('my-scroll-container'));
+const containerRipple = new MduiOverscrollRipple(document.getElementById('my-scroll-container'));
 ```
 
 ---
