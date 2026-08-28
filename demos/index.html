@@ -103,6 +103,14 @@
       border-radius: 50% !important;
     }
 
+    /* MD1 胶囊几何 (Switch Track 7px, Chips 16px, Extended FAB 24px) */
+    .md1-switch-track {
+      border-radius: 7px !important;
+    }
+    .surface-token-chip {
+      border-radius: 16px !important;
+    }
+
     .mdc-fab {
       width: 56px !important;
       height: 56px !important;
@@ -640,21 +648,62 @@
       pointer-events: none;
       transition: width 0.05s ease;
     }
-    .md1-slider-thumb {
+    .md1-slider-thumb-wrapper {
       position: absolute;
+      top: 50%;
       left: 40%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      transition: left 0.05s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .md1-slider-thumb {
       width: 12px;
       height: 12px;
       border-radius: 50% !important;
       background-color: var(--mdc-theme-primary, #6750a4);
-      transform: translate(-50%, 0);
-      pointer-events: none;
       box-shadow: 0 1px 3px rgba(0,0,0,0.4);
       transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
+    /* MDUI 经典水滴大头针气泡 (Teardrop Pin) */
+    .md1-slider-pin {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      width: 28px;
+      height: 28px;
+      background-color: var(--mdc-theme-primary, #6750a4);
+      border-radius: 50% 50% 50% 0 !important;
+      transform: translateX(-50%) rotate(-45deg) scale(0);
+      transform-origin: bottom center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1);
+      pointer-events: none;
+      z-index: 10;
+    }
+    .md1-slider-pin span {
+      transform: rotate(45deg);
+      color: var(--mdc-theme-on-primary, #ffffff);
+      font-size: 10.5px;
+      font-weight: bold;
+      line-height: 1;
+      user-select: none;
+    }
+    /* 拖动 / 聚焦 / 悬停时弹出大头针并放大滑块 */
+    .md1-slider.is-active .md1-slider-pin,
+    .md1-slider:hover .md1-slider-pin,
+    .md1-slider:active .md1-slider-pin {
+      transform: translateX(-50%) rotate(-45deg) scale(1) translateY(-8px);
+    }
+    .md1-slider.is-active .md1-slider-thumb,
     .md1-slider:hover .md1-slider-thumb,
     .md1-slider:active .md1-slider-thumb {
-      transform: translate(-50%, 0) scale(1.4);
+      transform: scale(1.35);
       box-shadow: 0 0 0 8px rgba(103, 80, 164, 0.2);
     }
 
@@ -1261,14 +1310,19 @@
           <span style="font-size: 13px; font-weight: 500;">MD1 动态色开关</span>
         </label>
 
-        <!-- MD1 纯正规范滑块 (MD1 Slider with pure circle thumb and track) -->
+        <!-- MD1 / MDUI 纯正规范大头针数字滑块 (Discrete Slider with Teardrop Pin) -->
         <div class="md1-slider-container">
           <span style="font-size: 13px; font-weight: 600;">色阶滑块:</span>
           <div class="md1-slider" id="md1SliderBox">
             <input type="range" id="slider-tone" min="10" max="90" value="40">
             <div class="md1-slider-track"></div>
             <div class="md1-slider-fill" id="md1SliderFill" style="width: 37.5%;"></div>
-            <div class="md1-slider-thumb" id="md1SliderThumb" style="left: 37.5%;"></div>
+            <div class="md1-slider-thumb-wrapper" id="md1SliderThumbWrapper" style="left: 37.5%;">
+              <div class="md1-slider-thumb"></div>
+              <div class="md1-slider-pin" id="md1SliderPin">
+                <span id="md1SliderPinText">40</span>
+              </div>
+            </div>
           </div>
           <span id="slider-val" style="font-size: 12px; font-family: monospace; font-weight: bold; width: 60px;">Tone 40</span>
         </div>
@@ -1879,12 +1933,14 @@
     }
 
     // =========================================================================
-    // MD1 纯正滑块联动 (MD1 Slider fill & thumb position)
+    // MD1 / MDUI 纯正大头针滑块联动 (Discrete Slider with Teardrop Pin)
     // =========================================================================
     const sliderInput = document.getElementById('slider-tone');
     const sliderFill = document.getElementById('md1SliderFill');
-    const sliderThumb = document.getElementById('md1SliderThumb');
+    const sliderThumbWrapper = document.getElementById('md1SliderThumbWrapper');
     const sliderVal = document.getElementById('slider-val');
+    const sliderPinText = document.getElementById('md1SliderPinText');
+    const sliderBox = document.getElementById('md1SliderBox');
 
     if (sliderInput) {
       function updateSlider(val) {
@@ -1892,13 +1948,33 @@
         const max = parseInt(sliderInput.max, 10);
         const percent = ((val - min) / (max - min)) * 100;
         if (sliderFill) sliderFill.style.width = `${percent}%`;
-        if (sliderThumb) sliderThumb.style.left = `${percent}%`;
+        if (sliderThumbWrapper) sliderThumbWrapper.style.left = `${percent}%`;
         if (sliderVal) sliderVal.textContent = `Tone ${val}`;
+        if (sliderPinText) sliderPinText.textContent = val;
       }
 
       sliderInput.addEventListener('input', (e) => {
         updateSlider(e.target.value);
       });
+      sliderInput.addEventListener('focus', () => {
+        if (sliderBox) sliderBox.classList.add('is-active');
+      });
+      sliderInput.addEventListener('blur', () => {
+        if (sliderBox) sliderBox.classList.remove('is-active');
+      });
+      sliderInput.addEventListener('mousedown', () => {
+        if (sliderBox) sliderBox.classList.add('is-active');
+      });
+      window.addEventListener('mouseup', () => {
+        if (sliderBox) sliderBox.classList.remove('is-active');
+      });
+      sliderInput.addEventListener('touchstart', () => {
+        if (sliderBox) sliderBox.classList.add('is-active');
+      }, { passive: true });
+      window.addEventListener('touchend', () => {
+        if (sliderBox) sliderBox.classList.remove('is-active');
+      }, { passive: true });
+
       updateSlider(sliderInput.value);
     }
 
