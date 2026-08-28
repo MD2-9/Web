@@ -104,6 +104,8 @@ export {
   ripple,
   createRipple,
   attachRipples,
+  MduiEdgeEffect,
+  attachEdgeEffect,
   MduiOverscrollGlow,
   attachOverscrollGlow,
   select,

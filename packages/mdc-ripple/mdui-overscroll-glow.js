@@ -2,172 +2,272 @@
 // Copyright 2026 unjal <unjal29@outlook.com>
 // Licensed under the Apache License, Version 2.0
 //
-// Material Design (Android 5.0 - 11.0 Lollipop ~ R) Universal Overscroll Edge Glow / Ripple Controller
-// Supports window and all nested scrollable containers.
+// Android 5.0 (Lollipop) ~ Android 11.0 (R) Material EdgeEffect Controller
+// Implements AOSP EdgeEffect.java state machine (PULL -> ABSORB -> RECEDE) with touch displacement.
 //
 
-export class MduiOverscrollGlow {
-  constructor(options = {}) {
-    this.rootGlowTop = null;
-    this.rootGlowBottom = null;
-    this.containerMap = new WeakMap();
-    this.activeTimeouts = new WeakMap();
+export class MduiEdgeEffect {
+  /**
+   * @param {HTMLElement} [container] 目标滚动容器，默认 window/viewport
+   */
+  constructor(container = null) {
+    this.isWindow = !container || container === document.body || container === document.documentElement;
+    this.container = this.isWindow ? document.body : container;
+    
+    this.wrapper = null;
+    this.topEffect = null;
+    this.bottomEffect = null;
+    this.topGlow = null;
+    this.bottomGlow = null;
+    
     this.touchStartY = 0;
-    this.touchTarget = null;
+    this.touchStartX = 0;
+    this.recedeTimers = { top: null, bottom: null };
 
-    this.initRootGlows();
-    this.bindGlobalEvents();
+    this.initDOM();
+    this.bindEvents();
   }
 
-  initRootGlows() {
-    this.rootGlowTop = document.querySelector('.md1-overscroll-glow--top.md1-overscroll-glow--fixed');
-    if (!this.rootGlowTop) {
-      this.rootGlowTop = document.createElement('div');
-      this.rootGlowTop.className = 'md1-overscroll-glow md1-overscroll-glow--top md1-overscroll-glow--fixed';
-      this.rootGlowTop.innerHTML = '<div class="md1-overscroll-glow__arc"></div>';
-      document.body.appendChild(this.rootGlowTop);
-    }
+  initDOM() {
+    this.wrapper = document.createElement('div');
+    this.wrapper.className = `md1-edge-effect-container ${this.isWindow ? 'md1-edge-effect-container--fixed' : ''}`;
 
-    this.rootGlowBottom = document.querySelector('.md1-overscroll-glow--bottom.md1-overscroll-glow--fixed');
-    if (!this.rootGlowBottom) {
-      this.rootGlowBottom = document.createElement('div');
-      this.rootGlowBottom.className = 'md1-overscroll-glow md1-overscroll-glow--bottom md1-overscroll-glow--fixed';
-      this.rootGlowBottom.innerHTML = '<div class="md1-overscroll-glow__arc"></div>';
-      document.body.appendChild(this.rootGlowBottom);
+    // 顶部 EdgeEffect
+    this.topEffect = document.createElement('div');
+    this.topEffect.className = 'md1-edge-effect md1-edge-effect--top';
+    this.topEffect.innerHTML = `
+      <div class="md1-edge-effect__arc"></div>
+      <div class="md1-edge-effect__glow"></div>
+    `;
+    this.topGlow = this.topEffect.querySelector('.md1-edge-effect__glow');
+
+    // 底部 EdgeEffect
+    this.bottomEffect = document.createElement('div');
+    this.bottomEffect.className = 'md1-edge-effect md1-edge-effect--bottom';
+    this.bottomEffect.innerHTML = `
+      <div class="md1-edge-effect__arc"></div>
+      <div class="md1-edge-effect__glow"></div>
+    `;
+    this.bottomGlow = this.bottomEffect.querySelector('.md1-edge-effect__glow');
+
+    this.wrapper.appendChild(this.topEffect);
+    this.wrapper.appendChild(this.bottomEffect);
+
+    if (this.isWindow) {
+      document.body.appendChild(this.wrapper);
+    } else {
+      if (window.getComputedStyle(this.container).position === 'static') {
+        this.container.style.position = 'relative';
+      }
+      this.container.appendChild(this.wrapper);
     }
   }
 
-  getOrCreateContainerGlow(container) {
-    if (!container || container === document.body || container === document.documentElement || container === window) {
-      return { top: this.rootGlowTop, bottom: this.rootGlowBottom };
-    }
+  /**
+   * 触发吸收冲击水波纹 (onAbsorb)
+   * @param {boolean} isTop
+   * @param {number} velocity
+   * @param {number} clientX
+   */
+  onAbsorb(isTop, velocity = 1, clientX = window.innerWidth / 2) {
+    const effect = isTop ? this.topEffect : this.bottomEffect;
+    const glow = isTop ? this.topGlow : this.bottomGlow;
+    const timerKey = isTop ? 'top' : 'bottom';
+    if (!effect || !glow) return;
 
-    if (this.containerMap.has(container)) {
-      return this.containerMap.get(container);
-    }
+    clearTimeout(this.recedeTimers[timerKey]);
 
-    const computedPos = window.getComputedStyle(container).position;
-    if (computedPos === 'static') {
-      container.style.position = 'relative';
-    }
+    const rect = this.isWindow 
+      ? { left: 0, width: window.innerWidth, height: window.innerHeight }
+      : this.container.getBoundingClientRect();
 
-    let topEl = container.querySelector(':scope > .md1-overscroll-glow--top');
-    if (!topEl) {
-      topEl = document.createElement('div');
-      topEl.className = 'md1-overscroll-glow md1-overscroll-glow--top';
-      topEl.innerHTML = '<div class="md1-overscroll-glow__arc"></div>';
-      container.insertBefore(topEl, container.firstChild);
-    }
+    const displacementX = Math.max(0, Math.min(rect.width, clientX - rect.left));
+    const glowWidth = Math.max(rect.width * 0.75, 260);
+    const glowHeight = Math.min(180, glowWidth * 0.45);
 
-    let bottomEl = container.querySelector(':scope > .md1-overscroll-glow--bottom');
-    if (!bottomEl) {
-      bottomEl = document.createElement('div');
-      bottomEl.className = 'md1-overscroll-glow md1-overscroll-glow--bottom';
-      bottomEl.innerHTML = '<div class="md1-overscroll-glow__arc"></div>';
-      container.appendChild(bottomEl);
-    }
+    glow.style.width = `${glowWidth}px`;
+    glow.style.height = `${glowHeight}px`;
+    glow.style.left = `${displacementX}px`;
 
-    const pair = { top: topEl, bottom: bottomEl };
-    this.containerMap.set(container, pair);
-    return pair;
+    // 状态 1: ABSORB 冲击展开
+    effect.classList.remove('is-receding');
+    effect.classList.add('is-active');
+    
+    const intensity = Math.min(1.4, Math.max(0.6, velocity));
+    glow.style.transition = 'transform 0.12s cubic-bezier(0, 0, 0.2, 1), opacity 0.12s ease';
+    glow.style.transform = `translate(-50%, 0) scale(${intensity})`;
+    glow.style.opacity = `${Math.min(0.85, 0.4 + intensity * 0.35)}`;
+
+    // 状态 2: RECEDE 衰减消退
+    this.recedeTimers[timerKey] = setTimeout(() => {
+      effect.classList.remove('is-active');
+      effect.classList.add('is-receding');
+      glow.style.transition = 'transform 0.45s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.45s ease-out';
+      glow.style.transform = `translate(-50%, 0) scale(${intensity * 1.35})`;
+      glow.style.opacity = '0';
+    }, 180);
   }
 
-  triggerGlow(element, isTop, intensity = 1) {
-    if (!element) return;
-    const key = `${isTop ? 't' : 'b'}`;
-    let timeouts = this.activeTimeouts.get(element) || {};
-    clearTimeout(timeouts[key]);
+  /**
+   * 持续拉动水波纹 (onPull)
+   * @param {boolean} isTop
+   * @param {number} deltaY
+   * @param {number} clientX
+   */
+  onPull(isTop, deltaY, clientX = window.innerWidth / 2) {
+    const effect = isTop ? this.topEffect : this.bottomEffect;
+    const glow = isTop ? this.topGlow : this.bottomGlow;
+    if (!effect || !glow) return;
 
-    element.classList.add('is-active');
-    element.style.opacity = `${Math.min(0.9, 0.45 + intensity * 0.45)}`;
-    const arc = element.querySelector('.md1-overscroll-glow__arc');
-    if (arc) arc.style.transform = `scaleY(${Math.min(1.5, 0.7 + intensity * 0.5)})`;
+    const rect = this.isWindow 
+      ? { left: 0, width: window.innerWidth, height: window.innerHeight }
+      : this.container.getBoundingClientRect();
 
-    timeouts[key] = setTimeout(() => {
-      element.classList.remove('is-active');
-      element.style.opacity = '';
-      if (arc) arc.style.transform = '';
-    }, 280);
-    this.activeTimeouts.set(element, timeouts);
+    const displacementX = Math.max(0, Math.min(rect.width, clientX - rect.left));
+    const glowWidth = Math.max(rect.width * 0.75, 260);
+    const glowHeight = Math.min(180, glowWidth * 0.45);
+
+    glow.style.width = `${glowWidth}px`;
+    glow.style.height = `${glowHeight}px`;
+    glow.style.left = `${displacementX}px`;
+
+    effect.classList.remove('is-receding');
+    effect.classList.add('is-active');
+
+    const pullDistance = Math.abs(deltaY);
+    const scale = Math.min(1.5, Math.sqrt(pullDistance / 80));
+    const alpha = Math.min(0.75, 0.25 + pullDistance / 180);
+
+    glow.style.transition = 'transform 0.05s linear, opacity 0.05s linear';
+    glow.style.transform = `translate(-50%, 0) scale(${scale})`;
+    glow.style.opacity = `${alpha}`;
   }
 
-  findScrollableAncestor(target) {
+  /**
+   * 释放拉动 (onRelease)
+   * @param {boolean} isTop
+   */
+  onRelease(isTop) {
+    const effect = isTop ? this.topEffect : this.bottomEffect;
+    const glow = isTop ? this.topGlow : this.bottomGlow;
+    const timerKey = isTop ? 'top' : 'bottom';
+    if (!effect || !glow) return;
+
+    clearTimeout(this.recedeTimers[timerKey]);
+    effect.classList.remove('is-active');
+    effect.classList.add('is-receding');
+
+    glow.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.4s ease-out';
+    glow.style.transform = `translate(-50%, 0) scale(1.3)`;
+    glow.style.opacity = '0';
+  }
+
+  bindEvents() {
+    // 1. 鼠标滚轮滚到头/底 (Wheel onAbsorb)
+    const targetEl = this.isWindow ? window : this.container;
+
+    targetEl.addEventListener('wheel', (e) => {
+      let isTopBoundary = false;
+      let isBottomBoundary = false;
+
+      if (this.isWindow) {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+        isTopBoundary = scrollY <= 1 && e.deltaY < 0;
+        isBottomBoundary = scrollY >= maxScrollY - 2 && e.deltaY > 0;
+      } else {
+        const scrollTop = this.container.scrollTop;
+        const maxScroll = this.container.scrollHeight - this.container.clientHeight;
+        isTopBoundary = scrollTop <= 1 && e.deltaY < 0;
+        isBottomBoundary = scrollTop >= maxScroll - 2 && e.deltaY > 0;
+      }
+
+      if (isTopBoundary) {
+        this.onAbsorb(true, Math.min(1.5, Math.abs(e.deltaY) / 75), e.clientX);
+      } else if (isBottomBoundary) {
+        this.onAbsorb(false, Math.min(1.5, Math.abs(e.deltaY) / 75), e.clientX);
+      }
+    }, { passive: true });
+
+    // 2. 触控手势拉动与释放 (Touch onPull / onRelease)
+    targetEl.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches.length > 0) {
+        this.touchStartY = e.touches[0].clientY;
+        this.touchStartX = e.touches[0].clientX;
+      }
+    }, { passive: true });
+
+    targetEl.addEventListener('touchmove', (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      const currentY = e.touches[0].clientY;
+      const currentX = e.touches[0].clientX;
+      const deltaY = currentY - this.touchStartY;
+
+      let isTop = false;
+      let isBottom = false;
+
+      if (this.isWindow) {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+        isTop = scrollY <= 0 && deltaY > 0;
+        isBottom = scrollY >= maxScrollY - 2 && deltaY < 0;
+      } else {
+        const scrollTop = this.container.scrollTop;
+        const maxScroll = this.container.scrollHeight - this.container.clientHeight;
+        isTop = scrollTop <= 0 && deltaY > 0;
+        isBottom = scrollTop >= maxScroll - 2 && deltaY < 0;
+      }
+
+      if (isTop) {
+        this.onPull(true, deltaY, currentX);
+      } else if (isBottom) {
+        this.onPull(false, deltaY, currentX);
+      }
+    }, { passive: true });
+
+    targetEl.addEventListener('touchend', () => {
+      this.onRelease(true);
+      this.onRelease(false);
+    }, { passive: true });
+  }
+}
+
+/**
+ * 全局一键自动挂载视口与所有滚动容器的 Android 5-11 EdgeEffect
+ */
+export class MduiEdgeEffectManager {
+  constructor() {
+    this.rootEffect = new MduiEdgeEffect(null);
+    this.containerMap = new WeakMap();
+    this.bindDelegation();
+  }
+
+  bindDelegation() {
+    window.addEventListener('wheel', (e) => {
+      const scrollable = this.findScrollable(e.target);
+      if (scrollable) {
+        let effect = this.containerMap.get(scrollable);
+        if (!effect) {
+          effect = new MduiEdgeEffect(scrollable);
+          this.containerMap.set(scrollable, effect);
+        }
+      }
+    }, { passive: true });
+  }
+
+  findScrollable(target) {
     let el = target;
     while (el && el !== document.body && el !== document.documentElement) {
       const style = window.getComputedStyle(el);
-      const overflowY = style.overflowY;
-      const isScrollable = (overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight;
+      const isScrollable = (style.overflowY === 'auto' || style.overflowY === 'scroll') && el.scrollHeight > el.clientHeight;
       if (isScrollable) return el;
       el = el.parentElement;
     }
     return null;
   }
-
-  bindGlobalEvents() {
-    // 1. 鼠标滚轮滚到头/滚到底水波纹响应 (Wheel)
-    window.addEventListener('wheel', (e) => {
-      const scrollable = this.findScrollableAncestor(e.target);
-      if (scrollable) {
-        const scrollTop = scrollable.scrollTop;
-        const maxScroll = scrollable.scrollHeight - scrollable.clientHeight;
-        const pair = this.getOrCreateContainerGlow(scrollable);
-
-        if (scrollTop <= 1 && e.deltaY < 0) {
-          this.triggerGlow(pair.top, true, Math.min(1, Math.abs(e.deltaY) / 100));
-        } else if (scrollTop >= maxScroll - 2 && e.deltaY > 0) {
-          this.triggerGlow(pair.bottom, false, Math.min(1, Math.abs(e.deltaY) / 100));
-        }
-      } else {
-        // 全局页面视口触顶/触底
-        const scrollY = window.scrollY || document.documentElement.scrollTop;
-        const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
-
-        if (scrollY <= 1 && e.deltaY < 0) {
-          this.triggerGlow(this.rootGlowTop, true, Math.min(1, Math.abs(e.deltaY) / 100));
-        } else if (scrollY >= maxScrollY - 2 && e.deltaY > 0) {
-          this.triggerGlow(this.rootGlowBottom, false, Math.min(1, Math.abs(e.deltaY) / 100));
-        }
-      }
-    }, { passive: true });
-
-    // 2. 移动端触摸拖拽触顶/触底响应 (Touch)
-    window.addEventListener('touchstart', (e) => {
-      if (e.touches && e.touches.length > 0) {
-        this.touchStartY = e.touches[0].clientY;
-        this.touchTarget = e.target;
-      }
-    }, { passive: true });
-
-    window.addEventListener('touchmove', (e) => {
-      if (!e.touches || e.touches.length === 0) return;
-      const currentY = e.touches[0].clientY;
-      const deltaY = currentY - this.touchStartY;
-      const scrollable = this.findScrollableAncestor(this.touchTarget || e.target);
-
-      if (scrollable) {
-        const scrollTop = scrollable.scrollTop;
-        const maxScroll = scrollable.scrollHeight - scrollable.clientHeight;
-        const pair = this.getOrCreateContainerGlow(scrollable);
-
-        if (scrollTop <= 0 && deltaY > 10) {
-          this.triggerGlow(pair.top, true, Math.min(1, deltaY / 150));
-        } else if (scrollTop >= maxScroll - 2 && deltaY < -10) {
-          this.triggerGlow(pair.bottom, false, Math.min(1, Math.abs(deltaY) / 150));
-        }
-      } else {
-        const scrollY = window.scrollY || document.documentElement.scrollTop;
-        const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
-
-        if (scrollY <= 0 && deltaY > 10) {
-          this.triggerGlow(this.rootGlowTop, true, Math.min(1, deltaY / 150));
-        } else if (scrollY >= maxScrollY - 2 && deltaY < -10) {
-          this.triggerGlow(this.rootGlowBottom, false, Math.min(1, Math.abs(deltaY) / 150));
-        }
-      }
-    }, { passive: true });
-  }
 }
 
-export function attachOverscrollGlow(options) {
-  return new MduiOverscrollGlow(options);
+export function attachEdgeEffect(container) {
+  if (container) return new MduiEdgeEffect(container);
+  return new MduiEdgeEffectManager();
 }

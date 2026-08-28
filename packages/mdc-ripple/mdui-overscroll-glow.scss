@@ -2,68 +2,115 @@
 // Copyright 2026 unjal <unjal29@outlook.com>
 // Licensed under the Apache License, Version 2.0
 //
-// Material Design (Android 5.0 - 11.0 Lollipop ~ R) Overscroll Edge Glow / Ripple Wave
-// Supports both global window viewport and any nested scrollable containers.
+// Android 5.0 (Lollipop) ~ Android 11.0 (R) Material EdgeEffect
+// Authentic 1:1 replication of AOSP android.widget.EdgeEffect (Arc + Radial Glow Dome)
 //
 
-.md1-overscroll-glow {
+.md1-edge-effect-container {
   position: absolute;
+  top: 0;
   left: 0;
-  right: 0;
-  height: 120px;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  z-index: 99999;
   overflow: hidden;
-  opacity: 0;
-  transition: opacity 0.35s cubic-bezier(0, 0, 0.2, 1);
+  z-index: 99999;
 
-  // 全局视口特化定位
   &--fixed {
     position: fixed !important;
     z-index: 999999 !important;
   }
-
-  &__arc {
-    position: absolute;
-    left: -25%;
-    right: -25%;
-    height: 100%;
-    transform: scaleY(0);
-    transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1);
-  }
-
-  &--top {
-    top: 0;
-
-    .md1-overscroll-glow__arc {
-      top: 0;
-      transform-origin: top center;
-      background: radial-gradient(ellipse 65% 100% at 50% 0%, var(--mdc-theme-primary, #6750a4) 0%, rgba(103, 80, 164, 0.4) 40%, rgba(103, 80, 164, 0) 75%);
-    }
-  }
-
-  &--bottom {
-    bottom: 0;
-
-    .md1-overscroll-glow__arc {
-      bottom: 0;
-      transform-origin: bottom center;
-      background: radial-gradient(ellipse 65% 100% at 50% 100%, var(--mdc-theme-primary, #6750a4) 0%, rgba(103, 80, 164, 0.4) 40%, rgba(103, 80, 164, 0) 75%);
-    }
-  }
-
-  &.is-active {
-    opacity: 0.9;
-    transition: opacity 0.06s ease;
-
-    .md1-overscroll-glow__arc {
-      transform: scaleY(1);
-      transition: transform 0.12s cubic-bezier(0, 0, 0.2, 1);
-    }
-  }
 }
 
-// 确保可滚动容器具备相对定位以容纳局部水波纹
-.has-overscroll-glow {
-  position: relative;
+.md1-edge-effect {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.15s ease-out;
+
+  // 顶部边缘水波纹穹顶
+  &--top {
+    top: 0;
+    height: 180px;
+  }
+
+  // 底部边缘水波纹穹顶
+  &--bottom {
+    bottom: 0;
+    height: 180px;
+  }
+
+  // Android 5-11 核心半圆水波纹泛光实体 (基于 touch X 水平位移动态定位)
+  &__glow {
+    position: absolute;
+    width: 240px;
+    height: 120px;
+    border-radius: 50% / 100% 100% 0 0;
+    transform: translate(-50%, 0) scale(0);
+    will-change: transform, opacity;
+    background: radial-gradient(
+      ellipse 60% 90% at 50% 0%,
+      var(--mdc-theme-primary, #6750a4) 0%,
+      rgba(103, 80, 164, 0.45) 45%,
+      rgba(103, 80, 164, 0.1) 75%,
+      transparent 100%
+    );
+  }
+
+  &--bottom &__glow {
+    border-radius: 50% / 0 0 100% 100%;
+    bottom: 0;
+    background: radial-gradient(
+      ellipse 60% 90% at 50% 100%,
+      var(--mdc-theme-primary, #6750a4) 0%,
+      rgba(103, 80, 164, 0.45) 45%,
+      rgba(103, 80, 164, 0.1) 75%,
+      transparent 100%
+    );
+  }
+
+  // 边缘极细高亮接触弧线 (Edge Arc)
+  &__arc {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 4px;
+    opacity: 0;
+    background: radial-gradient(
+      ellipse 50% 100% at 50% 0%,
+      var(--mdc-theme-primary, #6750a4) 0%,
+      transparent 80%
+    );
+  }
+
+  &--top &__arc {
+    top: 0;
+  }
+
+  &--bottom &__arc {
+    bottom: 0;
+    background: radial-gradient(
+      ellipse 50% 100% at 50% 100%,
+      var(--mdc-theme-primary, #6750a4) 0%,
+      transparent 80%
+    );
+  }
+
+  // 吸收/拉动状态 (PULL / ABSORB)
+  &.is-active {
+    opacity: 1;
+
+    .md1-edge-effect__arc {
+      opacity: 0.9;
+    }
+  }
+
+  // 释放淡出状态 (RECEDE)
+  &.is-receding {
+    opacity: 0;
+    transition: opacity 0.45s cubic-bezier(0.2, 0.8, 0.25, 1);
+  }
 }

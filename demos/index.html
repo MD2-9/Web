@@ -742,54 +742,97 @@
     }
 
     /* =========================================================================
-     * Android 5.0 ~ 11.0 经典触顶/触底边缘水波纹泛光 (Overscroll Edge Glow)
+     * Android 5.0 (Lollipop) ~ Android 11.0 (R) 经典 Material EdgeEffect (弧线 + 触摸点泛光穹顶)
      * ========================================================================= */
-    .md1-overscroll-glow {
+    .md1-edge-effect-container {
       position: absolute;
+      top: 0;
       left: 0;
-      right: 0;
-      height: 120px;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
-      z-index: 99999;
       overflow: hidden;
-      opacity: 0;
-      transition: opacity 0.35s cubic-bezier(0, 0, 0.2, 1);
+      z-index: 99999;
     }
-    .md1-overscroll-glow--fixed {
+    .md1-edge-effect-container--fixed {
       position: fixed !important;
       z-index: 999999 !important;
     }
-    .md1-overscroll-glow__arc {
+    .md1-edge-effect {
       position: absolute;
-      left: -25%;
-      right: -25%;
-      height: 100%;
-      transform: scaleY(0);
-      transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1);
+      left: 0;
+      width: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.15s ease-out;
     }
-    .md1-overscroll-glow--top {
+    .md1-edge-effect--top {
+      top: 0;
+      height: 180px;
+    }
+    .md1-edge-effect--bottom {
+      bottom: 0;
+      height: 180px;
+    }
+    .md1-edge-effect__glow {
+      position: absolute;
+      width: 260px;
+      height: 130px;
+      border-radius: 50% / 100% 100% 0 0;
+      transform: translate(-50%, 0) scale(0);
+      will-change: transform, opacity;
+      background: radial-gradient(
+        ellipse 60% 90% at 50% 0%,
+        var(--mdc-theme-primary, #6750a4) 0%,
+        rgba(103, 80, 164, 0.45) 45%,
+        rgba(103, 80, 164, 0.1) 75%,
+        transparent 100%
+      );
+    }
+    .md1-edge-effect--bottom .md1-edge-effect__glow {
+      border-radius: 50% / 0 0 100% 100%;
+      bottom: 0;
+      background: radial-gradient(
+        ellipse 60% 90% at 50% 100%,
+        var(--mdc-theme-primary, #6750a4) 0%,
+        rgba(103, 80, 164, 0.45) 45%,
+        rgba(103, 80, 164, 0.1) 75%,
+        transparent 100%
+      );
+    }
+    .md1-edge-effect__arc {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 4px;
+      opacity: 0;
+      background: radial-gradient(
+        ellipse 50% 100% at 50% 0%,
+        var(--mdc-theme-primary, #6750a4) 0%,
+        transparent 80%
+      );
+    }
+    .md1-edge-effect--top .md1-edge-effect__arc {
       top: 0;
     }
-    .md1-overscroll-glow--top .md1-overscroll-glow__arc {
-      top: 0;
-      transform-origin: top center;
-      background: radial-gradient(ellipse 65% 100% at 50% 0%, var(--mdc-theme-primary, #6750a4) 0%, rgba(103, 80, 164, 0.4) 40%, rgba(103, 80, 164, 0) 75%);
-    }
-    .md1-overscroll-glow--bottom {
+    .md1-edge-effect--bottom .md1-edge-effect__arc {
       bottom: 0;
+      background: radial-gradient(
+        ellipse 50% 100% at 50% 100%,
+        var(--mdc-theme-primary, #6750a4) 0%,
+        transparent 80%
+      );
     }
-    .md1-overscroll-glow--bottom .md1-overscroll-glow__arc {
-      bottom: 0;
-      transform-origin: bottom center;
-      background: radial-gradient(ellipse 65% 100% at 50% 100%, var(--mdc-theme-primary, #6750a4) 0%, rgba(103, 80, 164, 0.4) 40%, rgba(103, 80, 164, 0) 75%);
+    .md1-edge-effect.is-active {
+      opacity: 1;
     }
-    .md1-overscroll-glow.is-active {
+    .md1-edge-effect.is-active .md1-edge-effect__arc {
       opacity: 0.9;
-      transition: opacity 0.06s ease;
     }
-    .md1-overscroll-glow.is-active .md1-overscroll-glow__arc {
-      transform: scaleY(1);
-      transition: transform 0.12s cubic-bezier(0, 0, 0.2, 1);
+    .md1-edge-effect.is-receding {
+      opacity: 0;
+      transition: opacity 0.45s cubic-bezier(0.2, 0.8, 0.25, 1);
     }
 
     /* 卡片与组件展厅 (纯直角 0px) */
@@ -3174,142 +3217,225 @@
     }, 100);
 
     // =========================================================================
-    // Android 5.0 ~ 11.0 经典触顶/触底边缘水波纹泛光控制器 (全容器自动支持)
+    // Android 5.0 ~ 11.0 经典 Material EdgeEffect 物理状态机控制器 (AOSP 1:1 复刻)
     // =========================================================================
-    class MduiOverscrollGlow {
-      constructor() {
-        this.rootTop = document.createElement('div');
-        this.rootTop.className = 'md1-overscroll-glow md1-overscroll-glow--top md1-overscroll-glow--fixed';
-        this.rootTop.innerHTML = '<div class="md1-overscroll-glow__arc"></div>';
-        document.body.appendChild(this.rootTop);
-
-        this.rootBottom = document.createElement('div');
-        this.rootBottom.className = 'md1-overscroll-glow md1-overscroll-glow--bottom md1-overscroll-glow--fixed';
-        this.rootBottom.innerHTML = '<div class="md1-overscroll-glow__arc"></div>';
-        document.body.appendChild(this.rootBottom);
-
-        this.containerMap = new WeakMap();
-        this.timeouts = new WeakMap();
+    class MduiEdgeEffect {
+      constructor(container = null) {
+        this.isWindow = !container || container === document.body || container === document.documentElement;
+        this.container = this.isWindow ? document.body : container;
+        this.wrapper = null;
+        this.topEffect = null;
+        this.bottomEffect = null;
+        this.topGlow = null;
+        this.bottomGlow = null;
         this.touchStartY = 0;
-        this.touchTarget = null;
+        this.touchStartX = 0;
+        this.recedeTimers = { top: null, bottom: null };
+
+        this.initDOM();
         this.bindEvents();
       }
 
-      getGlow(container) {
-        if (!container || container === document.body || container === document.documentElement) {
-          return { top: this.rootTop, bottom: this.rootBottom };
-        }
-        if (this.containerMap.has(container)) return this.containerMap.get(container);
+      initDOM() {
+        this.wrapper = document.createElement('div');
+        this.wrapper.className = `md1-edge-effect-container ${this.isWindow ? 'md1-edge-effect-container--fixed' : ''}`;
 
-        if (window.getComputedStyle(container).position === 'static') {
-          container.style.position = 'relative';
+        this.topEffect = document.createElement('div');
+        this.topEffect.className = 'md1-edge-effect md1-edge-effect--top';
+        this.topEffect.innerHTML = `
+          <div class="md1-edge-effect__arc"></div>
+          <div class="md1-edge-effect__glow"></div>
+        `;
+        this.topGlow = this.topEffect.querySelector('.md1-edge-effect__glow');
+
+        this.bottomEffect = document.createElement('div');
+        this.bottomEffect.className = 'md1-edge-effect md1-edge-effect--bottom';
+        this.bottomEffect.innerHTML = `
+          <div class="md1-edge-effect__arc"></div>
+          <div class="md1-edge-effect__glow"></div>
+        `;
+        this.bottomGlow = this.bottomEffect.querySelector('.md1-edge-effect__glow');
+
+        this.wrapper.appendChild(this.topEffect);
+        this.wrapper.appendChild(this.bottomEffect);
+
+        if (this.isWindow) {
+          document.body.appendChild(this.wrapper);
+        } else {
+          if (window.getComputedStyle(this.container).position === 'static') {
+            this.container.style.position = 'relative';
+          }
+          this.container.appendChild(this.wrapper);
         }
-        let topEl = container.querySelector(':scope > .md1-overscroll-glow--top');
-        if (!topEl) {
-          topEl = document.createElement('div');
-          topEl.className = 'md1-overscroll-glow md1-overscroll-glow--top';
-          topEl.innerHTML = '<div class="md1-overscroll-glow__arc"></div>';
-          container.insertBefore(topEl, container.firstChild);
-        }
-        let bottomEl = container.querySelector(':scope > .md1-overscroll-glow--bottom');
-        if (!bottomEl) {
-          bottomEl = document.createElement('div');
-          bottomEl.className = 'md1-overscroll-glow md1-overscroll-glow--bottom';
-          bottomEl.innerHTML = '<div class="md1-overscroll-glow__arc"></div>';
-          container.appendChild(bottomEl);
-        }
-        const pair = { top: topEl, bottom: bottomEl };
-        this.containerMap.set(container, pair);
-        return pair;
       }
 
-      trigger(el, isTop, intensity = 1) {
-        if (!el) return;
-        const key = isTop ? 't' : 'b';
-        let timers = this.timeouts.get(el) || {};
-        clearTimeout(timers[key]);
+      onAbsorb(isTop, velocity = 1, clientX = window.innerWidth / 2) {
+        const effect = isTop ? this.topEffect : this.bottomEffect;
+        const glow = isTop ? this.topGlow : this.bottomGlow;
+        const timerKey = isTop ? 'top' : 'bottom';
+        if (!effect || !glow) return;
 
-        el.classList.add('is-active');
-        el.style.opacity = `${Math.min(0.95, 0.45 + intensity * 0.5)}`;
-        const arc = el.querySelector('.md1-overscroll-glow__arc');
-        if (arc) arc.style.transform = `scaleY(${Math.min(1.5, 0.7 + intensity * 0.5)})`;
+        clearTimeout(this.recedeTimers[timerKey]);
 
-        timers[key] = setTimeout(() => {
-          el.classList.remove('is-active');
-          el.style.opacity = '';
-          if (arc) arc.style.transform = '';
-        }, 280);
-        this.timeouts.set(el, timers);
+        const rect = this.isWindow 
+          ? { left: 0, width: window.innerWidth, height: window.innerHeight }
+          : this.container.getBoundingClientRect();
+
+        const displacementX = Math.max(0, Math.min(rect.width, clientX - rect.left));
+        const glowWidth = Math.max(rect.width * 0.75, 260);
+        const glowHeight = Math.min(180, glowWidth * 0.45);
+
+        glow.style.width = `${glowWidth}px`;
+        glow.style.height = `${glowHeight}px`;
+        glow.style.left = `${displacementX}px`;
+
+        effect.classList.remove('is-receding');
+        effect.classList.add('is-active');
+        
+        const intensity = Math.min(1.4, Math.max(0.6, velocity));
+        glow.style.transition = 'transform 0.12s cubic-bezier(0, 0, 0.2, 1), opacity 0.12s ease';
+        glow.style.transform = `translate(-50%, 0) scale(${intensity})`;
+        glow.style.opacity = `${Math.min(0.85, 0.4 + intensity * 0.35)}`;
+
+        this.recedeTimers[timerKey] = setTimeout(() => {
+          effect.classList.remove('is-active');
+          effect.classList.add('is-receding');
+          glow.style.transition = 'transform 0.45s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.45s ease-out';
+          glow.style.transform = `translate(-50%, 0) scale(${intensity * 1.35})`;
+          glow.style.opacity = '0';
+        }, 180);
       }
 
-      findScrollable(target) {
-        let el = target;
-        while (el && el !== document.body && el !== document.documentElement) {
-          const style = window.getComputedStyle(el);
-          const isScrollable = (style.overflowY === 'auto' || style.overflowY === 'scroll') && el.scrollHeight > el.clientHeight;
-          if (isScrollable) return el;
-          el = el.parentElement;
-        }
-        return null;
+      onPull(isTop, deltaY, clientX = window.innerWidth / 2) {
+        const effect = isTop ? this.topEffect : this.bottomEffect;
+        const glow = isTop ? this.topGlow : this.bottomGlow;
+        if (!effect || !glow) return;
+
+        const rect = this.isWindow 
+          ? { left: 0, width: window.innerWidth, height: window.innerHeight }
+          : this.container.getBoundingClientRect();
+
+        const displacementX = Math.max(0, Math.min(rect.width, clientX - rect.left));
+        const glowWidth = Math.max(rect.width * 0.75, 260);
+        const glowHeight = Math.min(180, glowWidth * 0.45);
+
+        glow.style.width = `${glowWidth}px`;
+        glow.style.height = `${glowHeight}px`;
+        glow.style.left = `${displacementX}px`;
+
+        effect.classList.remove('is-receding');
+        effect.classList.add('is-active');
+
+        const pullDistance = Math.abs(deltaY);
+        const scale = Math.min(1.5, Math.sqrt(pullDistance / 80));
+        const alpha = Math.min(0.75, 0.25 + pullDistance / 180);
+
+        glow.style.transition = 'transform 0.05s linear, opacity 0.05s linear';
+        glow.style.transform = `translate(-50%, 0) scale(${scale})`;
+        glow.style.opacity = `${alpha}`;
+      }
+
+      onRelease(isTop) {
+        const effect = isTop ? this.topEffect : this.bottomEffect;
+        const glow = isTop ? this.topGlow : this.bottomGlow;
+        const timerKey = isTop ? 'top' : 'bottom';
+        if (!effect || !glow) return;
+
+        clearTimeout(this.recedeTimers[timerKey]);
+        effect.classList.remove('is-active');
+        effect.classList.add('is-receding');
+
+        glow.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.4s ease-out';
+        glow.style.transform = `translate(-50%, 0) scale(1.3)`;
+        glow.style.opacity = '0';
       }
 
       bindEvents() {
-        window.addEventListener('wheel', (e) => {
-          const scrollable = this.findScrollable(e.target);
-          if (scrollable) {
-            const scrollTop = scrollable.scrollTop;
-            const maxScroll = scrollable.scrollHeight - scrollable.clientHeight;
-            const pair = this.getGlow(scrollable);
-            if (scrollTop <= 1 && e.deltaY < 0) {
-              this.trigger(pair.top, true, Math.min(1, Math.abs(e.deltaY) / 100));
-            } else if (scrollTop >= maxScroll - 2 && e.deltaY > 0) {
-              this.trigger(pair.bottom, false, Math.min(1, Math.abs(e.deltaY) / 100));
-            }
-          } else {
+        const targetEl = this.isWindow ? window : this.container;
+
+        targetEl.addEventListener('wheel', (e) => {
+          let isTopBoundary = false;
+          let isBottomBoundary = false;
+
+          if (this.isWindow) {
             const scrollY = window.scrollY || document.documentElement.scrollTop;
             const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
-            if (scrollY <= 1 && e.deltaY < 0) {
-              this.trigger(this.rootTop, true, Math.min(1, Math.abs(e.deltaY) / 100));
-            } else if (scrollY >= maxScrollY - 2 && e.deltaY > 0) {
-              this.trigger(this.rootBottom, false, Math.min(1, Math.abs(e.deltaY) / 100));
-            }
+            isTopBoundary = scrollY <= 1 && e.deltaY < 0;
+            isBottomBoundary = scrollY >= maxScrollY - 2 && e.deltaY > 0;
+          } else {
+            const scrollTop = this.container.scrollTop;
+            const maxScroll = this.container.scrollHeight - this.container.clientHeight;
+            isTopBoundary = scrollTop <= 1 && e.deltaY < 0;
+            isBottomBoundary = scrollTop >= maxScroll - 2 && e.deltaY > 0;
+          }
+
+          if (isTopBoundary) {
+            this.onAbsorb(true, Math.min(1.5, Math.abs(e.deltaY) / 75), e.clientX);
+          } else if (isBottomBoundary) {
+            this.onAbsorb(false, Math.min(1.5, Math.abs(e.deltaY) / 75), e.clientX);
           }
         }, { passive: true });
 
-        window.addEventListener('touchstart', (e) => {
+        targetEl.addEventListener('touchstart', (e) => {
           if (e.touches && e.touches.length > 0) {
             this.touchStartY = e.touches[0].clientY;
-            this.touchTarget = e.target;
+            this.touchStartX = e.touches[0].clientX;
           }
         }, { passive: true });
 
-        window.addEventListener('touchmove', (e) => {
+        targetEl.addEventListener('touchmove', (e) => {
           if (!e.touches || e.touches.length === 0) return;
-          const deltaY = e.touches[0].clientY - this.touchStartY;
-          const scrollable = this.findScrollable(this.touchTarget || e.target);
-          if (scrollable) {
-            const scrollTop = scrollable.scrollTop;
-            const maxScroll = scrollable.scrollHeight - scrollable.clientHeight;
-            const pair = this.getGlow(scrollable);
-            if (scrollTop <= 0 && deltaY > 8) {
-              this.trigger(pair.top, true, Math.min(1, deltaY / 140));
-            } else if (scrollTop >= maxScroll - 2 && deltaY < -8) {
-              this.trigger(pair.bottom, false, Math.min(1, Math.abs(deltaY) / 140));
-            }
-          } else {
+          const currentY = e.touches[0].clientY;
+          const currentX = e.touches[0].clientX;
+          const deltaY = currentY - this.touchStartY;
+
+          let isTop = false;
+          let isBottom = false;
+
+          if (this.isWindow) {
             const scrollY = window.scrollY || document.documentElement.scrollTop;
             const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
-            if (scrollY <= 0 && deltaY > 8) {
-              this.trigger(this.rootTop, true, Math.min(1, deltaY / 140));
-            } else if (scrollY >= maxScrollY - 2 && deltaY < -8) {
-              this.trigger(this.rootBottom, false, Math.min(1, Math.abs(deltaY) / 140));
-            }
+            isTop = scrollY <= 0 && deltaY > 0;
+            isBottom = scrollY >= maxScrollY - 2 && deltaY < 0;
+          } else {
+            const scrollTop = this.container.scrollTop;
+            const maxScroll = this.container.scrollHeight - this.container.clientHeight;
+            isTop = scrollTop <= 0 && deltaY > 0;
+            isBottom = scrollTop >= maxScroll - 2 && deltaY < 0;
           }
+
+          if (isTop) {
+            this.onPull(true, deltaY, currentX);
+          } else if (isBottom) {
+            this.onPull(false, deltaY, currentX);
+          }
+        }, { passive: true });
+
+        targetEl.addEventListener('touchend', () => {
+          this.onRelease(true);
+          this.onRelease(false);
         }, { passive: true });
       }
     }
 
-    const overscrollGlow = new MduiOverscrollGlow();
+    // 全局启动原生 EdgeEffect
+    const rootEdgeEffect = new MduiEdgeEffect(null);
+    const scrollContainerMap = new WeakMap();
+
+    window.addEventListener('wheel', (e) => {
+      let el = e.target;
+      while (el && el !== document.body && el !== document.documentElement) {
+        const style = window.getComputedStyle(el);
+        const isScrollable = (style.overflowY === 'auto' || style.overflowY === 'scroll') && el.scrollHeight > el.clientHeight;
+        if (isScrollable) {
+          if (!scrollContainerMap.has(el)) {
+            scrollContainerMap.set(el, new MduiEdgeEffect(el));
+          }
+          break;
+        }
+        el = el.parentElement;
+      }
+    }, { passive: true });
   </script>
 </body>
 </html>
