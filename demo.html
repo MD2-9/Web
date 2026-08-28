@@ -278,6 +278,10 @@
         <i class="mdui-list-item-icon mdui-icon material-icons">aspect_ratio</i>
         <div class="mdui-list-item-content">6. 直角对话框与菜单</div>
       </li>
+      <li class="mdui-list-item mdui-ripple" onclick="location.hash='#tabs'">
+        <i class="mdui-list-item-icon mdui-icon material-icons">tab</i>
+        <div class="mdui-list-item-content">7. 多 Tab 选项卡系统</div>
+      </li>
     </ul>
   </div>
 
@@ -708,6 +712,102 @@
             </a>
           </li>
         </ul>
+      </div>
+    </div>
+
+    <!-- 7. 多 Tab 选项卡与内容联动切换系统 -->
+    <div id="tabs" class="demo-section">
+      <div class="mdui-typo-headline mdui-m-b-2">7. 多 Tab 选项卡系统（纯直角指示条 ✖ 内容平滑联动 ✖ 莫奈主题驱动）</div>
+
+      <!-- 卡片内嵌多 Tab 切换 -->
+      <div class="mdui-card demo-card">
+        <div class="mdui-tab mdui-tab-full-width mdui-tab-centered" mdui-tab id="card-tab">
+          <a href="#tab-overview" class="mdui-ripple">
+            <i class="mdui-icon material-icons">dashboard</i>
+            <label>1. 系统架构概览</label>
+          </a>
+          <a href="#tab-tokens" class="mdui-ripple">
+            <i class="mdui-icon material-icons">palette</i>
+            <label>2. 莫奈色彩 Tokens</label>
+          </a>
+          <a href="#tab-api" class="mdui-ripple">
+            <i class="mdui-icon material-icons">code</i>
+            <label>3. 核心 API 参考</label>
+          </a>
+        </div>
+
+        <div id="tab-overview" class="mdui-p-a-3">
+          <div class="mdui-typo-title mdui-m-b-1">MD1 纯直角秩序 ✖ Material You (Monet) 双引擎</div>
+          <p class="mdui-typo-body-1">
+            本选项卡组件（<code>.mdui-tab</code>）严格遵循 MD1 直角几何规范，滑动指示条（<code>.mdui-tab-indicator</code>）采用纯直角设计，颜色自动随全局主题（原生 19 色 / 莫奈单双三色）动态着色。
+          </p>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+            <button class="mdui-btn mdui-btn-raised mdui-color-theme mdui-ripple">主色动作</button>
+            <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">次要动作</button>
+          </div>
+        </div>
+
+        <div id="tab-tokens" class="mdui-p-a-3" style="display: none;">
+          <div class="mdui-typo-title mdui-m-b-1">Android 12-17 5 组核心 Palettes 与 MD3 Surface 阶度</div>
+          <div class="mdui-table-fluid" style="border-radius: 0; box-shadow: none; border: 1px solid rgba(0,0,0,0.08);">
+            <table class="mdui-table mdui-table-hoverable">
+              <thead>
+                <tr>
+                  <th>调色板角色</th>
+                  <th>色彩阶度 Token</th>
+                  <th>适用组件场景</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Accent 1 (Primary)</strong></td>
+                  <td><code>--mdui-monet-primary-50~900</code></td>
+                  <td>AppBar、Raised 按钮、选中文本、Tab 指示器</td>
+                </tr>
+                <tr>
+                  <td><strong>Accent 2 (Secondary)</strong></td>
+                  <td><code>--mdui-monet-secondary-50~900</code></td>
+                  <td>Filter Chip、辅助操作、表单选择容器</td>
+                </tr>
+                <tr>
+                  <td><strong>Accent 3 (Tertiary)</strong></td>
+                  <td><code>--mdui-monet-tertiary-50~900</code></td>
+                  <td>FAB 浮动按钮、Accent 按钮、Switch 开关</td>
+                </tr>
+                <tr>
+                  <td><strong>MD3 Surface</strong></td>
+                  <td><code>--mdui-monet-surface-container</code></td>
+                  <td>卡片容器色、页面背景底色、对话框与抽屉栏</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="tab-api" class="mdui-p-a-3" style="display: none;">
+          <div class="mdui-typo-title mdui-m-b-1">JavaScript Tab 实例控制方法</div>
+          <p class="mdui-typo-body-1">
+            支持通过 <code>var tab = new mdui.Tab('#card-tab');</code> 进行代码级切换控制：
+          </p>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple" onclick="mdui.Tab('#card-tab').show(0)">切换到 Tab 1</button>
+            <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple" onclick="mdui.Tab('#card-tab').show(1)">切换到 Tab 2</button>
+            <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-ripple" onclick="mdui.Tab('#card-tab').show(2)">切换到 Tab 3</button>
+            <button class="mdui-btn mdui-btn-dense mdui-btn-raised mdui-color-theme mdui-ripple" onclick="mdui.Tab('#card-tab').next()">Next 下一项</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 主题色背景 Tab 条 (Primary Colored Tabs) -->
+      <div class="mdui-m-t-3">
+        <div class="mdui-typo-subheading mdui-m-b-1"><strong>主题背景 Tab 条 (Primary Color Toolbar Tabs):</strong></div>
+        <div class="mdui-tab mdui-color-theme mdui-tab-scrollable" mdui-tab>
+          <a href="javascript:;" class="mdui-ripple mdui-tab-active"><i class="mdui-icon material-icons">mail</i>收件箱</a>
+          <a href="javascript:;" class="mdui-ripple"><i class="mdui-icon material-icons">star</i>星标邮件</a>
+          <a href="javascript:;" class="mdui-ripple"><i class="mdui-icon material-icons">send</i>已发送</a>
+          <a href="javascript:;" class="mdui-ripple"><i class="mdui-icon material-icons">drafts</i>草稿箱</a>
+          <a href="javascript:;" class="mdui-ripple"><i class="mdui-icon material-icons">delete</i>已删除</a>
+        </div>
       </div>
     </div>
 
