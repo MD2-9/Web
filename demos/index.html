@@ -33,16 +33,16 @@
       font-stretch: 100%;
       font-display: swap;
       src: local('Google Sans Flex'), local('GoogleSansFlex'),
-           url('/fonts/google-sans-flex/GoogleSansFlex.woff2') format('woff2'),
-           url('/fonts/google-sans-flex/GoogleSansFlex.ttf') format('truetype');
+           url('../fonts/google-sans-flex/GoogleSansFlex.woff2') format('woff2'),
+           url('../fonts/google-sans-flex/GoogleSansFlex.ttf') format('truetype');
     }
     @font-face {
       font-family: 'Material Icons';
       font-style: normal;
       font-weight: 400;
       src: local('Material Icons'), local('MaterialIcons-Regular'),
-           url('/icons/material-icons/MaterialIcons-Regular.woff2') format('woff2'),
-           url('/icons/material-icons/MaterialIcons-Regular.woff') format('woff');
+           url('../icons/material-icons/MaterialIcons-Regular.woff2') format('woff2'),
+           url('../icons/material-icons/MaterialIcons-Regular.woff') format('woff');
     }
 
     .material-icons,
@@ -356,19 +356,42 @@
       transition: opacity 0.25s ease, color 0.3s ease;
     }
 
-    /* 一级导航菜单容器 (两端居中与纵向均衡排布) */
+    /* 一级导航菜单容器 (绝对居中，置于顶层，覆盖过长文本) */
     .drawer-nav-section .rail-nav-list {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      padding: 8px 0;
-      flex: 1;
+      padding: 16px 0;
       width: 100%;
       justify-content: center;
       align-items: center;
       overflow-y: auto;
       overflow-x: hidden !important;
       scrollbar-width: none;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      z-index: 10;
+      background-color: var(--mdc-theme-surface, #ffffff);
+    }
+    
+    #railVerticalTitleTop {
+      position: absolute;
+      top: 72px;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0 !important;
+      z-index: 1;
+    }
+    
+    #railVerticalTitleBottom {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0 !important;
+      z-index: 1;
     }
 
     /* 二级面板内的导航项样式 (完全无缩进瑕疵) */
@@ -739,46 +762,39 @@
       border-radius: 50% !important;
       background-color: var(--mdc-theme-primary, #6750a4);
       box-shadow: 0 1px 3px rgba(0,0,0,0.4);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-    /* MDUI 经典水滴大头针气泡 (Teardrop Pin) */
-    .md1-slider-pin {
-      position: absolute;
-      bottom: 12px;
-      left: 50%;
-      width: 28px;
-      height: 28px;
-      background-color: var(--mdc-theme-primary, #6750a4);
-      border-radius: 50% 50% 50% 0 !important;
-      transform: translateX(-50%) rotate(-45deg) scale(0);
-      transform-origin: bottom center;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1);
-      pointer-events: none;
+      transform: translateY(0) rotate(0deg);
       z-index: 10;
     }
-    .md1-slider-pin span {
-      transform: rotate(45deg);
+    .md1-slider-thumb span {
+      opacity: 0;
       color: var(--mdc-theme-on-primary, #ffffff);
       font-size: 10.5px;
       font-weight: bold;
       line-height: 1;
+      transform: rotate(0deg);
+      transition: all 0.2s;
       user-select: none;
+      pointer-events: none;
     }
-    /* 拖动 / 聚焦 / 悬停时弹出大头针并放大滑块 */
-    .md1-slider.is-active .md1-slider-pin,
-    .md1-slider:hover .md1-slider-pin,
-    .md1-slider:active .md1-slider-pin {
-      transform: translateX(-50%) rotate(-45deg) scale(1) translateY(-8px);
-    }
+    /* 拖动 / 聚焦 / 悬停时原来的点变成大头针 */
     .md1-slider.is-active .md1-slider-thumb,
     .md1-slider:hover .md1-slider-thumb,
     .md1-slider:active .md1-slider-thumb {
-      transform: scale(1.35);
-      box-shadow: 0 0 0 8px rgba(103, 80, 164, 0.2);
+      width: 28px;
+      height: 28px;
+      border-radius: 50% 50% 50% 0 !important;
+      transform: translateY(-18px) rotate(-45deg);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .md1-slider.is-active .md1-slider-thumb span,
+    .md1-slider:hover .md1-slider-thumb span,
+    .md1-slider:active .md1-slider-thumb span {
+      opacity: 1;
+      transform: rotate(45deg);
     }
 
     /* MD1 纯正开关 */
@@ -1397,8 +1413,7 @@
             <div class="md1-slider-track"></div>
             <div class="md1-slider-fill" id="md1SliderFill" style="width: 37.5%;"></div>
             <div class="md1-slider-thumb-wrapper" id="md1SliderThumbWrapper" style="left: 37.5%;">
-              <div class="md1-slider-thumb"></div>
-              <div class="md1-slider-pin" id="md1SliderPin">
+              <div class="md1-slider-thumb">
                 <span id="md1SliderPinText">40</span>
               </div>
             </div>
