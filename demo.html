@@ -137,6 +137,23 @@
       border-color: var(--mdui-monet-outline-variant, rgba(0, 0, 0, 0.08)) !important;
     }
 
+    /* 置顶卡片丝滑展开/折叠动画 */
+    #theme-panel-body {
+      overflow: hidden;
+      max-height: 1000px;
+      opacity: 1;
+      transform: translateY(0);
+      transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #theme-panel-body.is-collapsed {
+      max-height: 0 !important;
+      opacity: 0 !important;
+      transform: translateY(-8px) !important;
+      pointer-events: none;
+    }
+
     /* Tab 选项卡内容面板丝滑 Material 切换动画 */
     .tab-content-panel {
       animation: mduiTabFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -251,10 +268,10 @@
   <!-- 顶部导航栏 (固定) -->
   <header class="mdui-appbar mdui-appbar-fixed">
     <div class="mdui-toolbar mdui-color-theme">
-      <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#left-drawer', overlay: true}">
+      <a href="javascript:;" class="mdui-btn mdui-btn-icon" id="btn-open-drawer">
         <i class="mdui-icon material-icons">menu</i>
       </a>
-      <span class="mdui-typo-title">MDUI MD1 纯直角 & 圆形双主题系统</span>
+      <span class="mdui-typo-title">MDUI MD1 纯直角 & 莫奈双主题系统</span>
       <div class="mdui-toolbar-spacer"></div>
       <button id="btn-toggle-dark" class="mdui-btn mdui-btn-icon" title="切换暗色/亮色">
         <i class="mdui-icon material-icons">brightness_4</i>
@@ -265,52 +282,94 @@
     </div>
   </header>
 
-  <!-- 左侧抽屉栏 (带经典 Material Drawer Header 与无缝贴合) -->
-  <div class="mdui-drawer mdui-drawer-close" id="left-drawer">
-    <div class="mdui-p-a-2 mdui-color-theme" style="display: flex; align-items: center; gap: 12px; height: 110px; box-sizing: border-box;">
-      <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px;">
-        M1
+  <!-- 左侧抽屉栏 (支持 M3 Navigation Rail 仅图标模式 ✖ 二级菜单 ✖ 底部切换选项) -->
+  <div class="mdui-drawer mdui-drawer-close" id="left-drawer" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <!-- 抽屉栏上部滚动内容 -->
+    <div style="overflow-y: auto; flex: 1;">
+      <!-- Header -->
+      <div class="mdui-p-a-2 mdui-color-theme" style="display: flex; align-items: center; gap: 12px; height: 80px; box-sizing: border-box;">
+        <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; flex-shrink: 0;">
+          M1
+        </div>
+        <div class="drawer-header-text" style="overflow: hidden;">
+          <div style="font-weight: bold; font-size: 15px; white-space: nowrap;">MDUI Angular</div>
+          <div style="font-size: 11px; opacity: 0.85; white-space: nowrap;">纯直角 & 莫奈动态色</div>
+        </div>
       </div>
-      <div>
-        <div style="font-weight: bold; font-size: 16px;">MDUI Angular</div>
-        <div style="font-size: 12px; opacity: 0.85;">MD1 纯直角 & 莫奈动态色</div>
+
+      <!-- 导航列表 (支持一级与二级手风琴折叠) -->
+      <div class="mdui-list" mdui-collapse="{accordion: true}">
+        
+        <!-- 一级: 按钮与 FAB -->
+        <a href="#buttons" class="mdui-list-item mdui-ripple" title="1. 按钮与 FAB">
+          <i class="mdui-list-item-icon mdui-icon material-icons">touch_app</i>
+          <div class="mdui-list-item-content">1. 按钮与 FAB</div>
+        </a>
+
+        <!-- 一级: 卡片与头像 -->
+        <a href="#cards" class="mdui-list-item mdui-ripple" title="2. 卡片与头像">
+          <i class="mdui-list-item-icon mdui-icon material-icons">view_agenda</i>
+          <div class="mdui-list-item-content">2. 卡片与头像</div>
+        </a>
+
+        <!-- 二级折叠菜单: 3. 组件全景展厅 -->
+        <div class="mdui-collapse-item">
+          <div class="mdui-collapse-item-header mdui-list-item mdui-ripple" title="3. M3 组件全景展厅">
+            <i class="mdui-list-item-icon mdui-icon material-icons">widgets</i>
+            <div class="mdui-list-item-content">3. 组件全景矩阵</div>
+            <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+          </div>
+          <div class="mdui-collapse-item-body mdui-list drawer-submenu drawer-rail-hidden">
+            <a href="#components" class="mdui-list-item mdui-ripple">🔘 5 种按钮变体</a>
+            <a href="#components" class="mdui-list-item mdui-ripple">🏷️ 4 种胶囊 Chips</a>
+            <a href="#components" class="mdui-list-item mdui-ripple">🃏 3 种卡片形态</a>
+            <a href="#components" class="mdui-list-item mdui-ripple">📝 表单/开关/滑块</a>
+          </div>
+        </div>
+
+        <!-- 一级: 壁纸取色 -->
+        <a href="#monet-extract" class="mdui-list-item mdui-ripple" title="4. 壁纸单双三色取色">
+          <i class="mdui-list-item-icon mdui-icon material-icons">wallpaper</i>
+          <div class="mdui-list-item-content">4. 壁纸单/双/三色取色</div>
+        </a>
+
+        <!-- 一级: 局部双主题隔离 -->
+        <a href="#split-theme" class="mdui-list-item mdui-ripple" title="5. 局部双主题隔离">
+          <i class="mdui-list-item-icon mdui-icon material-icons">compare_arrows</i>
+          <div class="mdui-list-item-content">5. 局部双主题隔离</div>
+        </a>
+
+        <!-- 一级: 直角对话框与菜单 -->
+        <a href="#dialogs" class="mdui-list-item mdui-ripple" title="6. 直角对话框与菜单">
+          <i class="mdui-list-item-icon mdui-icon material-icons">aspect_ratio</i>
+          <div class="mdui-list-item-content">6. 直角对话框与菜单</div>
+        </a>
+
+        <!-- 一级: 多 Tab 系统 -->
+        <a href="#tabs" class="mdui-list-item mdui-ripple" title="7. 多 Tab 选项卡系统">
+          <i class="mdui-list-item-icon mdui-icon material-icons">tab</i>
+          <div class="mdui-list-item-content">7. 多 Tab 选项卡系统</div>
+        </a>
+
+        <!-- 一级: 内容折叠与手风琴 -->
+        <a href="#collapse" class="mdui-list-item mdui-ripple" title="8. 内容折叠与手风琴">
+          <i class="mdui-list-item-icon mdui-icon material-icons">unfold_more</i>
+          <div class="mdui-list-item-content">8. 内容折叠与手风琴</div>
+        </a>
       </div>
     </div>
-    <ul class="mdui-list">
-      <li class="mdui-subheader">组件导航索引</li>
-      <li class="mdui-list-item mdui-ripple" onclick="location.hash='#buttons'">
-        <i class="mdui-list-item-icon mdui-icon material-icons">touch_app</i>
-        <div class="mdui-list-item-content">1. 按钮与 FAB</div>
-      </li>
-      <li class="mdui-list-item mdui-ripple" onclick="location.hash='#cards'">
-        <i class="mdui-list-item-icon mdui-icon material-icons">dashboard</i>
-        <div class="mdui-list-item-content">2. 卡片与头像 (MD3 着色)</div>
-      </li>
-      <li class="mdui-list-item mdui-ripple" onclick="location.hash='#forms'">
-        <i class="mdui-list-item-icon mdui-icon material-icons">check_box</i>
-        <div class="mdui-list-item-content">3. 表单与选择组件</div>
-      </li>
-      <li class="mdui-list-item mdui-ripple" onclick="location.hash='#monet-extract'">
-        <i class="mdui-list-item-icon mdui-icon material-icons">wallpaper</i>
-        <div class="mdui-list-item-content">4. 壁纸单/双/三色取色</div>
-      </li>
-      <li class="mdui-list-item mdui-ripple" onclick="location.hash='#dual-theme'">
-        <i class="mdui-list-item-icon mdui-icon material-icons">compare_arrows</i>
-        <div class="mdui-list-item-content">5. 局部双主题隔离并存</div>
-      </li>
-      <li class="mdui-list-item mdui-ripple" onclick="location.hash='#dialogs'">
-        <i class="mdui-list-item-icon mdui-icon material-icons">aspect_ratio</i>
-        <div class="mdui-list-item-content">6. 直角对话框与菜单</div>
-      </li>
-      <li class="mdui-list-item mdui-ripple" onclick="location.hash='#tabs'">
-        <i class="mdui-list-item-icon mdui-icon material-icons">tab</i>
-        <div class="mdui-list-item-content">7. 多 Tab 选项卡系统</div>
-      </li>
-      <li class="mdui-list-item mdui-ripple" onclick="location.hash='#collapse'">
-        <i class="mdui-list-item-icon mdui-icon material-icons">unfold_more</i>
-        <div class="mdui-list-item-content">8. 内容折叠与手风琴面板</div>
-      </li>
-    </ul>
+
+    <!-- 抽屉栏底部模式控制选项 (Rail 紧凑 / 常驻 Expanded / 模态 Modal) -->
+    <div class="mdui-p-a-2" style="border-top: 1px solid var(--mdui-monet-outline-variant, rgba(0,0,0,0.08)); background: var(--mdui-monet-surface-container, rgba(0,0,0,0.02));">
+      <div class="drawer-footer-options">
+        <div class="mdui-typo-caption mdui-m-b-1"><strong>侧边栏显示形态:</strong></div>
+        <div class="segmented-btn-group" id="drawer-mode-group" style="width: 100%; display: flex;">
+          <button type="button" data-mode="modal" class="active" style="flex: 1; padding: 4px 2px; font-size: 11px;">模态</button>
+          <button type="button" data-mode="rail" style="flex: 1; padding: 4px 2px; font-size: 11px;">仅图标</button>
+          <button type="button" data-mode="expanded" style="flex: 1; padding: 4px 2px; font-size: 11px;">常驻</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="mdui-container">
@@ -327,7 +386,7 @@
         </button>
       </div>
 
-      <!-- 可折叠的主体内容区域 -->
+      <!-- 可折叠的主体内容区域 (带丝滑平滑过渡动画) -->
       <div id="theme-panel-body">
         <div class="mdui-row">
           <div class="mdui-col-md-4 mdui-col-sm-12">
@@ -1452,20 +1511,65 @@
       dark: false
     });
 
-    // 置顶控制台折叠/展开到仅标题功能
+    // 置顶控制台折叠/展开到仅标题功能 (带丝滑平滑过渡动画)
     let isPanelCollapsed = false;
     document.getElementById('btn-toggle-panel').onclick = () => {
       isPanelCollapsed = !isPanelCollapsed;
       const body = document.getElementById('theme-panel-body');
       const icon = document.getElementById('icon-toggle-panel');
       if (isPanelCollapsed) {
-        body.style.display = 'none';
+        body.classList.add('is-collapsed');
         icon.textContent = 'expand_more';
       } else {
-        body.style.display = 'block';
+        body.classList.remove('is-collapsed');
         icon.textContent = 'expand_less';
       }
     };
+
+    // 侧边栏抽屉与 M3 Navigation Rail 模式控制
+    const drawerElement = document.getElementById('left-drawer');
+    const drawerInst = new mdui.Drawer('#left-drawer', { overlay: true });
+    let currentDrawerMode = 'modal'; // 'modal' | 'rail' | 'expanded'
+
+    document.getElementById('btn-open-drawer').onclick = () => {
+      if (currentDrawerMode === 'modal') {
+        drawerInst.toggle();
+      } else {
+        // 在常驻/Rail 模式下点击菜单图标可在 Rail 与 Expanded 之间切换
+        const nextMode = currentDrawerMode === 'rail' ? 'expanded' : 'rail';
+        setDrawerMode(nextMode);
+      }
+    };
+
+    function setDrawerMode(mode) {
+      currentDrawerMode = mode;
+      document.querySelectorAll('#drawer-mode-group button').forEach(b => {
+        if (b.getAttribute('data-mode') === mode) b.classList.add('active');
+        else b.classList.remove('active');
+      });
+
+      document.body.classList.remove('drawer-mode-rail', 'drawer-mode-expanded', 'mdui-drawer-body-left');
+      drawerElement.classList.remove('drawer-rail', 'mdui-drawer-open', 'mdui-drawer-close');
+
+      if (mode === 'modal') {
+        drawerInst.options.overlay = true;
+        drawerElement.classList.add('mdui-drawer-close');
+      } else if (mode === 'rail') {
+        drawerInst.close();
+        drawerInst.options.overlay = false;
+        drawerElement.classList.add('drawer-rail', 'mdui-drawer-open');
+        document.body.classList.add('drawer-mode-rail', 'mdui-drawer-body-left');
+      } else if (mode === 'expanded') {
+        drawerInst.close();
+        drawerInst.options.overlay = false;
+        drawerElement.classList.add('mdui-drawer-open');
+        document.body.classList.add('drawer-mode-expanded', 'mdui-drawer-body-left');
+      }
+    }
+
+    document.querySelectorAll('#drawer-mode-group button').forEach(btn => {
+      btn.onclick = () => setDrawerMode(btn.getAttribute('data-mode'));
+    });
   </script>
 </body>
 </html>

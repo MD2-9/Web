@@ -65,12 +65,73 @@ css = css.replace(/border-radius:\s*2px;/g, 'border-radius: 0;');
 
 // C. Fix Drawer Top under Appbar for all screens including ultra-wide desktop
 const drawerAppbarFix = `
-/* 抽屉栏完美贴合修复（模态遮罩抽屉 100% 满高无缝，桌面常驻抽屉紧贴 Appbar） */
+/* 抽屉栏完美贴合与 M3 Navigation Rail (迷你图标模式) 平滑展开系统 */
 .mdui-drawer {
   top: 0 !important;
   height: 100% !important;
   margin: 0 !important;
   border-radius: 0 !important;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* 抽屉栏 Navigation Rail 迷你紧凑图标模式 (72px 仅显示居中图标) */
+.mdui-drawer.drawer-rail {
+  width: 72px !important;
+  overflow-x: hidden !important;
+  box-shadow: 1px 0 3px rgba(0,0,0,0.08) !important;
+}
+.mdui-drawer.drawer-rail:hover {
+  width: 260px !important;
+  box-shadow: 2px 0 12px rgba(0,0,0,0.2) !important;
+  z-index: 9999 !important;
+}
+.mdui-drawer.drawer-rail .drawer-header-text,
+.mdui-drawer.drawer-rail .mdui-list-item-content,
+.mdui-drawer.drawer-rail .mdui-collapse-item-arrow,
+.mdui-drawer.drawer-rail .mdui-subheader,
+.mdui-drawer.drawer-rail .drawer-footer-options {
+  opacity: 0;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+.mdui-drawer.drawer-rail:hover .drawer-header-text,
+.mdui-drawer.drawer-rail:hover .mdui-list-item-content,
+.mdui-drawer.drawer-rail:hover .mdui-collapse-item-arrow,
+.mdui-drawer.drawer-rail:hover .mdui-subheader,
+.mdui-drawer.drawer-rail:hover .drawer-footer-options {
+  opacity: 1;
+}
+.mdui-drawer.drawer-rail .mdui-list-item-icon {
+  margin-right: 0 !important;
+  margin-left: 8px !important;
+}
+.mdui-drawer.drawer-rail:hover .mdui-list-item-icon {
+  margin-left: 0 !important;
+  margin-right: 16px !important;
+}
+.mdui-drawer.drawer-rail .drawer-rail-hidden {
+  display: none !important;
+}
+.mdui-drawer.drawer-rail:hover .drawer-rail-hidden {
+  display: block !important;
+}
+
+/* 桌面常驻时根据 Rail / Expanded 自动适配主内容左边距 */
+body.drawer-mode-rail {
+  padding-left: 72px !important;
+  transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+body.drawer-mode-expanded {
+  padding-left: 260px !important;
+  transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media (max-width: 1023.9px) {
+  body.drawer-mode-rail,
+  body.drawer-mode-expanded {
+    padding-left: 0 !important;
+  }
 }
 
 /* 仅在桌面端桌面常驻（body-left 且非全高）时，挂载在标题栏下方 */
@@ -89,6 +150,12 @@ const drawerAppbarFix = `
     top: 48px !important;
     height: calc(100% - 48px) !important;
   }
+}
+
+/* 抽屉二级菜单缩进与样式 */
+.drawer-submenu .mdui-list-item {
+  padding-left: 56px !important;
+  font-size: 13px !important;
 }
 
 /* 菜单图层置顶修复，防止被卡片或相邻按钮遮挡 */
