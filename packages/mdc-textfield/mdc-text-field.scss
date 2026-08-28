@@ -251,6 +251,8 @@
 // Outlined Text Field with Leading Icon enhancements (0px Straight Angle)
 .mdc-text-field--outlined.mdc-text-field--with-leading-icon {
   border-radius: 0;
+  height: 56px;
+  box-sizing: border-box;
 
   .mdc-text-field__icon {
     position: absolute;
@@ -268,7 +270,10 @@
     padding-bottom: 0;
     line-height: 54px;
     padding-left: 44px;
+    padding-right: 14px;
     font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
   }
 
   .mdc-floating-label {
@@ -288,6 +293,59 @@
     transform: none;
     line-height: 1;
     pointer-events: none;
+  }
+}
+
+// Filled Text Field with Leading Icon enhancements (0px Straight Angle & 56px standard height)
+.mdc-text-field:not(.mdc-text-field--outlined).mdc-text-field--with-leading-icon {
+  border-radius: 0;
+  height: 56px;
+  background: rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+
+  .mdc-text-field__icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .mdc-text-field__input {
+    height: 100%;
+    padding-top: 18px;
+    padding-bottom: 4px;
+    padding-left: 44px;
+    padding-right: 14px;
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+    background: transparent;
+  }
+
+  .mdc-floating-label {
+    position: absolute;
+    top: 6px;
+    left: 44px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mdc-theme-primary);
+    transform: none;
+    line-height: 1.2;
+    pointer-events: none;
+  }
+}
+
+.dark-theme .mdc-text-field:not(.mdc-text-field--outlined).mdc-text-field--with-leading-icon {
+  background: rgba(255, 255, 255, 0.06);
+
+  .mdc-text-field__input {
+    border-bottom-color: rgba(255, 255, 255, 0.42);
+    color: #e6e1e5;
   }
 }
 

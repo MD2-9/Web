@@ -1594,6 +1594,8 @@
       display: inline-flex;
       flex-direction: column;
       width: 240px;
+      box-sizing: border-box;
+      font-family: inherit;
     }
     .mdc-select-custom__surface {
       display: flex;
@@ -1607,6 +1609,7 @@
       user-select: none;
       box-sizing: border-box;
       position: relative;
+      border-radius: 0;
     }
     .dark-theme .mdc-select-custom__surface {
       background: rgba(255, 255, 255, 0.06);
@@ -1620,17 +1623,18 @@
       min-width: 240px;
       background: var(--mdc-theme-surface, #ffffff);
       color: var(--mdc-theme-on-surface, #1d1b20);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
-      z-index: 9999;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+      z-index: 10000;
       flex-direction: column;
       padding: 6px 0;
       border-radius: 0;
+      font-family: inherit;
     }
     .dark-theme .mdc-select-custom__menu {
       background: #25232a;
-      border-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
     }
     .mdc-select-custom__item {
       padding: 12px 16px;
@@ -1640,6 +1644,7 @@
       justify-content: space-between;
       cursor: pointer;
       transition: background 0.15s ease;
+      font-family: inherit;
     }
     .mdc-select-custom__item:hover {
       background: rgba(0, 0, 0, 0.05);

@@ -28,7 +28,7 @@
   @include mdc-elevation(2);
   @include mdc-card-container-layout_;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .mdc-card--stroked {
