@@ -2,11 +2,11 @@
 // Copyright 2026 unjal <unjal29@outlook.com>
 // Licensed under the Apache License, Version 2.0
 //
-// Android 5.0 (Lollipop) ~ Android 11.0 (R) 经典页面边界水波纹特效 (Material Ripple 同款涟漪风格)
+// Android 5.0 (Lollipop) ~ Android 11.0 (R) 扁平化边界弧形水波纹 (Flat Arc EdgeEffect)
+// 100% 复刻截图所示的原生扁平半椭圆弧顶，纯色微透，无多余光效
 //
 
-.md1-overscroll-ripple-container,
-.md1-edge-effect-container {
+.md1-overscroll-edge-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -22,24 +22,49 @@
   }
 }
 
-// 纯正 Material 涟漪波纹实体 (与按钮/Tab水波纹风格完全一致)
-.md1-overscroll-ripple-wave,
-.md1-edge-effect__glow {
+.md1-overscroll-edge-arc {
   position: absolute;
-  border-radius: 50% !important;
+  left: -20%;
+  width: 140%;
   pointer-events: none;
-  z-index: 99999;
   background-color: var(--mdc-theme-primary, #6750a4);
-  opacity: 0.22;
-  transform: translate(-50%, -50%) scale(0.01);
-  will-change: transform, opacity;
-  transition: transform 0.45s cubic-bezier(0, 0, 0.2, 1), opacity 0.45s linear;
+  opacity: 0;
+  transform: scaleY(0);
+  will-change: transform, opacity, height;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.4s ease-out;
 
-  &.is-active {
-    transform: translate(-50%, -50%) scale(1);
+  // 顶部触顶弧形：从顶部向下突出的半椭圆弧
+  &--top {
+    top: 0;
+    height: 90px;
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+    transform-origin: top center;
   }
 
-  &.is-fading {
+  // 底部触底弧形：从底部向上突出的半椭圆弧 (与 Android 5-11 扁平化截图完全一致)
+  &--bottom {
+    bottom: 0;
+    height: 90px;
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    transform-origin: bottom center;
+  }
+
+  &.is-active {
+    opacity: 0.16;
+    transform: scaleY(1);
+    transition: transform 0.12s cubic-bezier(0, 0, 0.2, 1), opacity 0.12s ease-in;
+  }
+
+  &.is-receding {
     opacity: 0;
+    transform: scaleY(0);
+    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.45s ease-out;
+  }
+}
+
+.dark-theme .md1-overscroll-edge-arc {
+  background-color: #ffffff;
+  &.is-active {
+    opacity: 0.14;
   }
 }
