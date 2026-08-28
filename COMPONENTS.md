@@ -477,6 +477,53 @@ body {
 | :--- | :--- | :--- | :--- | :--- |
 | **Headline 1** | `<h1>`, `.mdc-typography--headline1` | 32px | 40px | 700 (Bold) |
 | **Headline 2** | `<h2>`, `.mdc-typography--headline2` | 24px | 32px | 700 (Bold) |
-| **Headline 3** | `<h3>`, `.mdc-typography--headline3` | 18px | 24px | 600 (SemiBold) |
 | **Body 1** | `<p>`, `.mdc-typography--body1` | 14px | 20px | 400 (Regular) |
 | **Caption** | `<small>`, `.mdc-typography--caption` | 12px | 16px | 400 (Regular) |
+
+---
+
+### 7. 🌊 Android 5.0 ~ 11.0 经典边缘水波纹泛光 (`@material/ripple/mdui-overscroll-glow`)
+
+1:1 深度复刻 AOSP 原生 `android.widget.EdgeEffect` 状态机（`PULL` ➔ `ABSORB` ➔ `RECEDE`）与触控水平位移（`displacement`）半圆穹顶泛光。
+
+#### 核心特性：
+- **边缘高亮弧线 (Edge Arc)**：4px 边缘受力指示。
+- **动态位移泛光穹顶 (Glow Dome)**：基于滚轮/触碰 `clientX` 坐标动态对齐半圆几何体（`border-radius: 50% / 100% 100% 0 0`）。
+- **全容器自动支持**：自动适配全局视口与页面内所有 `overflow-y: auto / scroll` 滚动容器。
+
+```javascript
+import { MduiEdgeEffect, attachEdgeEffect } from '@material/ripple';
+
+// 1. 全局视口自动挂载
+attachEdgeEffect();
+
+// 2. 指定容器单独挂载
+const containerEffect = new MduiEdgeEffect(document.getElementById('my-scroll-container'));
+```
+
+---
+
+### 8. 🧭 Navigation Rail 二级菜单水波纹扩散展开 (`@material/navigation-rail`)
+
+二级抽屉面板以点击按钮或触碰点为原点，通过 `clip-path: circle(...)` 呈现圆形水波纹向外扩展动画（Expand），返回一级菜单时以同款圆形水波纹向原点平滑收缩消退（Dismiss）。
+
+```html
+<!-- 一级菜单项 (传入 event 以获取精确水波纹圆心坐标) -->
+<div class="rail-nav-item" onclick="openOverlay('catalogSubmenuPanel', event)" title="目录">
+  <i class="material-icons rail-item-icon">toc</i>
+  <span class="rail-item-text">目录</span>
+</div>
+
+<!-- 二级水波纹面板 -->
+<div id="catalogSubmenuPanel" class="secondary-overlay-panel">
+  <div class="overlay-top-bar">
+    <div class="overlay-header-title">
+      <button class="mdc-button mdc-button--dense" onclick="closeOverlay('catalogSubmenuPanel', event)">
+        <i class="material-icons">arrow_back</i>
+      </button>
+      <span>组件全景目录</span>
+    </div>
+  </div>
+  <div class="secondary-overlay-content">...</div>
+</div>
+```

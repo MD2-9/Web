@@ -499,21 +499,52 @@
       display: none;
     }
 
-    /* 二级菜单进入与退出统一使用同款动画 (不作区分) */
-    .secondary-overlay-panel.anim-in,
-    .secondary-overlay-panel.anim-out {
-      display: flex;
-      animation: overlayUniformAnim 0.25s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+    /* 二级菜单水波纹扩散展开与收起 (以点击源坐标为圆心圆形水波纹扩散) */
+    .secondary-overlay-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--mdc-theme-surface, #ffffff);
+      z-index: 1005;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto;
+      scrollbar-width: none;
+      will-change: clip-path, opacity;
     }
 
-    @keyframes overlayUniformAnim {
+    .secondary-overlay-panel.anim-in {
+      display: flex !important;
+      animation: rippleExpandOverlay 0.35s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+    }
+
+    .secondary-overlay-panel.anim-out {
+      display: flex !important;
+      animation: rippleDismissOverlay 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes rippleExpandOverlay {
       0% {
-        opacity: 0;
-        transform: scale(0.96);
+        clip-path: circle(0% at var(--ripple-origin-x, 36px) var(--ripple-origin-y, 40px));
+        opacity: 0.5;
       }
       100% {
+        clip-path: circle(150% at var(--ripple-origin-x, 36px) var(--ripple-origin-y, 40px));
         opacity: 1;
-        transform: scale(1);
+      }
+    }
+
+    @keyframes rippleDismissOverlay {
+      0% {
+        clip-path: circle(150% at var(--ripple-origin-x, 36px) var(--ripple-origin-y, 40px));
+        opacity: 1;
+      }
+      100% {
+        clip-path: circle(0% at var(--ripple-origin-x, 36px) var(--ripple-origin-y, 40px));
+        opacity: 0;
       }
     }
 
@@ -1662,7 +1693,7 @@
     <div class="drawer-nav-section" id="drawerNavSection">
       
       <!-- 顶部 Brand Header (点击触发调色盘水波纹) -->
-      <div class="rail-header" onclick="openOverlay('themePickerPanel')" title="点击打开莫奈动态调色盘">
+      <div class="rail-header" onclick="openOverlay('themePickerPanel', event)" title="点击打开莫奈动态调色盘">
         <div class="rail-header-avatar">M3</div>
         <div class="rail-header-text">
           <div style="font-weight: bold; font-size: 15px;">MD3.1 · MDC-Web</div>
@@ -1685,19 +1716,19 @@
         </a>
 
         <!-- 2. 目录 (点击触发水波纹扩散覆盖一级菜单，展开 9 大模块) -->
-        <div class="rail-nav-item" onclick="openOverlay('catalogSubmenuPanel')" title="目录 (点击展开二级全景组件)">
+        <div class="rail-nav-item" onclick="openOverlay('catalogSubmenuPanel', event)" title="目录 (点击展开二级全景组件)">
           <i class="material-icons rail-item-icon" style="color: var(--mdc-theme-primary);">toc</i>
           <span class="rail-item-text">目录</span>
         </div>
 
         <!-- 3. 设置 (点击触发水波纹覆盖，展开主题与暗色设置) -->
-        <div class="rail-nav-item" onclick="openOverlay('settingsSubmenuPanel')" title="设置 (暗色与主题配置)">
+        <div class="rail-nav-item" onclick="openOverlay('settingsSubmenuPanel', event)" title="设置 (暗色与主题配置)">
           <i class="material-icons rail-item-icon">settings</i>
           <span class="rail-item-text">设置</span>
         </div>
 
         <!-- 4. 关于 -->
-        <div class="rail-nav-item" onclick="openOverlay('aboutSubmenuPanel')" title="关于项目">
+        <div class="rail-nav-item" onclick="openOverlay('aboutSubmenuPanel', event)" title="关于项目">
           <i class="material-icons rail-item-icon">info</i>
           <span class="rail-item-text">关于</span>
         </div>
@@ -1724,7 +1755,7 @@
     <div id="catalogSubmenuPanel" class="secondary-overlay-panel">
       <div class="overlay-top-bar">
         <div class="overlay-header-title">
-          <button class="mdc-button mdc-button--dense" onclick="closeOverlay('catalogSubmenuPanel')" style="color: #fff; min-width: 32px; padding: 0 4px;" title="返回一级菜单">
+          <button class="mdc-button mdc-button--dense" onclick="closeOverlay('catalogSubmenuPanel', event)" style="color: #fff; min-width: 32px; padding: 0 4px;" title="返回一级菜单">
             <i class="material-icons">arrow_back</i>
           </button>
           <span>组件全景目录</span>
@@ -1776,7 +1807,7 @@
 
       <!-- 底部显式返回按钮 -->
       <div class="overlay-bottom-bar">
-        <button class="mdc-button mdc-button--outlined" onclick="closeOverlay('catalogSubmenuPanel')" style="width: 100%;">
+        <button class="mdc-button mdc-button--outlined" onclick="closeOverlay('catalogSubmenuPanel', event)" style="width: 100%;">
           <i class="material-icons mdc-button__icon">arrow_back</i>
           返回一级菜单
         </button>
@@ -1787,7 +1818,7 @@
     <div id="settingsSubmenuPanel" class="secondary-overlay-panel">
       <div class="overlay-top-bar">
         <div class="overlay-header-title">
-          <button class="mdc-button mdc-button--dense" onclick="closeOverlay('settingsSubmenuPanel')" style="color: #fff; min-width: 32px; padding: 0 4px;" title="返回一级菜单">
+          <button class="mdc-button mdc-button--dense" onclick="closeOverlay('settingsSubmenuPanel', event)" style="color: #fff; min-width: 32px; padding: 0 4px;" title="返回一级菜单">
             <i class="material-icons">arrow_back</i>
           </button>
           <span>全局设置</span>
@@ -1796,7 +1827,7 @@
       <div class="secondary-overlay-content" style="gap: 16px;">
         <div>
           <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">莫奈调色盘</div>
-          <button class="mdc-button mdc-button--raised" onclick="closeOverlay('settingsSubmenuPanel'); openOverlay('themePickerPanel');" style="width: 100%;">
+          <button class="mdc-button mdc-button--raised" onclick="closeOverlay('settingsSubmenuPanel', event); openOverlay('themePickerPanel', event);" style="width: 100%;">
             打开 3-Step 取色盘
           </button>
         </div>
@@ -1808,7 +1839,7 @@
         </div>
       </div>
       <div class="overlay-bottom-bar">
-        <button class="mdc-button mdc-button--outlined" onclick="closeOverlay('settingsSubmenuPanel')" style="width: 100%;">
+        <button class="mdc-button mdc-button--outlined" onclick="closeOverlay('settingsSubmenuPanel', event)" style="width: 100%;">
           <i class="material-icons mdc-button__icon">arrow_back</i>
           返回一级菜单
         </button>
@@ -1819,7 +1850,7 @@
     <div id="aboutSubmenuPanel" class="secondary-overlay-panel">
       <div class="overlay-top-bar">
         <div class="overlay-header-title">
-          <button class="mdc-button mdc-button--dense" onclick="closeOverlay('aboutSubmenuPanel')" style="color: #fff; min-width: 32px; padding: 0 4px;" title="返回一级菜单">
+          <button class="mdc-button mdc-button--dense" onclick="closeOverlay('aboutSubmenuPanel', event)" style="color: #fff; min-width: 32px; padding: 0 4px;" title="返回一级菜单">
             <i class="material-icons">arrow_back</i>
           </button>
           <span>关于 MDC-Web</span>
@@ -1832,7 +1863,7 @@
         <p style="font-size: 11px; opacity: 0.7; margin-top: 16px;">遵循 Apache License 2.0 开源协议。</p>
       </div>
       <div class="overlay-bottom-bar">
-        <button class="mdc-button mdc-button--outlined" onclick="closeOverlay('aboutSubmenuPanel')" style="width: 100%;">
+        <button class="mdc-button mdc-button--outlined" onclick="closeOverlay('aboutSubmenuPanel', event)" style="width: 100%;">
           <i class="material-icons mdc-button__icon">arrow_back</i>
           返回一级菜单
         </button>
@@ -1843,7 +1874,7 @@
     <div id="themePickerPanel" class="secondary-overlay-panel">
       <div class="overlay-top-bar">
         <div class="overlay-header-title">
-          <button class="mdc-button mdc-button--dense" onclick="closeOverlay('themePickerPanel')" style="color: #fff; min-width: 32px; padding: 0 4px;" title="返回一级菜单">
+          <button class="mdc-button mdc-button--dense" onclick="closeOverlay('themePickerPanel', event)" style="color: #fff; min-width: 32px; padding: 0 4px;" title="返回一级菜单">
             <i class="material-icons">arrow_back</i>
           </button>
           <div style="display: flex; flex-direction: column;">
@@ -1856,7 +1887,7 @@
         <!-- 动态渲染真实 Monet 色阶与跳过选项 -->
       </div>
       <div class="overlay-bottom-bar">
-        <button class="mdc-button mdc-button--outlined" onclick="closeOverlay('themePickerPanel')" style="width: 100%;">
+        <button class="mdc-button mdc-button--outlined" onclick="closeOverlay('themePickerPanel', event)" style="width: 100%;">
           <i class="material-icons mdc-button__icon">arrow_back</i>
           返回一级菜单
         </button>
@@ -1875,7 +1906,7 @@
           <i class="material-icons" style="color: var(--mdc-theme-primary);">palette</i>
           MDC-Web Monet 动态取色控制台 (CAM16 / HCT)
         </h2>
-        <button class="mdc-button mdc-button--raised" onclick="openOverlay('themePickerPanel')" style="background-color: var(--mdc-theme-primary);">
+        <button class="mdc-button mdc-button--raised" onclick="openOverlay('themePickerPanel', event)" style="background-color: var(--mdc-theme-primary);">
           <i class="material-icons mdc-button__icon">color_lens</i>
           打开水波纹 3 步调色盘
         </button>
@@ -2553,7 +2584,7 @@
     // =========================================================================
     let activeOverlayId = null;
 
-    function openOverlay(panelId) {
+    function openOverlay(panelId, event) {
       const navSec = document.getElementById('drawerNavSection');
       const panel = document.getElementById(panelId);
       const rail = document.getElementById('app-rail');
@@ -2566,6 +2597,39 @@
         renderThemeTiles();
       }
 
+      // 计算点击坐标相对于 Navigation Rail 的原点 (水波纹圆形展开原点)
+      if (rail) {
+        const railRect = rail.getBoundingClientRect();
+        let originX = 36;
+        let originY = 80;
+
+        const evt = event || (window.event ? window.event : null);
+        if (evt) {
+          const clientX = evt.clientX !== undefined ? evt.clientX : (evt.touches && evt.touches[0] ? evt.touches[0].clientX : null);
+          const clientY = evt.clientY !== undefined ? evt.clientY : (evt.touches && evt.touches[0] ? evt.touches[0].clientY : null);
+          if (clientX !== null && clientY !== null) {
+            originX = Math.max(0, Math.min(railRect.width, clientX - railRect.left));
+            originY = Math.max(0, Math.min(railRect.height, clientY - railRect.top));
+          } else if (evt.currentTarget && evt.currentTarget.getBoundingClientRect) {
+            const itemRect = evt.currentTarget.getBoundingClientRect();
+            originX = (itemRect.left + itemRect.width / 2) - railRect.left;
+            originY = (itemRect.top + itemRect.height / 2) - railRect.top;
+          }
+        }
+
+        panel.style.setProperty('--ripple-origin-x', `${originX}px`);
+        panel.style.setProperty('--ripple-origin-y', `${originY}px`);
+      }
+
+      // 若之前已有其他展开的二级菜单，先关闭它
+      if (activeOverlayId && activeOverlayId !== panelId) {
+        const prev = document.getElementById(activeOverlayId);
+        if (prev) {
+          prev.classList.remove('anim-in');
+          prev.style.display = 'none';
+        }
+      }
+
       rail.classList.add('is-expanded');
       navSec.classList.remove('anim-in');
       navSec.classList.add('anim-out');
@@ -2576,7 +2640,7 @@
       activeOverlayId = panelId;
     }
 
-    function closeOverlay(panelId) {
+    function closeOverlay(panelId, event) {
       const id = panelId || activeOverlayId;
       if (!id) return;
 
@@ -2584,6 +2648,21 @@
       const panel = document.getElementById(id);
       const rail = document.getElementById('app-rail');
       if (!navSec || !panel) return;
+
+      // 如果有传入关闭点击事件，设置水波纹收缩原点
+      if (rail) {
+        const railRect = rail.getBoundingClientRect();
+        let originX = 36;
+        let originY = 36;
+        const evt = event || (window.event ? window.event : null);
+        if (evt && evt.currentTarget && evt.currentTarget.getBoundingClientRect) {
+          const itemRect = evt.currentTarget.getBoundingClientRect();
+          originX = (itemRect.left + itemRect.width / 2) - railRect.left;
+          originY = (itemRect.top + itemRect.height / 2) - railRect.top;
+          panel.style.setProperty('--ripple-origin-x', `${originX}px`);
+          panel.style.setProperty('--ripple-origin-y', `${originY}px`);
+        }
+      }
 
       panel.classList.remove('anim-in');
       panel.classList.add('anim-out');
@@ -2593,8 +2672,8 @@
         navSec.classList.remove('anim-out');
         navSec.classList.add('anim-in');
         rail.classList.remove('is-expanded');
-        activeOverlayId = null;
-      }, 220);
+        if (activeOverlayId === id) activeOverlayId = null;
+      }, 260);
     }
 
     function handleNavClick() {
