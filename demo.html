@@ -1410,16 +1410,26 @@
     // 暗色模式切换
     document.getElementById('btn-toggle-dark').onclick = () => {
       isDarkMode = !isDarkMode;
-      if (currentMode === 'monet') {
-        mdui.monet.setDarkMode(isDarkMode, document.body);
-        if (mdui.monet.getTheme()) renderMonetDetails(mdui.monet.getTheme());
+      if (isDarkMode) {
+        document.body.classList.add('mdui-theme-layout-dark');
       } else {
-        if (isDarkMode) {
-          document.body.classList.add('mdui-theme-layout-dark');
-        } else {
-          document.body.classList.remove('mdui-theme-layout-dark');
-        }
+        document.body.classList.remove('mdui-theme-layout-dark');
       }
+
+      if (currentMode === 'monet') {
+        applyMonetColors();
+      }
+
+      // 同步更新独立局部容器 B 的暗色状态
+      mdui.monet.setColor({
+        primary: '#E65100',
+        secondary: '#00838F',
+        tertiary: '#C2185B',
+        mode: 'triple'
+      }, {
+        target: document.getElementById('monet-isolated-box'),
+        dark: isDarkMode
+      });
     };
 
     // 独立局部容器 B 的 Monet 设置 (使用专属三色)

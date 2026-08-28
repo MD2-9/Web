@@ -13617,29 +13617,40 @@ body.mdui-theme-monet .mdui-toolbar.mdui-color-theme {
   border: 1px solid var(--mdui-monet-outline-variant, rgba(0, 0, 0, 0.08)) !important;
 }
 
-/* Monet 全局主色与强调色强制优先注入 */
+/* Monet 全局主色与强调色强制优先注入 (亮色使用 Tone 40，暗色使用明亮柔和的 Tone 80 与深色文字 Tone 20) */
 body.mdui-theme-monet .mdui-color-theme,
 .mdui-theme-monet .mdui-color-theme,
 .mdui-theme-monet.mdui-color-theme {
-  background-color: var(--mdui-monet-primary-500, var(--mdui-monet-primary)) !important;
-  color: var(--mdui-monet-on-primary, #ffffff) !important;
+  background-color: var(--mdui-monet-primary-main, var(--mdui-monet-primary)) !important;
+  color: var(--mdui-monet-primary-contrast, var(--mdui-monet-on-primary, #ffffff)) !important;
 }
+
 body.mdui-theme-monet .mdui-color-theme-accent,
 .mdui-theme-monet .mdui-color-theme-accent,
 .mdui-theme-monet.mdui-color-theme-accent {
-  background-color: var(--mdui-monet-accent-a400, var(--mdui-monet-tertiary, #ff4081)) !important;
-  color: var(--mdui-monet-on-tertiary, #ffffff) !important;
+  background-color: var(--mdui-monet-accent-main, var(--mdui-monet-tertiary, #ff4081)) !important;
+  color: var(--mdui-monet-accent-contrast, var(--mdui-monet-on-tertiary, #ffffff)) !important;
 }
 
 body.mdui-theme-monet .mdui-text-color-theme,
 .mdui-theme-monet .mdui-text-color-theme,
 .mdui-theme-monet.mdui-text-color-theme {
-  color: var(--mdui-monet-primary-500, var(--mdui-monet-primary)) !important;
+  color: var(--mdui-monet-primary-main, var(--mdui-monet-primary)) !important;
 }
 body.mdui-theme-monet .mdui-text-color-theme-accent,
 .mdui-theme-monet .mdui-text-color-theme-accent,
 .mdui-theme-monet.mdui-text-color-theme-accent {
-  color: var(--mdui-monet-accent-a400, var(--mdui-monet-tertiary, #ff4081)) !important;
+  color: var(--mdui-monet-accent-main, var(--mdui-monet-tertiary, #ff4081)) !important;
+}
+
+/* 暗色模式下标题栏与各组件配色联动 */
+body.mdui-theme-monet.mdui-theme-layout-dark .mdui-appbar,
+.mdui-theme-monet.mdui-theme-layout-dark .mdui-appbar,
+.mdui-theme-monet.mdui-theme-layout-dark .mdui-toolbar.mdui-color-theme,
+body.mdui-theme-monet.mdui-theme-layout-dark .mdui-toolbar.mdui-color-theme {
+  background-color: var(--mdui-monet-surface-container-high, #2b2930) !important;
+  color: var(--mdui-monet-on-surface, #e6e1e5) !important;
+  border-bottom: 1px solid var(--mdui-monet-outline-variant, rgba(255, 255, 255, 0.08)) !important;
 }
 
 /* Monet 阶度色彩 classes */
