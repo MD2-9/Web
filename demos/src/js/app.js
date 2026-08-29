@@ -3403,8 +3403,8 @@ window.addEventListener('m29:loaded', function() {
         const btnEl = document.getElementById('btnTogglePanelWidth');
         const is2Col = currentWidth >= 460;
         if (iconEl) {
-          // 🌟 纯正单双竖栏图标：单列使用 view_stream，双列使用 splitscreen
-          iconEl.textContent = is2Col ? 'splitscreen' : 'view_stream';
+          // 🌟 Classic Material Icons 100% 兼容字形：单列使用 crop_portrait，双列使用 view_column
+          iconEl.textContent = is2Col ? 'view_column' : 'crop_portrait';
         }
         if (btnEl) {
           const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
@@ -3483,6 +3483,8 @@ window.addEventListener('m29:loaded', function() {
           panel.style.removeProperty('--mdc-theme-primary-container');
           panel.style.removeProperty('--mdc-theme-on-primary');
           panel.style.removeProperty('--mdc-theme-on-primary-container');
+          panel.style.removeProperty('--mdc-theme-surface-container-high');
+          panel.style.removeProperty('--mdc-theme-surface-variant');
           panel.style.removeProperty('--panel-accent-color');
           showDemoToast(isEn ? 'Component panel is following global palette' : '组件栏已恢复跟随全局配色');
         } else {
@@ -3490,23 +3492,27 @@ window.addEventListener('m29:loaded', function() {
           const [h, s, l] = hexToHsl(hex);
           const isDark = panel.classList.contains('dark-theme') || (!panel.classList.contains('light-theme') && document.body.classList.contains('dark-theme'));
 
-          let p, pCont, onP, onPCont;
+          let p, pCont, onP, onPCont, surfaceContHigh;
           if (isDark) {
             p = hslToHex(h, Math.min(100, Math.max(25, s * 0.85)), 78);
             onP = '#000000';
             pCont = hslToHex(h, Math.min(100, s * 0.5), 32);
             onPCont = hslToHex(h, Math.min(100, s * 0.5), 90);
+            surfaceContHigh = hslToHex(h, Math.min(100, s * 0.18), 18);
           } else {
             p = hex;
             onP = '#ffffff';
             pCont = hslToHex(h, Math.min(100, s * 0.45), 90);
             onPCont = hslToHex(h, Math.min(100, s * 0.6), 15);
+            surfaceContHigh = hslToHex(h, Math.min(100, s * 0.25), 96);
           }
 
           panel.style.setProperty('--mdc-theme-primary', p);
           panel.style.setProperty('--mdc-theme-primary-container', pCont);
           panel.style.setProperty('--mdc-theme-on-primary', onP);
           panel.style.setProperty('--mdc-theme-on-primary-container', onPCont);
+          panel.style.setProperty('--mdc-theme-surface-container-high', surfaceContHigh);
+          panel.style.setProperty('--mdc-theme-surface-variant', surfaceContHigh);
           panel.style.setProperty('--panel-accent-color', p);
           showDemoToast(isEn ? `Component panel palette updated: ${hex}` : `组件栏已切换独立配色: ${hex}`);
         }

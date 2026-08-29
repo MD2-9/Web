@@ -1153,14 +1153,90 @@ span.material-icons,
 }
 
 /* 底部控制面板 (支持 72px 单图标模式与 260px 展开模式自由切换) */
-/* 底部控制面板 */
 .rail-footer {
-  padding: 8px;
+  padding: 0;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
-  background: inherit;
+  background: var(--mdc-theme-surface, #ffffff);
   flex-shrink: 0;
   overflow: hidden;
+  height: 56px;
+  position: relative;
   transition: background-color 0.3s ease, border-color 0.3s ease;
+  z-index: 10;
+}
+
+/* 72px 紧凑外部：单个居中暗色模式按钮 */
+.rail-footer-compact-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 56px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.rail-footer-compact-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* 260px 展开内部：横排 4 个纯图标按钮 */
+.rail-footer-expanded-row {
+  display: none !important;
+  width: 260px;
+  height: 56px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.mdc-navigation-rail:hover .rail-footer-compact-btn,
+.mdc-navigation-rail.is-expanded .rail-footer-compact-btn {
+  display: none !important;
+}
+
+.mdc-navigation-rail:hover .rail-footer-expanded-row,
+.mdc-navigation-rail.is-expanded .rail-footer-expanded-row {
+  display: flex !important;
+}
+
+.rail-footer-icon-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  border-radius: 0 !important;
+  padding: 0;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.rail-footer-icon-btn:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.rail-footer-icon-btn i.material-icons {
+  font-size: 20px !important;
+  color: var(--mdc-theme-on-surface, #1d1b20);
+}
+
+.dark-theme .rail-footer {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-theme .rail-footer-icon-btn {
+  color: var(--mdc-theme-on-surface, #e6e1e5);
+}
+
+.dark-theme .rail-footer-icon-btn i.material-icons {
+  color: var(--mdc-theme-on-surface, #e6e1e5);
 }
 
 .rail-footer-text {
@@ -4178,12 +4254,38 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   background-color: #f7f2fa !important;
 }
 
-/* 组件栏内的 Picker 自适应宽度 */
+/* 组件栏内的 Picker 自适应宽度与完整局部配色覆盖 */
 .mdc-component-panel .mdc-date-picker,
 .mdc-component-panel .mdc-time-picker {
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
+}
+
+#app-component-panel .component-panel-section-title i.material-icons,
+#app-component-panel .component-panel-title i.material-icons,
+#app-component-panel .mdc-date-picker i.material-icons,
+#app-component-panel .mdc-time-picker i.material-icons {
+  color: var(--panel-accent-color, var(--mdc-theme-primary)) !important;
+  transition: color 0.38s ease;
+}
+
+#app-component-panel .mdc-time-picker__clock-face {
+  background-color: var(--mdc-theme-surface-container-high, #f7f2fa) !important;
+}
+
+#app-component-panel .mdc-time-picker__center-pivot,
+#app-component-panel .mdc-time-picker__clock-hand,
+#app-component-panel .mdc-time-picker__thumb-circle,
+#app-component-panel .mdc-time-picker__digit-indicator,
+#app-component-panel .mdc-date-picker__header,
+#app-component-panel .mdc-date-picker__day.is-selected,
+#app-component-panel .mdc-button--raised {
+  background-color: var(--mdc-theme-primary) !important;
+}
+
+#app-component-panel .mdc-button:not(.mdc-button--raised):not(.mdc-button--outlined) {
+  color: var(--mdc-theme-primary) !important;
 }
 
 /* 组件栏遮罩 (仅移动端) */

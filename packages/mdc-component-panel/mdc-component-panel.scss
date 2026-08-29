@@ -358,12 +358,38 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   background-color: #f7f2fa !important;
 }
 
-/* 组件栏内的 Picker 自适应宽度 */
+/* 组件栏内的 Picker 自适应宽度与完整局部配色覆盖 */
 .mdc-component-panel .mdc-date-picker,
 .mdc-component-panel .mdc-time-picker {
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
+}
+
+#app-component-panel .component-panel-section-title i.material-icons,
+#app-component-panel .component-panel-title i.material-icons,
+#app-component-panel .mdc-date-picker i.material-icons,
+#app-component-panel .mdc-time-picker i.material-icons {
+  color: var(--panel-accent-color, var(--mdc-theme-primary)) !important;
+  transition: color 0.38s ease;
+}
+
+#app-component-panel .mdc-time-picker__clock-face {
+  background-color: var(--mdc-theme-surface-container-high, #f7f2fa) !important;
+}
+
+#app-component-panel .mdc-time-picker__center-pivot,
+#app-component-panel .mdc-time-picker__clock-hand,
+#app-component-panel .mdc-time-picker__thumb-circle,
+#app-component-panel .mdc-time-picker__digit-indicator,
+#app-component-panel .mdc-date-picker__header,
+#app-component-panel .mdc-date-picker__day.is-selected,
+#app-component-panel .mdc-button--raised {
+  background-color: var(--mdc-theme-primary) !important;
+}
+
+#app-component-panel .mdc-button:not(.mdc-button--raised):not(.mdc-button--outlined) {
+  color: var(--mdc-theme-primary) !important;
 }
 
 /* 组件栏遮罩 (仅移动端) */
