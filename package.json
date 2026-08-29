@@ -8,7 +8,8 @@
   "scripts": {
     "build": "node scripts/build-css.js",
     "build:css": "node scripts/build-css.js",
-    "dev": "wrangler dev",
+    "start": "node scripts/build-css.js && node server.js",
+    "dev": "node scripts/build-css.js && node server.js",
     "preview": "node scripts/build-css.js && wrangler dev",
     "deploy": "node scripts/build-css.js && wrangler deploy",
     "dist": "npm run build"

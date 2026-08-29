@@ -1,5 +1,5 @@
 #
-# Cloudflare Workers & Pages Configuration for MDC-Web M2.9
+# Cloudflare Workers Configuration for MDC-Web M2.9
 # Authored by 安秋 (github.com/unjal29)
 #
 
@@ -7,9 +7,6 @@ name = "m2-9-showroom"
 main = "worker.js"
 compatibility_date = "2024-04-01"
 compatibility_flags = ["nodejs_compat"]
-
-# Cloudflare Pages Build Output Directory
-pages_build_output_dir = "."
 
 # Workers Static Assets Configuration
 [assets]

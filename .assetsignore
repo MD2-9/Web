@@ -1,0 +1,11 @@
+node_modules
+node_modules/**
+.git
+.git/**
+.github
+.github/**
+.idea
+.vscode
+*.log
+package-lock.json
+wrangler.toml

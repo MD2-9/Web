@@ -1,3 +1,0 @@
-/ /demos/index.html 200
-/demos /demos/index.html 200
-/assets/* /demos/:splat 200
