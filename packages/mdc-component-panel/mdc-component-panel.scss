@@ -1,0 +1,505 @@
+//
+// Copyright 2026 安秋 <github.com/unjal29>
+// Licensed under the Apache License, Version 2.0
+//
+// Material Components Web - Right Component Panel & Scoped Palette Matrix
+//
+
+:root {
+  --component-panel-width: 290px;
+}
+
+.mdc-component-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--component-panel-width, 290px);
+  min-width: 200px;
+  max-width: 80vw;
+  background-color: var(--mdc-theme-surface, #ffffff);
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: -1px 0 3px rgba(0, 0, 0, 0.05);
+  z-index: 998;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease,
+              background-color 0.28s cubic-bezier(0.2, 0, 0, 1),
+              border-color 0.28s cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* 拖拽调整宽度时禁用 transition 以获得丝滑跟手感 */
+body.is-resizing-component-panel .mdc-component-panel,
+body.is-resizing-component-panel .main-container {
+  transition: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  cursor: col-resize !important;
+}
+
+/* 左侧拖拽调整手柄 (Resizer Handle) */
+.component-panel-resizer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -6px;
+  width: 12px;
+  cursor: col-resize;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  touch-action: none !important;
+  user-select: none !important;
+  transition: background-color 0.2s ease;
+}
+
+.component-panel-resizer::after {
+  content: '';
+  width: 2px;
+  height: 100%;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.component-panel-resizer:hover::after,
+body.is-resizing-component-panel .component-panel-resizer::after {
+  background-color: var(--panel-accent-color, var(--mdc-theme-primary, #6750a4));
+  box-shadow: none !important;
+}
+
+@media (max-width: 767.9px) {
+  .component-panel-resizer {
+    display: none !important;
+  }
+}
+
+.component-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+  background-color: var(--mdc-theme-surface, #ffffff);
+  transition: background-color 0.28s cubic-bezier(0.2, 0, 0, 1),
+              border-color 0.28s cubic-bezier(0.2, 0, 0, 1);
+  position: relative;
+}
+
+.component-panel-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--mdc-theme-on-surface, #1d1b20);
+}
+
+.component-panel-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  opacity: 0.8;
+  border-radius: 0 !important;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  padding: 0;
+}
+
+.component-panel-action-btn:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.component-panel-close-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  opacity: 0.7;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  padding: 0;
+}
+
+.component-panel-close-btn:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.component-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px 16px 24px 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  align-content: start;
+  position: relative;
+}
+
+/* 🎨 独立配色浮层面板 */
+.component-panel-palette-menu {
+  position: absolute;
+  top: 56px;
+  right: 12px;
+  width: 240px;
+  background-color: var(--mdc-theme-surface, #ffffff);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  border-radius: 0 !important;
+  z-index: 1005;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: m29MenuFadeIn 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@keyframes m29MenuFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.palette-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--mdc-theme-on-surface, #1d1b20);
+}
+
+.palette-menu-close {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 2px;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.palette-menu-close:hover {
+  opacity: 1;
+}
+
+.palette-swatches-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.panel-swatch-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50% !important;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+  padding: 0;
+}
+
+.panel-swatch-dot:hover {
+  transform: scale(1.15);
+}
+
+.panel-swatch-dot.is-active {
+  border-color: var(--mdc-theme-on-surface, #1d1b20);
+}
+
+.panel-swatch-custom {
+  width: 24px;
+  height: 24px;
+  border-radius: 50% !important;
+  border: 1px dashed rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s ease;
+}
+
+.panel-swatch-custom:hover {
+  transform: scale(1.15);
+}
+
+.palette-menu-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.palette-menu-footer button {
+  font-size: 11px !important;
+  padding: 0 8px !important;
+  height: 28px !important;
+}
+
+/* 组件栏独立暗色/浅色模式 */
+.mdc-component-panel.dark-theme,
+.dark-theme .mdc-component-panel:not(.light-theme) {
+  --mdc-theme-surface: #1e1b22;
+  --mdc-theme-on-surface: #e6e1e5;
+  --mdc-theme-surface-variant: #49454f;
+  --mdc-theme-on-surface-variant: #cac4d0;
+  background-color: var(--mdc-theme-surface, #1e1b22) !important;
+  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+  border-left-color: rgba(255, 255, 255, 0.08) !important;
+  border-right-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: -1px 0 8px rgba(0, 0, 0, 0.6) !important;
+}
+
+.mdc-component-panel.dark-theme .component-panel-header,
+.dark-theme .mdc-component-panel:not(.light-theme) .component-panel-header {
+  background-color: var(--mdc-theme-surface, #1e1b22) !important;
+  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.mdc-component-panel.dark-theme .component-panel-action-btn,
+.dark-theme .mdc-component-panel:not(.light-theme) .component-panel-action-btn {
+  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+}
+
+.mdc-component-panel.dark-theme .component-panel-palette-menu,
+.dark-theme .mdc-component-panel:not(.light-theme) .component-panel-palette-menu {
+  background-color: #28252e !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #e6e1e5 !important;
+}
+
+.mdc-component-panel.dark-theme .palette-menu-header,
+.dark-theme .mdc-component-panel:not(.light-theme) .palette-menu-header {
+  color: #e6e1e5 !important;
+}
+
+.mdc-component-panel.dark-theme .palette-menu-close,
+.dark-theme .mdc-component-panel:not(.light-theme) .palette-menu-close {
+  color: #e6e1e5 !important;
+}
+
+.mdc-component-panel.dark-theme .palette-menu-footer,
+.dark-theme .mdc-component-panel:not(.light-theme) .palette-menu-footer {
+  border-top-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.mdc-component-panel.dark-theme .mdc-date-picker,
+.mdc-component-panel.dark-theme .mdc-time-picker,
+.dark-theme .mdc-component-panel:not(.light-theme) .mdc-date-picker,
+.dark-theme .mdc-component-panel:not(.light-theme) .mdc-time-picker {
+  background-color: #28252e !important;
+  color: #e6e1e5 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+.mdc-component-panel.dark-theme .mdc-date-picker__cell,
+.dark-theme .mdc-component-panel:not(.light-theme) .mdc-date-picker__cell {
+  color: #e6e1e5 !important;
+}
+
+.mdc-component-panel.dark-theme .mdc-time-picker__clock-face,
+.dark-theme .mdc-component-panel:not(.light-theme) .mdc-time-picker__clock-face {
+  background-color: #332f3b !important;
+}
+
+.mdc-component-panel.light-theme {
+  --mdc-theme-surface: #ffffff;
+  --mdc-theme-on-surface: #1d1b20;
+  --mdc-theme-surface-variant: #f7f2fa;
+  --mdc-theme-on-surface-variant: #49454f;
+  background-color: #ffffff !important;
+  color: #1d1b20 !important;
+  border-left-color: rgba(0, 0, 0, 0.08) !important;
+  border-right-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: -1px 0 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+.mdc-component-panel.light-theme .component-panel-header {
+  background-color: #ffffff !important;
+  color: #1d1b20 !important;
+  border-bottom-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.mdc-component-panel.light-theme .component-panel-action-btn {
+  color: #1d1b20 !important;
+}
+
+.mdc-component-panel.light-theme .mdc-date-picker,
+.mdc-component-panel.light-theme .mdc-time-picker {
+  background-color: #ffffff !important;
+  color: #1d1b20 !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.mdc-component-panel.light-theme .mdc-date-picker__cell {
+  color: #1d1b20 !important;
+}
+
+.mdc-component-panel.light-theme .mdc-time-picker__clock-face {
+  background-color: #f7f2fa !important;
+}
+
+/* 组件栏内的 Picker 自适应宽度 */
+.mdc-component-panel .mdc-date-picker,
+.mdc-component-panel .mdc-time-picker {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* 组件栏遮罩 (仅移动端) */
+.component-panel-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 997;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.component-panel-backdrop.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ≥768px 桌面端：常驻显示 + main-container 让出右侧空间 */
+@media (min-width: 768px) {
+  .mdc-component-panel {
+    transform: translateX(0);
+  }
+
+  .main-container {
+    margin-right: var(--component-panel-width, 290px);
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  body.component-panel-closed .mdc-component-panel {
+    transform: translateX(100%) !important;
+    box-shadow: none !important;
+  }
+
+  body.component-panel-closed .main-container {
+    margin-right: 0 !important;
+  }
+
+  body.component-panel-closed .m29-overlay-scrollbar-track.is-window {
+    right: 0 !important;
+  }
+
+  .component-panel-close-btn {
+    display: none !important;
+  }
+}
+
+/* <768px 移动端：默认隐藏，滑入显示 */
+@media (max-width: 767.9px) {
+  .mdc-component-panel {
+    width: 290px !important;
+    transform: translateX(100%);
+    box-shadow: none;
+    z-index: 99998;
+  }
+
+  .mdc-component-panel.is-open {
+    transform: translateX(0) !important;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .component-panel-close-btn {
+    display: flex !important;
+  }
+
+  .component-panel-backdrop {
+    z-index: 99997;
+  }
+}
+
+/* 🌟 核心融合：整页滚动条与组件栏调整线完全合并为一条线 */
+.m29-overlay-scrollbar-track.is-window {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: var(--component-panel-width, 290px);
+  z-index: 1002;
+  width: 14px;
+  transform: translateX(50%);
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+@media (max-width: 767.9px) {
+  .m29-overlay-scrollbar-track.is-window {
+    right: 0 !important;
+    transform: none !important;
+    width: 6px !important;
+  }
+}
+
+body.component-panel-closed .m29-overlay-scrollbar-track.is-window {
+  right: 0 !important;
+  transform: none !important;
+  width: 6px !important;
+}
+
+.m29-overlay-scrollbar-track.is-visible,
+.m29-overlay-scrollbar-track:hover,
+.m29-overlay-scrollbar-track.is-dragging {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.m29-overlay-scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 1px);
+  width: 2px;
+  min-height: 28px;
+  border-radius: 0 !important;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  opacity: 0.75;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: opacity 0.2s ease, background-color 0.2s ease, width 0.15s ease, left 0.15s ease, transform 0.06s linear;
+}
+
+.m29-overlay-scrollbar-track:hover .m29-overlay-scrollbar-thumb,
+.m29-overlay-scrollbar-thumb:hover,
+.m29-overlay-scrollbar-track.is-dragging .m29-overlay-scrollbar-thumb {
+  opacity: 1;
+  width: 4px;
+  left: calc(50% - 2px);
+  background-color: var(--mdc-theme-primary, #6750a4);
+}
+
+.dark-theme .m29-overlay-scrollbar-thumb {
+  background-color: var(--mdc-theme-primary, #d0bcff);
+  opacity: 0.8;
+}
+
+.dark-theme .m29-overlay-scrollbar-track:hover .m29-overlay-scrollbar-thumb,
+.dark-theme .m29-overlay-scrollbar-thumb:hover,
+.dark-theme .m29-overlay-scrollbar-track.is-dragging .m29-overlay-scrollbar-thumb {
+  opacity: 1;
+  background-color: var(--mdc-theme-primary, #d0bcff);
+}

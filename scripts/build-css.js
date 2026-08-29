@@ -46,7 +46,8 @@ const packageFiles = [
   'packages/mdc-divider/mdc-divider.scss',
   'packages/mdc-select/mdc-select.scss',
   'packages/mdc-textfield/mdc-text-field.scss',
-  'packages/mdc-picker/mdc-picker.scss'
+  'packages/mdc-picker/mdc-picker.scss',
+  'packages/mdc-component-panel/mdc-component-panel.scss'
 ];
 
 function cleanScssToCss(content) {

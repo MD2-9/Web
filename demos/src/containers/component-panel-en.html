@@ -18,12 +18,38 @@
       <button class="component-panel-action-btn" onclick="toggleLayoutSwap()" title="Swap Layout (Swap Sidebar & Component Panel)">
         <i class="material-icons" style="font-size: 20px;">swap_horiz</i>
       </button>
+      <button class="component-panel-action-btn" id="btnTogglePanelPalette" onclick="toggleComponentPanelPaletteMenu(event)" title="Component Panel Scoped Palette">
+        <i class="material-icons" style="font-size: 18px;">palette</i>
+      </button>
       <button class="component-panel-action-btn" id="btnTogglePanelWidth" onclick="toggleComponentPanelWidth()" title="Toggle Width Preset (290px Single Column / 629px Dual Columns)">
         <i class="material-icons" id="componentPanelWidthIcon" style="font-size: 18px;">view_stream</i>
       </button>
       <button class="component-panel-action-btn" id="btnTogglePanelTheme" onclick="toggleComponentPanelTheme()" title="Toggle Component Panel Dark / Light Mode">
-        <i class="material-icons" id="componentPanelThemeIcon" style="font-size: 18px;">dark_mode</i>
+        <i class="material-icons" id="componentPanelThemeIcon" style="font-size: 18px;">brightness_4</i>
       </button>
+    </div>
+  </div>
+
+  <!-- 🎨 Component Panel Scoped Palette Floating Card -->
+  <div class="component-panel-palette-menu" id="componentPanelPaletteMenu" style="display: none;">
+    <div class="palette-menu-header">
+      <span>Scoped Color Palette</span>
+      <button class="palette-menu-close" onclick="closeComponentPanelPaletteMenu()"><i class="material-icons" style="font-size: 16px;">close</i></button>
+    </div>
+    <div class="palette-swatches-grid">
+      <button class="panel-swatch-dot" style="background-color: #6750a4;" onclick="setComponentPanelColor('#6750a4')" title="Lavender"></button>
+      <button class="panel-swatch-dot" style="background-color: #0061a4;" onclick="setComponentPanelColor('#0061a4')" title="Ocean Blue"></button>
+      <button class="panel-swatch-dot" style="background-color: #006a60;" onclick="setComponentPanelColor('#006a60')" title="Emerald Green"></button>
+      <button class="panel-swatch-dot" style="background-color: #7e5700;" onclick="setComponentPanelColor('#7e5700')" title="Amber Gold"></button>
+      <button class="panel-swatch-dot" style="background-color: #ba1a1a;" onclick="setComponentPanelColor('#ba1a1a')" title="Crimson Red"></button>
+      <button class="panel-swatch-dot" style="background-color: #9c4146;" onclick="setComponentPanelColor('#9c4146')" title="Sunset Rose"></button>
+      <label class="panel-swatch-custom" title="Custom Color">
+        <input type="color" onchange="setComponentPanelColor(this.value)" style="opacity: 0; width: 0; height: 0; position: absolute;">
+        <i class="material-icons" style="font-size: 14px;">colorize</i>
+      </label>
+    </div>
+    <div class="palette-menu-footer">
+      <button class="mdc-button mdc-button--dense" onclick="setComponentPanelColor('auto')">Follow Global Palette</button>
     </div>
   </div>
   <div class="component-panel-body">

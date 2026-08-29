@@ -34,12 +34,38 @@
       <button class="component-panel-action-btn" onclick="toggleLayoutSwap()" title="左右布局互换 (调换侧边栏与组件栏位置)">
         <i class="material-icons" style="font-size: 20px;">swap_horiz</i>
       </button>
+      <button class="component-panel-action-btn" id="btnTogglePanelPalette" onclick="toggleComponentPanelPaletteMenu(event)" title="组件栏独立配色方案">
+        <i class="material-icons" style="font-size: 18px;">palette</i>
+      </button>
       <button class="component-panel-action-btn" id="btnTogglePanelWidth" onclick="toggleComponentPanelWidth()" title="切换组件栏预设档位 (290px 单列 / 629px 双列)">
         <i class="material-icons" id="componentPanelWidthIcon" style="font-size: 18px;">view_stream</i>
       </button>
       <button class="component-panel-action-btn" id="btnTogglePanelTheme" onclick="toggleComponentPanelTheme()" title="切换组件栏独立暗色/浅色模式">
-        <i class="material-icons" id="componentPanelThemeIcon" style="font-size: 18px;">dark_mode</i>
+        <i class="material-icons" id="componentPanelThemeIcon" style="font-size: 18px;">brightness_4</i>
       </button>
+    </div>
+  </div>
+
+  <!-- 🎨 组件栏独立配色方案浮层面板 -->
+  <div class="component-panel-palette-menu" id="componentPanelPaletteMenu" style="display: none;">
+    <div class="palette-menu-header">
+      <span>独立配色 (Scoped Palette)</span>
+      <button class="palette-menu-close" onclick="closeComponentPanelPaletteMenu()"><i class="material-icons" style="font-size: 16px;">close</i></button>
+    </div>
+    <div class="palette-swatches-grid">
+      <button class="panel-swatch-dot" style="background-color: #6750a4;" onclick="setComponentPanelColor('#6750a4')" title="Lavender"></button>
+      <button class="panel-swatch-dot" style="background-color: #0061a4;" onclick="setComponentPanelColor('#0061a4')" title="Ocean Blue"></button>
+      <button class="panel-swatch-dot" style="background-color: #006a60;" onclick="setComponentPanelColor('#006a60')" title="Emerald Green"></button>
+      <button class="panel-swatch-dot" style="background-color: #7e5700;" onclick="setComponentPanelColor('#7e5700')" title="Amber Gold"></button>
+      <button class="panel-swatch-dot" style="background-color: #ba1a1a;" onclick="setComponentPanelColor('#ba1a1a')" title="Crimson Red"></button>
+      <button class="panel-swatch-dot" style="background-color: #9c4146;" onclick="setComponentPanelColor('#9c4146')" title="Sunset Rose"></button>
+      <label class="panel-swatch-custom" title="自定义配色">
+        <input type="color" onchange="setComponentPanelColor(this.value)" style="opacity: 0; width: 0; height: 0; position: absolute;">
+        <i class="material-icons" style="font-size: 14px;">colorize</i>
+      </label>
+    </div>
+    <div class="palette-menu-footer">
+      <button class="mdc-button mdc-button--dense" onclick="setComponentPanelColor('auto')">跟随全局配色</button>
     </div>
   </div>
   <div class="component-panel-body">

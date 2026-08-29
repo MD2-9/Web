@@ -1202,6 +1202,8 @@ window.addEventListener('m29:loaded', function() {
       if (!container || !theme || !theme.tones) return;
       container.innerHTML = '';
 
+      const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+
       function buildRow(title, toneMap) {
         const row = document.createElement('div');
         row.className = 'palette-row';
@@ -1220,9 +1222,9 @@ window.addEventListener('m29:loaded', function() {
         return row;
       }
 
-      container.appendChild(buildRow('Primary 主色 50~900 全色阶 (CAM16):', theme.tones.primary));
-      container.appendChild(buildRow('Secondary 次色 50~900 全色阶:', theme.tones.secondary));
-      container.appendChild(buildRow('Tertiary 第三色 50~900 全色阶:', theme.tones.tertiary));
+      container.appendChild(buildRow(isEn ? 'Primary 50~900 Tonal Swatches (CAM16):' : 'Primary 主色 50~900 全色阶 (CAM16):', theme.tones.primary));
+      container.appendChild(buildRow(isEn ? 'Secondary 50~900 Tonal Swatches:' : 'Secondary 次色 50~900 全色阶:', theme.tones.secondary));
+      container.appendChild(buildRow(isEn ? 'Tertiary 50~900 Tonal Swatches:' : 'Tertiary 第三色 50~900 全色阶:', theme.tones.tertiary));
     }
 
     function hexToHsl(hex) {
@@ -1702,7 +1704,21 @@ window.addEventListener('m29:loaded', function() {
       }
     }
 
-    const SECTION_TITLE_MAP = [
+    const isEnglish = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+    const SECTION_TITLE_MAP = isEnglish ? [
+      { id: 'section-overview', top: 'M2.9', bottom: 'Unjal' },
+      { id: 'section-buttons', top: 'M2.9 · Buttons', bottom: '1. Buttons & FAB' },
+      { id: 'section-cards', top: 'M2.9 · Cards', bottom: '2. Sharp Cards' },
+      { id: 'section-chips', top: 'M2.9 · Chips', bottom: '3. Chips & Badges' },
+      { id: 'section-form', top: 'M2.9 · Form', bottom: '4. Form Controls' },
+      { id: 'section-list', top: 'M2.9 · List', bottom: '5. Lists & Panels' },
+      { id: 'section-dialogs', top: 'M2.9 · Dialogs', bottom: '6. Dialogs & Menus' },
+      { id: 'section-tabs', top: 'M2.9 · Tabs', bottom: '7. Tabs Bar' },
+      { id: 'section-progress', top: 'M2.9 · Progress', bottom: '8. Progress Indicators' },
+      { id: 'section-monet-lab', top: 'M2.9 · Monet', bottom: '9. Monet Color Lab' },
+      { id: 'section-typography', top: 'M2.9 · Type', bottom: '10. Typography' },
+      { id: 'section-pickers', top: 'M2.9 · Pickers', bottom: '11. Date & Time' }
+    ] : [
       { id: 'section-overview', top: 'M2.9', bottom: '安秋' },
       { id: 'section-buttons', top: 'M2.9 · 按钮', bottom: '1. 按钮与 FAB' },
       { id: 'section-cards', top: 'M2.9 · 卡片', bottom: '2. 直角卡片' },
@@ -2260,36 +2276,45 @@ window.addEventListener('m29:loaded', function() {
       const prevBtn = document.querySelector('#demoDatePicker .mdc-date-picker__prev-btn');
       const nextBtn = document.querySelector('#demoDatePicker .mdc-date-picker__next-btn');
 
-      const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+      const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+      const weekdaysZh = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+      const weekdaysEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const monthsEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const monthsShortEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-      // 🌟 1. 顶部 Header 与副标题文案联动
+      // 🌟 1. 顶部 Header 与副标题文案联动 (双语自适应)
       if (pickerMode === 'day') {
-        if (yearEl) yearEl.textContent = `${year} 年`;
+        if (yearEl) yearEl.textContent = isEn ? `${year}` : `${year} 年`;
         if (dateEl) {
-          const sMonth = pickerSelectedDate.getMonth() + 1;
+          const sMonth = pickerSelectedDate.getMonth();
           const sDay = pickerSelectedDate.getDate();
-          const sW = weekdays[pickerSelectedDate.getDay()];
-          dateEl.textContent = `${sMonth}月${sDay}日 ${sW}`;
+          const sW = isEn ? weekdaysEn[pickerSelectedDate.getDay()] : weekdaysZh[pickerSelectedDate.getDay()];
+          dateEl.textContent = isEn ? `${sW}, ${monthsShortEn[sMonth]} ${sDay}` : `${sMonth + 1}月${sDay}日 ${sW}`;
         }
         if (monthLabel) {
-          monthLabel.textContent = `${year} 年 ${month + 1} 月`;
+          monthLabel.textContent = isEn ? `${monthsEn[month]} ${year}` : `${year} 年 ${month + 1} 月`;
           triggerDemoAnim(monthLabel, yearAnimClass);
         }
-        if (prevBtn) prevBtn.title = '上个月';
-        if (nextBtn) nextBtn.title = '下个月';
-        if (weekdaysEl) weekdaysEl.style.display = 'grid';
+        if (prevBtn) prevBtn.title = isEn ? 'Previous Month' : '上个月';
+        if (nextBtn) nextBtn.title = isEn ? 'Next Month' : '下个月';
+        if (weekdaysEl) {
+          weekdaysEl.style.display = 'grid';
+          weekdaysEl.innerHTML = isEn 
+            ? '<span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>'
+            : '<span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>';
+        }
       } else {
-        if (yearEl) yearEl.textContent = '选择月份';
+        if (yearEl) yearEl.textContent = isEn ? 'Select Month' : '选择月份';
         if (dateEl) {
-          dateEl.textContent = `${year} 年`;
+          dateEl.textContent = isEn ? `${year}` : `${year} 年`;
           triggerDemoAnim(dateEl, yearAnimClass);
         }
         if (monthLabel) {
-          monthLabel.textContent = `${year} 年`;
+          monthLabel.textContent = isEn ? `${year}` : `${year} 年`;
           triggerDemoAnim(monthLabel, yearAnimClass);
         }
-        if (prevBtn) prevBtn.title = '上一年';
-        if (nextBtn) nextBtn.title = '下一年';
+        if (prevBtn) prevBtn.title = isEn ? 'Previous Year' : '上一年';
+        if (nextBtn) nextBtn.title = isEn ? 'Next Year' : '下一年';
         if (weekdaysEl) weekdaysEl.style.display = 'none';
       }
 
@@ -2340,10 +2365,10 @@ window.addEventListener('m29:loaded', function() {
             updateDemoThumbPosition(cell);
 
             if (dateEl) {
-              const sMonth = pickerSelectedDate.getMonth() + 1;
+              const sMonth = pickerSelectedDate.getMonth();
               const sDay = pickerSelectedDate.getDate();
-              const sW = weekdays[pickerSelectedDate.getDay()];
-              dateEl.textContent = `${sMonth}月${sDay}日 ${sW}`;
+              const sW = isEn ? weekdaysEn[pickerSelectedDate.getDay()] : weekdaysZh[pickerSelectedDate.getDay()];
+              dateEl.textContent = isEn ? `${sW}, ${monthsShortEn[sMonth]} ${sDay}` : `${sMonth + 1}月${sDay}日 ${sW}`;
             }
           });
 
@@ -2359,7 +2384,7 @@ window.addEventListener('m29:loaded', function() {
             monthCell.classList.add('is-selected');
             activeCell = monthCell;
           }
-          monthCell.textContent = `${m + 1} 月`;
+          monthCell.textContent = isEn ? monthsShortEn[m] : `${m + 1} 月`;
 
           monthCell.addEventListener('click', () => {
             pickerCurrentDate.setMonth(m);
@@ -3186,11 +3211,8 @@ window.addEventListener('m29:loaded', function() {
           const headerWidth = headerEl.offsetWidth || pickerEl.offsetWidth;
           const displayRect = displayEl.getBoundingClientRect();
           const headerRect = headerEl.getBoundingClientRect();
-          // 右侧剩余可用空间比例 = (header 右边缘 - 数字区右边缘) / header 总宽度
           const rightSpace = headerRect.right - displayRect.right;
           const rightSpaceRatio = headerWidth > 0 ? (rightSpace / headerWidth) : 1;
-
-          // 🌟 核心规则：当右侧可用空间少于 32% 时隐藏上午/下午
           shouldHide = rightSpaceRatio < 0.32;
         } else {
           shouldHide = pickerEl.offsetWidth < 260;
@@ -3374,6 +3396,22 @@ window.addEventListener('m29:loaded', function() {
       window.toggleComponentPanelWidth = toggleComponentPanelWidth;
       window.updateComponentPanelWidthIcon = updateComponentPanelWidthIcon;
 
+      function updateComponentPanelWidthIcon() {
+        const rawWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--component-panel-width'), 10);
+        const currentWidth = (!isNaN(rawWidth) && rawWidth > 0) ? rawWidth : 290;
+        const iconEl = document.getElementById('componentPanelWidthIcon');
+        const btnEl = document.getElementById('btnTogglePanelWidth');
+        const is2Col = currentWidth >= 460;
+        if (iconEl) {
+          // 🌟 纯正单双竖栏图标：单列使用 view_stream，双列使用 splitscreen
+          iconEl.textContent = is2Col ? 'splitscreen' : 'view_stream';
+        }
+        if (btnEl) {
+          const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+          btnEl.title = is2Col ? (isEn ? 'Current: Dual Columns 629px (Click for 290px Single Column)' : '当前: 双列 629px (点击切换为 290px 单列)') : (isEn ? 'Current: Single Column 290px (Click for 629px Dual Columns)' : '当前: 单列 290px (点击切换为 629px 双列)');
+        }
+      }
+
       function applyComponentPanelTheme(theme) {
         const panel = document.getElementById('app-component-panel');
         const iconEl = document.getElementById('componentPanelThemeIcon');
@@ -3389,11 +3427,17 @@ window.addEventListener('m29:loaded', function() {
 
         const isDark = theme === 'dark' || (theme !== 'light' && document.body.classList.contains('dark-theme'));
         if (iconEl) {
-          iconEl.textContent = isDark ? 'light_mode' : 'dark_mode';
+          iconEl.textContent = isDark ? 'wb_sunny' : 'brightness_4';
         }
         if (btnEl) {
           const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
           btnEl.title = isDark ? (isEn ? 'Current: Dark Mode (Click for Light Mode)' : '当前: 暗色模式 (点击切换为浅色)') : (isEn ? 'Current: Light Mode (Click for Dark Mode)' : '当前: 浅色模式 (点击切换为暗色)');
+        }
+
+        // 如果设置了独立配色，重新计算暗/亮对比色
+        const savedPanelColor = localStorage.getItem('m29_component_panel_color');
+        if (savedPanelColor && savedPanelColor !== 'auto') {
+          setComponentPanelColor(savedPanelColor);
         }
       }
 
@@ -3407,8 +3451,82 @@ window.addEventListener('m29:loaded', function() {
         const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
         showDemoToast(nextTheme === 'dark' ? (isEn ? 'Component Panel set to Dark Mode' : '组件栏已切换为独立暗色模式') : (isEn ? 'Component Panel set to Light Mode' : '组件栏已切换为独立浅色模式'));
       }
+
+      function toggleComponentPanelPaletteMenu(e) {
+        if (e) e.stopPropagation();
+        const menu = document.getElementById('componentPanelPaletteMenu');
+        if (!menu) return;
+        const isOpen = menu.style.display !== 'none';
+        menu.style.display = isOpen ? 'none' : 'flex';
+      }
+
+      function closeComponentPanelPaletteMenu() {
+        const menu = document.getElementById('componentPanelPaletteMenu');
+        if (menu) menu.style.display = 'none';
+      }
+
+      function rgbToHex(rgb) {
+        if (!rgb || !rgb.startsWith('rgb')) return rgb;
+        const nums = rgb.match(/\d+/g);
+        if (!nums || nums.length < 3) return rgb;
+        return '#' + nums.slice(0, 3).map(x => parseInt(x, 10).toString(16).padStart(2, '0')).join('');
+      }
+
+      function setComponentPanelColor(hex) {
+        const panel = document.getElementById('app-component-panel');
+        if (!panel) return;
+        const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+
+        if (!hex || hex === 'auto') {
+          localStorage.removeItem('m29_component_panel_color');
+          panel.style.removeProperty('--mdc-theme-primary');
+          panel.style.removeProperty('--mdc-theme-primary-container');
+          panel.style.removeProperty('--mdc-theme-on-primary');
+          panel.style.removeProperty('--mdc-theme-on-primary-container');
+          panel.style.removeProperty('--panel-accent-color');
+          showDemoToast(isEn ? 'Component panel is following global palette' : '组件栏已恢复跟随全局配色');
+        } else {
+          localStorage.setItem('m29_component_panel_color', hex);
+          const [h, s, l] = hexToHsl(hex);
+          const isDark = panel.classList.contains('dark-theme') || (!panel.classList.contains('light-theme') && document.body.classList.contains('dark-theme'));
+
+          let p, pCont, onP, onPCont;
+          if (isDark) {
+            p = hslToHex(h, Math.min(100, Math.max(25, s * 0.85)), 78);
+            onP = '#000000';
+            pCont = hslToHex(h, Math.min(100, s * 0.5), 32);
+            onPCont = hslToHex(h, Math.min(100, s * 0.5), 90);
+          } else {
+            p = hex;
+            onP = '#ffffff';
+            pCont = hslToHex(h, Math.min(100, s * 0.45), 90);
+            onPCont = hslToHex(h, Math.min(100, s * 0.6), 15);
+          }
+
+          panel.style.setProperty('--mdc-theme-primary', p);
+          panel.style.setProperty('--mdc-theme-primary-container', pCont);
+          panel.style.setProperty('--mdc-theme-on-primary', onP);
+          panel.style.setProperty('--mdc-theme-on-primary-container', onPCont);
+          panel.style.setProperty('--panel-accent-color', p);
+          showDemoToast(isEn ? `Component panel palette updated: ${hex}` : `组件栏已切换独立配色: ${hex}`);
+        }
+
+        // 高亮选中项
+        const dots = document.querySelectorAll('.panel-swatch-dot');
+        dots.forEach(dot => {
+          const bg = dot.style.backgroundColor;
+          dot.classList.toggle('is-active', hex && hex !== 'auto' && (bg === hex || rgbToHex(bg) === hex.toLowerCase()));
+        });
+
+        closeComponentPanelPaletteMenu();
+        refreshDatePickerThumb(true);
+      }
+
       window.applyComponentPanelTheme = applyComponentPanelTheme;
       window.toggleComponentPanelTheme = toggleComponentPanelTheme;
+      window.toggleComponentPanelPaletteMenu = toggleComponentPanelPaletteMenu;
+      window.closeComponentPanelPaletteMenu = closeComponentPanelPaletteMenu;
+      window.setComponentPanelColor = setComponentPanelColor;
 
       // 恢复组件栏独立主题设置
       const savedPanelTheme = localStorage.getItem('m29_component_panel_theme');
@@ -3417,6 +3535,21 @@ window.addEventListener('m29:loaded', function() {
       } else {
         applyComponentPanelTheme('auto');
       }
+
+      // 恢复组件栏独立配色设置
+      const savedPanelColor = localStorage.getItem('m29_component_panel_color');
+      if (savedPanelColor) {
+        setComponentPanelColor(savedPanelColor);
+      }
+
+      // 点击页面任意外部关闭配色菜单
+      document.addEventListener('click', (e) => {
+        const menu = document.getElementById('componentPanelPaletteMenu');
+        const btn = document.getElementById('btnTogglePanelPalette');
+        if (menu && menu.style.display !== 'none' && !menu.contains(e.target) && (!btn || !btn.contains(e.target))) {
+          closeComponentPanelPaletteMenu();
+        }
+      });
 
       // 启动时初始化图标
       updateComponentPanelWidthIcon();

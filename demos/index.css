@@ -1136,111 +1136,6 @@ span.material-icons,
   box-sizing: border-box !important;
 }
 
-/* 底部控制面板 (72px 紧凑态单暗色按钮 ✖ 260px 展开态横排 3 纯图标按钮) */
-.rail-footer {
-  padding: 8px 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  background: inherit;
-  flex-shrink: 0;
-  overflow: hidden;
-  width: 100%;
-  box-sizing: border-box;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-/* 72px 紧凑态：仅显示居中单个暗色模式按钮 */
-.rail-footer-compact-btn {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 48px;
-  cursor: pointer;
-  color: var(--mdc-theme-primary, #6750a4);
-  transition: background-color 0.2s ease;
-}
-
-.rail-footer-compact-btn:hover {
-  background-color: rgba(0, 0, 0, 0.06);
-}
-
-.rail-footer-expanded-row {
-  display: none !important;
-  width: 100%;
-  padding: 0 16px;
-  box-sizing: border-box;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  height: 48px;
-}
-
-/* 展开态 (hover 或 is-expanded)：隐藏单个紧凑按钮，显示横排 3 个纯图标按钮 */
-.mdc-navigation-rail:hover .rail-footer-compact-btn,
-.mdc-navigation-rail.is-expanded .rail-footer-compact-btn {
-  display: none !important;
-}
-
-.mdc-navigation-rail:hover .rail-footer-expanded-row,
-.mdc-navigation-rail.is-expanded .rail-footer-expanded-row {
-  display: flex !important;
-}
-
-.rail-footer-icon-btn {
-  flex: 1;
-  height: 40px;
-  border: none;
-  background: transparent;
-  border-radius: 0 !important;
-  color: var(--mdc-theme-on-surface, #1d1b20);
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  padding: 0;
-}
-
-.rail-footer-icon-btn i {
-  font-size: 22px !important;
-  color: var(--mdc-theme-primary, #6750a4);
-  margin: 0 !important;
-}
-
-.rail-footer-icon-btn:hover {
-  background-color: rgba(0, 0, 0, 0.08);
-}
-
-.dark-theme .rail-footer-compact-btn:hover,
-.dark-theme .rail-footer-icon-btn:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
-.dark-theme .rail-footer {
-  border-top-color: rgba(255, 255, 255, 0.08);
-}
-
-/* 移动端抽屉底部：横排 3 个纯图标按钮 */
-.mobile-drawer-footer {
-  padding: 12px 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  gap: 12px;
-}
-
-.mobile-drawer-footer .rail-footer-icon-btn {
-  height: 44px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.dark-theme .mobile-drawer-footer .rail-footer-icon-btn {
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
 .secondary-overlay-panel .rail-nav-item .rail-item-icon {
   margin-right: 0 !important;
   margin-left: 0 !important;
@@ -1306,21 +1201,11 @@ span.material-icons,
   display: none;
 }
 
-/* 🌟 二级菜单专属：打开水波纹扩散速率调慢为原来的 29% (0.35s / 0.29 ≈ 1.2s 极缓优雅扩散) */
-.secondary-overlay-panel:not(#themePickerPanel).anim-in {
-  display: flex !important;
-  opacity: 1 !important;
-  animation: rippleExpandOverlay 1.2s cubic-bezier(0.16, 0.9, 0.22, 1) forwards;
-}
-
-/* 🌟 调色盘面板保持原速 0.35s 不变 */
-#themePickerPanel.anim-in,
 .secondary-overlay-panel.anim-in {
   display: flex !important;
   opacity: 1 !important;
   animation: rippleExpandOverlay 0.35s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
 }
-
 
 .secondary-overlay-panel.anim-out {
   display: flex !important;
@@ -2420,11 +2305,6 @@ body.component-panel-closed .m29-overscroll-edge-container--main {
 
 
 
-#section-tabs {
-  container-type: inline-size;
-  container-name: tab-card;
-}
-
 .m29-tabs-bar {
   display: flex;
   position: relative;
@@ -2446,13 +2326,13 @@ body.component-panel-closed .m29-overscroll-edge-container--main {
 }
 
 .m29-tab-item {
-  padding: 12px 20px;
+  padding: 12px 24px;
   font-size: 14px;
   font-weight: 600;
   color: inherit;
   opacity: 0.7;
   cursor: pointer;
-  transition: opacity 0.2s ease, color 0.2s ease, padding 0.25s ease;
+  transition: opacity 0.2s ease, color 0.2s ease;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -2468,37 +2348,6 @@ body.component-panel-closed .m29-overscroll-edge-container--main {
 .m29-tab-item.is-active {
   opacity: 1;
   color: var(--mdc-theme-primary, #6750a4) !important;
-}
-
-/* 🌟 Tab 容器宽度不足时 (<440px) 响应式紧凑折叠：
-   - 有图标：仅显示图标居中
-   - 无图标：显示首字 + ... 截断
-   - Tooltip 鼠标悬停显示完整内容
-*/
-@container tab-card (max-width: 440px) {
-  .m29-tabs-bar {
-    justify-content: space-around;
-  }
-
-  .m29-tab-item {
-    padding: 10px 6px !important;
-    justify-content: center !important;
-    min-width: 0 !important;
-    flex: 1 1 0 !important;
-  }
-
-  .m29-tab-item:has(i) span,
-  .m29-tab-item:has(.material-icons) span {
-    display: none !important;
-  }
-
-  .m29-tab-item:not(:has(i)):not(:has(.material-icons)) span {
-    display: inline-block !important;
-    max-width: 2.2em !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-  }
 }
 
 .m29-tab-indicator {
@@ -3450,10 +3299,6 @@ body.component-panel-closed .m29-overscroll-edge-container--main {
   will-change: transform, opacity;
 }
 
-body.is-resizing-component-panel .mdc-date-picker__selection-thumb {
-  transition: none !important;
-}
-
 .mdc-date-picker.is-month-mode .mdc-date-picker__selection-thumb {
   border-radius: 0 !important;
 }
@@ -3972,163 +3817,14 @@ body.is-resizing-component-panel .mdc-date-picker__selection-thumb {
 }
 
 
-/* =============================================================== */
-/* Demo Catalog & Layout Helpers                                   */
-/* =============================================================== */
-.main-container {
-  margin-left: 72px;
-  margin-right: 0;
-  padding: 28px 36px 24px 36px;
-  box-sizing: border-box;
-  width: auto !important;
-  min-width: 0 !important;
-  max-width: none;
-  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* 🌟 1. 单栏模式：卡片在宽屏主可用区域内左右优雅居中 (max-width: 960px，1.2倍底间隙) */
-body:not(.layout-double-columns):not(.layout-triple-columns) .main-container,
-body.downgrade-1col .main-container {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  width: auto !important;
-  max-width: none !important;
-}
-
-body:not(.layout-double-columns):not(.layout-triple-columns) .main-container > .demo-card,
-body.downgrade-1col .main-container > .demo-card {
-  width: 100% !important;
-  max-width: 960px !important;
-  margin-bottom: calc(16px * 1.2) !important; /* 1.2倍垂直间隙 (19.2px) */
-  box-sizing: border-box !important;
-}
-
-/* 🌟 2. 双栏与三栏瀑布流自适应布局：从左往右排序 ✖ 自动向上紧密填补空白 */
-body.layout-double-columns:not(.downgrade-1col) .main-container,
-body.layout-triple-columns:not(.downgrade-1col) .main-container {
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: wrap !important;
-  align-items: flex-start !important;
-  width: auto !important;
-  max-width: none !important;
-}
-
-/* 🌟 2. 双栏模式 (包括原生双栏，以及三栏模式发生 3->2 降级时)：满宽自适应 2 列 (50% / 50%)，左右间距 24px */
-body.layout-double-columns:not(.downgrade-1col) .main-container,
-body.layout-triple-columns.downgrade-2col:not(.downgrade-1col) .main-container {
-  gap: 24px !important; /* 左右保持标准间距 24px */
-}
-
-body.layout-double-columns:not(.downgrade-1col) .masonry-col,
-body.layout-triple-columns.downgrade-2col:not(.downgrade-1col) .masonry-col {
-  width: calc((100% - 24px) / 2) !important;
-  flex: none !important;
-}
-
-/* 🌟 3. 三栏模式 (仅在未发生 3->2 降级且未发生 1 栏降级时)：满宽自适应 3 列 (33.3% * 3)，左右间距 20px */
-body.layout-triple-columns:not(.downgrade-1col):not(.downgrade-2col) .main-container {
-  gap: 20px !important; /* 左右保持标准间距 20px */
-}
-
-body.layout-triple-columns:not(.downgrade-1col):not(.downgrade-2col) .masonry-col {
-  width: calc((100% - 40px) / 3) !important;
-  flex: none !important;
-}
-
-/* 置顶总览卡片始终跨占 100% 满宽 */
-.main-container > #section-overview {
-  width: 100% !important;
-  flex-basis: 100% !important;
-  margin-bottom: calc(16px * 1.2) !important;
-  box-sizing: border-box !important;
-}
-
-/* 瀑布流独立列容器 (列内卡片自动向上紧凑堆叠，上下 1.2 倍间隙 19.2px) */
-.masonry-col {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: calc(16px * 1.2) !important;
-  min-width: 0 !important;
-  box-sizing: border-box !important;
-  transition: width 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* 各模块卡片：自然平滑过渡，无字体挤压变形 */
-.masonry-col > .demo-card,
-.main-container > .demo-card {
-  width: 100% !important;
-  margin-bottom: 0 !important;
-  box-sizing: border-box !important;
-  min-width: 0 !important;
-  transition: max-width 0.32s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
-  will-change: transform;
-}
-
-/* 🌟 莫奈三色列着色系统 (第 1 列主色，第 2 列次色，第 3 列与组件栏第三色) */
-.main-container .demo-card > h3 > i.material-icons {
-  color: var(--card-theme-color, var(--mdc-theme-primary)) !important;
-  transition: color 0.38s ease;
-}
-
-/* 🌟 右侧常驻组件栏 (担任第 3 列/侧边专属色)：统一使用莫奈 Tertiary 第三色 */
-#app-component-panel {
-  --panel-accent-color: var(--mdc-theme-tertiary);
-}
-
-#app-component-panel .component-panel-header i.material-icons,
-#app-component-panel .component-panel-section-title i.material-icons,
-#app-component-panel .component-panel-title i.material-icons {
-  color: var(--panel-accent-color, var(--mdc-theme-tertiary)) !important;
-  transition: color 0.38s ease;
-}
+/* --- Component: packages/mdc-component-panel/mdc-component-panel.scss --- */
 
 
 
-/* 🌟 核心网格布局：内部小卡片宽屏自适应多列/双列 */
-.component-grid {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
-  gap: 20px !important;
-  margin-top: 16px !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-/* 🌟 全局隐藏原生滚动条 (彻底不占用任何像素宽度，杜绝布局挤压与跳动) */
-html, body, * {
-  scrollbar-width: none !important; /* Firefox */
-  -ms-overflow-style: none !important; /* IE / Edge */
-}
-
-::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  background: transparent !important;
-}
-
-@media (max-width: 599.9px) {
-  .main-container {
-    margin-left: 0 !important;
-    padding: 16px 16px 24px 16px !important;
-    width: 100% !important;
-    max-width: 100vw !important;
-    overflow-x: hidden;
-  }
-
-  .component-grid {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
-  }
-}
 
 
-/* =============================================================== */
-/* 🧩 右侧常驻组件栏 (Right Component Panel · 可自由调整宽度)        */
-/* =============================================================== */
+
+
 :root {
   --component-panel-width: 290px;
 }
@@ -4147,7 +3843,7 @@ html, body, * {
   z-index: 998;
   display: flex;
   flex-direction: column;
-  overflow: visible; /* 允许 resizer 稍微凸出左边缘以便抓取 */
+  overflow: visible;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.3s ease,
               background-color 0.28s cubic-bezier(0.2, 0, 0, 1),
@@ -4191,13 +3887,13 @@ body.is-resizing-component-panel .main-container {
 
 .component-panel-resizer:hover::after,
 body.is-resizing-component-panel .component-panel-resizer::after {
-  background-color: var(--mdc-theme-primary, #6750a4);
-  box-shadow: none !important; /* 彻底去除发光与阴影，保持纯净扁平直角线条 */
+  background-color: var(--panel-accent-color, var(--mdc-theme-primary, #6750a4));
+  box-shadow: none !important;
 }
 
 @media (max-width: 767.9px) {
   .component-panel-resizer {
-    display: none !important; /* 移动端抽屉模式不需要调整宽度 */
+    display: none !important;
   }
 }
 
@@ -4211,6 +3907,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   background-color: var(--mdc-theme-surface, #ffffff);
   transition: background-color 0.28s cubic-bezier(0.2, 0, 0, 1),
               border-color 0.28s cubic-bezier(0.2, 0, 0, 1);
+  position: relative;
 }
 
 .component-panel-header-title {
@@ -4220,6 +3917,27 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   font-size: 15px;
   font-weight: 700;
   color: var(--mdc-theme-on-surface, #1d1b20);
+}
+
+.component-panel-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  opacity: 0.8;
+  border-radius: 0 !important;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  padding: 0;
+}
+
+.component-panel-action-btn:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.06);
 }
 
 .component-panel-close-btn {
@@ -4246,39 +3964,218 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 16px 16px 80px 16px;
+  padding: 16px 16px 24px 16px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px 16px;
-  align-items: start;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  align-content: start;
   position: relative;
-  container-type: inline-size;
-  container-name: component-panel;
-  box-sizing: border-box;
 }
 
-.component-panel-section {
+/* 🎨 独立配色浮层面板 */
+.component-panel-palette-menu {
+  position: absolute;
+  top: 56px;
+  right: 12px;
+  width: 240px;
+  background-color: var(--mdc-theme-surface, #ffffff);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  border-radius: 0 !important;
+  z-index: 1005;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-width: 0; /* 防止子元素撑破 grid 列宽 */
-  width: 100%;
+  animation: m29MenuFadeIn 0.2s cubic-bezier(0, 0, 0.2, 1);
 }
 
-@container component-panel (min-width: 520px) {
-  .component-panel-body {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-  }
+@keyframes m29MenuFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.component-panel-section-title {
-  font-size: 13px;
-  font-weight: 600;
-  opacity: 0.85;
+.palette-menu-header {
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--mdc-theme-on-surface, #1d1b20);
+}
+
+.palette-menu-close {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 2px;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.palette-menu-close:hover {
+  opacity: 1;
+}
+
+.palette-swatches-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.panel-swatch-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50% !important;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+  padding: 0;
+}
+
+.panel-swatch-dot:hover {
+  transform: scale(1.15);
+}
+
+.panel-swatch-dot.is-active {
+  border-color: var(--mdc-theme-on-surface, #1d1b20);
+}
+
+.panel-swatch-custom {
+  width: 24px;
+  height: 24px;
+  border-radius: 50% !important;
+  border: 1px dashed rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s ease;
+}
+
+.panel-swatch-custom:hover {
+  transform: scale(1.15);
+}
+
+.palette-menu-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.palette-menu-footer button {
+  font-size: 11px !important;
+  padding: 0 8px !important;
+  height: 28px !important;
+}
+
+/* 组件栏独立暗色/浅色模式 */
+.mdc-component-panel.dark-theme,
+.dark-theme .mdc-component-panel:not(.light-theme) {
+  --mdc-theme-surface: #1e1b22;
+  --mdc-theme-on-surface: #e6e1e5;
+  --mdc-theme-surface-variant: #49454f;
+  --mdc-theme-on-surface-variant: #cac4d0;
+  background-color: var(--mdc-theme-surface, #1e1b22) !important;
+  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+  border-left-color: rgba(255, 255, 255, 0.08) !important;
+  border-right-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: -1px 0 8px rgba(0, 0, 0, 0.6) !important;
+}
+
+.mdc-component-panel.dark-theme .component-panel-header,
+.dark-theme .mdc-component-panel:not(.light-theme) .component-panel-header {
+  background-color: var(--mdc-theme-surface, #1e1b22) !important;
+  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.mdc-component-panel.dark-theme .component-panel-action-btn,
+.dark-theme .mdc-component-panel:not(.light-theme) .component-panel-action-btn {
+  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+}
+
+.mdc-component-panel.dark-theme .component-panel-palette-menu,
+.dark-theme .mdc-component-panel:not(.light-theme) .component-panel-palette-menu {
+  background-color: #28252e !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #e6e1e5 !important;
+}
+
+.mdc-component-panel.dark-theme .palette-menu-header,
+.dark-theme .mdc-component-panel:not(.light-theme) .palette-menu-header {
+  color: #e6e1e5 !important;
+}
+
+.mdc-component-panel.dark-theme .palette-menu-close,
+.dark-theme .mdc-component-panel:not(.light-theme) .palette-menu-close {
+  color: #e6e1e5 !important;
+}
+
+.mdc-component-panel.dark-theme .palette-menu-footer,
+.dark-theme .mdc-component-panel:not(.light-theme) .palette-menu-footer {
+  border-top-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.mdc-component-panel.dark-theme .mdc-date-picker,
+.mdc-component-panel.dark-theme .mdc-time-picker,
+.dark-theme .mdc-component-panel:not(.light-theme) .mdc-date-picker,
+.dark-theme .mdc-component-panel:not(.light-theme) .mdc-time-picker {
+  background-color: #28252e !important;
+  color: #e6e1e5 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+.mdc-component-panel.dark-theme .mdc-date-picker__cell,
+.dark-theme .mdc-component-panel:not(.light-theme) .mdc-date-picker__cell {
+  color: #e6e1e5 !important;
+}
+
+.mdc-component-panel.dark-theme .mdc-time-picker__clock-face,
+.dark-theme .mdc-component-panel:not(.light-theme) .mdc-time-picker__clock-face {
+  background-color: #332f3b !important;
+}
+
+.mdc-component-panel.light-theme {
+  --mdc-theme-surface: #ffffff;
+  --mdc-theme-on-surface: #1d1b20;
+  --mdc-theme-surface-variant: #f7f2fa;
+  --mdc-theme-on-surface-variant: #49454f;
+  background-color: #ffffff !important;
+  color: #1d1b20 !important;
+  border-left-color: rgba(0, 0, 0, 0.08) !important;
+  border-right-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: -1px 0 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+.mdc-component-panel.light-theme .component-panel-header {
+  background-color: #ffffff !important;
+  color: #1d1b20 !important;
+  border-bottom-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.mdc-component-panel.light-theme .component-panel-action-btn {
+  color: #1d1b20 !important;
+}
+
+.mdc-component-panel.light-theme .mdc-date-picker,
+.mdc-component-panel.light-theme .mdc-time-picker {
+  background-color: #ffffff !important;
+  color: #1d1b20 !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.mdc-component-panel.light-theme .mdc-date-picker__cell {
+  color: #1d1b20 !important;
+}
+
+.mdc-component-panel.light-theme .mdc-time-picker__clock-face {
+  background-color: #f7f2fa !important;
 }
 
 /* 组件栏内的 Picker 自适应宽度 */
@@ -4305,7 +4202,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   pointer-events: auto;
 }
 
-/* ≥768px 桌面端：常驻显示 + main-container 让出右侧空间 (支持关闭折叠) */
+/* ≥768px 桌面端：常驻显示 + main-container 让出右侧空间 */
 @media (min-width: 768px) {
   .mdc-component-panel {
     transform: translateX(0);
@@ -4317,7 +4214,6 @@ body.is-resizing-component-panel .component-panel-resizer::after {
                 margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* 桌面端组件栏被用户关闭折叠时的样式 */
   body.component-panel-closed .mdc-component-panel {
     transform: translateX(100%) !important;
     box-shadow: none !important;
@@ -4328,14 +4224,10 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   }
 
   body.component-panel-closed .m29-overlay-scrollbar-track.is-window {
-    right: 2px !important;
+    right: 0 !important;
   }
 
   .component-panel-close-btn {
-    display: none !important;
-  }
-
-  .component-panel-backdrop {
     display: none !important;
   }
 }
@@ -4343,7 +4235,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
 /* <768px 移动端：默认隐藏，滑入显示 */
 @media (max-width: 767.9px) {
   .mdc-component-panel {
-    width: 290px !important; /* 移动端固定 290px */
+    width: 290px !important;
     transform: translateX(100%);
     box-shadow: none;
     z-index: 99998;
@@ -4363,130 +4255,31 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   }
 }
 
-/* =============================================================== */
-/* 🌙 组件栏独立暗色 / 浅色模式系统                                   */
-/* 支持脱离全局主题，独立将组件栏切换为暗色或浅色                      */
-/* =============================================================== */
-.mdc-component-panel.dark-theme,
-.dark-theme .mdc-component-panel:not(.light-theme) {
-  --mdc-theme-surface: #1e1b22;
-  --mdc-theme-on-surface: #e6e1e5;
-  --mdc-theme-surface-variant: #49454f;
-  --mdc-theme-on-surface-variant: #cac4d0;
-  background-color: var(--mdc-theme-surface, #1e1b22) !important;
-  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
-  border-left-color: rgba(255, 255, 255, 0.08) !important;
-  border-right-color: rgba(255, 255, 255, 0.08) !important;
-  box-shadow: -1px 0 8px rgba(0, 0, 0, 0.6) !important;
-}
-
-.mdc-component-panel.dark-theme .component-panel-header,
-.dark-theme .mdc-component-panel:not(.light-theme) .component-panel-header {
-  background-color: var(--mdc-theme-surface, #1e1b22) !important;
-  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
-  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
-}
-
-.mdc-component-panel.dark-theme .component-panel-action-btn,
-.dark-theme .mdc-component-panel:not(.light-theme) .component-panel-action-btn {
-  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
-}
-
-.mdc-component-panel.dark-theme .component-panel-close-btn:hover,
-.dark-theme .mdc-component-panel:not(.light-theme) .component-panel-close-btn:hover {
-  background-color: rgba(255, 255, 255, 0.08) !important;
-}
-
-.mdc-component-panel.dark-theme .mdc-date-picker,
-.mdc-component-panel.dark-theme .mdc-time-picker,
-.dark-theme .mdc-component-panel:not(.light-theme) .mdc-date-picker,
-.dark-theme .mdc-component-panel:not(.light-theme) .mdc-time-picker {
-  background-color: #28252e !important;
-  color: #e6e1e5 !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
-}
-
-.mdc-component-panel.dark-theme .mdc-date-picker__cell,
-.dark-theme .mdc-component-panel:not(.light-theme) .mdc-date-picker__cell {
-  color: #e6e1e5 !important;
-}
-
-.mdc-component-panel.dark-theme .mdc-time-picker__clock-face,
-.dark-theme .mdc-component-panel:not(.light-theme) .mdc-time-picker__clock-face {
-  background-color: #332f3b !important;
-}
-
-/* 组件栏独立浅色模式 (即便页面全局开启了暗色模式) */
-.mdc-component-panel.light-theme {
-  --mdc-theme-surface: #ffffff;
-  --mdc-theme-on-surface: #1c1b1f;
-  --mdc-theme-surface-variant: #e7e0ec;
-  --mdc-theme-on-surface-variant: #49454f;
-  background-color: #ffffff !important;
-  color: #1c1b1f !important;
-  border-left-color: rgba(0, 0, 0, 0.08) !important;
-  border-right-color: rgba(0, 0, 0, 0.08) !important;
-  box-shadow: -1px 0 3px rgba(0, 0, 0, 0.05) !important;
-}
-
-.mdc-component-panel.light-theme .component-panel-header {
-  background-color: #ffffff !important;
-  color: #1c1b1f !important;
-  border-bottom-color: rgba(0, 0, 0, 0.08) !important;
-}
-
-.mdc-component-panel.light-theme .component-panel-action-btn {
-  color: #1c1b1f !important;
-}
-
-.mdc-component-panel.light-theme .mdc-date-picker,
-.mdc-component-panel.light-theme .mdc-time-picker {
-  background-color: #ffffff !important;
-  color: #1c1b1f !important;
-  border-color: rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
-}
-
-.mdc-component-panel.light-theme .mdc-date-picker__cell {
-  color: #1c1b1f !important;
-}
-
-.mdc-component-panel.light-theme .mdc-time-picker__clock-face {
-  background-color: #f3edf7 !important;
-}
-
-
-/* =============================================================== */
-/* 🌟 M2.9 自研浮动悬浮滚动条 (Zero-Width Overlay Scrollbar)         */
-/* 绝不占用任何布局宽度，随滚动动态淡入淡出，支持拖拽与自适应莫奈色彩 */
-/* =============================================================== */
-.m29-overlay-scrollbar-track {
-  position: absolute;
-  top: 2px;
-  bottom: 2px;
-  width: 6px;
-  right: 2px;
-  z-index: 9999;
-  pointer-events: auto;
-  opacity: 0.35; /* 常驻轻量半透明，滚动或悬停时完全高亮 */
-  transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1), width 0.15s ease;
-  border-radius: 3px !important;
-}
-
+/* 🌟 核心融合：整页滚动条与组件栏调整线完全合并为一条线 */
 .m29-overlay-scrollbar-track.is-window {
   position: fixed;
   top: 0;
   bottom: 0;
   right: var(--component-panel-width, 290px);
-  z-index: 996; /* 位于顶部与组件栏之下 */
-  width: 6px;
+  z-index: 1002;
+  width: 14px;
+  transform: translateX(50%);
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
 }
 
 @media (max-width: 767.9px) {
   .m29-overlay-scrollbar-track.is-window {
-    right: 2px !important;
+    right: 0 !important;
+    transform: none !important;
+    width: 6px !important;
   }
+}
+
+body.component-panel-closed .m29-overlay-scrollbar-track.is-window {
+  right: 0 !important;
+  transform: none !important;
+  width: 6px !important;
 }
 
 .m29-overlay-scrollbar-track.is-visible,
@@ -4499,250 +4292,71 @@ body.is-resizing-component-panel .component-panel-resizer::after {
 .m29-overlay-scrollbar-thumb {
   position: absolute;
   top: 0;
-  left: 1px;
-  right: 1px;
-  min-height: 24px;
-  border-radius: 4px !important;
+  left: calc(50% - 1px);
+  width: 2px;
+  min-height: 28px;
+  border-radius: 0 !important;
   background-color: var(--mdc-theme-primary, #6750a4);
-  opacity: 0.45;
+  opacity: 0.75;
   cursor: pointer;
   pointer-events: auto;
-  transition: opacity 0.2s ease, background-color 0.2s ease, width 0.15s ease, transform 0.06s linear;
+  transition: opacity 0.2s ease, background-color 0.2s ease, width 0.15s ease, left 0.15s ease, transform 0.06s linear;
 }
 
 .m29-overlay-scrollbar-track:hover .m29-overlay-scrollbar-thumb,
 .m29-overlay-scrollbar-thumb:hover,
 .m29-overlay-scrollbar-track.is-dragging .m29-overlay-scrollbar-thumb {
-  opacity: 0.85;
+  opacity: 1;
+  width: 4px;
+  left: calc(50% - 2px);
   background-color: var(--mdc-theme-primary, #6750a4);
 }
 
 .dark-theme .m29-overlay-scrollbar-thumb {
   background-color: var(--mdc-theme-primary, #d0bcff);
-  opacity: 0.5;
+  opacity: 0.8;
 }
 
 .dark-theme .m29-overlay-scrollbar-track:hover .m29-overlay-scrollbar-thumb,
 .dark-theme .m29-overlay-scrollbar-thumb:hover,
 .dark-theme .m29-overlay-scrollbar-track.is-dragging .m29-overlay-scrollbar-thumb {
-  opacity: 0.9;
+  opacity: 1;
   background-color: var(--mdc-theme-primary, #d0bcff);
 }
 
 
 /* =============================================================== */
-/* 🌟 M2.9 纯直角 Material 悬浮 Tooltip 系统                       */
-/* 0px 绝对直角 ✖ 莫奈暗调/反色表面 ✖ 严禁浏览器丑陋原生系统提示框  */
+/* Demo Catalog & Layout Helpers                                   */
 /* =============================================================== */
-.m29-tooltip-popover {
-  position: fixed;
-  background-color: var(--mdc-theme-inverse-surface, #322f35);
-  color: var(--mdc-theme-inverse-on-surface, #f5eff7);
-  padding: 6px 12px;
-  font-size: 11.5px;
-  font-weight: 500;
-  white-space: nowrap;
-  border-radius: 0 !important;
-  pointer-events: none;
-  z-index: 999999;
-  opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 0.18s cubic-bezier(0, 0, 0.2, 1), transform 0.18s cubic-bezier(0, 0, 0.2, 1);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
-  letter-spacing: 0.2px;
-  line-height: 1.4;
+.main-container {
+  margin-left: 72px;
+  padding: 28px 36px 80px 36px;
+  max-width: 1200px;
+  box-sizing: border-box;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.m29-tooltip-popover.is-active {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.dark-theme .m29-tooltip-popover {
-  background-color: var(--mdc-theme-inverse-surface, #e6e1e5);
-  color: var(--mdc-theme-inverse-on-surface, #313033);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
-}
-
-
-
-/* ------------------------------------------------------------------------- */
-/* Extracted from index.html inline style */
-/* ------------------------------------------------------------------------- */
-    .m29-demo-toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      background: #323232;
-      color: #fff;
-      padding: 12px 24px;
-      font-size: 13px;
-      z-index: 99990;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
-      transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0,0,0.2,1), visibility 0.25s;
-    }
-    .m29-demo-toast.is-active {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transform: translateX(-50%) translateY(0);
-    }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-
-    /* 🌟 全局选中文本样式 (独立声明，确保 100% 浏览器兼容) */
-    ::selection {
-      background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
-      color: var(--mdc-theme-primary-900, #21005d) !important;
-    }
-    *::selection {
-      background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
-      color: var(--mdc-theme-primary-900, #21005d) !important;
-    }
-    .dark-theme ::selection,
-    .dark-theme *::selection {
-      background-color: var(--mdc-theme-primary-700, #4f378b) !important;
-      color: var(--mdc-theme-primary-50, #f6edff) !important;
-    }
-    ::-moz-selection {
-      background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
-      color: var(--mdc-theme-primary-900, #21005d) !important;
-    }
-    *::-moz-selection {
-      background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
-      color: var(--mdc-theme-primary-900, #21005d) !important;
-    }
-    .dark-theme ::-moz-selection,
-    .dark-theme *::-moz-selection {
-      background-color: var(--mdc-theme-primary-700, #4f378b) !important;
-      color: var(--mdc-theme-primary-50, #f6edff) !important;
-    }
-
-html { scroll-behavior: smooth; }
-
-
-/* =============================================================== */
-/* 🔀 Layout Swap Logic (Navigation Rail on Right, Component Panel on Left) */
-/* =============================================================== */
-body.layout-swap .mdc-navigation-rail {
-  left: auto !important;
-  right: 0 !important;
-  border-right: none !important;
-  border-left: 1px solid rgba(0,0,0,0.08) !important;
-  box-shadow: -1px 0 6px rgba(0,0,0,0.06);
-}
-.dark-theme body.layout-swap .mdc-navigation-rail {
-  border-left: 1px solid rgba(255,255,255,0.08) !important;
-  box-shadow: -1px 0 6px rgba(0, 0, 0, 0.6);
-}
-
-body.layout-swap .mdc-component-panel {
-  right: auto !important;
-  left: 0 !important;
-  border-left: none !important;
-  border-right: 1px solid rgba(0,0,0,0.08);
-  box-shadow: 1px 0 6px rgba(0,0,0,0.06);
-}
-.dark-theme body.layout-swap .mdc-component-panel {
-  border-right: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.6);
-}
-
-/* 调整手柄移动至组件栏右侧边缘 */
-body.layout-swap .component-panel-resizer {
-  left: auto !important;
-  right: -6px !important;
-  cursor: col-resize !important;
-  transform: none !important;
-  touch-action: none !important;
-  user-select: none !important;
-}
-
-@media (min-width: 768px) {
-  body.layout-swap .main-container {
-    margin-left: var(--component-panel-width, 290px) !important;
-    margin-right: 72px !important;
-  }
-  body.layout-swap.component-panel-closed .main-container {
-    margin-left: 0 !important;
-    margin-right: 72px !important;
-  }
-  body.layout-swap.component-panel-closed .mdc-component-panel {
-    transform: translateX(-100%) !important;
-  }
-  /* 页面级悬浮滚动条直接位于左右分界线 (左侧组件栏右边缘) */
-  body.layout-swap .m29-overlay-scrollbar-track.is-window {
-    left: var(--component-panel-width, 290px) !important;
-    right: auto !important;
-  }
-  body.layout-swap.component-panel-closed .m29-overlay-scrollbar-track.is-window {
-    left: 2px !important;
-    right: auto !important;
-  }
-}
-@media (max-width: 767.9px) {
-  body.layout-swap .m29-overlay-scrollbar-track.is-window {
-    right: 2px !important;
-    left: auto !important;
-  }
-}
-
-
-/* =============================================================== */
-/* 📌 Masonry Layout & Advanced Card Attributes */
-/* =============================================================== */
-.main-container > .demo-card {
+/* 🌟 核心网格布局：宽屏自适应多列/双列，窄屏自动单列 */
+.component-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 20px !important;
+  margin-top: 16px !important;
   width: 100% !important;
-  flex-basis: 100% !important;
-  margin-bottom: calc(16px * 1.2) !important;
   box-sizing: border-box !important;
 }
 
-/* 📌 Sticky Header Support */
-.demo-card[data-sticky="true"] {
-  position: sticky !important;
-  top: 16px;
-  z-index: 10;
-}
-@media (min-width: 768px) {
-  .demo-card[data-sticky="true"] {
-    top: 24px;
+@media (max-width: 599.9px) {
+  .main-container {
+    margin-left: 0 !important;
+    padding: 16px 16px 80px 16px !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden;
+  }
+
+  .component-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
   }
 }
-
-
-/* =============================================================== */
-/* 🧩 Component Panel Action Buttons (Swap & Close) */
-/* =============================================================== */
-.component-panel-action-btn {
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: var(--mdc-theme-on-surface, #1d1b20);
-  opacity: 0.7;
-  transition: opacity 0.2s, background-color 0.2s;
-  padding: 0;
-  border-radius: 50% !important;
-}
-.component-panel-action-btn:hover {
-  opacity: 1;
-  background-color: rgba(0, 0, 0, 0.08);
-}
-.dark-theme .component-panel-action-btn {
-  color: #fff;
-}
-.dark-theme .component-panel-action-btn:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
