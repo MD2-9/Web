@@ -3803,6 +3803,19 @@ button {
   box-sizing: border-box !important;
 }
 
+/* 🌟 全局隐藏原生滚动条 (彻底不占用任何像素宽度，杜绝布局挤压与跳动) */
+html, body, * {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE / Edge */
+}
+
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
 @media (max-width: 599.9px) {
   .main-container {
     margin-left: 0 !important;
@@ -3816,4 +3829,319 @@ button {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
   }
+}
+
+
+/* =============================================================== */
+/* 🧩 右侧常驻组件栏 (Right Component Panel · 可自由调整宽度)        */
+/* =============================================================== */
+:root {
+  --component-panel-width: 290px;
+}
+
+.mdc-component-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--component-panel-width, 290px);
+  min-width: 200px;
+  max-width: 80vw;
+  background-color: var(--mdc-theme-surface, #ffffff);
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: -1px 0 3px rgba(0, 0, 0, 0.05);
+  z-index: 998;
+  display: flex;
+  flex-direction: column;
+  overflow: visible; /* 允许 resizer 稍微凸出左边缘以便抓取 */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease,
+              background-color 0.28s cubic-bezier(0.2, 0, 0, 1),
+              border-color 0.28s cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* 拖拽调整宽度时禁用 transition 以获得丝滑跟手感 */
+body.is-resizing-component-panel .mdc-component-panel,
+body.is-resizing-component-panel .main-container {
+  transition: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  cursor: col-resize !important;
+}
+
+/* 左侧拖拽调整手柄 (Resizer Handle) */
+.component-panel-resizer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -4px;
+  width: 8px;
+  cursor: col-resize;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.component-panel-resizer::after {
+  content: '';
+  width: 2px;
+  height: 100%;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.component-panel-resizer:hover::after,
+body.is-resizing-component-panel .component-panel-resizer::after {
+  background-color: var(--mdc-theme-primary, #6750a4);
+  box-shadow: none !important; /* 彻底去除发光与阴影，保持纯净扁平直角线条 */
+}
+
+@media (max-width: 767.9px) {
+  .component-panel-resizer {
+    display: none !important; /* 移动端抽屉模式不需要调整宽度 */
+  }
+}
+
+.component-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+  background-color: var(--mdc-theme-surface, #ffffff);
+  transition: background-color 0.28s cubic-bezier(0.2, 0, 0, 1),
+              border-color 0.28s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.component-panel-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--mdc-theme-on-surface, #1d1b20);
+}
+
+.component-panel-close-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  opacity: 0.7;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  padding: 0;
+}
+
+.component-panel-close-btn:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.component-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px 16px;
+  align-items: start;
+  position: relative;
+  container-type: inline-size;
+  container-name: component-panel;
+}
+
+.component-panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0; /* 防止子元素撑破 grid 列宽 */
+  width: 100%;
+}
+
+@container component-panel (min-width: 520px) {
+  .component-panel-body {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+.component-panel-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.85;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 组件栏内的 Picker 自适应宽度 */
+.mdc-component-panel .mdc-date-picker,
+.mdc-component-panel .mdc-time-picker {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* 组件栏遮罩 (仅移动端) */
+.component-panel-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 997;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.component-panel-backdrop.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ≥768px 桌面端：常驻显示 + main-container 让出右侧空间 */
+@media (min-width: 768px) {
+  .mdc-component-panel {
+    transform: translateX(0);
+  }
+
+  .main-container {
+    margin-right: var(--component-panel-width, 290px);
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .component-panel-close-btn {
+    display: none !important;
+  }
+
+  /* ≥768px 时隐藏左侧「组件」入口（组件栏已常驻） */
+  .component-panel-trigger {
+    display: none !important;
+  }
+
+  .component-panel-backdrop {
+    display: none !important;
+  }
+}
+
+/* <768px 移动端：默认隐藏，滑入显示 */
+@media (max-width: 767.9px) {
+  .mdc-component-panel {
+    width: 290px !important; /* 移动端固定 290px */
+    transform: translateX(100%);
+    box-shadow: none;
+    z-index: 99998;
+  }
+
+  .mdc-component-panel.is-open {
+    transform: translateX(0) !important;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .component-panel-close-btn {
+    display: flex !important;
+  }
+
+  .component-panel-backdrop {
+    z-index: 99997;
+  }
+}
+
+/* 暗色模式 */
+.dark-theme .mdc-component-panel {
+  background-color: var(--mdc-theme-surface, #19181e);
+  border-left-color: rgba(255, 255, 255, 0.08);
+  box-shadow: -1px 0 6px rgba(0, 0, 0, 0.6);
+}
+
+.dark-theme .component-panel-header {
+  background-color: var(--mdc-theme-surface, #19181e);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-theme .component-panel-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+
+/* =============================================================== */
+/* 🌟 M2.9 自研浮动悬浮滚动条 (Zero-Width Overlay Scrollbar)         */
+/* 绝不占用任何布局宽度，随滚动动态淡入淡出，支持拖拽与自适应莫奈色彩 */
+/* =============================================================== */
+.m29-overlay-scrollbar-track {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  width: 6px;
+  right: 2px;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1), width 0.15s ease;
+  border-radius: 3px !important;
+}
+
+.m29-overlay-scrollbar-track.is-window {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: var(--component-panel-width, 290px);
+  z-index: 996; /* 位于顶部与组件栏之下 */
+  width: 6px;
+}
+
+@media (max-width: 767.9px) {
+  .m29-overlay-scrollbar-track.is-window {
+    right: 2px !important;
+  }
+}
+
+.m29-overlay-scrollbar-track.is-visible,
+.m29-overlay-scrollbar-track:hover,
+.m29-overlay-scrollbar-track.is-dragging {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.m29-overlay-scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  left: 1px;
+  right: 1px;
+  min-height: 24px;
+  border-radius: 4px !important;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  opacity: 0.45;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: opacity 0.2s ease, background-color 0.2s ease, width 0.15s ease, transform 0.06s linear;
+}
+
+.m29-overlay-scrollbar-track:hover .m29-overlay-scrollbar-thumb,
+.m29-overlay-scrollbar-thumb:hover,
+.m29-overlay-scrollbar-track.is-dragging .m29-overlay-scrollbar-thumb {
+  opacity: 0.85;
+  background-color: var(--mdc-theme-primary, #6750a4);
+}
+
+.dark-theme .m29-overlay-scrollbar-thumb {
+  background-color: var(--mdc-theme-primary, #d0bcff);
+  opacity: 0.5;
+}
+
+.dark-theme .m29-overlay-scrollbar-track:hover .m29-overlay-scrollbar-thumb,
+.dark-theme .m29-overlay-scrollbar-thumb:hover,
+.dark-theme .m29-overlay-scrollbar-track.is-dragging .m29-overlay-scrollbar-thumb {
+  opacity: 0.9;
+  background-color: var(--mdc-theme-primary, #d0bcff);
 }
