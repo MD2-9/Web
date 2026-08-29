@@ -207,13 +207,13 @@
             自由配置页面色彩维度：纯粹单色统一、双色中阶平衡或三色全景表达：
           </div>
           <div class="segmented-button-group" style="width: 100%; display: flex;">
-            <button class="segmented-button is-selected" id="btn-color-mode-1" onclick="setColorPaletteMode(1)" style="flex: 1; justify-content: center; padding: 6px 0; font-size: 11.5px;">
+            <button class="segmented-button" id="btn-color-mode-1" onclick="setColorPaletteMode(1)" style="flex: 1; justify-content: center; padding: 6px 0; font-size: 11.5px;">
               1色·单色
             </button>
             <button class="segmented-button" id="btn-color-mode-2" onclick="setColorPaletteMode(2)" style="flex: 1; justify-content: center; padding: 6px 0; font-size: 11.5px;">
               2色·双色
             </button>
-            <button class="segmented-button" id="btn-color-mode-3" onclick="setColorPaletteMode(3)" style="flex: 1; justify-content: center; padding: 6px 0; font-size: 11.5px;">
+            <button class="segmented-button is-selected" id="btn-color-mode-3" onclick="setColorPaletteMode(3)" style="flex: 1; justify-content: center; padding: 6px 0; font-size: 11.5px;">
               3色·三色
             </button>
           </div>
@@ -825,17 +825,17 @@
         7. 选项卡联动系统 (M2.9 Tabs & Sliding Indicator)
       </h3>
       
-      <!-- M2.9 选项卡条 -->
+      <!-- M2.9 选项卡条 (宽度不足时有图标仅显示图标，无图标显示首字+...，Tooltip 显示全标题) -->
       <div class="m29-tabs-bar" id="demoTabsBar">
-        <div class="m29-tab-item is-active" onclick="switchM29Tab(0, this)">
+        <div class="m29-tab-item is-active" onclick="switchM29Tab(0, this)" data-full-title="1. 组件全景" data-tooltip="1. 组件全景">
           <i class="material-icons" style="font-size: 18px;">widgets</i>
           <span>1. 组件全景</span>
         </div>
-        <div class="m29-tab-item" onclick="switchM29Tab(1, this)">
+        <div class="m29-tab-item" onclick="switchM29Tab(1, this)" data-full-title="2. CAM16 色彩算法" data-tooltip="2. CAM16 色彩算法">
           <i class="material-icons" style="font-size: 18px;">palette</i>
           <span>2. CAM16 色彩算法</span>
         </div>
-        <div class="m29-tab-item" onclick="switchM29Tab(2, this)">
+        <div class="m29-tab-item" onclick="switchM29Tab(2, this)" data-full-title="3. Navigation Rail 架构" data-tooltip="3. Navigation Rail 架构">
           <i class="material-icons" style="font-size: 18px;">navigation</i>
           <span>3. Navigation Rail 架构</span>
         </div>
@@ -915,9 +915,9 @@
           <div style="font-size: 11px; opacity: 0.75; margin-top: 2px;">支持 1色（极致统一单色调）、2色（主次平衡）与 3色（官方全阶三色）无缝切换</div>
         </div>
         <div class="segmented-button-group">
-          <button class="segmented-button is-selected" id="lab-color-mode-1" onclick="setColorPaletteMode(1)">1色·单色统一</button>
+          <button class="segmented-button" id="lab-color-mode-1" onclick="setColorPaletteMode(1)">1色·单色统一</button>
           <button class="segmented-button" id="lab-color-mode-2" onclick="setColorPaletteMode(2)">2色·双色平衡</button>
-          <button class="segmented-button" id="lab-color-mode-3" onclick="setColorPaletteMode(3)">3色·三色对比</button>
+          <button class="segmented-button is-selected" id="lab-color-mode-3" onclick="setColorPaletteMode(3)">3色·三色对比</button>
         </div>
       </div>
       
@@ -1454,7 +1454,7 @@
         });
       }
 
-      // 🌟 FLIP 动画 Step 2 & 3 (Last, Invert, Play): 平滑平移动画
+      // 🌟 FLIP 动画：纯净自然位移动画 (无拉伸形变、无回弹超调，纯粹丝滑平移入位)
       if (firstPositions.size > 0) {
         requestAnimationFrame(() => {
           allCards.forEach(card => {
@@ -1466,12 +1466,12 @@
             const dy = firstRect.top - lastRect.top;
 
             if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
-              card.style.transform = `translate(${dx}px, ${dy}px)`;
+              card.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
               card.style.transition = 'none';
 
               requestAnimationFrame(() => {
-                card.style.transition = 'transform 0.42s cubic-bezier(0.16, 0.9, 0.22, 1)';
-                card.style.transform = '';
+                card.style.transition = 'transform 0.3s cubic-bezier(0, 0, 0.2, 1)';
+                card.style.transform = 'translate3d(0, 0, 0)';
 
                 const onEnd = () => {
                   card.style.transition = '';
@@ -1631,6 +1631,10 @@
     let mobileNavDelayTimer = null;
 
     function openOverlay(panelId, event) {
+      if (event && typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
+
       const isMobile = window.innerWidth < 600;
       const targetContainer = isMobile ? document.getElementById('app-mobile-drawer') : document.getElementById('app-rail');
       const panel = document.getElementById(panelId);
@@ -1694,6 +1698,10 @@
     }
 
     function closeOverlay(panelId, event) {
+      if (event && typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
+
       const id = panelId || activeOverlayId;
       if (!id) return;
 
@@ -1753,10 +1761,10 @@
         }
       });
 
-      // 桌面端点击侧边栏空白区域收回
+      // 桌面端点击侧边栏空白区域收回 (排除所有交互控件及二级面板内部区域)
       desktopRail.addEventListener('click', (e) => {
         if (window.innerWidth >= 600) {
-          const isInteractive = e.target.closest('.rail-nav-item, .rail-header, button, a, input, select, .mdc-button, .segmented-button, .theme-swatch');
+          const isInteractive = e.target.closest('.rail-nav-item, .rail-header, button, a, input, select, .mdc-button, .segmented-button, .theme-swatch, .theme-tile, .theme-grid, .secondary-overlay-panel, #themePickerPanel');
           if (!isInteractive) {
             if (activeOverlayId) {
               closeOverlay(activeOverlayId, e);
@@ -1768,10 +1776,10 @@
       });
     }
 
-    // 点击页面主体空白处时，收回桌面端二级覆层
+    // 点击页面主体空白处时，收回桌面端二级覆层 (排除所有打开按钮与二级面板内部)
     document.addEventListener('click', (e) => {
       if (window.innerWidth >= 600 && activeOverlayId) {
-        if (!e.target.closest('#app-rail') && !e.target.closest('.secondary-overlay-panel')) {
+        if (!e.target.closest('#app-rail, .secondary-overlay-panel, #themePickerPanel, [onclick*="openOverlay"], [onclick*="themePickerPanel"]')) {
           closeOverlay(activeOverlayId, e);
         }
       }
@@ -2152,7 +2160,10 @@
         tile.style.color = t.text;
         tile.innerHTML = `<div class="theme-tile-cn">${t.cn}</div><div class="theme-tile-en">${t.en}</div>`;
 
-        tile.onclick = (e) => handleSelectColor(t.color, e);
+        tile.onclick = (e) => {
+          if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+          handleSelectColor(t.color, e);
+        };
         grid.appendChild(tile);
       });
 
@@ -2164,10 +2175,11 @@
         specialTile.style.color = '#FFFFFF';
         specialTile.innerHTML = '<div class="theme-tile-cn">默认黑白</div><div class="theme-tile-en">Black & White</div>';
         specialTile.onclick = (e) => {
+          if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
           selectedPrimary = '#1D1B20';
-          selectedSecondary = null;
-          selectedTertiary = null;
-          finishMonetSelection(e); // 一键跳过全流程！
+          selectedSecondary = '#49454F';
+          selectedTertiary = '#605D62';
+          finishMonetSelection(e);
         };
       } else {
         specialTile.style.backgroundColor = '#FFFFFF';
@@ -2175,13 +2187,17 @@
         specialTile.style.border = '1px dashed #79747E';
         specialTile.innerHTML = '<div class="theme-tile-cn"><i class="material-icons" style="font-size: 16px; vertical-align: -3px;">fast_forward</i> 直接跳过</div><div class="theme-tile-en">Skip All</div>';
         specialTile.onclick = (e) => {
-          finishMonetSelection(e); // 后面直接跳过全流程！
+          if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+          finishMonetSelection(e);
         };
       }
       grid.appendChild(specialTile);
     }
 
     function handleSelectColor(hex, event) {
+      if (event && typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
       if (colorPaletteMode === 1) {
         // 🌟 单色模式：严格只允许主色的色阶配色，选择主色后直接完成！
         selectedPrimary = hex;
@@ -2210,11 +2226,13 @@
     }
 
     function handleSkipStep(event) {
+      if (event && typeof event.stopPropagation === 'function') event.stopPropagation();
       finishMonetSelection(event);
     }
 
     function finishMonetSelection(event) {
       const evt = event || (window.event ? window.event : null);
+      closeOverlay('themePickerPanel', evt);
       executeThemeRippleTransition(evt, () => {
         applyMonetTheme();
         showDemoToast('已成功应用选定的莫奈三色主题');
@@ -2292,7 +2310,7 @@
       return `#${f(0)}${f(8)}${f(4)}`;
     }
 
-    let colorPaletteMode = 1; // 1: 极致纯净单色模式 (默认), 2: 双色中阶平衡模式, 3: 官方三色全阶对比模式
+    let colorPaletteMode = 3; // 1: 极致纯净单色模式, 2: 双色中阶平衡模式, 3: 官方三色全阶对比模式 (默认三色全阶)
     try {
       const saved = localStorage.getItem('mdc_color_palette_mode');
       if (saved && ['1', '2', '3'].includes(saved)) {
@@ -2475,6 +2493,11 @@
       if (pLabel) pLabel.textContent = finalPrimary;
       if (sLabel) sLabel.textContent = colorPaletteMode === 1 ? '主色色阶' : finalSecondary;
       if (tLabel) tLabel.textContent = colorPaletteMode === 1 ? '主色色阶' : (colorPaletteMode === 2 ? '次色色阶' : finalTertiary);
+
+      // 🌟 4. 实时刷新各卡片与列的主题色着色体系
+      if (typeof applyColumnColorTones === 'function') {
+        applyColumnColorTones();
+      }
     }
 
     // =========================================================================
@@ -2541,6 +2564,14 @@
 
     window.addEventListener('load', initM29TabIndicator);
     window.addEventListener('resize', initM29TabIndicator);
+
+    // 监听 Tab 卡片尺寸变化实时对齐指示器
+    const tabCardEl = document.getElementById('section-tabs');
+    if (tabCardEl && window.ResizeObserver) {
+      new ResizeObserver(() => {
+        initM29TabIndicator();
+      }).observe(tabCardEl);
+    }
 
     // =========================================================================
     // 确定型线性进度条动态控制
@@ -4388,8 +4419,8 @@
       }
 
       init() {
-        // 仅底部 4 个操作按钮允许触发 Tooltip 的白名单选择器
-        const FOOTER_BTNS_SELECTOR = '.rail-footer-icon-btn, .rail-footer-compact-btn, .mobile-drawer-footer-btn, #btn-toggle-panel, #btn-toggle-lang, #btn-toggle-layout, #btn-toggle-dark, #btn-toggle-dark-compact';
+        // 仅底部 4 个操作按钮与 Tab 选项卡允许触发 Tooltip 的白名单选择器
+        const FOOTER_BTNS_SELECTOR = '.rail-footer-icon-btn, .rail-footer-compact-btn, .mobile-drawer-footer-btn, #btn-toggle-panel, #btn-toggle-lang, #btn-toggle-layout, #btn-toggle-dark, #btn-toggle-dark-compact, .m29-tab-item';
 
         document.addEventListener('pointerenter', (e) => {
           const rawTarget = e.target.closest('[title], [data-tooltip]');

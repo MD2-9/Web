@@ -2385,6 +2385,11 @@ button {
 
 
 
+#section-tabs {
+  container-type: inline-size;
+  container-name: tab-card;
+}
+
 .m29-tabs-bar {
   display: flex;
   position: relative;
@@ -2406,13 +2411,13 @@ button {
 }
 
 .m29-tab-item {
-  padding: 12px 24px;
+  padding: 12px 20px;
   font-size: 14px;
   font-weight: 600;
   color: inherit;
   opacity: 0.7;
   cursor: pointer;
-  transition: opacity 0.2s ease, color 0.2s ease;
+  transition: opacity 0.2s ease, color 0.2s ease, padding 0.25s ease;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -2428,6 +2433,37 @@ button {
 .m29-tab-item.is-active {
   opacity: 1;
   color: var(--mdc-theme-primary, #6750a4) !important;
+}
+
+/* 🌟 Tab 容器宽度不足时 (<440px) 响应式紧凑折叠：
+   - 有图标：仅显示图标居中
+   - 无图标：显示首字 + ... 截断
+   - Tooltip 鼠标悬停显示完整内容
+*/
+@container tab-card (max-width: 440px) {
+  .m29-tabs-bar {
+    justify-content: space-around;
+  }
+
+  .m29-tab-item {
+    padding: 10px 6px !important;
+    justify-content: center !important;
+    min-width: 0 !important;
+    flex: 1 1 0 !important;
+  }
+
+  .m29-tab-item:has(i) span,
+  .m29-tab-item:has(.material-icons) span {
+    display: none !important;
+  }
+
+  .m29-tab-item:not(:has(i)):not(:has(.material-icons)) span {
+    display: inline-block !important;
+    max-width: 2.2em !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
 }
 
 .m29-tab-indicator {
@@ -3982,15 +4018,17 @@ body.layout-triple-columns:not(.downgrade-1col):not(.downgrade-2col) .masonry-co
   gap: calc(16px * 1.2) !important;
   min-width: 0 !important;
   box-sizing: border-box !important;
+  transition: width 0.32s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 各模块卡片 */
+/* 各模块卡片：自然平滑过渡，无字体挤压变形 */
 .masonry-col > .demo-card,
 .main-container > .demo-card {
   width: 100% !important;
   margin-bottom: 0 !important;
   box-sizing: border-box !important;
   min-width: 0 !important;
+  transition: max-width 0.32s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
   will-change: transform;
 }
 
@@ -4171,7 +4209,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 16px;
+  padding: 16px 16px 80px 16px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px 16px;
@@ -4179,6 +4217,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   position: relative;
   container-type: inline-size;
   container-name: component-panel;
+  box-sizing: border-box;
 }
 
 .component-panel-section {
