@@ -249,3 +249,70 @@ body {
 .dark-theme .mdc-fab * {
   color: #000000 !important;
 }
+
+/* 🌟 M2.9 标准悬浮浮动 Snackbar (Toast) 提示 */
+.m29-demo-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10000;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  background-color: var(--mdc-theme-inverse-surface, #313033);
+  color: var(--mdc-theme-inverse-on-surface, #f4eff4);
+  font-size: 13.5px;
+  font-weight: 500;
+  border-radius: 0 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1),
+              opacity 0.28s cubic-bezier(0.2, 0, 0, 1);
+  min-width: 240px;
+  max-width: calc(100vw - 32px);
+  box-sizing: border-box;
+
+  &.is-active {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  span {
+    flex: 1;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  button {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: var(--mdc-theme-inverse-primary, #d0bcff) !important;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 0 4px !important;
+    min-width: auto !important;
+    height: auto !important;
+    text-transform: uppercase;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+}
+
+.dark-theme .m29-demo-toast {
+  background-color: #e6e1e5;
+  color: #1d1b20;
+
+  button {
+    color: var(--mdc-theme-primary, #6750a4) !important;
+  }
+}
