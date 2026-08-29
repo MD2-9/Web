@@ -1,5 +1,5 @@
 //
-// Copyright 2026 unjal <unjal29@outlook.com>
+// Copyright 2026 安秋 <github.com/unjal29>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 // Material Components for Web (MDC-Web) - Monet Dynamic Color Engine
-// Crafted by unjal <unjal29@outlook.com>
+// Crafted by 安秋 <github.com/unjal29>
 //
 
 import {

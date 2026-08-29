@@ -1,6 +1,12 @@
-# MDC-Web · MD3.1 全组件架构与调用规范文档 (Component Catalog & API Reference)
+# MDC-Web · M2.9 全组件架构与调用规范文档 (Component Catalog & API Reference)
 
-本项目基于官方 **Material Components Web (MDC-Web v0.34.1 / Android 8 MD1 终极成熟架构)** 进行深度重构与定制扩展，融合了 **0px 纯直角 & 50% 纯圆几何骨架**、**Google Sans Flex 变量字体**、**Material You (CAM16 & HCT) 莫奈动态色彩空间引擎** 以及一系列全新现代组件。
+> **署名作者**：安秋 ([github.com/unjal29](https://github.com/unjal29))  
+> **开源协议**：个人修改与扩展组件遵循 **MIT License** | 原版 Google MDC 基础遵循 **Apache License 2.0**  
+> **上游官方基准库**：[Google MDC-Web (github.com/material-components/material-components-web)](https://github.com/material-components/material-components-web)  
+> **参考说明**：部分 UI 借用与参考自 [MDUI (github.com/zdhxiong/mdui)](https://github.com/zdhxiong/mdui)  
+> **字体声明**：排版演示采用 **Google Sans Flex** 变量字体，版权归 **Google LLC** 所有。
+
+本项目基于官方 **Material Components Web (MDC-Web v0.34.1 / Android 8 MD1 终极成熟架构)** 进行深度重构与定制扩展，构建全新的 **M2.9** 设计规范体系。融合了 **0px 纯直角 & 50% 纯圆几何骨架**、**Google Sans Flex 变量字体**、**Material You (CAM16 & HCT) 莫奈动态色彩空间引擎** 以及一系列现代组件。
 
 所有控件均封装在模块化的 `packages/` 与 `packages/material-components-web` 中，支持全量引入或按需调用。
 
@@ -50,7 +56,7 @@ autoInit();
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                               MD3.1 定制与新增组件架构                                  │
+│                                M2.9 定制与新增组件架构                                 │
 ├───────────────────────┬──────────────────────────────────┬─────────────────────────────┤
 │ 模块名称              │ NPM 包路径                       │ 核心导出 Class / API        │
 ├───────────────────────┼──────────────────────────────────┼─────────────────────────────┤
@@ -454,7 +460,7 @@ const tabs = new Md1Tabs(
       <h2 id="dialog-title" class="mdc-dialog__header__title">直角对话框标题</h2>
     </header>
     <section id="dialog-content" class="mdc-dialog__body">
-      这是遵循 MD3.1 直角体系的沉浸式对话框内容。
+      这是遵循 M2.9 直角体系的沉浸式对话框内容。
     </section>
     <footer class="mdc-dialog__footer">
       <button type="button" class="mdc-button mdc-dialog__footer__button--cancel">取消</button>

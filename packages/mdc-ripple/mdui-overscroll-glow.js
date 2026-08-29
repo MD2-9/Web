@@ -1,5 +1,5 @@
 //
-// Copyright 2026 unjal <unjal29@outlook.com>
+// Copyright 2026 安秋 <github.com/unjal29>
 // Licensed under the Apache License, Version 2.0
 //
 // Material Components for Web (MDC-Web) - Android 5.0 (Lollipop) ~ 11.0 (R) 扁平化边界弧形动效 (Flat Arc EdgeEffect)

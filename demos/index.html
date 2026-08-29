@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
   Copyright 2016 Google Inc. All rights reserved.
-  Modifications Copyright 2026 unjal <unjal29@outlook.com>
+  Modifications Copyright 2026 安秋 <github.com/unjal29>
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
   limitations under the License.
 
   Material Components for Web (MDC-Web) - Navigation Rail & Monet Dynamic Theme Demo
-  Crafted by unjal <unjal29@outlook.com>
+  Crafted by 安秋 <github.com/unjal29>
 -->
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <title>MDC-Web · 纯直角 & 莫奈动态色 Navigation Rail 全景展厅</title>
+  <title>M2.9 · MDC-Web · 纯直角 & 莫奈动态色 Navigation Rail 全景展厅</title>
   <!-- 本地高可用字体与 Material Icons 官方与本地双重高可用库 -->
   <link rel="stylesheet" href="../icons/material-icons/material-icons.css">
   <link rel="stylesheet" href="/icons/material-icons/material-icons.css">
@@ -31,7 +31,7 @@
   <!-- MDC Web 官方组件库样式 (纯直角 0px & 50% 纯圆几何骨架) -->
   <link rel="stylesheet" href="https://unpkg.com/material-components-web@0.34.1/dist/material-components-web.min.css">
 
-  <!-- MDC Web MD3.1 全局组件库与展厅样式表 (从 packages/ 统一调用) -->
+  <!-- MDC Web M2.9 全局组件库与展厅样式表 (从 packages/ 统一调用) -->
   <link rel="stylesheet" href="/assets/index.css">
   <link rel="stylesheet" href="/assets/material-components-web.css">
   <link rel="stylesheet" href="../build/material-components-web.css">
@@ -47,16 +47,16 @@
       
       <!-- 顶部 Brand Header (点击触发调色盘水波纹) -->
       <div class="rail-header" onclick="openOverlay('themePickerPanel', event)" title="点击打开莫奈动态调色盘">
-        <div class="rail-header-avatar">M3</div>
+        <div class="rail-header-avatar">M2.9</div>
         <div class="rail-header-text">
-          <div style="font-weight: bold; font-size: 15px;">MD3.1 · MDC-Web</div>
+          <div style="font-weight: bold; font-size: 15px;">M2.9 · MDC-Web</div>
           <div style="font-size: 11px; opacity: 0.85;">点击取色</div>
         </div>
       </div>
 
-      <!-- 上部竖向动态标题 (默认 MD3.1，随页面动态更新) -->
+      <!-- 上部竖向动态标题 (默认 M2.9，随页面动态更新) -->
       <div class="rail-vertical-title" id="railVerticalTitleTop">
-        MD3.1
+        M2.9
       </div>
 
       <!-- 一级核心导航菜单 (主页 ✖ 目录 ✖ 设置 ✖ 关于) -->
@@ -227,14 +227,31 @@
           <button class="mdc-button mdc-button--dense" onclick="closeOverlay('aboutSubmenuPanel', event)" style="color: #fff; min-width: 32px; padding: 0 4px;" title="返回一级菜单">
             <i class="material-icons">arrow_back</i>
           </button>
-          <span>关于 MDC-Web</span>
+          <span>关于 M2.9</span>
         </div>
       </div>
-      <div class="secondary-overlay-content" style="font-size: 13px; line-height: 1.6; opacity: 0.9;">
-        <h4 style="margin: 0 0 8px 0; font-size: 14px;">MDC-Web · MD1 & Monet</h4>
-        <p>基于官方 MDC-Web v0.34.1 (Android 8 MD1 终极成熟架构)，全面重构为 0px 纯直角与 50% 纯圆几何骨架。</p>
-        <p>集成 Google Sans Flex 变量字体与 CAM16/HCT 莫奈色彩空间引擎。</p>
-        <p style="font-size: 11px; opacity: 0.7; margin-top: 16px;">遵循 Apache License 2.0 开源协议。</p>
+      <div class="secondary-overlay-content" style="font-size: 13px; line-height: 1.6; opacity: 0.95; display: flex; flex-direction: column; gap: 12px;">
+        <h4 style="margin: 0 0 4px 0; font-size: 15px; color: var(--mdc-theme-primary);">M2.9 · Material Components for Web</h4>
+        <p style="margin: 0; line-height: 1.5;">基于官方 MDC-Web v0.34.1 架构，全面重构为 0px 纯直角与 50% 纯圆/胶囊几何体系，集成 Google Sans Flex 变量字体与 CAM16/HCT 莫奈色彩空间引擎。</p>
+        
+        <div style="padding: 10px; background: rgba(0,0,0,0.04); font-size: 12px; line-height: 1.8; border-left: 3px solid var(--mdc-theme-primary);">
+          <div style="font-weight: bold; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;"><i class="material-icons" style="font-size: 16px; color: var(--mdc-theme-primary);">person</i> 开发者与项目署名</div>
+          <div>• 署名作者：<a href="https://github.com/unjal29" target="_blank" style="color: var(--mdc-theme-primary); text-decoration: underline; font-weight: bold;">安秋</a></div>
+          <div>• 本项目开源地址：<a href="https://github.com/unjal29" target="_blank" style="color: var(--mdc-theme-primary); text-decoration: underline;">M2.9 (MDC-Web Extended)</a></div>
+          <div>• 上游官方基准库：<a href="https://github.com/material-components/material-components-web" target="_blank" style="color: var(--mdc-theme-primary); text-decoration: underline;">Google MDC-Web</a></div>
+          <div>• 部分 UI 借用与参考：<a href="https://github.com/zdhxiong/mdui" target="_blank" style="color: var(--mdc-theme-primary); text-decoration: underline;">MDUI</a></div>
+        </div>
+
+        <div style="font-size: 11.5px; opacity: 0.85; line-height: 1.5;">
+          <div style="font-weight: bold; margin-bottom: 2px; display: flex; align-items: center; gap: 6px;"><i class="material-icons" style="font-size: 16px; color: var(--mdc-theme-primary);">font_download</i> 变量字体声明 (Font Attribution)</div>
+          <div>• 本项目排版演示采用 <strong>Google Sans Flex</strong> 变量字体（Variable Font，包含 wght / opsz / GRAD 轴），字体版权归 <strong>Google LLC</strong> 所有。</div>
+        </div>
+
+        <div style="font-size: 11.5px; opacity: 0.85; line-height: 1.5;">
+          <div style="font-weight: bold; margin-bottom: 2px; display: flex; align-items: center; gap: 6px;"><i class="material-icons" style="font-size: 16px; color: var(--mdc-theme-primary);">description</i> 开源协议说明 (Dual License)</div>
+          <div>• <strong>个人修改与新增组件代码</strong>：采用 <strong>MIT License</strong>，作者 <a href="https://github.com/unjal29" target="_blank" style="color: inherit; text-decoration: underline;">安秋</a>。</div>
+          <div>• <strong>原版 Google MDC-Web 基础代码</strong>：保持 <strong>Apache License 2.0</strong> 开源授权。</div>
+        </div>
       </div>
       <div class="overlay-bottom-bar">
         <button class="mdc-button mdc-button--outlined" onclick="closeOverlay('aboutSubmenuPanel', event)" style="width: 100%;">
@@ -1416,7 +1433,7 @@
         specialTile.style.backgroundColor = '#FFFFFF';
         specialTile.style.color = '#1D1B20';
         specialTile.style.border = '1px dashed #79747E';
-        specialTile.innerHTML = '<div class="theme-tile-cn">⏩ 直接跳过</div><div class="theme-tile-en">Skip All</div>';
+        specialTile.innerHTML = '<div class="theme-tile-cn"><i class="material-icons" style="font-size: 16px; vertical-align: -3px;">fast_forward</i> 直接跳过</div><div class="theme-tile-en">Skip All</div>';
         specialTile.onclick = () => {
           finishMonetSelection(); // 后面直接跳过全流程！
         };
@@ -1931,7 +1948,7 @@
     });
 
     // =========================================================================
-    // 外部双竖排标题动态联动系统 (上部 MD3.1 / 下部 安秋，随页面与 Tab 自动变化)
+    // 外部双竖排标题动态联动系统 (上部 M2.9 / 下部 安秋，随页面与 Tab 自动变化)
     // =========================================================================
     const titleTopEl = document.getElementById('railVerticalTitleTop');
     const titleBottomEl = document.getElementById('railVerticalTitleBottom');
@@ -1946,18 +1963,18 @@
     }
 
     const SECTION_TITLE_MAP = [
-      { id: 'section-overview', top: 'MD3.1', bottom: '安秋' },
-      { id: 'section-buttons', top: 'MD3.1 · 按钮', bottom: '1. 按钮与 FAB' },
-      { id: 'section-cards', top: 'MD3.1 · 卡片', bottom: '2. 直角卡片' },
-      { id: 'section-chips', top: 'MD3.1 · 标签', bottom: '3. 标签与徽标' },
-      { id: 'section-form', top: 'MD3.1 · 表单', bottom: '4. 表单与开关' },
-      { id: 'section-list', top: 'MD3.1 · 列表', bottom: '5. 列表与手风琴' },
-      { id: 'section-dialogs', top: 'MD3.1 · 弹窗', bottom: '6. 对话框与菜单' },
-      { id: 'section-tabs', top: 'MD3.1 · 选项卡', bottom: '7. 选项卡 Tab' },
-      { id: 'section-progress', top: 'MD3.1 · 进度', bottom: '8. 进度指示器' },
-      { id: 'section-monet-lab', top: 'MD3.1 · 色彩', bottom: '9. 莫奈实验室' },
-      { id: 'section-typography', top: 'MD3.1 · 排版', bottom: '10. 排版与变量字体' },
-      { id: 'section-pickers', top: 'MD3.1 · 选择器', bottom: '11. 日历与时钟' }
+      { id: 'section-overview', top: 'M2.9', bottom: '安秋' },
+      { id: 'section-buttons', top: 'M2.9 · 按钮', bottom: '1. 按钮与 FAB' },
+      { id: 'section-cards', top: 'M2.9 · 卡片', bottom: '2. 直角卡片' },
+      { id: 'section-chips', top: 'M2.9 · 标签', bottom: '3. 标签与徽标' },
+      { id: 'section-form', top: 'M2.9 · 表单', bottom: '4. 表单与开关' },
+      { id: 'section-list', top: 'M2.9 · 列表', bottom: '5. 列表与手风琴' },
+      { id: 'section-dialogs', top: 'M2.9 · 弹窗', bottom: '6. 对话框与菜单' },
+      { id: 'section-tabs', top: 'M2.9 · 选项卡', bottom: '7. 选项卡 Tab' },
+      { id: 'section-progress', top: 'M2.9 · 进度', bottom: '8. 进度指示器' },
+      { id: 'section-monet-lab', top: 'M2.9 · 色彩', bottom: '9. 莫奈实验室' },
+      { id: 'section-typography', top: 'M2.9 · 排版', bottom: '10. 排版与变量字体' },
+      { id: 'section-pickers', top: 'M2.9 · 选择器', bottom: '11. 日历与时钟' }
     ];
 
     function updateDynamicTitles(topText, bottomText) {

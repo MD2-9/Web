@@ -1,5 +1,6 @@
 /**
- * Cloudflare Worker for MDC-Web MD3.1 Showroom
+ * Cloudflare Worker for M2.9 · MDC-Web Showroom
+ * Authored by 安秋 (github.com/unjal29)
  * Handles routing, static asset serving, MIME types, and fallback.
  */
 
@@ -36,7 +37,7 @@ export default {
       const assetRequest = new Request(url.toString(), request);
       let response = await env.ASSETS.fetch(assetRequest);
 
-      // If not found, try fallback to /demos/index.html
+      // If not found, fallback to /demos/index.html
       if (!response || response.status === 404) {
         const fallbackUrl = new URL('/demos/index.html', request.url);
         response = await env.ASSETS.fetch(new Request(fallbackUrl, request));
@@ -46,7 +47,7 @@ export default {
     }
 
     // Direct fetch fallback
-    return new Response('MDC-Web MD3.1 Showroom is active. Use wrangler deploy with [assets] configuration.', {
+    return new Response('M2.9 Showroom is active. Use wrangler deploy with [assets] configuration.', {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' }
     });
   }

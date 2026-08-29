@@ -45,8 +45,9 @@ function cleanScssToCss(content) {
 
 function build() {
   let combinedCss = `/* =============================================================== *\n` +
-                    ` * Material Components for Web (MDC-Web MD3.1 Global Bundle)       *\n` +
-                    ` * Crafted by unjal <unjal29@outlook.com>                          *\n` +
+                    ` * Material Components for Web (MDC-Web M2.9 Global Bundle)        *\n` +
+                    ` * Authored & Maintained by 安秋 (github.com/unjal29)              *\n` +
+                    ` * Extensions: MIT License | Original MDC: Apache-2.0             *\n` +
                     ` * =============================================================== */\n\n`;
 
   for (const relPath of packageFiles) {

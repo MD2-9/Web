@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2026 unjal <unjal29@outlook.com>
+ * Copyright 2026 安秋 <github.com/unjal29>
  * Licensed under the Apache License, Version 2.0
  */
 

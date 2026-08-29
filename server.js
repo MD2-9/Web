@@ -1,5 +1,5 @@
 //
-// Copyright 2026 unjal <unjal29@outlook.com>
+// Copyright 2026 安秋 <github.com/unjal29>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 // MDC-Web Live Dev Server on 127.0.0.1:2929
-// Crafted by unjal <unjal29@outlook.com>
+// Crafted by 安秋 <github.com/unjal29>
 //
 
 import http from 'http';
@@ -108,6 +108,6 @@ server.listen(PORT, HOST, () => {
   console.log(`  > http://127.0.0.1:${PORT}`);
   console.log(`  > http://localhost:${PORT}`);
   console.log(`  > http://${HOST}:${PORT}`);
-  console.log(`Deployed & Crafted by unjal <unjal29@outlook.com>`);
+  console.log(`Deployed & Crafted by 安秋 <github.com/unjal29>`);
   console.log(`=======================================================`);
 });
