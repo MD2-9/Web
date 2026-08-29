@@ -977,13 +977,13 @@ span.material-icons,
   z-index: 1;
 }
 
-/* 二级面板列表与内容区域：顶部对齐起始 ✖ 独立顺畅滚动 ✖ 绝不挤压到顶栏下方 */
-.secondary-overlay-panel .rail-nav-list {
+/* 二级面板列表与内容区域：桌面端上下居中对齐 ✖ 独立平滑滚动 */
+.mdc-navigation-rail .secondary-overlay-panel .rail-nav-list {
   flex: 1 1 auto;
   height: calc(100% - 112px);
   display: flex !important;
   flex-direction: column !important;
-  justify-content: flex-start !important;
+  justify-content: center !important;
   align-items: stretch !important;
   padding: 8px 0 !important;
   width: 100% !important;
@@ -991,7 +991,7 @@ span.material-icons,
   overflow-y: auto !important;
   overflow-x: hidden !important;
   scrollbar-width: none;
-  margin: 0 !important;
+  margin: auto 0 !important;
   position: static !important;
   top: auto !important;
   left: auto !important;
@@ -1000,24 +1000,29 @@ span.material-icons,
   box-sizing: border-box !important;
 }
 
-.secondary-overlay-content {
+.mdc-navigation-rail .secondary-overlay-content {
   flex: 1 1 auto;
   height: calc(100% - 112px);
   display: flex !important;
   flex-direction: column !important;
-  justify-content: flex-start !important;
+  justify-content: center !important;
   align-items: stretch !important;
   padding: 16px !important;
   min-height: 0;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   scrollbar-width: none;
-  margin: 0 !important;
+  margin: auto 0 !important;
   position: static !important;
   top: auto !important;
   left: auto !important;
   transform: none !important;
   box-sizing: border-box !important;
+}
+
+.mdc-navigation-rail .secondary-overlay-content .theme-grid {
+  align-content: center !important;
+  margin: auto 0 !important;
 }
 
 /* 二级面板内的导航项样式 (完全无缩进瑕疵) */
@@ -1483,6 +1488,55 @@ span.material-icons,
     opacity: 0.95;
     transform: scale(1) translateY(0);
     pointer-events: auto;
+  }
+
+  /* 🌟 移动端二级面板：内容与菜单向下对齐（Bottom-to-Top / 贴底排列） */
+  .mdc-mobile-drawer .secondary-overlay-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    left: 0 !important;
+  }
+
+  .mdc-mobile-drawer .secondary-overlay-panel .rail-nav-list {
+    flex: 1 1 auto;
+    height: calc(100% - 112px);
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    align-items: stretch !important;
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+    padding: 16px 0 !important;
+    gap: 8px;
+    width: 100% !important;
+    min-height: 0;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scrollbar-width: none;
+    box-sizing: border-box !important;
+  }
+
+  .mdc-mobile-drawer .secondary-overlay-content {
+    flex: 1 1 auto;
+    height: calc(100% - 112px);
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    align-items: stretch !important;
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+    padding: 16px !important;
+    min-height: 0;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scrollbar-width: none;
+    box-sizing: border-box !important;
+  }
+
+  .mdc-mobile-drawer .secondary-overlay-content .theme-grid {
+    align-content: end !important;
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
   }
 }
 

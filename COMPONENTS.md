@@ -291,14 +291,114 @@ attachRipples();
 
 ### 9. 🧭 竖向导航栏与二级抽屉 (`@material/navigation-rail`)
 
-* **功能定位**：72px 桌面端常驻竖向导轨，支持点击一级菜单平滑唤出二级抽屉面板（进出同款统一动画 `scale(0.96) -> scale(1)` 与 `opacity 0 -> 1`）。
+* **功能定位**：桌面端（宽度 $\ge 600\text{px}$）常驻竖向导航导轨，默认收起为 80px 单图标模式，悬浮展开至 256px 并渐显文字标签。支持点击一级菜单平滑唤出二级抽屉面板（圆圈涟漪展开动画 `clip-path: circle()`）。
+* **对齐规范**：桌面端二级面板内的导航列表（`.rail-nav-list`）、自定义内容（`.secondary-overlay-content`）与调色盘网格（`.theme-grid`）采用**上下居中对齐**（`margin: auto 0; justify-content: center;`），在内容过长时平滑触发内部纵向滚动。
 * **引入路径**：
   * SCSS: `@import "@material/navigation-rail/mdc-navigation-rail";`
   * JS: `import { MdcNavigationRail } from '@material/navigation-rail';`
 
+#### HTML 结构
+```html
+<nav class="mdc-navigation-rail" id="app-rail">
+  <div class="rail-header">
+    <div class="rail-header-avatar">M</div>
+    <span class="rail-header-text">M2.9 Web</span>
+  </div>
+  <div class="rail-nav-list">
+    <a href="#section-overview" class="rail-nav-item is-active">
+      <i class="material-icons rail-item-icon">home</i>
+      <span class="rail-item-text">首页</span>
+    </a>
+  </div>
+  <!-- 二级抽屉面板 (桌面端上下居中) -->
+  <div class="secondary-overlay-panel" id="catalogSubmenuPanel">
+    <div class="secondary-overlay-header">
+      <button class="secondary-back-btn"><i class="material-icons">arrow_back</i></button>
+      <div class="secondary-overlay-title">组件目录</div>
+    </div>
+    <div class="rail-nav-list">
+      <a href="#section-buttons" class="rail-nav-item">1. 按钮与 FAB</a>
+    </div>
+  </div>
+</nav>
+```
+
 ---
 
-### 10. 📑 方向感知选项卡与目标扩散水波纹 (`@material/tabs`)
+### 10. 📱 移动端专用抽屉组件 (`@material/mobile-drawer`)
+
+* **功能定位**：移动端（宽度 $< 600\text{px}$）独立专用抽屉组件，默认隐藏于屏幕左侧之外，支持屏幕左边缘右滑唤出或页面静止 2.9 秒后自动呈现的悬浮操作按钮唤出。
+* **对齐与交互规范**：
+  * **向下对齐（Bottom-to-Top）**：一级列表与二级面板内的全部按钮与内容均采用向下靠底排列（`justify-content: flex-end; margin-top: auto; margin-bottom: 0;`），极致贴合单手大拇指黄金操作区。
+  * **0.39s 页面跳转收回**：点击跳转页面锚点项时，平滑滚动至目标锚点并在延迟 0.39 秒后收回抽屉，给用户清晰的视觉确认。
+* **引入路径**：
+  * SCSS: `@import "@material/mobile-drawer/mdc-mobile-drawer";`
+  * JS: `import { MdcMobileDrawer } from '@material/mobile-drawer';`
+
+---
+
+### 11. ⏰ 日历与时钟选择器 (`@material/picker`)
+
+* **功能定位**：0px 直角与纯圆 Material 规范的日期选择器（DatePicker）与表盘时间选择器（TimePicker）。
+  * **DatePicker**：支持年份/月份切换、今日指示器、选中圆圈态与农历/节假日扩展。
+  * **TimePicker**：具备 24小时/12小时模式、拖拽即时物理反色遮罩指针、1:1 动态等比自适应表盘（表盘直径随容器自适应且数字与指针毫秒级重算坐标）、以及**当顶栏右侧可用空间少于 32% 时自动隐藏上午/下午切换器**的高级响应式机制。
+* **引入路径**：
+  * SCSS: `@import "@material/picker/mdc-picker";`
+  * JS: `import { MdcDatePicker, MdcTimePicker } from '@material/picker';`
+
+#### HTML 结构 (TimePicker)
+```html
+<div class="mdc-time-picker" id="demoTimePicker">
+  <div class="mdc-time-picker__header">
+    <div class="mdc-time-picker__digital-display">
+      <div class="mdc-time-picker__digit-indicator"></div>
+      <div class="mdc-time-picker__digital-content mdc-time-picker__digital-content--base">
+        <div class="mdc-time-picker__digit-slot mdc-time-picker__digit-hour">12</div>
+        <div class="mdc-time-picker__colon">:</div>
+        <div class="mdc-time-picker__digit-slot mdc-time-picker__digit-minute">30</div>
+      </div>
+      <div class="mdc-time-picker__digital-content mdc-time-picker__digital-content--inverted">
+        <div class="mdc-time-picker__digit-slot mdc-time-picker__digit-hour">12</div>
+        <div class="mdc-time-picker__colon">:</div>
+        <div class="mdc-time-picker__digit-slot mdc-time-picker__digit-minute">30</div>
+      </div>
+    </div>
+    <div class="mdc-time-picker__ampm-toggle">
+      <button class="mdc-time-picker__ampm-btn mdc-time-picker__ampm-am">上午</button>
+      <button class="mdc-time-picker__ampm-btn mdc-time-picker__ampm-pm is-active">下午</button>
+    </div>
+  </div>
+  <div class="mdc-time-picker__dial-container">
+    <div class="mdc-time-picker__clock-face">
+      <div class="mdc-time-picker__clock-hand">
+        <div class="mdc-time-picker__clock-thumb"></div>
+      </div>
+      <div class="mdc-time-picker__numbers-base"></div>
+    </div>
+  </div>
+</div>
+```
+
+#### JavaScript 调用
+```javascript
+import { MdcDatePicker, MdcTimePicker } from '@material/picker';
+
+const datePicker = new MdcDatePicker(document.getElementById('demoDatePicker'), {
+  onChange: (date) => console.log('Selected date:', date)
+});
+
+const timePicker = new MdcTimePicker(document.getElementById('demoTimePicker'), {
+  mode: 'hour',
+  hour: 12,
+  minute: 30,
+  isPM: true,
+  onSelect: (time) => console.log('Selected time:', time)
+});
+```
+
+---
+
+### 12. 📑 方向感知选项卡与目标扩散水波纹 (`@material/tabs`)
 
 * **功能定位**：具备 Sliding Indicator 动态滑块、方向感知滑动动画（左滑/右滑），并支持**以目标 Tab 按钮为原点向 Tab 内容容器全景扩散水波纹（Tab 按钮本身不显示涟漪，仅在内容容器内部显示）**。
 * **引入路径**：
