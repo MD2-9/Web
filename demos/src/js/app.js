@@ -3403,8 +3403,8 @@ window.addEventListener('m29:loaded', function() {
         const btnEl = document.getElementById('btnTogglePanelWidth');
         const is2Col = currentWidth >= 460;
         if (iconEl) {
-          // 🌟 Classic Material Icons 100% 兼容字形：单列使用 crop_portrait，双列使用 view_column
-          iconEl.textContent = is2Col ? 'view_column' : 'crop_portrait';
+          // 🌟 与侧边栏保持 100% 同款完全一致的图标：单列使用 view_agenda，双列使用 view_column
+          iconEl.textContent = is2Col ? 'view_column' : 'view_agenda';
         }
         if (btnEl) {
           const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
