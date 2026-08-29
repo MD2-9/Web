@@ -117,6 +117,8 @@ export function attachRipples() {
   const CARD_CONTAINER_SELECTOR = '.demo-card, .mdc-card, [data-m29-ripple], [data-mdui-ripple]';
 
   window.addEventListener('pointerdown', (e) => {
+    if (!e || !e.target || typeof e.target.closest !== 'function') return;
+
     // 0. 如果当前已有正在选中的文本，不触发水波纹
     if (typeof window.getSelection === 'function' && window.getSelection().toString().trim().length > 0) {
       return;

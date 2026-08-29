@@ -85,7 +85,7 @@ export class MdcNavigationRail {
 
   initMobileEvents() {
     const resetIdle = (e) => {
-      if (e && e.target && (e.target.closest('#btnMobileFloatingMenu') || e.target.closest('.mobile-floating-menu-btn') || e.target.closest('.mdc-navigation-rail') || e.target.closest('.mobile-drawer-backdrop'))) {
+      if (e && e.target && typeof e.target.closest === 'function' && (e.target.closest('#btnMobileFloatingMenu') || e.target.closest('.mobile-floating-menu-btn') || e.target.closest('.mdc-navigation-rail') || e.target.closest('.mobile-drawer-backdrop'))) {
         return;
       }
       document.body.classList.remove('page-is-idle');
@@ -123,11 +123,11 @@ export class MdcNavigationRail {
       window.addEventListener('touchstart', (e) => {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
-        touchStartedInRail = !!(e.target && e.target.closest('.mdc-navigation-rail'));
+        touchStartedInRail = !!(e.target && typeof e.target.closest === 'function' && e.target.closest('.mdc-navigation-rail'));
       }, { passive: true });
 
       window.addEventListener('touchend', (e) => {
-        if (touchStartedInRail || (e.target && e.target.closest('.mdc-navigation-rail'))) {
+        if (touchStartedInRail || (e.target && typeof e.target.closest === 'function' && e.target.closest('.mdc-navigation-rail'))) {
           return;
         }
         const touchEndX = e.changedTouches[0].clientX;
@@ -148,7 +148,7 @@ export class MdcNavigationRail {
     initOverlayEvents() {
       if (this.navSection) {
         this.navSection.addEventListener('click', (e) => {
-          if (!e.target.closest('.rail-nav-item, .rail-header, button, a, input, .mdc-button')) {
+          if (!e.target || typeof e.target.closest !== 'function' || !e.target.closest('.rail-nav-item, .rail-header, button, a, input, .mdc-button')) {
             if (this.activeOverlayId) {
               this.closeOverlay(this.activeOverlayId);
             } else if (window.innerWidth < 600) {

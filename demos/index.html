@@ -1764,6 +1764,7 @@
       // 桌面端点击侧边栏空白区域收回 (排除所有交互控件及二级面板内部区域)
       desktopRail.addEventListener('click', (e) => {
         if (window.innerWidth >= 600) {
+          if (!e || !e.target || typeof e.target.closest !== 'function') return;
           const isInteractive = e.target.closest('.rail-nav-item, .rail-header, button, a, input, select, .mdc-button, .segmented-button, .theme-swatch, .theme-tile, .theme-grid, .secondary-overlay-panel, #themePickerPanel');
           if (!isInteractive) {
             if (activeOverlayId) {
@@ -1779,6 +1780,7 @@
     // 点击页面主体空白处时，收回桌面端二级覆层 (排除所有打开按钮与二级面板内部)
     document.addEventListener('click', (e) => {
       if (window.innerWidth >= 600 && activeOverlayId) {
+        if (!e || !e.target || typeof e.target.closest !== 'function') return;
         if (!e.target.closest('#app-rail, .secondary-overlay-panel, #themePickerPanel, [onclick*="openOverlay"], [onclick*="themePickerPanel"]')) {
           closeOverlay(activeOverlayId, e);
         }
@@ -1934,7 +1936,7 @@
       if (!e.touches || !e.touches[0]) return;
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
-      touchStartedInDrawer = !!(e.target && e.target.closest('#app-mobile-drawer'));
+      touchStartedInDrawer = !!(e.target && typeof e.target.closest === 'function' && e.target.closest('#app-mobile-drawer'));
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
@@ -2508,10 +2510,12 @@
 
     function switchM29Tab(index, eventOrElement) {
       let tabElement;
-      if (eventOrElement && eventOrElement.target) {
+      if (eventOrElement && eventOrElement.target && typeof eventOrElement.target.closest === 'function') {
         tabElement = eventOrElement.target.closest('.m29-tab-item');
+      } else if (eventOrElement && typeof eventOrElement.closest === 'function') {
+        tabElement = eventOrElement.closest('.m29-tab-item');
       } else if (eventOrElement instanceof HTMLElement) {
-        tabElement = eventOrElement.closest('.m29-tab-item') || eventOrElement;
+        tabElement = eventOrElement;
       }
       
       const tabs = document.querySelectorAll('.m29-tab-item');
@@ -2746,7 +2750,7 @@
 
     // 分段按钮点击切换选中态
     function toggleSegmented(btn) {
-      const group = btn.closest('.segmented-button-group');
+      const group = btn && typeof btn.closest === 'function' ? btn.closest('.segmented-button-group') : null;
       if (group) {
         group.querySelectorAll('.segmented-button').forEach(b => b.classList.remove('is-selected'));
         btn.classList.add('is-selected');
@@ -4423,10 +4427,11 @@
         const FOOTER_BTNS_SELECTOR = '.rail-footer-icon-btn, .rail-footer-compact-btn, .mobile-drawer-footer-btn, #btn-toggle-panel, #btn-toggle-lang, #btn-toggle-layout, #btn-toggle-dark, #btn-toggle-dark-compact, .m29-tab-item';
 
         document.addEventListener('pointerenter', (e) => {
+          if (!e || !e.target || typeof e.target.closest !== 'function') return;
           const rawTarget = e.target.closest('[title], [data-tooltip]');
           if (rawTarget) {
             // 如果不是底部 4 个按钮，彻底清除其 title 属性，绝不弹出任何 tooltip 或原生弹窗
-            if (!rawTarget.closest(FOOTER_BTNS_SELECTOR)) {
+            if (typeof rawTarget.closest !== 'function' || !rawTarget.closest(FOOTER_BTNS_SELECTOR)) {
               rawTarget.removeAttribute('title');
               rawTarget.removeAttribute('data-tooltip');
               return;
@@ -4452,6 +4457,7 @@
         }, { capture: true, passive: true });
 
         document.addEventListener('pointerleave', (e) => {
+          if (!e || !e.target || typeof e.target.closest !== 'function') return;
           const target = e.target.closest(FOOTER_BTNS_SELECTOR);
           if (target && (target === this.activeTarget || target.contains(this.activeTarget))) {
             this.hide();
