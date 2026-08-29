@@ -8,6 +8,14 @@ Copyright 2026 安秋 <github.com/unjal29>
 This product includes software developed by Google Inc.
 (https://github.com/material-components/material-components-web).
 Original codebase is licensed under the Apache License, Version 2.0.
+All original upstream source files without individual file headers remain
+Copyright Google Inc. and are governed by the Apache License, Version 2.0,
+specifically including:
+  * packages/mdc-select/label/constants.js
+  * packages/mdc-tabs/tab/_mixins.scss
+  * packages/mdc-tabs/tab-bar/_mixins.scss
+  * packages/mdc-tabs/_mixins.scss
+
 
 =========================================================================
 2. Modifications and Extensions (Apache-2.0)

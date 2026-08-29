@@ -60,8 +60,8 @@ function cleanScssToCss(content) {
 function build() {
   let combinedCss = `/* =============================================================== *\n` +
                     ` * Material Components for Web (MDC-Web M2.9 Global Bundle)        *\n` +
-                    ` * Authored & Maintained by 安秋 (github.com/unjal29)              *\n` +
-                    ` * Extensions: MIT License | Original MDC: Apache-2.0             *\n` +
+                    ` * Copyright 2026 安秋 <github.com/unjal29>                         *\n` +
+                    ` * Licensed under the Apache License, Version 2.0                 *\n` +
                     ` * =============================================================== */\n\n`;
 
   for (const relPath of packageFiles) {
