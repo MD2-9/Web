@@ -480,7 +480,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   }
 }
 
-/* 🌟 核心融合：整页滚动条与组件栏调整线完全合并为一条线 */
+/* 🌟 核心融合：整页滚动条与组件栏调整线完全合并为一条线 (两者绝不同时显示) */
 .m29-overlay-scrollbar-track.is-window {
   position: fixed;
   top: 0;
@@ -489,8 +489,9 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   z-index: 1002;
   width: 14px;
   transform: translateX(50%);
-  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
   pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1), right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (max-width: 767.9px) {
@@ -512,6 +513,16 @@ body.component-panel-closed .m29-overlay-scrollbar-track.is-window {
 .m29-overlay-scrollbar-track.is-dragging {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* 🌟 当调整线被 hover 或拖拽时，滚动条彻底淡出隐藏，两者绝不同时显示 */
+body:has(.component-panel-resizer:hover) .m29-overlay-scrollbar-track.is-window,
+body.is-resizing-component-panel .m29-overlay-scrollbar-track.is-window,
+body:has(.component-panel-resizer:hover) .m29-overlay-scrollbar-thumb,
+body.is-resizing-component-panel .m29-overlay-scrollbar-thumb {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.2s ease !important;
 }
 
 .m29-overlay-scrollbar-thumb {
