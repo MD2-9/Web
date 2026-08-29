@@ -898,7 +898,7 @@ span.material-icons,
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
   padding: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 0 !important;
   border-radius: 0 !important;
   transition: all 0.3s ease;
   cursor: pointer;
