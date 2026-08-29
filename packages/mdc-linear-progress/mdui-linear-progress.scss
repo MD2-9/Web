@@ -11,7 +11,7 @@
   width: 100%;
   height: 4px;
   overflow: hidden;
-  background-color: rgba(103, 80, 164, 0.2);
+  background-color: var(--mdc-theme-primary-container, color-mix(in srgb, var(--mdc-theme-primary, #6750a4) 25%, transparent));
   border-radius: 0;
 }
 

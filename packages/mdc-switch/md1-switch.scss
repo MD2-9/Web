@@ -2,7 +2,7 @@
 // Copyright 2026 unjal <unjal29@outlook.com>
 // Licensed under the Apache License, Version 2.0
 //
-// MD1 纯正滑动开关规范
+// MD1 纯正滑动开关规范 (严格跟随动态主题色)
 //
 
 .md1-switch {
@@ -48,11 +48,20 @@
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.25s ease;
 }
 
+/* 🌟 激活状态轨道背景严格跟随当前动态主题色 (50% 混色 / Primary Container) */
 .md1-switch input:checked + .md1-switch-track {
-  background-color: rgba(103, 80, 164, 0.5);
+  background-color: var(--mdc-theme-primary-container, color-mix(in srgb, var(--mdc-theme-primary, #6750a4) 50%, transparent));
+}
+
+.dark-theme .md1-switch input:checked + .md1-switch-track {
+  background-color: var(--mdc-theme-primary-container, #4f378b) !important;
 }
 
 .md1-switch input:checked + .md1-switch-track .md1-switch-thumb {
   transform: translateX(20px);
   background-color: var(--mdc-theme-primary, #6750a4);
+}
+
+.dark-theme .md1-switch input:checked + .md1-switch-track .md1-switch-thumb {
+  background-color: var(--mdc-theme-primary, #d0bcff) !important;
 }

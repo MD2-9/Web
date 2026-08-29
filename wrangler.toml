@@ -1,0 +1,19 @@
+#
+# Cloudflare Workers Configuration for MDC-Web MD3.1
+#
+
+name = "mdc-web-demo"
+main = "worker.js"
+compatibility_date = "2024-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Workers Static Assets Configuration
+[assets]
+directory = "."
+binding = "ASSETS"
+run_worker_first = true
+
+# Optional Environment Configuration
+[vars]
+PROJECT_NAME = "MDC-Web MD3.1 Showroom"
+DEFAULT_PAGE = "/demos/index.html"
