@@ -1334,27 +1334,234 @@
     window.toggleLanguage = toggleLanguage;
 
     // =========================================================================
-    // 📐 文章卡片单/双栏排版切换系统 (Card Columns Layout)
+    // 📐 文章卡片单/双/三栏排版切换系统 (1 Column Centered / 2-3 Columns Full Width)
     // =========================================================================
-    let currentCardColumns = localStorage.getItem('m29_card_columns') || '1';
+    let currentCardColumns = localStorage.getItem('m29_card_columns') || '2';
+
+    function updateMainLayoutColumns() {
+      const isDesktop = window.innerWidth >= 768;
+      const isPanelClosed = document.body.classList.contains('component-panel-closed') || !isDesktop;
+      
+      // 🌟 核心公式：当组件栏收纳或在移动端时，组件栏宽度直接算作 0；展开时扣除实际宽度与侧边栏 72px
+      let panelWidth = 0;
+      if (isDesktop && !isPanelClosed) {
+        const rawWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--component-panel-width'), 10);
+        panelWidth = (!isNaN(rawWidth) && rawWidth > 0) ? rawWidth : 290;
+      }
+      const railWidth = isDesktop ? 72 : 0;
+      
+      // 主内容区域净可用宽度
+      const availableWidth = window.innerWidth - railWidth - panelWidth;
+
+      document.body.classList.remove('downgrade-1col', 'downgrade-2col');
+
+      if (currentCardColumns === '3') {
+        // 🌟 三栏阶梯降级：< 560px 降为 1 栏；560px ~ 860px 先降为 2 栏；>= 860px 始终完整呈现 3 栏
+        if (availableWidth < 560) {
+          document.body.classList.add('downgrade-1col');
+        } else if (availableWidth < 860) {
+          document.body.classList.add('downgrade-2col');
+        }
+      } else if (currentCardColumns === '2') {
+        // 🌟 双栏阶梯降级：< 560px 降为 1 栏；>= 560px 正常 2 栏
+        if (availableWidth < 560) {
+          document.body.classList.add('downgrade-1col');
+        }
+      }
+
+      // 🌟 1. 动态瀑布流排版：自动按列分配 ✖ 伴随卡片平滑移动动画
+      renderMasonryLayout();
+
+      // 🌟 2. 莫奈动态三色列着色系统 (第 1 列主色，第 2 列次色，第 3 列与组件栏第三色)
+      applyColumnColorTones();
+    }
+    window.updateMainLayoutColumns = updateMainLayoutColumns;
+
+    // 🌟 永久锁定卡片初始有序 ID 列表 (1 ~ 11 模块全部 100% 正确匹配真实 DOM ID)
+    const ORDERED_SECTION_IDS = [
+      'section-buttons',     // 1. 按钮与 FAB
+      'section-cards',       // 2. 直角卡片
+      'section-chips',       // 3. 标签与徽标
+      'section-form',        // 4. 表单与开关
+      'section-list',        // 5. 列表与手风琴 (修正: section-list)
+      'section-dialogs',     // 6. 对话框与菜单
+      'section-tabs',        // 7. 选项卡 Tab
+      'section-progress',    // 8. 进度指示器 (修正: section-progress)
+      'section-monet-lab',   // 9. 莫奈色彩实验室 (修正: section-monet-lab)
+      'section-typography',  // 10. 排版与变量字体 (修正: section-typography)
+      'section-pickers'      // 11. 日历与时钟选择器
+    ];
+
+    let currentRenderedCols = -1;
+
+    function renderMasonryLayout() {
+      const container = document.querySelector('.main-container');
+      if (!container) return;
+
+      const overviewCard = document.getElementById('section-overview');
+      const allCards = ORDERED_SECTION_IDS.map(id => document.getElementById(id)).filter(Boolean);
+      if (!allCards.length) return;
+
+      let targetCols = 1;
+      if (document.body.classList.contains('layout-triple-columns')) {
+        targetCols = document.body.classList.contains('downgrade-1col') ? 1 : (document.body.classList.contains('downgrade-2col') ? 2 : 3);
+      } else if (document.body.classList.contains('layout-double-columns')) {
+        targetCols = document.body.classList.contains('downgrade-1col') ? 1 : 2;
+      }
+
+      if (targetCols === currentRenderedCols) return;
+
+      // 🌟 FLIP 动画 Step 1 (First): 记录所有卡片在排版前的屏幕绝对坐标
+      const firstPositions = new Map();
+      allCards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          firstPositions.set(card, rect);
+        }
+      });
+
+      currentRenderedCols = targetCols;
+
+      // 清理已有列容器
+      const existingCols = Array.from(container.querySelectorAll('.masonry-col'));
+      existingCols.forEach(col => col.remove());
+
+      if (targetCols === 1) {
+        // 单栏模式：置顶总览卡片在前，1 ~ 11 号卡片按顺序直接挂载到 main-container
+        if (overviewCard) container.appendChild(overviewCard);
+        allCards.forEach(card => {
+          card.style.gridRowEnd = '';
+          container.appendChild(card);
+        });
+      } else {
+        // 多栏模式：置顶总览卡片在前
+        if (overviewCard) container.appendChild(overviewCard);
+
+        // 创建 targetCols 个自适应列容器
+        const colDivs = [];
+        for (let i = 0; i < targetCols; i++) {
+          const col = document.createElement('div');
+          col.className = 'masonry-col';
+          container.appendChild(col);
+          colDivs.push(col);
+        }
+
+        // 严格按横向从左往右轮询分配 (第 1 行: 1左 2右; 第 2 行: 3左 4右; 第 3 行: 5左 6右...)
+        allCards.forEach((card, index) => {
+          card.style.gridRowEnd = '';
+          const colIndex = index % targetCols;
+          colDivs[colIndex].appendChild(card);
+        });
+      }
+
+      // 🌟 FLIP 动画 Step 2 & 3 (Last, Invert, Play): 平滑平移动画
+      if (firstPositions.size > 0) {
+        requestAnimationFrame(() => {
+          allCards.forEach(card => {
+            const firstRect = firstPositions.get(card);
+            if (!firstRect) return;
+            const lastRect = card.getBoundingClientRect();
+
+            const dx = firstRect.left - lastRect.left;
+            const dy = firstRect.top - lastRect.top;
+
+            if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+              card.style.transform = `translate(${dx}px, ${dy}px)`;
+              card.style.transition = 'none';
+
+              requestAnimationFrame(() => {
+                card.style.transition = 'transform 0.42s cubic-bezier(0.16, 0.9, 0.22, 1)';
+                card.style.transform = '';
+
+                const onEnd = () => {
+                  card.style.transition = '';
+                  card.style.transform = '';
+                  card.removeEventListener('transitionend', onEnd);
+                };
+                card.addEventListener('transitionend', onEnd, { once: true });
+              });
+            }
+          });
+        });
+      }
+    }
+    window.renderMasonryLayout = renderMasonryLayout;
+
+    // 🌟 莫奈三色列着色系统 (第 1 列主色，第 2 列次色，第 3 列与组件栏第三色)
+    function applyColumnColorTones() {
+      const overviewCard = document.getElementById('section-overview');
+      if (overviewCard) {
+        overviewCard.style.setProperty('--card-theme-color', 'var(--mdc-theme-primary)');
+      }
+
+      const allCards = ORDERED_SECTION_IDS.map(id => document.getElementById(id)).filter(Boolean);
+      if (!allCards.length) return;
+
+      const cols = Array.from(document.querySelectorAll('.masonry-col'));
+
+      if (cols.length > 0) {
+        // 多栏模式：根据所属列容器进行精准着色 (Col 0: 主色, Col 1: 次色, Col 2: 第三色)
+        cols.forEach((col, colIndex) => {
+          let colorVar = 'var(--mdc-theme-primary)';
+          if (colIndex === 1) colorVar = 'var(--mdc-theme-secondary)';
+          if (colIndex === 2) colorVar = 'var(--mdc-theme-tertiary)';
+
+          const cardsInCol = col.querySelectorAll('.demo-card');
+          cardsInCol.forEach(card => {
+            card.style.setProperty('--card-theme-color', colorVar);
+          });
+        });
+      } else {
+        // 单栏模式：全为主色
+        allCards.forEach(card => {
+          card.style.setProperty('--card-theme-color', 'var(--mdc-theme-primary)');
+        });
+      }
+
+      // 🌟 组件栏（右侧面板）：统一应用莫奈第三色 (Tertiary)
+      const componentPanel = document.getElementById('app-component-panel');
+      if (componentPanel) {
+        componentPanel.style.setProperty('--panel-accent-color', 'var(--mdc-theme-tertiary)');
+      }
+    }
+    window.applyColumnColorTones = applyColumnColorTones;
+
+
+
 
     function applyCardColumns(cols) {
       currentCardColumns = cols;
       localStorage.setItem('m29_card_columns', cols);
+      document.body.classList.remove('layout-double-columns', 'layout-triple-columns');
+
       if (cols === '2') {
         document.body.classList.add('layout-double-columns');
-      } else {
-        document.body.classList.remove('layout-double-columns');
+      } else if (cols === '3') {
+        document.body.classList.add('layout-triple-columns');
       }
+      // '1' 对应单栏居中（无多栏类）
+
       updateLayoutTexts();
+      updateMainLayoutColumns();
       window.dispatchEvent(new Event('resize'));
     }
 
+
     function updateLayoutTexts() {
       const isEn = currentLang === 'en';
-      const isDouble = currentCardColumns === '2';
-      const icon = isDouble ? 'view_agenda' : 'view_column';
-      const tip = isDouble ? (isEn ? 'Switch to 1 Column' : '切换为单栏布局') : (isEn ? 'Switch to 2 Columns' : '切换为双栏布局');
+      let icon = 'view_agenda';
+      let tip = '';
+
+      if (currentCardColumns === '1') {
+        icon = 'view_agenda';
+        tip = isEn ? 'Switch to 2 Columns (Full Width)' : '切换为双栏满宽布局';
+      } else if (currentCardColumns === '2') {
+        icon = 'view_column';
+        tip = isEn ? 'Switch to 3 Columns (Full Width)' : '切换为三栏满宽布局';
+      } else {
+        icon = 'dashboard';
+        tip = isEn ? 'Switch to 1 Column (Centered)' : '切换为单栏居中布局';
+      }
 
       const railLayoutIcon = document.getElementById('rail-layout-icon');
       const mobileLayoutIcon = document.getElementById('mobile-layout-icon');
@@ -1369,12 +1576,22 @@
 
     function toggleCardColumns(event) {
       if (event) event.stopPropagation();
-      const nextCols = currentCardColumns === '1' ? '2' : '1';
+      let nextCols = '1';
+      if (currentCardColumns === '1') {
+        nextCols = '2';
+      } else if (currentCardColumns === '2') {
+        nextCols = '3';
+      } else {
+        nextCols = '1';
+      }
+
       applyCardColumns(nextCols);
       if (nextCols === '2') {
-        showDemoToast(currentLang === 'en' ? 'Double-column layout enabled (auto 1-column if narrow)' : '已开启双栏布局（若宽度不足自动保持单栏）');
+        showDemoToast(currentLang === 'en' ? 'Double-column full-width layout enabled' : '已开启双栏满宽布局（宽度不足自动降级）');
+      } else if (nextCols === '3') {
+        showDemoToast(currentLang === 'en' ? 'Triple-column full-width layout enabled' : '已开启三栏满宽布局（宽度不足自动降级）');
       } else {
-        showDemoToast(currentLang === 'en' ? 'Single-column layout enabled' : '已切换为单栏布局');
+        showDemoToast(currentLang === 'en' ? 'Single-column centered layout enabled' : '已切换为单栏居中布局');
       }
     }
     window.toggleCardColumns = toggleCardColumns;
@@ -1388,6 +1605,7 @@
       if (isDesktop) {
         const isClosed = document.body.classList.toggle('component-panel-closed');
         localStorage.setItem('m29_component_panel_closed', isClosed ? 'true' : 'false');
+        updateMainLayoutColumns();
         window.dispatchEvent(new Event('resize'));
         showDemoToast(isClosed ? (currentLang === 'en' ? 'Component panel closed' : '已关闭右侧组件栏') : (currentLang === 'en' ? 'Component panel opened' : '已展开右侧组件栏'));
       } else {
@@ -1403,6 +1621,8 @@
     if (localStorage.getItem('m29_component_panel_closed') === 'true' && window.innerWidth >= 768) {
       document.body.classList.add('component-panel-closed');
     }
+    updateMainLayoutColumns();
+    window.addEventListener('resize', updateMainLayoutColumns, { passive: true });
 
     // =========================================================================
     // 导航系统：桌面端 Navigation Rail (Hover展开/移开收起) ✖ 移动端独立抽屉 (0.39s跳转收起)
@@ -1620,15 +1840,27 @@
     function openComponentPanel() {
       const panel = document.getElementById('app-component-panel');
       const backdrop = document.getElementById('componentPanelBackdrop');
+      if (window.innerWidth >= 768) {
+        document.body.classList.remove('component-panel-closed');
+        localStorage.setItem('m29_component_panel_closed', 'false');
+      }
       if (panel) panel.classList.add('is-open');
       if (backdrop) backdrop.classList.add('is-active');
+      if (typeof updateMainLayoutColumns === 'function') updateMainLayoutColumns();
+      window.dispatchEvent(new Event('resize'));
     }
 
     function closeComponentPanel() {
       const panel = document.getElementById('app-component-panel');
       const backdrop = document.getElementById('componentPanelBackdrop');
+      if (window.innerWidth >= 768) {
+        document.body.classList.add('component-panel-closed');
+        localStorage.setItem('m29_component_panel_closed', 'true');
+      }
       if (panel) panel.classList.remove('is-open');
       if (backdrop) backdrop.classList.remove('is-active');
+      if (typeof updateMainLayoutColumns === 'function') updateMainLayoutColumns();
+      window.dispatchEvent(new Event('resize'));
     }
     window.openComponentPanel = openComponentPanel;
     window.closeComponentPanel = closeComponentPanel;
@@ -2846,7 +3078,7 @@
     let pickerSelectedDate = new Date();
     let pickerMode = 'day'; // 'day' | 'month'
 
-    function updateDemoThumbPosition(activeCell) {
+    function updateDemoThumbPosition(activeCell, instant = false) {
       const thumb = document.querySelector('#demoDatePicker .mdc-date-picker__selection-thumb');
       const container = document.querySelector('#demoDatePicker .mdc-date-picker__body-container');
       if (!thumb || !container) return;
@@ -2874,10 +3106,38 @@
       const x = offsetLeft + (cellW - thumbW) / 2;
       const y = offsetTop + (cellH - thumbH) / 2;
 
+      if (instant || document.body.classList.contains('is-resizing-component-panel')) {
+        thumb.style.transition = 'none';
+      } else {
+        thumb.style.transition = '';
+      }
+
       thumb.style.width = `${Math.round(thumbW)}px`;
       thumb.style.height = `${Math.round(thumbH)}px`;
       thumb.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
       thumb.style.opacity = '1';
+    }
+
+    function refreshDatePickerThumb(instant = false) {
+      const activeCell = document.querySelector('#demoDatePicker .mdc-date-picker__cell.is-selected, #demoDatePicker .mdc-date-picker__month-cell.is-selected');
+      if (activeCell) {
+        updateDemoThumbPosition(activeCell, instant);
+      }
+    }
+    window.refreshDatePickerThumb = refreshDatePickerThumb;
+
+    // 🌟 监听日历容器尺寸变化，在任何宽度改变、折叠、拖拽时将圆点 100% 锁死在日期上
+    const pickerBodyContainer = document.querySelector('#demoDatePicker .mdc-date-picker__body-container');
+    if (pickerBodyContainer && window.ResizeObserver) {
+      new ResizeObserver(() => {
+        refreshDatePickerThumb(true);
+      }).observe(pickerBodyContainer);
+    }
+    const demoDatePickerRoot = document.getElementById('demoDatePicker');
+    if (demoDatePickerRoot && window.ResizeObserver) {
+      new ResizeObserver(() => {
+        refreshDatePickerThumb(true);
+      }).observe(demoDatePickerRoot);
     }
 
     function toggleDemoDatePickerMode(targetMode) {
@@ -3922,6 +4182,9 @@
         const maxWidth = Math.min(window.innerWidth - 120, 840);
         newWidth = Math.max(MIN_WIDTH, Math.min(maxWidth, newWidth));
         document.documentElement.style.setProperty('--component-panel-width', `${newWidth}px`);
+        if (typeof updateMainLayoutColumns === 'function') {
+          updateMainLayoutColumns();
+        }
       });
 
       const endResizing = (e) => {
@@ -3931,6 +4194,9 @@
         try { resizer.releasePointerCapture(e.pointerId); } catch (_) {}
         const finalWidth = panel.offsetWidth;
         localStorage.setItem('m29_component_panel_width', String(finalWidth));
+        if (typeof updateMainLayoutColumns === 'function') {
+          updateMainLayoutColumns();
+        }
         window.dispatchEvent(new Event('resize'));
       };
 
@@ -3941,6 +4207,9 @@
       resizer.addEventListener('dblclick', () => {
         document.documentElement.style.setProperty('--component-panel-width', `${DEFAULT_WIDTH}px`);
         localStorage.setItem('m29_component_panel_width', String(DEFAULT_WIDTH));
+        if (typeof updateMainLayoutColumns === 'function') {
+          updateMainLayoutColumns();
+        }
         window.dispatchEvent(new Event('resize'));
         showDemoToast('组件栏宽度已重置为 290px');
       });
@@ -4106,7 +4375,7 @@
     }
 
     // =========================================================================
-    // 🌟 M2.9 纯直角 Material 悬浮 Tooltip 引擎 (拦截原生 title ✖ 0px 极简悬浮浮层)
+    // 🌟 M2.9 纯直角 Material 悬浮 Tooltip 引擎 (仅侧边栏底部 4 个控制按钮 ✖ 严格向上弹出)
     // =========================================================================
     class M29TooltipEngine {
       constructor() {
@@ -4119,11 +4388,24 @@
       }
 
       init() {
+        // 仅底部 4 个操作按钮允许触发 Tooltip 的白名单选择器
+        const FOOTER_BTNS_SELECTOR = '.rail-footer-icon-btn, .rail-footer-compact-btn, .mobile-drawer-footer-btn, #btn-toggle-panel, #btn-toggle-lang, #btn-toggle-layout, #btn-toggle-dark, #btn-toggle-dark-compact';
+
         document.addEventListener('pointerenter', (e) => {
-          const target = e.target.closest('[data-tooltip], [title], .rail-footer-btn, .rail-footer-icon-btn, .rail-footer-compact-btn, .rail-nav-item, .component-panel-close-btn, .component-panel-resizer, .mdc-fab');
+          const rawTarget = e.target.closest('[title], [data-tooltip]');
+          if (rawTarget) {
+            // 如果不是底部 4 个按钮，彻底清除其 title 属性，绝不弹出任何 tooltip 或原生弹窗
+            if (!rawTarget.closest(FOOTER_BTNS_SELECTOR)) {
+              rawTarget.removeAttribute('title');
+              rawTarget.removeAttribute('data-tooltip');
+              return;
+            }
+          }
+
+          const target = e.target.closest(FOOTER_BTNS_SELECTOR);
           if (!target) return;
 
-          // 提取 tooltip 内容并清空原生 title 避免浏览器弹出丑陋的原生黄色系统提示框
+          // 提取 tooltip 内容并清空原生 title 避免浏览器弹出原生黄色系统提示框
           if (target.hasAttribute('title')) {
             const rawTitle = target.getAttribute('title');
             if (rawTitle && rawTitle.trim()) {
@@ -4139,7 +4421,7 @@
         }, { capture: true, passive: true });
 
         document.addEventListener('pointerleave', (e) => {
-          const target = e.target.closest('[data-tooltip], .rail-footer-btn, .rail-footer-icon-btn, .rail-footer-compact-btn, .rail-nav-item, .component-panel-close-btn, .component-panel-resizer, .mdc-fab');
+          const target = e.target.closest(FOOTER_BTNS_SELECTOR);
           if (target && (target === this.activeTarget || target.contains(this.activeTarget))) {
             this.hide();
           }
@@ -4158,21 +4440,14 @@
         const rect = target.getBoundingClientRect();
         const tipRect = this.el.getBoundingClientRect();
 
-        // 默认定位：优先放置于 target 上方居中
-        let top = rect.top - tipRect.height - 8;
+        // 🌟 核心规范：所有底部按钮的 Tooltip 绝对严格往【上方】弹出居中
+        const top = rect.top - tipRect.height - 10;
         let left = rect.left + (rect.width - tipRect.width) / 2;
 
-        // 如果上方超出视口，移到下方
-        if (top < 8) {
-          top = rect.bottom + 8;
-        }
-
-        // 如果左侧超出视口或靠近左侧边栏，向右定位
-        if (left < 10) {
-          left = rect.right + 10;
-          top = rect.top + (rect.height - tipRect.height) / 2;
-        } else if (left + tipRect.width > window.innerWidth - 10) {
-          left = window.innerWidth - tipRect.width - 10;
+        // 左右防溢出屏幕
+        if (left < 6) left = 6;
+        if (left + tipRect.width > window.innerWidth - 6) {
+          left = window.innerWidth - tipRect.width - 6;
         }
 
         this.el.style.top = `${Math.round(top)}px`;
@@ -4182,7 +4457,7 @@
           if (this.activeTarget === target) {
             this.el.classList.add('is-active');
           }
-        }, 80);
+        }, 50);
       }
 
       hide() {
@@ -4191,6 +4466,7 @@
         this.el.classList.remove('is-active');
       }
     }
+
 
     // 初始化全局 M2.9 纯直角 Tooltip 引擎
     window.globalTooltipEngine = new M29TooltipEngine();

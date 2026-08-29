@@ -1306,11 +1306,21 @@ span.material-icons,
   display: none;
 }
 
+/* 🌟 二级菜单专属：打开水波纹扩散速率调慢为原来的 29% (0.35s / 0.29 ≈ 1.2s 极缓优雅扩散) */
+.secondary-overlay-panel:not(#themePickerPanel).anim-in {
+  display: flex !important;
+  opacity: 1 !important;
+  animation: rippleExpandOverlay 1.2s cubic-bezier(0.16, 0.9, 0.22, 1) forwards;
+}
+
+/* 🌟 调色盘面板保持原速 0.35s 不变 */
+#themePickerPanel.anim-in,
 .secondary-overlay-panel.anim-in {
   display: flex !important;
   opacity: 1 !important;
   animation: rippleExpandOverlay 0.35s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
 }
+
 
 .secondary-overlay-panel.anim-out {
   display: flex !important;
@@ -3369,6 +3379,10 @@ button {
   will-change: transform, opacity;
 }
 
+body.is-resizing-component-panel .mdc-date-picker__selection-thumb {
+  transition: none !important;
+}
+
 .mdc-date-picker.is-month-mode .mdc-date-picker__selection-thumb {
   border-radius: 0 !important;
 }
@@ -3892,16 +3906,118 @@ button {
 /* =============================================================== */
 .main-container {
   margin-left: 72px;
+  margin-right: 0;
   padding: 28px 36px 80px 36px;
-  max-width: 1200px;
   box-sizing: border-box;
-  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 🌟 核心网格布局：宽屏自适应多列/双列，窄屏自动单列 */
+/* 🌟 1. 单栏模式：卡片在宽屏主可用区域内左右优雅居中 (max-width: 960px，1.2倍底间隙) */
+body:not(.layout-double-columns):not(.layout-triple-columns) .main-container,
+body.downgrade-1col .main-container {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+body:not(.layout-double-columns):not(.layout-triple-columns) .main-container > .demo-card,
+body.downgrade-1col .main-container > .demo-card {
+  width: 100% !important;
+  max-width: 960px !important;
+  margin-bottom: calc(16px * 1.2) !important; /* 1.2倍垂直间隙 (19.2px) */
+  box-sizing: border-box !important;
+}
+
+/* 🌟 2. 双栏与三栏瀑布流自适应布局：从左往右排序 ✖ 自动向上紧密填补空白 */
+body.layout-double-columns:not(.downgrade-1col) .main-container,
+body.layout-triple-columns:not(.downgrade-1col) .main-container {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: flex-start !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+/* 🌟 2. 双栏模式 (包括原生双栏，以及三栏模式发生 3->2 降级时)：满宽自适应 2 列 (50% / 50%)，左右间距 24px */
+body.layout-double-columns:not(.downgrade-1col) .main-container,
+body.layout-triple-columns.downgrade-2col:not(.downgrade-1col) .main-container {
+  gap: 24px !important; /* 左右保持标准间距 24px */
+}
+
+body.layout-double-columns:not(.downgrade-1col) .masonry-col,
+body.layout-triple-columns.downgrade-2col:not(.downgrade-1col) .masonry-col {
+  width: calc((100% - 24px) / 2) !important;
+  flex: none !important;
+}
+
+/* 🌟 3. 三栏模式 (仅在未发生 3->2 降级且未发生 1 栏降级时)：满宽自适应 3 列 (33.3% * 3)，左右间距 20px */
+body.layout-triple-columns:not(.downgrade-1col):not(.downgrade-2col) .main-container {
+  gap: 20px !important; /* 左右保持标准间距 20px */
+}
+
+body.layout-triple-columns:not(.downgrade-1col):not(.downgrade-2col) .masonry-col {
+  width: calc((100% - 40px) / 3) !important;
+  flex: none !important;
+}
+
+/* 置顶总览卡片始终跨占 100% 满宽 */
+.main-container > #section-overview {
+  width: 100% !important;
+  flex-basis: 100% !important;
+  margin-bottom: calc(16px * 1.2) !important;
+  box-sizing: border-box !important;
+}
+
+/* 瀑布流独立列容器 (列内卡片自动向上紧凑堆叠，上下 1.2 倍间隙 19.2px) */
+.masonry-col {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: calc(16px * 1.2) !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* 各模块卡片 */
+.masonry-col > .demo-card,
+.main-container > .demo-card {
+  width: 100% !important;
+  margin-bottom: 0 !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  will-change: transform;
+}
+
+/* 🌟 莫奈三色列着色系统 (第 1 列主色，第 2 列次色，第 3 列与组件栏第三色) */
+.main-container .demo-card > h3 > i.material-icons {
+  color: var(--card-theme-color, var(--mdc-theme-primary)) !important;
+  transition: color 0.38s ease;
+}
+
+/* 🌟 右侧常驻组件栏 (担任第 3 列/侧边专属色)：统一使用莫奈 Tertiary 第三色 */
+#app-component-panel {
+  --panel-accent-color: var(--mdc-theme-tertiary);
+}
+
+#app-component-panel .component-panel-header i.material-icons,
+#app-component-panel .component-panel-section-title i.material-icons,
+#app-component-panel .component-panel-title i.material-icons {
+  color: var(--panel-accent-color, var(--mdc-theme-tertiary)) !important;
+  transition: color 0.38s ease;
+}
+
+
+
+/* 🌟 核心网格布局：内部小卡片宽屏自适应多列/双列 */
 .component-grid {
   display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
   gap: 20px !important;
   margin-top: 16px !important;
   width: 100% !important;
@@ -3931,33 +4047,6 @@ html, body, * {
   }
 
   .component-grid {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
-  }
-}
-
-
-/* 🌟 文章卡片单/双栏排版布局系统 (双栏模式下若宽度不足自动优雅降为单栏) */
-.layout-double-columns .main-container {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)) !important;
-  gap: 24px !important;
-  align-items: start !important;
-}
-
-/* 置顶总览卡片在双栏模式下始终跨占全宽 */
-.layout-double-columns .main-container > #section-overview {
-  grid-column: 1 / -1 !important;
-  margin-bottom: 0 !important;
-}
-
-.layout-double-columns .main-container > .demo-card {
-  margin-bottom: 0 !important;
-}
-
-/* 核心要求：双栏模式打开后 如果宽度不够 依然是单栏 */
-@media (max-width: 999.9px) {
-  .layout-double-columns .main-container {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
   }
