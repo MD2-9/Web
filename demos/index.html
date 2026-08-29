@@ -42,6 +42,8 @@
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
+  <!-- 🌟 全局独立底层背景渲染容器 (专供背景水波纹动画) -->
+  <div id="app-bg-layer"></div>
 
   <!-- 左侧 Navigation Rail (桌面端 72px 紧凑 / 260px 悬浮展开) -->
   <aside class="mdc-navigation-rail" id="app-rail">
@@ -1129,6 +1131,34 @@
       transform: translateX(-50%) translateY(0);
     }
     @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    /* 🌟 全局选中文本样式 (独立声明，确保 100% 浏览器兼容) */
+    ::selection {
+      background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
+      color: var(--mdc-theme-primary-900, #21005d) !important;
+    }
+    *::selection {
+      background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
+      color: var(--mdc-theme-primary-900, #21005d) !important;
+    }
+    .dark-theme ::selection,
+    .dark-theme *::selection {
+      background-color: var(--mdc-theme-primary-700, #4f378b) !important;
+      color: var(--mdc-theme-primary-50, #f6edff) !important;
+    }
+    ::-moz-selection {
+      background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
+      color: var(--mdc-theme-primary-900, #21005d) !important;
+    }
+    *::-moz-selection {
+      background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
+      color: var(--mdc-theme-primary-900, #21005d) !important;
+    }
+    .dark-theme ::-moz-selection,
+    .dark-theme *::-moz-selection {
+      background-color: var(--mdc-theme-primary-700, #4f378b) !important;
+      color: var(--mdc-theme-primary-50, #f6edff) !important;
+    }
   </style>
 
   <!-- 引入 Monet MDC 核心算法脚本与 MDC 官方 JS -->
@@ -1139,18 +1169,75 @@
     // 实例化 MDC 组件
     if (window.mdc && mdc.autoInit) mdc.autoInit();
 
-    // 暗色模式状态
-    let isDarkMode = false;
-    function toggleThemeMode() {
-      isDarkMode = !isDarkMode;
-      if (isDarkMode) {
-        document.body.classList.add('dark-theme');
-        document.documentElement.classList.add('dark-theme');
-      } else {
-        document.body.classList.remove('dark-theme');
-        document.documentElement.classList.remove('dark-theme');
+    // =========================================================================
+    // 页面背景与卡片独享水波纹主题动效 (背景与卡片底层扩散，前景控件保持平滑过渡)
+    // =========================================================================
+    function executeThemeRippleTransition(event, changeCallback) {
+      // 1. 立即计算并更新色彩数据
+      changeCallback();
+
+      // 2. 页面背景层独立水波纹扩散 (从窗口左上角 0,0 扩散)
+      const bgLayer = document.getElementById('app-bg-layer');
+      if (bgLayer) {
+        const maxDim = Math.max(window.innerWidth, window.innerHeight);
+        const diameter = Math.round(maxDim * 4.2);
+        const bgWave = document.createElement('div');
+        bgWave.className = 'm29-bg-theme-wave';
+        bgWave.style.width = `${diameter}px`;
+        bgWave.style.height = `${diameter}px`;
+        bgWave.style.left = `${-diameter / 2}px`;
+        bgWave.style.top = `${-diameter / 2}px`;
+        bgWave.style.backgroundColor = isDarkMode ? '#131217' : '#fdf8fd';
+        bgLayer.appendChild(bgWave);
+
+        requestAnimationFrame(() => {
+          bgWave.style.transform = 'translate3d(0, 0, 0) scale(1)';
+        });
+
+        setTimeout(() => {
+          if (bgWave.parentNode) bgWave.parentNode.removeChild(bgWave);
+        }, 460);
       }
-      applyMonetTheme();
+
+      // 3. 所有卡片背景底层独立水波纹扩散 (z-index: 0 位于文字和按钮下方)
+      const cards = document.querySelectorAll('.demo-card, .mdc-card');
+      cards.forEach(card => {
+        const w = card.offsetWidth || 300;
+        const h = card.offsetHeight || 200;
+        const radius = Math.hypot(w, h) * 2;
+        const cWave = document.createElement('div');
+        cWave.className = 'm29-card-theme-wave';
+        cWave.style.width = `${radius * 2}px`;
+        cWave.style.height = `${radius * 2}px`;
+        cWave.style.backgroundColor = isDarkMode ? 'var(--mdc-theme-surface-container, #131217)' : 'var(--mdc-theme-surface-container, #ffffff)';
+        card.appendChild(cWave);
+
+        requestAnimationFrame(() => {
+          cWave.style.transform = 'translate3d(-50%, -50%, 0) scale(1)';
+        });
+
+        setTimeout(() => {
+          if (cWave.parentNode) cWave.parentNode.removeChild(cWave);
+        }, 460);
+      });
+    }
+    window.executeThemeRippleTransition = executeThemeRippleTransition;
+
+    // 暗色模式状态 (水波纹圆形覆盖切换)
+    let isDarkMode = false;
+    function toggleThemeMode(event) {
+      const evt = event || (window.event ? window.event : null);
+      executeThemeRippleTransition(evt, () => {
+        isDarkMode = !isDarkMode;
+        if (isDarkMode) {
+          document.body.classList.add('dark-theme');
+          document.documentElement.classList.add('dark-theme');
+        } else {
+          document.body.classList.remove('dark-theme');
+          document.documentElement.classList.remove('dark-theme');
+        }
+        applyMonetTheme();
+      });
     }
     const btnToggleDark = document.getElementById('btn-toggle-dark');
     if (btnToggleDark) btnToggleDark.onclick = toggleThemeMode;
@@ -1641,7 +1728,7 @@
         tile.style.color = t.text;
         tile.innerHTML = `<div class="theme-tile-cn">${t.cn}</div><div class="theme-tile-en">${t.en}</div>`;
 
-        tile.onclick = () => handleSelectColor(t.color);
+        tile.onclick = (e) => handleSelectColor(t.color, e);
         grid.appendChild(tile);
       });
 
@@ -1652,31 +1739,31 @@
         specialTile.style.backgroundColor = '#1D1B20';
         specialTile.style.color = '#FFFFFF';
         specialTile.innerHTML = '<div class="theme-tile-cn">默认黑白</div><div class="theme-tile-en">Black & White</div>';
-        specialTile.onclick = () => {
+        specialTile.onclick = (e) => {
           selectedPrimary = '#1D1B20';
           selectedSecondary = null;
           selectedTertiary = null;
-          finishMonetSelection(); // 一键跳过全流程！
+          finishMonetSelection(e); // 一键跳过全流程！
         };
       } else {
         specialTile.style.backgroundColor = '#FFFFFF';
         specialTile.style.color = '#1D1B20';
         specialTile.style.border = '1px dashed #79747E';
         specialTile.innerHTML = '<div class="theme-tile-cn"><i class="material-icons" style="font-size: 16px; vertical-align: -3px;">fast_forward</i> 直接跳过</div><div class="theme-tile-en">Skip All</div>';
-        specialTile.onclick = () => {
-          finishMonetSelection(); // 后面直接跳过全流程！
+        specialTile.onclick = (e) => {
+          finishMonetSelection(e); // 后面直接跳过全流程！
         };
       }
       grid.appendChild(specialTile);
     }
 
-    function handleSelectColor(hex) {
+    function handleSelectColor(hex, event) {
       if (colorPaletteMode === 1) {
         // 🌟 单色模式：严格只允许主色的色阶配色，选择主色后直接完成！
         selectedPrimary = hex;
         selectedSecondary = hex;
         selectedTertiary = hex;
-        finishMonetSelection();
+        finishMonetSelection(event);
         return;
       }
       if (currentStep === 1) {
@@ -1687,32 +1774,38 @@
         selectedSecondary = hex;
         if (colorPaletteMode === 2) {
           selectedTertiary = hex;
-          finishMonetSelection();
+          finishMonetSelection(event);
           return;
         }
         currentStep = 3;
         renderThemeTiles();
       } else {
         selectedTertiary = hex;
-        finishMonetSelection();
+        finishMonetSelection(event);
       }
     }
 
-    function handleSkipStep() {
-      finishMonetSelection();
+    function handleSkipStep(event) {
+      finishMonetSelection(event);
     }
 
-    function finishMonetSelection() {
-      applyMonetTheme();
-      showDemoToast('已成功应用选定的莫奈三色主题');
+    function finishMonetSelection(event) {
+      const evt = event || (window.event ? window.event : null);
+      executeThemeRippleTransition(evt, () => {
+        applyMonetTheme();
+        showDemoToast('已成功应用选定的莫奈三色主题');
+      });
     }
 
-    function extractFromSample(p, s, t) {
-      selectedPrimary = p;
-      selectedSecondary = s;
-      selectedTertiary = t;
-      applyMonetTheme();
-      showDemoToast(`已成功从壁纸提取并应用莫奈三色: P(${p})`);
+    function extractFromSample(p, s, t, event) {
+      const evt = event || (window.event ? window.event : null);
+      executeThemeRippleTransition(evt, () => {
+        selectedPrimary = p;
+        selectedSecondary = s;
+        selectedTertiary = t;
+        applyMonetTheme();
+        showDemoToast(`已成功从壁纸提取并应用莫奈三色: P(${p})`);
+      });
     }
 
     function renderTonalSwatches(theme) {
@@ -1783,7 +1876,7 @@
       }
     } catch (_) {}
 
-    function setColorPaletteMode(mode) {
+    function setColorPaletteMode(mode, event) {
       colorPaletteMode = mode;
       try { localStorage.setItem('mdc_color_palette_mode', String(mode)); } catch (_) {}
       [1, 2, 3].forEach(m => {
@@ -1792,7 +1885,10 @@
         const labBtn = document.getElementById(`lab-color-mode-${m}`);
         if (labBtn) labBtn.classList.toggle('is-selected', m === mode);
       });
-      applyMonetTheme();
+      const evt = event || (window.event ? window.event : null);
+      executeThemeRippleTransition(evt, () => {
+        applyMonetTheme();
+      });
       const modeNames = { 1: '1色·极致单色统一模式', 2: '2色·双色中阶平衡模式', 3: '3色·三色全阶对比模式' };
       showDemoToast(`已切换色彩维度: ${modeNames[mode]}`);
     }
@@ -1938,10 +2034,15 @@
         target.style.setProperty('--mdc-theme-on-tertiary-container', onTCont);
 
         // 选中文本色阶注入
-        target.style.setProperty('--mdc-theme-primary-200', hslToHex(hp, Math.min(100, sp * 0.45), 85));
-        target.style.setProperty('--mdc-theme-primary-700', hslToHex(hp, Math.min(100, sp * 0.5), 32));
-        target.style.setProperty('--mdc-theme-primary-900', hslToHex(hp, Math.min(100, sp * 0.6), 15));
-        target.style.setProperty('--mdc-theme-primary-50', hslToHex(hp, Math.min(100, sp * 0.3), 96));
+        const p200 = (theme && theme.tones && theme.tones.primary && theme.tones.primary[200]) ? theme.tones.primary[200] : hslToHex(hp, Math.min(100, sp * 0.45), 85);
+        const p700 = (theme && theme.tones && theme.tones.primary && theme.tones.primary[700]) ? theme.tones.primary[700] : hslToHex(hp, Math.min(100, sp * 0.5), 32);
+        const p900 = (theme && theme.tones && theme.tones.primary && theme.tones.primary[900]) ? theme.tones.primary[900] : hslToHex(hp, Math.min(100, sp * 0.6), 15);
+        const p50  = (theme && theme.tones && theme.tones.primary && theme.tones.primary[50])  ? theme.tones.primary[50]  : hslToHex(hp, Math.min(100, sp * 0.3), 96);
+
+        target.style.setProperty('--mdc-theme-primary-200', p200);
+        target.style.setProperty('--mdc-theme-primary-700', p700);
+        target.style.setProperty('--mdc-theme-primary-900', p900);
+        target.style.setProperty('--mdc-theme-primary-50', p50);
       });
 
       const pLabel = document.getElementById('label-cur-p');

@@ -36,6 +36,12 @@
   --mdc-theme-on-surface: #1d1b20;
   --mdc-theme-surface-container: #ffffff;
   --mdc-theme-surface-container-high: #f7f2fa;
+
+  --mdc-theme-primary-50: #f6edff;
+  --mdc-theme-primary-100: #eaddff;
+  --mdc-theme-primary-200: #d0bcff;
+  --mdc-theme-primary-700: #4f378b;
+  --mdc-theme-primary-900: #21005d;
 }
 
 body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, div, label, li {
@@ -52,16 +58,16 @@ html, body {
   overflow-x: hidden;
 }
 
-/* 🌟 全局选中文本样式：
+/* 🌟 全局选中文本样式 (独立分块，避免不同内核前缀互相使规则失效)：
    - 浅色模式：200 色阶背景 + 900 色阶深色文本反色
    - 深色模式：700 色阶背景 + 50 色阶浅色文本反色 */
 ::selection {
-  background-color: var(--mdc-theme-primary-200, #eaddff) !important;
+  background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
   color: var(--mdc-theme-primary-900, #21005d) !important;
 }
 
-::-moz-selection {
-  background-color: var(--mdc-theme-primary-200, #eaddff) !important;
+*::selection {
+  background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
   color: var(--mdc-theme-primary-900, #21005d) !important;
 }
 
@@ -70,9 +76,63 @@ html, body {
   color: var(--mdc-theme-primary-50, #f6edff) !important;
 }
 
+.dark-theme *::selection {
+  background-color: var(--mdc-theme-primary-700, #4f378b) !important;
+  color: var(--mdc-theme-primary-50, #f6edff) !important;
+}
+
+::-moz-selection {
+  background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
+  color: var(--mdc-theme-primary-900, #21005d) !important;
+}
+
+*::-moz-selection {
+  background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
+  color: var(--mdc-theme-primary-900, #21005d) !important;
+}
+
 .dark-theme ::-moz-selection {
   background-color: var(--mdc-theme-primary-700, #4f378b) !important;
   color: var(--mdc-theme-primary-50, #f6edff) !important;
+}
+
+.dark-theme *::-moz-selection {
+  background-color: var(--mdc-theme-primary-700, #4f378b) !important;
+  color: var(--mdc-theme-primary-50, #f6edff) !important;
+}
+
+/* 🌟 全局独立背景图层与水波纹 */
+#app-bg-layer {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: -10 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  background-color: var(--mdc-theme-background, #fdf8fd);
+  transition: background-color 0.3s ease;
+}
+
+.m29-bg-theme-wave {
+  position: absolute !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  will-change: transform;
+  transform: translate3d(0, 0, 0) scale(0);
+  transition: transform 0.42s cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* 🌟 卡片内部独享底层水波纹 (z-index: 0 绝不遮挡前景控件) */
+.m29-card-theme-wave {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  will-change: transform;
+  transform: translate3d(-50%, -50%, 0) scale(0);
+  transition: transform 0.42s cubic-bezier(0.2, 0, 0, 1);
 }
 
 /* 桌面端：彻底删除所有横向标题栏 */
