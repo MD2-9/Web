@@ -505,9 +505,11 @@ window.addEventListener('m29:loaded', function() {
       }
 
       if (panelId === 'themePickerPanel') {
-        currentStep = 1;
-        selectedSecondary = null;
-        selectedTertiary = null;
+        if (!window._isComponentPanelThemePicking) {
+          currentStep = 1;
+          selectedSecondary = null;
+          selectedTertiary = null;
+        }
         renderThemeTiles();
       }
 
@@ -538,7 +540,7 @@ window.addEventListener('m29:loaded', function() {
         const prev = document.getElementById(activeOverlayId);
         if (prev) {
           prev.classList.remove('anim-in');
-          prev.style.display = 'none';
+          prev.classList.remove('anim-out');
         }
       }
 
@@ -1089,20 +1091,28 @@ window.addEventListener('m29:loaded', function() {
       grid.innerHTML = '';
       grid.scrollTop = 0;
 
-      const modeText = colorPaletteMode === 1 ? '单色模式' : (colorPaletteMode === 2 ? '双色模式' : '三色模式');
-      if (stepTitle) stepTitle.textContent = modeText;
+      const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+      if (window._isComponentPanelThemePicking) {
+        if (stepTitle) stepTitle.textContent = isEn ? 'Component Panel Palette' : '组件栏专属配色';
+        if (stepSub) stepSub.textContent = isEn ? 'Select Monet Theme for Component Panel' : '为右侧组件栏选择独立莫奈配色';
+      } else {
+        const modeText = colorPaletteMode === 1 ? (isEn ? '1-Color Pure Mode' : '单色模式') : (colorPaletteMode === 2 ? (isEn ? '2-Color Balanced Mode' : '双色模式') : (isEn ? '3-Color Contrast Mode' : '三色模式'));
+        if (stepTitle) stepTitle.textContent = modeText;
 
-      let subText = '选择主色';
-      if (currentStep === 2) {
-        subText = '选择次色';
-      } else if (currentStep === 3) {
-        subText = '选择第三色';
+        let subText = isEn ? 'Select Primary Color' : '选择主色';
+        if (currentStep === 2) {
+          subText = isEn ? 'Select Secondary Color' : '选择次色';
+        } else if (currentStep === 3) {
+          subText = isEn ? 'Select Tertiary Color' : '选择第三色';
+        }
+        if (stepSub) stepSub.textContent = subText;
       }
-      if (stepSub) stepSub.textContent = subText;
+
+      const activeColor = window._isComponentPanelThemePicking ? (localStorage.getItem('m29_component_panel_color') || selectedPrimary) : selectedPrimary;
 
       MONET_PALETTES.forEach(t => {
         const tile = document.createElement('div');
-        tile.className = 'theme-tile' + (t.color.toUpperCase() === selectedPrimary.toUpperCase() && currentStep === 1 ? ' active' : '');
+        tile.className = 'theme-tile' + (t.color.toUpperCase() === (activeColor || '').toUpperCase() && (!window._isComponentPanelThemePicking ? currentStep === 1 : true) ? ' active' : '');
         tile.style.backgroundColor = t.color;
         tile.style.color = t.text;
         tile.innerHTML = `<div class="theme-tile-cn">${t.cn}</div><div class="theme-tile-en">${t.en}</div>`;
@@ -1114,10 +1124,21 @@ window.addEventListener('m29:loaded', function() {
         grid.appendChild(tile);
       });
 
-      // 默认黑白 / 直接跳过 (点击后直接跳过全流程完成取色)
+      // 默认黑白 / 恢复跟随全局 (组件栏模式下显示恢复跟随全局)
       const specialTile = document.createElement('div');
       specialTile.className = 'theme-tile';
-      if (currentStep === 1 || colorPaletteMode === 1) {
+      if (window._isComponentPanelThemePicking) {
+        specialTile.style.backgroundColor = 'var(--mdc-theme-surface-container, #f3edf7)';
+        specialTile.style.color = 'var(--mdc-theme-on-surface, #1d1b20)';
+        specialTile.style.border = '1px dashed rgba(0,0,0,0.2)';
+        specialTile.innerHTML = `<div class="theme-tile-cn"><i class="material-icons" style="font-size: 16px; vertical-align: -3px;">sync</i> 跟随全局</div><div class="theme-tile-en">Follow Global</div>`;
+        specialTile.onclick = (e) => {
+          if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+          applyComponentPanelMonetTheme('auto');
+          closeOverlay('themePickerPanel', e);
+          window._isComponentPanelThemePicking = false;
+        };
+      } else if (currentStep === 1 || colorPaletteMode === 1) {
         specialTile.style.backgroundColor = '#1D1B20';
         specialTile.style.color = '#FFFFFF';
         specialTile.innerHTML = '<div class="theme-tile-cn">默认黑白</div><div class="theme-tile-en">Black & White</div>';
@@ -1145,6 +1166,15 @@ window.addEventListener('m29:loaded', function() {
       if (event && typeof event.stopPropagation === 'function') {
         event.stopPropagation();
       }
+
+      // 🌟 组件栏专属选色：只改变组件栏独立主题，绝不影响全局界面！
+      if (window._isComponentPanelThemePicking) {
+        applyComponentPanelMonetTheme(hex);
+        closeOverlay('themePickerPanel', event);
+        window._isComponentPanelThemePicking = false;
+        return;
+      }
+
       if (colorPaletteMode === 1) {
         // 🌟 单色模式：严格只允许主色的色阶配色，选择主色后直接完成！
         selectedPrimary = hex;
@@ -1172,18 +1202,94 @@ window.addEventListener('m29:loaded', function() {
       }
     }
 
-    function handleSkipStep(event) {
-      if (event && typeof event.stopPropagation === 'function') event.stopPropagation();
-      finishMonetSelection(event);
+    function openComponentPanelThemePicker(event) {
+      window._isComponentPanelThemePicking = true;
+      openOverlay('themePickerPanel', event);
     }
+    window.openComponentPanelThemePicker = openComponentPanelThemePicker;
+
+    function applyComponentPanelMonetTheme(hex) {
+      const panel = document.getElementById('app-component-panel');
+      if (!panel) return;
+      const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+
+      if (!hex || hex === 'auto') {
+        localStorage.removeItem('m29_component_panel_color');
+        panel.style.removeProperty('--mdc-theme-primary');
+        panel.style.removeProperty('--mdc-theme-on-primary');
+        panel.style.removeProperty('--mdc-theme-primary-container');
+        panel.style.removeProperty('--mdc-theme-on-primary-container');
+        panel.style.removeProperty('--mdc-theme-surface-container-low');
+        panel.style.removeProperty('--mdc-theme-surface-container');
+        panel.style.removeProperty('--mdc-theme-surface-container-high');
+        panel.style.removeProperty('--mdc-theme-surface-container-highest');
+        panel.style.removeProperty('--mdc-theme-on-surface');
+        panel.style.removeProperty('--mdc-theme-on-surface-variant');
+        if (typeof refreshDatePickerThumb === 'function') refreshDatePickerThumb(true);
+        showDemoToast(isEn ? 'Component panel is following global theme' : '组件栏已恢复跟随全局主题');
+        return;
+      }
+
+      localStorage.setItem('m29_component_panel_color', hex);
+      const [h, s, l] = hexToHsl(hex);
+      const isDark = panel.classList.contains('dark-theme') || (!panel.classList.contains('light-theme') && document.body.classList.contains('dark-theme'));
+
+      let primary, onPrimary, pCont, onPCont;
+      let surfLow, surfCont, surfHigh, surfHighest;
+      let onSurf, onSurfVar;
+
+      if (isDark) {
+        primary = hslToHex(h, Math.min(100, Math.max(25, s * 0.85)), 78);
+        onPrimary = '#000000';
+        pCont = hslToHex(h, Math.min(100, s * 0.5), 32);
+        onPCont = hslToHex(h, Math.min(100, s * 0.5), 90);
+        surfLow = hslToHex(h, Math.min(100, s * 0.15), 11);
+        surfCont = hslToHex(h, Math.min(100, s * 0.16), 13);
+        surfHigh = hslToHex(h, Math.min(100, s * 0.18), 17);
+        surfHighest = hslToHex(h, Math.min(100, s * 0.2), 22);
+        onSurf = '#e6e1e5';
+        onSurfVar = '#cac4d0';
+      } else {
+        primary = hex;
+        onPrimary = '#ffffff';
+        pCont = hslToHex(h, Math.min(100, s * 0.45), 90);
+        onPCont = hslToHex(h, Math.min(100, s * 0.6), 15);
+        surfLow = hslToHex(h, Math.min(100, s * 0.25), 97);
+        surfCont = hslToHex(h, Math.min(100, s * 0.28), 94);
+        surfHigh = hslToHex(h, Math.min(100, s * 0.3), 91);
+        surfHighest = hslToHex(h, Math.min(100, s * 0.32), 88);
+        onSurf = '#1d1b20';
+        onSurfVar = '#49454f';
+      }
+
+      panel.style.setProperty('--mdc-theme-primary', primary);
+      panel.style.setProperty('--mdc-theme-on-primary', onPrimary);
+      panel.style.setProperty('--mdc-theme-primary-container', pCont);
+      panel.style.setProperty('--mdc-theme-on-primary-container', onPCont);
+      panel.style.setProperty('--mdc-theme-surface-container-low', surfLow);
+      panel.style.setProperty('--mdc-theme-surface-container', surfCont);
+      panel.style.setProperty('--mdc-theme-surface-container-high', surfHigh);
+      panel.style.setProperty('--mdc-theme-surface-container-highest', surfHighest);
+      panel.style.setProperty('--mdc-theme-on-surface', onSurf);
+      panel.style.setProperty('--mdc-theme-on-surface-variant', onSurfVar);
+
+      if (typeof refreshDatePickerThumb === 'function') refreshDatePickerThumb(true);
+      showDemoToast(isEn ? `Component panel theme updated: ${hex}` : `组件栏已更新专属 MD3 莫奈配色: ${hex}`);
+    }
+    window.applyComponentPanelMonetTheme = applyComponentPanelMonetTheme;
 
     function finishMonetSelection(event) {
       const evt = event || (window.event ? window.event : null);
       closeOverlay('themePickerPanel', evt);
-      executeThemeRippleTransition(evt, () => {
-        applyMonetTheme();
-        showDemoToast('已成功应用选定的莫奈三色主题');
-      });
+      if (window._isComponentPanelThemePicking) {
+        window._isComponentPanelThemePicking = false;
+        applyComponentPanelMonetTheme(selectedPrimary);
+      } else {
+        executeThemeRippleTransition(evt, () => {
+          applyMonetTheme();
+          showDemoToast('已成功应用选定的莫奈三色主题');
+        });
+      }
     }
 
     function extractFromSample(p, s, t, event) {
@@ -3457,19 +3563,58 @@ window.addEventListener('m29:loaded', function() {
         applyComponentPanelTheme('auto');
       }
 
-      // 清除可能遗留的旧独立配色变量，彻底恢复统一 MD3 莫奈调色体系
-      localStorage.removeItem('m29_component_panel_color');
-      const panelEl = document.getElementById('app-component-panel');
-      if (panelEl) {
-        panelEl.style.removeProperty('--mdc-theme-primary');
-        panelEl.style.removeProperty('--mdc-theme-primary-container');
-        panelEl.style.removeProperty('--mdc-theme-on-primary');
-        panelEl.style.removeProperty('--mdc-theme-on-primary-container');
-        panelEl.style.removeProperty('--mdc-theme-surface-container-high');
-        panelEl.style.removeProperty('--mdc-theme-surface-variant');
-        panelEl.style.removeProperty('--panel-accent-color');
-        panelEl.style.removeProperty('--panel-bg-color');
-        panelEl.style.removeProperty('--panel-surface-color');
+      let paletteLongPressTimer = null;
+      let isPaletteLongPressTriggered = false;
+
+      function handleComponentPanelPaletteClick(event) {
+        if (isPaletteLongPressTriggered) {
+          isPaletteLongPressTriggered = false;
+          return;
+        }
+        openComponentPanelThemePicker(event);
+      }
+      window.handleComponentPanelPaletteClick = handleComponentPanelPaletteClick;
+
+      const paletteBtn = document.getElementById('btnTogglePanelPalette');
+      if (paletteBtn) {
+        // 鼠标右键：直接恢复跟随全局主题
+        paletteBtn.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          applyComponentPanelMonetTheme('auto');
+        });
+
+        // 触摸/鼠标长按 500ms 触发恢复跟随全局
+        const startLongPress = () => {
+          isPaletteLongPressTriggered = false;
+          if (paletteLongPressTimer) clearTimeout(paletteLongPressTimer);
+          paletteLongPressTimer = setTimeout(() => {
+            isPaletteLongPressTriggered = true;
+            applyComponentPanelMonetTheme('auto');
+          }, 500);
+        };
+
+        const cancelLongPress = () => {
+          if (paletteLongPressTimer) {
+            clearTimeout(paletteLongPressTimer);
+            paletteLongPressTimer = null;
+          }
+        };
+
+        paletteBtn.addEventListener('mousedown', startLongPress);
+        paletteBtn.addEventListener('mouseup', cancelLongPress);
+        paletteBtn.addEventListener('mouseleave', cancelLongPress);
+        paletteBtn.addEventListener('touchstart', startLongPress, { passive: true });
+        paletteBtn.addEventListener('touchend', cancelLongPress);
+        paletteBtn.addEventListener('touchcancel', cancelLongPress);
+      }
+
+      // 恢复组件栏独立配色设置 (默认跟随全局主题)
+      const savedPanelColor = localStorage.getItem('m29_component_panel_color');
+      if (savedPanelColor && savedPanelColor !== 'auto') {
+        applyComponentPanelMonetTheme(savedPanelColor);
+      } else {
+        applyComponentPanelMonetTheme('auto');
       }
 
       // 启动时初始化图标
