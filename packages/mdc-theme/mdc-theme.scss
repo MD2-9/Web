@@ -52,6 +52,29 @@ html, body {
   overflow-x: hidden;
 }
 
+/* 🌟 全局选中文本样式：
+   - 浅色模式：200 色阶背景 + 900 色阶深色文本反色
+   - 深色模式：700 色阶背景 + 50 色阶浅色文本反色 */
+::selection {
+  background-color: var(--mdc-theme-primary-200, #eaddff) !important;
+  color: var(--mdc-theme-primary-900, #21005d) !important;
+}
+
+::-moz-selection {
+  background-color: var(--mdc-theme-primary-200, #eaddff) !important;
+  color: var(--mdc-theme-primary-900, #21005d) !important;
+}
+
+.dark-theme ::selection {
+  background-color: var(--mdc-theme-primary-700, #4f378b) !important;
+  color: var(--mdc-theme-primary-50, #f6edff) !important;
+}
+
+.dark-theme ::-moz-selection {
+  background-color: var(--mdc-theme-primary-700, #4f378b) !important;
+  color: var(--mdc-theme-primary-50, #f6edff) !important;
+}
+
 /* 桌面端：彻底删除所有横向标题栏 */
 .mdc-top-app-bar,
 .mdc-toolbar,

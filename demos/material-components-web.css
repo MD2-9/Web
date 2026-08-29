@@ -60,6 +60,29 @@ html, body {
   overflow-x: hidden;
 }
 
+/* 🌟 全局选中文本样式：
+   - 浅色模式：200 色阶背景 + 900 色阶深色文本反色
+   - 深色模式：700 色阶背景 + 50 色阶浅色文本反色 */
+::selection {
+  background-color: var(--mdc-theme-primary-200, #eaddff) !important;
+  color: var(--mdc-theme-primary-900, #21005d) !important;
+}
+
+::-moz-selection {
+  background-color: var(--mdc-theme-primary-200, #eaddff) !important;
+  color: var(--mdc-theme-primary-900, #21005d) !important;
+}
+
+.dark-theme ::selection {
+  background-color: var(--mdc-theme-primary-700, #4f378b) !important;
+  color: var(--mdc-theme-primary-50, #f6edff) !important;
+}
+
+.dark-theme ::-moz-selection {
+  background-color: var(--mdc-theme-primary-700, #4f378b) !important;
+  color: var(--mdc-theme-primary-50, #f6edff) !important;
+}
+
 /* 桌面端：彻底删除所有横向标题栏 */
 .mdc-top-app-bar,
 .mdc-toolbar,
@@ -724,13 +747,24 @@ span.material-icons,
 
 .preview-img-box span {
   position: absolute;
-  bottom: 6px;
+  top: 6px;
   left: 6px;
-  background: rgba(0, 0, 0, 0.75);
-  color: #fff;
-  padding: 3px 8px;
-  font-size: 11px;
+  background: var(--mdc-theme-surface-container, rgba(255, 255, 255, 0.9));
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 4px 10px;
+  font-size: 11.5px;
   font-weight: 600;
+  border-radius: 0 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark-theme .preview-img-box span {
+  background: var(--mdc-theme-surface-container, rgba(25, 24, 30, 0.9));
+  color: var(--mdc-theme-on-surface, #e6e1e5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 
@@ -1778,26 +1812,40 @@ span.material-icons,
 
 
 
+
 .demo-card,
 .mdc-card,
 .preview-img-box,
 .secondary-overlay-panel .rail-nav-item,
 .rail-nav-item,
+.mobile-drawer-nav-item,
+.mdc-list-item,
+.m29-segmented-button,
+.segmented-button,
 .surface-token-chip,
+.m29-expansion-header,
+.expansion-header,
+.m29-expansion-panel,
 .expansion-panel,
 .theme-tile,
+.theme-swatch,
 .mdc-button,
+.mdc-icon-button,
+.mdc-fab,
+.mdc-chip,
+.m29-tab-item,
 button {
   position: relative;
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
 }
 
+/* 🌟 图层规范：卡片背景水波纹置于底层 (z-index: 0)，前景子元素 (z-index: 1) 自动遮挡背景波纹 */
 .m29-ripple-wave {
   position: absolute !important;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 0 !important;
   margin: 0;
   padding: 0;
   font-size: 0;
@@ -1807,6 +1855,22 @@ button {
   transition: transform 1.35s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.85s cubic-bezier(0.2, 0.8, 0.25, 1);
   pointer-events: none;
   will-change: transform, opacity;
+}
+
+/* 卡片内部元素提升图层，确保点击卡片背景时的水波纹被卡片内其他元素/色块遮挡 */
+.demo-card > *:not(.m29-ripple-wave),
+.mdc-card > *:not(.m29-ripple-wave),
+.preview-img-box > *:not(.m29-ripple-wave) {
+  position: relative;
+  z-index: 1;
+}
+
+/* 列表项内部文本与图标提升图层，水波纹在列表项自身内部底层扩散 */
+.mdc-list-item > *:not(.m29-ripple-wave),
+.rail-nav-item > *:not(.m29-ripple-wave),
+.mobile-drawer-nav-item > *:not(.m29-ripple-wave) {
+  position: relative;
+  z-index: 1;
 }
 
 /* 大卡片涟漪透明度调高（更透、更细腻，略小于常规按钮涟漪效果） */

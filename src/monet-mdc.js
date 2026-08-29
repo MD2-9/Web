@@ -184,9 +184,14 @@ export class MdcMonetEngine {
       '--mdc-theme-text-secondary-on-background': surfaces.onSurfaceVariant,
       '--mdc-theme-text-hint-on-background': hexFromArgb(neutralVariantPalette.tone(isDark ? 60 : 40)),
       '--mdc-theme-text-disabled-on-background': hexFromArgb(neutralVariantPalette.tone(isDark ? 50 : 70)),
-      '--mdc-theme-text-icon-on-background': hexFromArgb(neutralVariantPalette.tone(isDark ? 70 : 50)),
       '--mdc-theme-surface-container': surfaces.surfaceContainer,
-      '--mdc-theme-surface-container-high': surfaces.surfaceContainerHigh
+      '--mdc-theme-surface-container-high': surfaces.surfaceContainerHigh,
+
+      '--mdc-theme-primary-50': hexFromArgb(primaryPalette.tone(95)),
+      '--mdc-theme-primary-100': hexFromArgb(primaryPalette.tone(90)),
+      '--mdc-theme-primary-200': hexFromArgb(primaryPalette.tone(80)),
+      '--mdc-theme-primary-700': hexFromArgb(primaryPalette.tone(isDark ? 60 : 30)),
+      '--mdc-theme-primary-900': hexFromArgb(primaryPalette.tone(isDark ? 40 : 10))
     };
 
     function createToneMap(palette) {

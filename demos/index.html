@@ -1480,8 +1480,32 @@
       
       const startTime = Date.now();
       const MIN_HOLD_TIME = 120; // 🌟 严格提供 0.12s (120ms) 单点留存时间
+      const startPointerX = clientX;
+      const startPointerY = clientY;
+
+      function onPointerMove(moveEvent) {
+        const moveX = moveEvent.clientX !== undefined ? moveEvent.clientX : (moveEvent.touches && moveEvent.touches[0] ? moveEvent.touches[0].clientX : startPointerX);
+        const moveY = moveEvent.clientY !== undefined ? moveEvent.clientY : (moveEvent.touches && moveEvent.touches[0] ? moveEvent.touches[0].clientY : startPointerY);
+        const dist = Math.hypot(moveX - startPointerX, moveY - startPointerY);
+        const hasSelection = typeof window.getSelection === 'function' && window.getSelection().toString().trim().length > 0;
+        // 🌟 选中文本或拖拽时立即取消水波纹，保持纯净文本选择体验
+        if (dist > 8 || hasSelection) {
+          wave.classList.add('is-fading');
+          setTimeout(() => {
+            if (wave.parentNode) wave.parentNode.removeChild(wave);
+          }, 200);
+          cleanup();
+        }
+      }
+
+      function cleanup() {
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', removeRipple);
+        window.removeEventListener('pointercancel', removeRipple);
+      }
 
       function removeRipple() {
+        cleanup();
         const elapsed = Date.now() - startTime;
         const remaining = Math.max(0, MIN_HOLD_TIME - elapsed);
 
@@ -1491,35 +1515,46 @@
             if (wave.parentNode) wave.parentNode.removeChild(wave);
           }, 850);
         }, remaining);
-
-        window.removeEventListener('pointerup', removeRipple);
-        window.removeEventListener('pointercancel', removeRipple);
       }
       
+      window.addEventListener('pointermove', onPointerMove, { passive: true });
       window.addEventListener('pointerup', removeRipple, { once: true });
       window.addEventListener('pointercancel', removeRipple, { once: true });
       setTimeout(removeRipple, 2400);
     }
 
-    // 统一精确水波纹委托选择器 (优先子元素，空白处卡片自身水波纹)
+    // 统一精确水波纹委托选择器 (列表项、按钮、标签严格单点隔离，绝不波及父容器)
     const INNER_INTERACTIVE_SELECTOR = [
+      '.mdc-list-item',
+      '.rail-nav-item',
+      '.mobile-drawer-nav-item',
+      '.m29-segmented-button',
+      '.segmented-button',
+      '.surface-token-chip',
+      '.mdc-chip',
+      '.theme-tile',
+      '.theme-swatch',
+      '.preview-img-box',
+      '.m29-expansion-header',
+      '.expansion-header',
+      '.m29-tab-item',
       '.mdc-button',
       'button',
       '.mdc-icon-button',
-      '.segmented-button',
-      '.surface-token-chip',
-      '.theme-tile',
-      '.rail-nav-item',
-      '.preview-img-box',
-      '.expansion-header',
-      '.m29-tab-item',
-      '.mdc-fab'
+      '.mdc-fab',
+      '.mdc-card__action',
+      '.mdc-card__primary-action'
     ].join(',');
-    const CARD_CONTAINER_SELECTOR = '.demo-card';
+    const CARD_CONTAINER_SELECTOR = '.demo-card, .mdc-card, [data-m29-ripple], [data-mdui-ripple]';
 
-    // 单一全局事件委托：精准获取最内层目标容器，点按钮仅按钮有涟漪，点卡片空白仅卡片自身有涟漪
+    // 单一全局事件委托：精准获取最内层目标容器，点列表项仅列表项有涟漪，点按钮仅按钮有涟漪，点卡片空白仅卡片背景底层有涟漪
     document.addEventListener('pointerdown', (e) => {
       if (!e || !e.target || typeof e.target.closest !== 'function') return;
+
+      // 0. 如果当前已有正在选中的文本，不触发水波纹
+      if (typeof window.getSelection === 'function' && window.getSelection().toString().trim().length > 0) {
+        return;
+      }
 
       // 1. 忽略原生输入框、单选、复选、滑块、自定义选择框以及 Picker 与复合控件、Tab 内容区域
       if (e.target.closest('input, select, textarea, .m29-slider, .m29-switch, .mdc-checkbox, .mdc-radio, .mdc-select-custom, .mdc-date-picker, .mdc-time-picker, .expansion-panel, .m29-tab-content-container, .m29-tab-panel')) {
@@ -1528,14 +1563,15 @@
         return;
       }
 
-      // 2. 优先查找最内层的具体交互元素（如按钮、标签、选项等）
+      // 2. 优先查找最内层的具体交互元素（如列表项、按钮、标签、选项等）
       const innerTarget = e.target.closest(INNER_INTERACTIVE_SELECTOR);
       if (innerTarget) {
+        // 🌟 精准目标隔离：水波纹仅在被点击的列表项或按钮自身内部扩散，绝不向上波及到父容器或外部卡片！
         createRipple(e, innerTarget);
-        return; // 精确隔离：绝不向外冒泡触发外部卡片的水波纹！
+        return;
       }
 
-      // 3. 若未点击在内部具体交互元素上，且点击在卡片空白区，则仅触发当前卡片自身的水波纹
+      // 3. 若未点击在内部具体交互元素上，且点击在卡片空白区，则仅触发当前卡片自身底层的水波纹（被卡片内前景元素遮挡）
       const cardTarget = e.target.closest(CARD_CONTAINER_SELECTOR);
       if (cardTarget) {
         createRipple(e, cardTarget);
@@ -1900,6 +1936,12 @@
         target.style.setProperty('--mdc-theme-tertiary-container', tCont);
         target.style.setProperty('--mdc-theme-on-tertiary', onTertiary);
         target.style.setProperty('--mdc-theme-on-tertiary-container', onTCont);
+
+        // 选中文本色阶注入
+        target.style.setProperty('--mdc-theme-primary-200', hslToHex(hp, Math.min(100, sp * 0.45), 85));
+        target.style.setProperty('--mdc-theme-primary-700', hslToHex(hp, Math.min(100, sp * 0.5), 32));
+        target.style.setProperty('--mdc-theme-primary-900', hslToHex(hp, Math.min(100, sp * 0.6), 15));
+        target.style.setProperty('--mdc-theme-primary-50', hslToHex(hp, Math.min(100, sp * 0.3), 96));
       });
 
       const pLabel = document.getElementById('label-cur-p');

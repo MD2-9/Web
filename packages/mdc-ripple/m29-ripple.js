@@ -45,8 +45,32 @@ export function createRipple(e, container) {
 
   const startTime = Date.now();
   const MIN_HOLD_TIME = 120; // 🌟 严格提供 0.12s (120ms) 单点留存时间
+  const startPointerX = clientX;
+  const startPointerY = clientY;
+
+  function onPointerMove(moveEvent) {
+    const moveX = moveEvent.clientX !== undefined ? moveEvent.clientX : (moveEvent.touches && moveEvent.touches[0] ? moveEvent.touches[0].clientX : startPointerX);
+    const moveY = moveEvent.clientY !== undefined ? moveEvent.clientY : (moveEvent.touches && moveEvent.touches[0] ? moveEvent.touches[0].clientY : startPointerY);
+    const dist = Math.hypot(moveX - startPointerX, moveY - startPointerY);
+    const hasSelection = typeof window.getSelection === 'function' && window.getSelection().toString().trim().length > 0;
+    // 🌟 选中文本或拖拽时立即取消水波纹，保持纯净文本选择体验
+    if (dist > 8 || hasSelection) {
+      wave.classList.add('is-fading');
+      setTimeout(() => {
+        if (wave.parentNode) wave.parentNode.removeChild(wave);
+      }, 200);
+      cleanup();
+    }
+  }
+
+  function cleanup() {
+    window.removeEventListener('pointermove', onPointerMove);
+    window.removeEventListener('pointerup', removeRipple);
+    window.removeEventListener('pointercancel', removeRipple);
+  }
 
   function removeRipple() {
+    cleanup();
     const elapsed = Date.now() - startTime;
     const remaining = Math.max(0, MIN_HOLD_TIME - elapsed);
 
@@ -56,11 +80,9 @@ export function createRipple(e, container) {
         if (wave.parentNode) wave.parentNode.removeChild(wave);
       }, 850);
     }, remaining);
-
-    window.removeEventListener('pointerup', removeRipple);
-    window.removeEventListener('pointercancel', removeRipple);
   }
 
+  window.addEventListener('pointermove', onPointerMove, { passive: true });
   window.addEventListener('pointerup', removeRipple, { once: true });
   window.addEventListener('pointercancel', removeRipple, { once: true });
   setTimeout(removeRipple, 2400);
@@ -71,28 +93,49 @@ export function createRipple(e, container) {
  * 优先响应最近子交互元素（如按钮、标签），点击卡片空白区才作用于卡片自身，绝不向上重叠触发
  */
 export function attachRipples() {
-  const INNER_INTERACTIVE_SELECTOR = '.mdc-button, button, .mdc-icon-button, .segmented-button, .surface-token-chip, .theme-tile, .rail-nav-item, .preview-img-box, .expansion-header, .m29-tab-item, .mdc-fab';
+  const INNER_INTERACTIVE_SELECTOR = [
+    '.mdc-list-item',
+    '.rail-nav-item',
+    '.mobile-drawer-nav-item',
+    '.m29-segmented-button',
+    '.segmented-button',
+    '.surface-token-chip',
+    '.mdc-chip',
+    '.theme-tile',
+    '.theme-swatch',
+    '.preview-img-box',
+    '.m29-expansion-header',
+    '.expansion-header',
+    '.m29-tab-item',
+    '.mdc-button',
+    'button',
+    '.mdc-icon-button',
+    '.mdc-fab',
+    '.mdc-card__action',
+    '.mdc-card__primary-action'
+  ].join(',');
   const CARD_CONTAINER_SELECTOR = '.demo-card, .mdc-card, [data-m29-ripple], [data-mdui-ripple]';
 
   window.addEventListener('pointerdown', (e) => {
+    // 0. 如果当前已有正在选中的文本，不触发水波纹
+    if (typeof window.getSelection === 'function' && window.getSelection().toString().trim().length > 0) {
+      return;
+    }
+
     // 1. 如果点击了复选框、单选框、滑块等原生 input 控件或 Tab 内容区，不触发水波纹
     if (e.target.closest('input, select, textarea, .m29-slider, .m29-switch, .m29-tab-content-container, .m29-tab-panel')) {
       return;
     }
 
-    // 2. 检查是否点击了内部精准交互元素
+    // 2. 检查是否点击了内部精准交互元素 (如列表项、按钮、标签等)
     const innerTarget = e.target.closest(INNER_INTERACTIVE_SELECTOR);
     if (innerTarget) {
-      const btn = innerTarget.closest('.mdc-button, button');
-      if (btn) {
-        createRipple(e, btn);
-        return;
-      }
+      // 🌟 精准目标隔离：水波纹仅在被点击的列表项或按钮自身内部扩散，绝不向上波及到父容器或卡片！
       createRipple(e, innerTarget);
       return;
     }
 
-    // 3. 点击卡片空白区域时，触发卡片整体浅淡水波纹
+    // 3. 点击卡片空白区域时，水波纹仅在卡片背景底层 (z-index: 0) 扩散，被卡片内部元素自然遮挡
     const cardTarget = e.target.closest(CARD_CONTAINER_SELECTOR);
     if (cardTarget) {
       createRipple(e, cardTarget);

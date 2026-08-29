@@ -3,26 +3,40 @@
 // Licensed under the Apache License, Version 2.0
 //
 
+// 🌟 具备自身隔离水波纹的交互容器
 .demo-card,
 .mdc-card,
 .preview-img-box,
 .secondary-overlay-panel .rail-nav-item,
 .rail-nav-item,
+.mobile-drawer-nav-item,
+.mdc-list-item,
+.m29-segmented-button,
+.segmented-button,
 .surface-token-chip,
+.m29-expansion-header,
+.expansion-header,
+.m29-expansion-panel,
 .expansion-panel,
 .theme-tile,
+.theme-swatch,
 .mdc-button,
+.mdc-icon-button,
+.mdc-fab,
+.mdc-chip,
+.m29-tab-item,
 button {
   position: relative;
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
 }
 
+/* 🌟 图层规范：卡片背景水波纹置于底层 (z-index: 0)，前景子元素 (z-index: 1) 自动遮挡背景波纹 */
 .m29-ripple-wave {
   position: absolute !important;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 0 !important;
   margin: 0;
   padding: 0;
   font-size: 0;
@@ -32,6 +46,22 @@ button {
   transition: transform 1.35s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.85s cubic-bezier(0.2, 0.8, 0.25, 1);
   pointer-events: none;
   will-change: transform, opacity;
+}
+
+/* 卡片内部元素提升图层，确保点击卡片背景时的水波纹被卡片内其他元素/色块遮挡 */
+.demo-card > *:not(.m29-ripple-wave),
+.mdc-card > *:not(.m29-ripple-wave),
+.preview-img-box > *:not(.m29-ripple-wave) {
+  position: relative;
+  z-index: 1;
+}
+
+/* 列表项内部文本与图标提升图层，水波纹在列表项自身内部底层扩散 */
+.mdc-list-item > *:not(.m29-ripple-wave),
+.rail-nav-item > *:not(.m29-ripple-wave),
+.mobile-drawer-nav-item > *:not(.m29-ripple-wave) {
+  position: relative;
+  z-index: 1;
 }
 
 /* 大卡片涟漪透明度调高（更透、更细腻，略小于常规按钮涟漪效果） */
