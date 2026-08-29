@@ -105,12 +105,22 @@
         安秋
       </div>
 
-      <!-- 底部控制面板 -->
+      <!-- 底部控制面板 (外部显示单个暗色模式，展开内部横排 3 个无文本纯图标按钮) -->
       <div class="rail-footer">
-        <div class="rail-footer-text">
-          <button id="btn-toggle-dark" class="mdc-button mdc-button--raised" style="width: 100%;">
-            <i class="material-icons mdc-button__icon">brightness_4</i>
-            切换暗色模式
+        <!-- 72px 紧凑外部：单个居中暗色模式按钮 -->
+        <div class="rail-footer-compact-btn" id="btn-toggle-dark-compact" onclick="toggleThemeMode(event)" title="切换亮/暗色模式">
+          <i class="material-icons" id="rail-compact-dark-icon" style="font-size: 24px; color: var(--mdc-theme-primary);">brightness_4</i>
+        </div>
+        <!-- 260px 展开内部：横排 3 个纯图标按钮 -->
+        <div class="rail-footer-expanded-row">
+          <button class="rail-footer-icon-btn" id="btn-toggle-lang" onclick="toggleLanguage(event)" title="切换语言 (Language)">
+            <i class="material-icons">translate</i>
+          </button>
+          <button class="rail-footer-icon-btn" id="btn-toggle-layout" onclick="toggleCardColumns(event)" title="切换单双栏布局 (Columns)">
+            <i class="material-icons" id="rail-layout-icon">view_column</i>
+          </button>
+          <button class="rail-footer-icon-btn" id="btn-toggle-dark" onclick="toggleThemeMode(event)" title="切换亮/暗色模式 (Dark Mode)">
+            <i class="material-icons" id="rail-dark-icon">brightness_4</i>
           </button>
         </div>
       </div>
@@ -345,11 +355,16 @@
         </div>
       </nav>
 
-      <!-- 底部控制面板 -->
+      <!-- 底部控制面板 (横排 3 个纯图标按钮) -->
       <div class="mobile-drawer-footer">
-        <button id="btn-toggle-dark-mobile" onclick="toggleThemeMode()" class="mdc-button mdc-button--raised" style="width: 100%;">
-          <i class="material-icons mdc-button__icon">brightness_4</i>
-          切换暗色模式
+        <button class="rail-footer-icon-btn" id="btn-toggle-lang-mobile" onclick="toggleLanguage(event)" title="切换语言 (Language)">
+          <i class="material-icons">translate</i>
+        </button>
+        <button class="rail-footer-icon-btn" id="btn-toggle-layout-mobile" onclick="toggleCardColumns(event)" title="切换单双栏布局 (Columns)">
+          <i class="material-icons" id="mobile-layout-icon">view_column</i>
+        </button>
+        <button class="rail-footer-icon-btn" id="btn-toggle-dark-mobile" onclick="toggleThemeMode(event)" title="切换暗色模式 (Dark Mode)">
+          <i class="material-icons" id="mobile-dark-icon">brightness_4</i>
         </button>
       </div>
     </div>
@@ -1270,11 +1285,109 @@
           document.body.classList.remove('dark-theme');
           document.documentElement.classList.remove('dark-theme');
         }
+        updateThemeModeTexts();
         applyMonetTheme();
       });
     }
-    const btnToggleDark = document.getElementById('btn-toggle-dark');
-    if (btnToggleDark) btnToggleDark.onclick = toggleThemeMode;
+    window.toggleThemeMode = toggleThemeMode;
+
+    function updateThemeModeTexts() {
+      const railDarkIcon = document.getElementById('rail-dark-icon');
+      const railCompactDarkIcon = document.getElementById('rail-compact-dark-icon');
+      const mobileDarkIcon = document.getElementById('mobile-dark-icon');
+      const icon = isDarkMode ? 'brightness_7' : 'brightness_4';
+      if (railDarkIcon) railDarkIcon.textContent = icon;
+      if (railCompactDarkIcon) railCompactDarkIcon.textContent = icon;
+      if (mobileDarkIcon) mobileDarkIcon.textContent = icon;
+
+      const isEn = currentLang === 'en';
+      const tip = isDarkMode ? (isEn ? 'Switch to Light Mode' : '切换为亮色模式') : (isEn ? 'Switch to Dark Mode' : '切换为暗色模式');
+      const btnDark = document.getElementById('btn-toggle-dark');
+      const btnCompactDark = document.getElementById('btn-toggle-dark-compact');
+      const btnMobileDark = document.getElementById('btn-toggle-dark-mobile');
+      if (btnDark) btnDark.title = tip;
+      if (btnCompactDark) btnCompactDark.title = tip;
+      if (btnMobileDark) btnMobileDark.title = tip;
+    }
+
+    // =========================================================================
+    // 🌐 语言切换系统 (Language / i18n)
+    // =========================================================================
+    let currentLang = localStorage.getItem('m29_lang') || 'zh';
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('m29_lang', lang);
+      document.documentElement.lang = lang === 'en' ? 'en-US' : 'zh-CN';
+
+      const isEn = lang === 'en';
+      const langTip = isEn ? 'Switch to Chinese / 切换为中文' : '切换为英文 / Switch to English';
+      const btnLang = document.getElementById('btn-toggle-lang');
+      const btnMobileLang = document.getElementById('btn-toggle-lang-mobile');
+      if (btnLang) btnLang.title = langTip;
+      if (btnMobileLang) btnMobileLang.title = langTip;
+
+      updateLayoutTexts();
+      updateThemeModeTexts();
+    }
+
+    function toggleLanguage(event) {
+      if (event) event.stopPropagation();
+      const nextLang = currentLang === 'zh' ? 'en' : 'zh';
+      applyLanguage(nextLang);
+      showDemoToast(nextLang === 'en' ? 'Switched to English' : '已切换为简体中文');
+    }
+    window.toggleLanguage = toggleLanguage;
+
+    // =========================================================================
+    // 📐 文章卡片单/双栏排版切换系统 (Card Columns Layout)
+    // =========================================================================
+    let currentCardColumns = localStorage.getItem('m29_card_columns') || '1';
+
+    function applyCardColumns(cols) {
+      currentCardColumns = cols;
+      localStorage.setItem('m29_card_columns', cols);
+      if (cols === '2') {
+        document.body.classList.add('layout-double-columns');
+      } else {
+        document.body.classList.remove('layout-double-columns');
+      }
+      updateLayoutTexts();
+      window.dispatchEvent(new Event('resize'));
+    }
+
+    function updateLayoutTexts() {
+      const isEn = currentLang === 'en';
+      const isDouble = currentCardColumns === '2';
+      const icon = isDouble ? 'view_agenda' : 'view_column';
+      const tip = isDouble ? (isEn ? 'Switch to 1 Column' : '切换为单栏布局') : (isEn ? 'Switch to 2 Columns' : '切换为双栏布局');
+
+      const railLayoutIcon = document.getElementById('rail-layout-icon');
+      const mobileLayoutIcon = document.getElementById('mobile-layout-icon');
+      const btnLayout = document.getElementById('btn-toggle-layout');
+      const btnMobileLayout = document.getElementById('btn-toggle-layout-mobile');
+
+      if (railLayoutIcon) railLayoutIcon.textContent = icon;
+      if (mobileLayoutIcon) mobileLayoutIcon.textContent = icon;
+      if (btnLayout) btnLayout.title = tip;
+      if (btnMobileLayout) btnMobileLayout.title = tip;
+    }
+
+    function toggleCardColumns(event) {
+      if (event) event.stopPropagation();
+      const nextCols = currentCardColumns === '1' ? '2' : '1';
+      applyCardColumns(nextCols);
+      if (nextCols === '2') {
+        showDemoToast(currentLang === 'en' ? 'Double-column layout enabled (auto 1-column if narrow)' : '已开启双栏布局（若宽度不足自动保持单栏）');
+      } else {
+        showDemoToast(currentLang === 'en' ? 'Single-column layout enabled' : '已切换为单栏布局');
+      }
+    }
+    window.toggleCardColumns = toggleCardColumns;
+
+    // 页面载入初始化语言与卡片列数
+    applyLanguage(currentLang);
+    applyCardColumns(currentCardColumns);
 
     // =========================================================================
     // 导航系统：桌面端 Navigation Rail (Hover展开/移开收起) ✖ 移动端独立抽屉 (0.39s跳转收起)

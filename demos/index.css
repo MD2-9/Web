@@ -1136,6 +1136,111 @@ span.material-icons,
   box-sizing: border-box !important;
 }
 
+/* 底部控制面板 (72px 紧凑态单暗色按钮 ✖ 260px 展开态横排 3 纯图标按钮) */
+.rail-footer {
+  padding: 8px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: inherit;
+  flex-shrink: 0;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 72px 紧凑态：仅显示居中单个暗色模式按钮 */
+.rail-footer-compact-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  cursor: pointer;
+  color: var(--mdc-theme-primary, #6750a4);
+  transition: background-color 0.2s ease;
+}
+
+.rail-footer-compact-btn:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.rail-footer-expanded-row {
+  display: none !important;
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+}
+
+/* 展开态 (hover 或 is-expanded)：隐藏单个紧凑按钮，显示横排 3 个纯图标按钮 */
+.mdc-navigation-rail:hover .rail-footer-compact-btn,
+.mdc-navigation-rail.is-expanded .rail-footer-compact-btn {
+  display: none !important;
+}
+
+.mdc-navigation-rail:hover .rail-footer-expanded-row,
+.mdc-navigation-rail.is-expanded .rail-footer-expanded-row {
+  display: flex !important;
+}
+
+.rail-footer-icon-btn {
+  flex: 1;
+  height: 40px;
+  border: none;
+  background: transparent;
+  border-radius: 0 !important;
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 0;
+}
+
+.rail-footer-icon-btn i {
+  font-size: 22px !important;
+  color: var(--mdc-theme-primary, #6750a4);
+  margin: 0 !important;
+}
+
+.rail-footer-icon-btn:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.dark-theme .rail-footer-compact-btn:hover,
+.dark-theme .rail-footer-icon-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-theme .rail-footer {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+/* 移动端抽屉底部：横排 3 个纯图标按钮 */
+.mobile-drawer-footer {
+  padding: 12px 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  gap: 12px;
+}
+
+.mobile-drawer-footer .rail-footer-icon-btn {
+  height: 44px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.dark-theme .mobile-drawer-footer .rail-footer-icon-btn {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
 .secondary-overlay-panel .rail-nav-item .rail-item-icon {
   margin-right: 0 !important;
   margin-left: 0 !important;
@@ -3826,6 +3931,33 @@ html, body, * {
   }
 
   .component-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+
+/* 🌟 文章卡片单/双栏排版布局系统 (双栏模式下若宽度不足自动优雅降为单栏) */
+.layout-double-columns .main-container {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)) !important;
+  gap: 24px !important;
+  align-items: start !important;
+}
+
+/* 置顶总览卡片在双栏模式下始终跨占全宽 */
+.layout-double-columns .main-container > #section-overview {
+  grid-column: 1 / -1 !important;
+  margin-bottom: 0 !important;
+}
+
+.layout-double-columns .main-container > .demo-card {
+  margin-bottom: 0 !important;
+}
+
+/* 核心要求：双栏模式打开后 如果宽度不够 依然是单栏 */
+@media (max-width: 999.9px) {
+  .layout-double-columns .main-container {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
   }
