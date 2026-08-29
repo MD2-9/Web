@@ -37,6 +37,15 @@
        url('/icons/material-icons/MaterialIcons-Regular.woff') format('woff');
 }
 
+*, *::before, *::after {
+  font-family: 'Google Sans Flex', 'GoogleSansFlex', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+html, body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, div, label, li, aside, nav, span, strong, a {
+  font-family: 'Google Sans Flex', 'GoogleSansFlex', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 .material-icons,
 i.material-icons,
 span.material-icons,

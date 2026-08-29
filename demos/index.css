@@ -278,6 +278,15 @@ body {
        url('/icons/material-icons/MaterialIcons-Regular.woff') format('woff');
 }
 
+*, *::before, *::after {
+  font-family: 'Google Sans Flex', 'GoogleSansFlex', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+html, body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, div, label, li, aside, nav, span, strong, a {
+  font-family: 'Google Sans Flex', 'GoogleSansFlex', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 .material-icons,
 i.material-icons,
 span.material-icons,
@@ -3913,7 +3922,7 @@ body.component-panel-closed .m29-overscroll-edge-container--main {
   width: var(--component-panel-width, 290px);
   min-width: 200px;
   max-width: 80vw;
-  background-color: var(--mdc-theme-surface, #ffffff);
+  background-color: var(--panel-bg-color, var(--mdc-theme-primary-50, #f6edff));
   border-left: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: -1px 0 3px rgba(0, 0, 0, 0.05);
   z-index: 998;
@@ -4046,6 +4055,14 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   gap: 20px;
   align-content: start;
   position: relative;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.component-panel-body::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* 🎨 独立配色浮层面板 */

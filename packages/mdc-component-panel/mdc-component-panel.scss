@@ -17,7 +17,7 @@
   width: var(--component-panel-width, 290px);
   min-width: 200px;
   max-width: 80vw;
-  background-color: var(--mdc-theme-surface, #ffffff);
+  background-color: var(--panel-bg-color, var(--mdc-theme-primary-50, #f6edff));
   border-left: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: -1px 0 3px rgba(0, 0, 0, 0.05);
   z-index: 998;
@@ -150,6 +150,14 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   gap: 20px;
   align-content: start;
   position: relative;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.component-panel-body::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* 🎨 独立配色浮层面板 */
