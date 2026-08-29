@@ -1,121 +1,139 @@
-[![Build Status](https://img.shields.io/travis/material-components/material-components-web/master.svg)](https://travis-ci.org/material-components/material-components-web/)
-[![codecov](https://codecov.io/gh/material-components/material-components-web/branch/master/graph/badge.svg)](https://codecov.io/gh/material-components/material-components-web)
-[![Chat](https://img.shields.io/discord/259087343246508035.svg)](https://discord.gg/material-components)
+# Material Design 2.9 (M2.9 / MD3.1) Web Components
 
-# Material Components for the web
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Based on MDC Web](https://img.shields.io/badge/upstream-MDC%20Web%20v0.34.1-6200EE.svg)](https://github.com/material-components/material-components-web)
+[![Architecture](https://img.shields.io/badge/Design-Zero--Radius%20%7C%20Monet%20%7C%20AOSP%20EdgeEffect-00796B.svg)](#-核心特性亮点)
+[![Author](https://img.shields.io/badge/author-unjal-263238.svg)](https://github.com/unjal29)
 
-Material Components for the web (MDC Web) helps developers execute [Material Design](https://www.material.io).
-Developed by a core team of engineers and UX designers at Google, these components enable a reliable development workflow to build beautiful and functional web projects.
+**Material Design 2.9 (M2.9 / MD3.1)** 是基于 Google 官方 [Material Components for the web (MDC Web)](https://github.com/material-components/material-components-web) 深度扩展与现代演进的下一代 Web 组件库与交互展厅系统。
 
-Material Components for the web is the successor to [Material Design Lite](https://getmdl.io/), and has 3 high-level goals:
+本项目完美融合了 **Material Design 3 (Material You)** 的动态调色哲学与 **经典 Material Design** 的严谨几何触感，为现代 Web 应用带来极具辨识度的视觉体验与极致流畅的交互动效。
 
-- Production-ready components consumable in an a-la-carte fashion
-- Best-in-class performance and adherence to the [Material Design guidelines](https://material.io/guidelines)
-- Seamless integration with other JS frameworks and libraries
-  - [Preact Material Components](https://github.com/prateekbh/preact-material-components)
-  - [RMWC: React Material Web Components](https://github.com/jamesmfriedman/rmwc)
-  - [Angular MDC](https://github.com/trimox/angular-mdc-web)
-  - [Blox Material](https://blox.src.zone/material): Angular Integration Library.
-  - [Vue MDC Adapter](https://github.com/stasson/vue-mdc-adapter): MDC Web Integration for Vue.js (using [foundation/adapters](./docs/integrating-into-frameworks.md#the-advanced-approach-using-foundations-and-adapters).)
-  - [Material Components Vue](https://github.com/matsp/material-components-vue): MDC Web Integration for Vue.js (using [vanilla components](./docs/integrating-into-frameworks.md#the-simple-approach-wrapping-mdc-web-vanilla-components))
-  - More coming soon! Feel free to submit a pull request adding your library to this list, so long as you meet our [criteria](docs/integrating-into-frameworks.md).
+---
 
-MDC Web strives to seamlessly incorporate into a wider range of usage contexts, from simple static websites to complex, JavaScript-heavy applications to hybrid client/server rendering systems. In short, whether you're already heavily invested in another framework or not, it should be easy to incorporate Material Components into your site in a lightweight, idiomatic fashion.
+## ✨ 核心特性亮点
 
-**[Demos](https://material-components-web.appspot.com/)** (updated with every release)
+### 📐 1. 极简直角几何美学 (Zero-Radius Styling)
+全系组件统一采用现代直角几何语言，消除多余圆角与冗余边框，呈现硬朗、纯粹、高密度的专业界面质感。
 
-## Quick start
+### 🎨 2. Monet 动态取色调色盘 (Material You Theming)
+- 独创 **3 步原点扩散式** Monet 调色盘取色器。
+- 支持从任意色相提取主色、辅助色、容器色与暗色阶，实时驱动全站 CSS 变量与动态主题切换。
+- 内置 Google Sans Flex 可变字体与本地 Material Icons 图标集，实现无外部网络依赖的完整离线呈现。
 
-> Note: This guide assumes you have npm installed locally.
+### 🌊 3. 1:1 原生 AOSP EdgeEffect 边界泛光水波纹
+- 严格遵循 **Android 5-11 原生 AOSP EdgeEffect** 规范与物理状态机。
+- 支持触摸/滚动坐标实时追踪、扁平弧形边缘泛光穹顶与位移动态反馈，完美还原原生移动端触顶/触底阻尼质感。
 
-### Include CSS for a component
+### 🧭 4. 现代化 MDC Navigation Rail 导航轨系统
+- **双模式竖排动态标题**（MD3.1 / 安秋）。
+- **全屏响应式抽屉**：移动端自动适配抽屉模式，桌面端优雅停靠。
+- **精确对称动效**：二级菜单与一级菜单采用原地水波纹扩散展开与反向收缩动画，杜绝位移跳动。
 
-> Note: This guide assumes you have webpack configured to compile Sass into CSS. See this [getting started guide](docs/getting-started.md) for pointers on how to configure webpack.
+### 🧩 5. 深度重构与全新扩展组件 (M2.9 Extensions)
+除承接官方 MDC 全部基础组件外，本项目新增与重构了大量核心包：
+- `@material/monet`：Monet 动态色彩提取与调色引擎。
+- `@material/navigation-rail`：现代 Navigation Rail 导航轨组件。
+- `@material/picker`：经典 Material 时钟/日期选择器（支持 12/24 小时制及 AM/PM 联动高亮）。
+- `@material/segmented-button`：分段选择器与紧凑网格布局。
+- `@material/expansion-panel`：折叠面板与手风琴容器。
+- `@material/badge` & `@material/divider` & `@material/tooltip`：基础增强元器件。
+- **重构组件**：
+  - **Tabs**：方向感知型横向滑动水波纹与无缝切换动画。
+  - **Slider**：MDUI 经典水滴气泡指针离散滑块。
+  - **Switch & Chips**：支持 MD1 经典形态与 M3 胶囊几何。
+  - **Text Field & Select**：纯直角缺口轮廓、前缀/后缀图标精确居中对齐。
 
-To include the Sass files for the Material Design button, install the Node dependency:
+### 🏛️ 6. 9 大模块全功能交互展厅 (Interactive Showcase)
+- 涵盖 Buttons & FABs、Inputs & Forms、Navigation、Surfaces & Cards、Data Display、Feedback、Pickers 等全量控件。
+- 支持手势横向滑动切换、空闲悬浮功能球、底部轻提示 (Toast) 与全网段服务监听。
 
-```
-npm install @material/button
-```
+### ⚡ 7. 现代极速构建与边缘计算部署
+- 基于 `esbuild-sass-plugin` 的极速全量 CSS 编译管线 (`scripts/build-css.js`)。
+- 原生支持 **Cloudflare Workers (Wrangler)** 边缘计算一键部署 (`worker.js`)。
 
-Then import the Sass files for @material/button into your application. You can also use Sass mixins to customize the button:
+---
 
-```scss
-@import "@material/button/mdc-button";
+## 🚀 快速上手
 
-.foo-button {
-  @include mdc-button-ink-color(teal);
-  @include mdc-states(teal);
-}
-```
-@material/button has [documentation](packages/mdc-button/README.md) about the required HTML of a button. Update your application's HTML to include this HTML, and add the foo-button class onto the element:
+### 环境要求
+- Node.js >= 16.0.0
+- npm >= 7.0.0
 
-```html
-<button class="foo-button mdc-button">
-  Button
-</button>
-```
+### 安装与启动
 
-You also need to configure the sass-loader to understand the @material syntax. Update your webpack.config.js by changing `{ loader: 'sass-loader' }` to:
+1. **克隆仓库与安装依赖**：
+   ```bash
+   git clone https://github.com/MD2-9/Web.git
+   cd Web
+   npm install
+   ```
 
-```javascript
-{
-  loader: 'sass-loader',
-  options: {
-    importer: function(url, prev) {
-      if(url.indexOf('@material') === 0) {
-        var filePath = url.split('@material')[1];
-        var nodeModulePath = `./node_modules/@material/${filePath}`;
-        return { file: require('path').resolve(nodeModulePath) };
-      }
-      return { file: url };
-    }
-  }
-}
-```
+2. **启动本地开发展厅**（支持全网段访问与热重载）：
+   ```bash
+   npm run dev
+   ```
+   访问本地服务：`http://localhost:8080`
 
-This will produce a customized Material Design button!
+3. **编译全量 M2.9 CSS 样式包**：
+   ```bash
+   npm run build:css
+   ```
+   产物将输出至 `dist/m29-bundle.css`。
 
-![Button](docs/button.png)
+4. **生产构建**：
+   ```bash
+   npm run dist
+   ```
 
-### Include JavaScript for a component
+5. **部署至 Cloudflare Workers**：
+   ```bash
+   npm run deploy
+   ```
 
-> Note: This guide assumes you have webpack configured to compile ES2015 into JavaScript. See this [getting started guide](docs/getting-started.md) for pointers on how to configure webpack.
+---
 
-To include the ES2015 files for the Material Design ripple, install the Node dependency:
+## 📁 核心组件包概览
 
-```
-npm install @material/ripple
-```
+| 模块包名 | 类型 | 说明 |
+| :--- | :--- | :--- |
+| `@material/navigation-rail` | 🆕 扩展 | 竖排标题导航轨、多级菜单联动 |
+| `@material/monet` | 🆕 扩展 | Monet 动态取色算法与全套主题变量 |
+| `@material/picker` | 🆕 扩展 | Material 经典 Date & Time 时钟选择器 |
+| `@material/segmented-button` | 🆕 扩展 | 分段选择按钮与紧凑布局 |
+| `@material/expansion-panel` | 🆕 扩展 | 展开折叠面板容器 |
+| `@material/badge` | 🆕 扩展 | 状态角标与未读徽标 |
+| `@material/divider` | 🆕 扩展 | 极简直角分割线 |
+| `@material/tooltip` | 🆕 扩展 | 现代文字提示悬浮气泡 |
+| `@material/ripple` | ⚡ 增强 | 隔离目标精确涟漪、AOSP EdgeEffect 边缘泛光 |
+| `@material/tabs` | ⚡ 增强 | 方向感知滑动扩散水波纹与指示条联动 |
+| `@material/slider` | ⚡ 增强 | 水滴气泡指针离散数值滑块 |
+| `@material/textfield` | ⚡ 增强 | 纯直角描边缺口、图标绝对居中 |
+| `@material/button` / `fab` | ⚡ 增强 | 直角按钮、胶囊形 Extended FAB |
 
-Then import the ES2015 file for @material/ripple into your application, and initialize an MDCRipple with a DOM element:
+---
 
-```javascript
-import {MDCRipple} from '@material/ripple';
-const ripple = new MDCRipple(document.querySelector('.foo-button'));
-```
+## 🛠️ 技术栈与依赖
 
-This will produce a Material Design ripple on the button!
+- **样式与构建**：Sass (SCSS), PostCSS, Autoprefixer, esbuild
+- **打包工具**：Webpack, Lerna, Babel (ES2015+)
+- **测试框架**：Karma, Mocha, Chai, Istanbul
+- **字体与图标**：Google Sans Flex (OFL-1.1), Material Icons (CC-BY 4.0 / Apache-2.0)
+- **边缘部署**：Cloudflare Workers, Wrangler
 
-![Button with Ripple](docs/button_with_ripple.png)
+---
 
-## Useful Links
+## 📄 开源许可与致谢
 
-- [Getting Started Guide](docs/getting-started.md)
-- [All Components](packages/)
-- [Demos](demos/)
-- [Contributing](CONTRIBUTING.md)
-- [Material.io](https://www.material.io) (external site)
-- [Material Design Guidelines](https://material.io/guidelines) (external site)
+本项目遵循 [Apache License 2.0](LICENSE) 开源协议。
 
-## Browser Support
+### 上游基础
+本项目基于 Google Inc. 开源项目 [material-components-web](https://github.com/material-components/material-components-web) (v0.34.1) 构建。所有未标注个人版权的原版文件保持原有 Google Inc. 声明。
 
-We officially support the last two versions of every major browser. Specifically, we test on the following browsers:
+### 致谢与第三方归属
+本项目在演进过程中参考并融合了以下优秀开源项目的理念与实现，特此致谢：
+- **[MDUI](https://github.com/zdhxiong/mdui)** (MIT License, zdhxiong) - 水滴形滑块、方向感知 Tabs 滑动及组件交互灵感。
+- **[Android Open Source Project (AOSP)](https://source.android.com/)** (Apache-2.0, Google LLC) - EdgeEffect 边缘泛光水波纹状态机。
+- **[Focus Trap](https://github.com/focus-trap/focus-trap)** (MIT License, David Clark) - 模态焦点捕获机制。
 
-- Chrome
-- Safari
-- Firefox
-- IE 11/Edge
-- Opera
-- Mobile Safari
-- Chrome on Android
+详细版权与引用说明请参阅 [NOTICE](NOTICE) 文件。
