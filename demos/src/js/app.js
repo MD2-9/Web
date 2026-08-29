@@ -3609,6 +3609,23 @@ window.addEventListener('m29:loaded', function() {
 
 
     // =========================================================================
+    // 🚀 初始化引擎与功能模块
+    // =========================================================================
+    
+    // 初始化全局 M2.9 纯直角 Tooltip 引擎
+    window.globalTooltipEngine = new M29TooltipEngine();
+
+    // 初始化宽度调整手柄
+    initComponentPanelResizer();
+
+    // 初始化全局页面与组件栏浮动滚动条
+    window.pageOverlayScrollbar = new M29OverlayScrollbar(window);
+    const panelBodyEl = document.querySelector('#app-component-panel .component-panel-body');
+    if (panelBodyEl) {
+      window.panelOverlayScrollbar = new M29OverlayScrollbar(panelBodyEl);
+    }
+
+    // =========================================================================
     // 🌐 全局暴露所有组件交互方法 (供 HTML 模块内部 inline onclick 正常调用)
     // =========================================================================
     window.extractFromSample = extractFromSample;
