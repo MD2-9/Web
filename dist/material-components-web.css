@@ -3922,7 +3922,7 @@ body.component-panel-closed .m29-overscroll-edge-container--main {
   width: var(--component-panel-width, 290px);
   min-width: 200px;
   max-width: 80vw;
-  background-color: var(--panel-bg-color, var(--mdc-theme-primary-50, #f6edff));
+  background-color: var(--panel-bg-color, var(--mdc-theme-primary-100, #eaddff)) !important;
   border-left: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: -1px 0 3px rgba(0, 0, 0, 0.05);
   z-index: 998;
@@ -4172,7 +4172,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   --mdc-theme-on-surface: #e6e1e5;
   --mdc-theme-surface-variant: #49454f;
   --mdc-theme-on-surface-variant: #cac4d0;
-  background-color: var(--mdc-theme-surface, #1e1b22) !important;
+  background-color: var(--panel-bg-color, #131217) !important;
   color: var(--mdc-theme-on-surface, #e6e1e5) !important;
   border-left-color: rgba(255, 255, 255, 0.08) !important;
   border-right-color: rgba(255, 255, 255, 0.08) !important;
@@ -4217,7 +4217,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
 .mdc-component-panel.dark-theme .mdc-time-picker,
 .dark-theme .mdc-component-panel:not(.light-theme) .mdc-date-picker,
 .dark-theme .mdc-component-panel:not(.light-theme) .mdc-time-picker {
-  background-color: #28252e !important;
+  background-color: #1e1b22 !important;
   color: #e6e1e5 !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
@@ -4230,7 +4230,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
 
 .mdc-component-panel.dark-theme .mdc-time-picker__clock-face,
 .dark-theme .mdc-component-panel:not(.light-theme) .mdc-time-picker__clock-face {
-  background-color: #332f3b !important;
+  background-color: #2b2732 !important;
 }
 
 .mdc-component-panel.light-theme {
@@ -4238,7 +4238,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   --mdc-theme-on-surface: #1d1b20;
   --mdc-theme-surface-variant: #f7f2fa;
   --mdc-theme-on-surface-variant: #49454f;
-  background-color: #ffffff !important;
+  background-color: var(--panel-bg-color, var(--mdc-theme-primary-100, #eaddff)) !important;
   color: #1d1b20 !important;
   border-left-color: rgba(0, 0, 0, 0.08) !important;
   border-right-color: rgba(0, 0, 0, 0.08) !important;
