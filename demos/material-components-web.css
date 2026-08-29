@@ -2342,7 +2342,9 @@ button {
 
 
 
-.expansion-panel {
+.m29-expansion-panel,
+.expansion-panel,
+.mdc-expansion-panel {
   border: 1px solid rgba(0, 0, 0, 0.08);
   margin-bottom: 8px;
   border-radius: 0 !important;
@@ -2353,20 +2355,30 @@ button {
   overflow: hidden;
 }
 
+.m29-expansion-panel.is-open .m29-expansion-body,
+.m29-expansion-panel.is-open .expansion-body,
+.expansion-panel.is-open .m29-expansion-body,
 .expansion-panel.is-open .expansion-body {
   display: block;
 }
 
+.m29-expansion-panel.is-open .m29-expansion-arrow,
+.m29-expansion-panel.is-open .expansion-arrow,
+.expansion-panel.is-open .m29-expansion-arrow,
 .expansion-panel.is-open .expansion-arrow {
   transform: rotate(180deg);
 }
 
-.dark-theme .expansion-panel {
+.dark-theme .m29-expansion-panel,
+.dark-theme .expansion-panel,
+.dark-theme .mdc-expansion-panel {
   background-color: var(--mdc-theme-surface-container, #131217);
   border-color: rgba(255, 255, 255, 0.08);
 }
 
-.expansion-header {
+.m29-expansion-header,
+.expansion-header,
+.mdc-expansion-panel__header {
   padding: 12px 16px;
   display: flex;
   align-items: center;
@@ -2380,19 +2392,28 @@ button {
   transition: background-color 0.2s ease;
 }
 
-.expansion-header:hover {
+.m29-expansion-header:hover,
+.expansion-header:hover,
+.mdc-expansion-panel__header:hover {
   background: rgba(0, 0, 0, 0.05);
 }
 
-.dark-theme .expansion-header {
+.dark-theme .m29-expansion-header,
+.dark-theme .expansion-header,
+.dark-theme .mdc-expansion-panel__header {
   background: rgba(255, 255, 255, 0.03);
 }
 
-.dark-theme .expansion-header:hover {
+.dark-theme .m29-expansion-header:hover,
+.dark-theme .expansion-header:hover,
+.dark-theme .mdc-expansion-panel__header:hover {
   background: rgba(255, 255, 255, 0.06);
 }
 
-.expansion-body {
+.m29-expansion-body,
+.expansion-body,
+.mdc-expansion-panel__content,
+.mdc-expansion-panel__body {
   padding: 16px;
   display: none;
   font-size: 13px;
@@ -2400,11 +2421,16 @@ button {
   line-height: 1.6;
 }
 
-.dark-theme .expansion-body {
+.dark-theme .m29-expansion-body,
+.dark-theme .expansion-body,
+.dark-theme .mdc-expansion-panel__content,
+.dark-theme .mdc-expansion-panel__body {
   border-top-color: rgba(255, 255, 255, 0.06);
 }
 
-.expansion-arrow {
+.m29-expansion-arrow,
+.expansion-arrow,
+.mdc-expansion-panel__icon {
   transition: transform 0.2s ease;
   font-size: 20px;
 }
@@ -2418,6 +2444,7 @@ button {
 
 
 
+.m29-segmented-button-group,
 .segmented-button-group {
   display: inline-flex;
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -2427,10 +2454,12 @@ button {
   box-sizing: border-box;
 }
 
+.dark-theme .m29-segmented-button-group,
 .dark-theme .segmented-button-group {
   border-color: rgba(255, 255, 255, 0.12);
 }
 
+.m29-segmented-button,
 .segmented-button {
   padding: 8px 16px;
   font-size: 13px;
@@ -2449,23 +2478,28 @@ button {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+.m29-segmented-button:hover,
 .segmented-button:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
+.m29-segmented-button:last-child,
 .segmented-button:last-child {
   border-right: none;
 }
 
+.m29-segmented-button.is-selected,
 .segmented-button.is-selected {
   background-color: var(--mdc-theme-secondary-container, #e8def8) !important;
   color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
 }
 
+.dark-theme .m29-segmented-button,
 .dark-theme .segmented-button {
   border-right-color: rgba(255, 255, 255, 0.12);
 }
 
+.dark-theme .m29-segmented-button:hover,
 .dark-theme .segmented-button:hover {
   background-color: rgba(255, 255, 255, 0.08);
 }
@@ -2479,6 +2513,7 @@ button {
 
 
 
+.m29-badge-container,
 .badge-container {
   position: relative;
   display: inline-flex;
@@ -2486,6 +2521,7 @@ button {
   justify-content: center;
 }
 
+.m29-badge-dot,
 .badge-dot {
   position: absolute;
   top: -2px;
@@ -2497,6 +2533,7 @@ button {
   pointer-events: none;
 }
 
+.m29-badge-number,
 .badge-number {
   position: absolute;
   top: -4px;
@@ -2521,17 +2558,22 @@ button {
 
 
 
+.m29-tooltip-wrapper,
 .tooltip-wrapper {
   position: relative;
   display: inline-flex;
 }
 
+.m29-tooltip-wrapper:hover .m29-tooltip-box,
+.m29-tooltip-wrapper:hover .tooltip-box,
+.tooltip-wrapper:hover .m29-tooltip-box,
 .tooltip-wrapper:hover .tooltip-box {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
 }
 
+.m29-tooltip-box,
 .tooltip-box {
   position: absolute;
   bottom: calc(100% + 8px);
@@ -2561,6 +2603,7 @@ button {
 
 
 
+.m29-divider,
 .mdc-divider {
   height: 1px;
   width: 100%;
@@ -2569,10 +2612,12 @@ button {
   border: none;
 }
 
+.dark-theme .m29-divider,
 .dark-theme .mdc-divider {
   background-color: rgba(255, 255, 255, 0.08);
 }
 
+.m29-divider--inset,
 .mdc-divider--inset {
   margin-left: 56px;
   width: calc(100% - 56px);

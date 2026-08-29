@@ -5,17 +5,22 @@
 // Material Components Web - Tooltips (0px Straight Angle Edition)
 //
 
+.m29-tooltip-wrapper,
 .tooltip-wrapper {
   position: relative;
   display: inline-flex;
 }
 
+.m29-tooltip-wrapper:hover .m29-tooltip-box,
+.m29-tooltip-wrapper:hover .tooltip-box,
+.tooltip-wrapper:hover .m29-tooltip-box,
 .tooltip-wrapper:hover .tooltip-box {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
 }
 
+.m29-tooltip-box,
 .tooltip-box {
   position: absolute;
   bottom: calc(100% + 8px);

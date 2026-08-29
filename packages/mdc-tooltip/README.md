@@ -1,4 +1,4 @@
-# Tooltip (@material/tooltip)
+# M2.9 Tooltip (@material/tooltip)
 
 0px straight-angle hover tooltip component.
 
@@ -12,9 +12,9 @@ npm install @material/tooltip
 
 ### HTML
 ```html
-<div class="tooltip-wrapper">
+<div class="m29-tooltip-wrapper">
   <button class="mdc-button mdc-button--outlined">Hover Me</button>
-  <div class="tooltip-box">Tooltip content</div>
+  <div class="m29-tooltip-box">Tooltip content</div>
 </div>
 ```
 

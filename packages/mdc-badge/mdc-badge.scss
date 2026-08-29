@@ -5,6 +5,7 @@
 // Material Components Web - Badges (Dot and Count Badges - M3 Tertiary Edition)
 //
 
+.m29-badge-container,
 .badge-container {
   position: relative;
   display: inline-flex;
@@ -12,6 +13,7 @@
   justify-content: center;
 }
 
+.m29-badge-dot,
 .badge-dot {
   position: absolute;
   top: -2px;
@@ -23,6 +25,7 @@
   pointer-events: none;
 }
 
+.m29-badge-number,
 .badge-number {
   position: absolute;
   top: -4px;

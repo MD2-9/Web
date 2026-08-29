@@ -1,4 +1,4 @@
-# Expansion Panel (@material/expansion-panel)
+# M2.9 Expansion Panel (@material/expansion-panel)
 
 Accordion expansion panel component for collapsible content blocks.
 
@@ -12,15 +12,13 @@ npm install @material/expansion-panel
 
 ### HTML
 ```html
-<div class="mdc-expansion-panel">
-  <div class="mdc-expansion-panel__header">
-    <span class="mdc-expansion-panel__title">Panel Title</span>
-    <i class="material-icons mdc-expansion-panel__icon">expand_more</i>
+<div class="m29-expansion-panel">
+  <div class="m29-expansion-header">
+    <span class="m29-expansion-title">Panel Title</span>
+    <i class="material-icons m29-expansion-arrow">expand_more</i>
   </div>
-  <div class="mdc-expansion-panel__content">
-    <div class="mdc-expansion-panel__body">
-      Panel collapsible content goes here.
-    </div>
+  <div class="m29-expansion-body">
+    Panel collapsible content goes here.
   </div>
 </div>
 ```

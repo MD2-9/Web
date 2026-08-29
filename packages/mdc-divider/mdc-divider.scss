@@ -5,6 +5,7 @@
 // Material Components Web - Dividers
 //
 
+.m29-divider,
 .mdc-divider {
   height: 1px;
   width: 100%;
@@ -13,10 +14,12 @@
   border: none;
 }
 
+.dark-theme .m29-divider,
 .dark-theme .mdc-divider {
   background-color: rgba(255, 255, 255, 0.08);
 }
 
+.m29-divider--inset,
 .mdc-divider--inset {
   margin-left: 56px;
   width: calc(100% - 56px);

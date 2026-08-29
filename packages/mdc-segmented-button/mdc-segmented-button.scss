@@ -5,6 +5,7 @@
 // Material Components Web - Segmented Button (0px Straight Angle Edition)
 //
 
+.m29-segmented-button-group,
 .segmented-button-group {
   display: inline-flex;
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -14,10 +15,12 @@
   box-sizing: border-box;
 }
 
+.dark-theme .m29-segmented-button-group,
 .dark-theme .segmented-button-group {
   border-color: rgba(255, 255, 255, 0.12);
 }
 
+.m29-segmented-button,
 .segmented-button {
   padding: 8px 16px;
   font-size: 13px;
@@ -36,23 +39,28 @@
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+.m29-segmented-button:hover,
 .segmented-button:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
+.m29-segmented-button:last-child,
 .segmented-button:last-child {
   border-right: none;
 }
 
+.m29-segmented-button.is-selected,
 .segmented-button.is-selected {
   background-color: var(--mdc-theme-secondary-container, #e8def8) !important;
   color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
 }
 
+.dark-theme .m29-segmented-button,
 .dark-theme .segmented-button {
   border-right-color: rgba(255, 255, 255, 0.12);
 }
 
+.dark-theme .m29-segmented-button:hover,
 .dark-theme .segmented-button:hover {
   background-color: rgba(255, 255, 255, 0.08);
 }

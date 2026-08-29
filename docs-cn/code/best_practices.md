@@ -4,10 +4,13 @@
 
 ---
 
-## 1. CSS 与 Sass 规范
+## 1. CSS 与 Sass 规范及组件前缀准则
 
-- **遵循 BEM 命名规范**：类名格式必须为 `mdc-[block]__[element]--[modifier]`。
-- **0px 纯直角与 50% 纯圆几何**：常规容器、卡片、输入框、按钮等一律采用 `border-radius: 0`；圆形 FAB、头像、选择态一律采用 `border-radius: 50%`。
+- **组件命名前缀准则 (Prefix Convention)**：
+  - **官方原生基础组件**：保留 `mdc-[component]` 经典前缀（例如 `.mdc-button`、`.mdc-card`、`.mdc-dialog`、`.mdc-checkbox`）。
+  - **M2.9 本项目新增与深度定制组件**：**统一采用 `m29-[component]` 前缀**（例如 `.m29-segmented-button`、`.m29-badge-container`、`.m29-tooltip-wrapper`、`.m29-divider`、`.m29-expansion-panel`、`.m29-tabs-bar`、`.m29-slider`、`.m29-switch`、`.m29-ripple-wave`、`M29NavigationRail`、`M29MobileDrawer`、`M29DatePicker`、`M29TimePicker`、`M29MonetEngine` 等）。
+- **遵循 BEM 命名规范**：类名格式遵循 `m29-[block]__[element]--[modifier]` 或 `mdc-[block]__[element]--[modifier]`。
+- **0px 纯直角与 50% 纯圆几何**：常规容器、卡片、输入框、分段按钮等一律采用 `border-radius: 0`；圆形 FAB、头像、选择态一律采用 `border-radius: 50%`。
 - **避免直接使用硬编码颜色**：一律使用 `var(--mdc-theme-*)` CSS 变量或 `@material/theme` 混入函数。
 - **样式隔离与作用域**：避免对通用 HTML 标签（如 `button`、`div`）直接应用全局裸选择器。
 

@@ -1,4 +1,4 @@
-# Divider (@material/divider)
+# M2.9 Divider (@material/divider)
 
 Material Design full-width and inset horizontal dividers.
 
@@ -13,10 +13,10 @@ npm install @material/divider
 ### HTML
 ```html
 <!-- Full-width divider -->
-<hr class="mdc-divider">
+<hr class="m29-divider">
 
 <!-- Inset divider (56px left margin for list avatars/icons) -->
-<hr class="mdc-divider mdc-divider--inset">
+<hr class="m29-divider m29-divider--inset">
 ```
 
 ### SCSS
