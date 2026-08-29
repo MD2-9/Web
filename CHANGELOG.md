@@ -11,11 +11,11 @@
 * **@material/segmented-button:** 引入分段按钮组件，支持单选/多选及紧凑网格视图。
 * **@material/tooltip:** 引入纯直角 Material Tooltip 提示框。
 * **mdc-ripple (M2.9 & Android Overscroll Glow):** 
-  * 引入 `mdui-ripple.js`，速率放缓 3/5，支持更自然的扩散与中心水波纹。
-  * 引入 `mdui-overscroll-glow.js`，100% 严格复刻 Android 5.0~11.0 经典扁平化边界弧形边缘泛光 (Flat Arc EdgeEffect)。
-* **mdc-tabs & md1-tabs:** 引入跟随滑块方向平滑切换的 Direction-aware Sliding Indicator 与内容水波纹联动。
-* **mdc-slider & md1-slider:** 引入 MD1 / MDUI 经典离散滑块控制器（水滴指示器 Teardrop Pin）。
-* **mdc-switch & md1-switch:** 纯正滑动开关规范，严格跟随动态主题色与 0px 胶囊几何。
+  * 引入 `m29-ripple.js`，速率放缓 3/5，支持更自然的扩散与中心水波纹。
+  * 引入 `m29-overscroll-glow.js`，100% 严格复刻 Android 5.0~11.0 经典扁平化边界弧形边缘泛光 (Flat Arc EdgeEffect)。
+* **mdc-tabs & m29-tabs:** 引入跟随滑块方向平滑切换的 Direction-aware Sliding Indicator 与内容水波纹联动。
+* **mdc-slider & m29-slider:** 引入 M2.9 / MDUI 经典离散滑块控制器（水滴指示器 Teardrop Pin）。
+* **mdc-switch & m29-switch:** 纯正滑动开关规范，严格跟随动态主题色与 0px 胶囊几何。
 * **cloud & local server:** 引入 Cloudflare Workers 部署支持 (`worker.js` + `wrangler.toml`) 及全网段本地预览服务 (`server.js`)。
 * **local assets:** 集成本地高可用 `Google Sans Flex` (SIL OFL 1.1) 可变字体与 `Material Icons` (CC-BY 4.0)。
 

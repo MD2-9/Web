@@ -2,10 +2,10 @@
 // Copyright 2026 安秋 <github.com/unjal29>
 // Licensed under the Apache License, Version 2.0
 //
-// MD1 纯正滑动开关规范 (严格跟随动态主题色)
+// M29 纯正滑动开关规范 (严格跟随动态主题色)
 //
 
-.md1-switch {
+.m29-switch {
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -14,14 +14,14 @@
   user-select: none;
 }
 
-.md1-switch input {
+.m29-switch input {
   position: absolute;
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.md1-switch-track {
+.m29-switch-track {
   width: 36px;
   height: 14px;
   border-radius: 7px !important;
@@ -32,11 +32,11 @@
   transition: background-color 0.25s ease;
 }
 
-.dark-theme .md1-switch-track {
+.dark-theme .m29-switch-track {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
-.md1-switch-thumb {
+.m29-switch-thumb {
   position: absolute;
   top: -3px;
   left: -2px;
@@ -49,19 +49,19 @@
 }
 
 /* 🌟 激活状态轨道背景严格跟随当前动态主题色 (50% 混色 / Primary Container) */
-.md1-switch input:checked + .md1-switch-track {
+.m29-switch input:checked + .m29-switch-track {
   background-color: var(--mdc-theme-primary-container, color-mix(in srgb, var(--mdc-theme-primary, #6750a4) 50%, transparent));
 }
 
-.dark-theme .md1-switch input:checked + .md1-switch-track {
+.dark-theme .m29-switch input:checked + .m29-switch-track {
   background-color: var(--mdc-theme-primary-container, #4f378b) !important;
 }
 
-.md1-switch input:checked + .md1-switch-track .md1-switch-thumb {
+.m29-switch input:checked + .m29-switch-track .m29-switch-thumb {
   transform: translateX(20px);
   background-color: var(--mdc-theme-primary, #6750a4);
 }
 
-.dark-theme .md1-switch input:checked + .md1-switch-track .md1-switch-thumb {
+.dark-theme .m29-switch input:checked + .m29-switch-track .m29-switch-thumb {
   background-color: var(--mdc-theme-primary, #d0bcff) !important;
 }

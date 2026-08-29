@@ -21,6 +21,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>M2.9 · MDC-Web · 纯直角 & 莫奈动态色 Navigation Rail 全景展厅</title>
   <!-- 本地高可用字体与 Material Icons 官方与本地双重高可用库 -->
   <link rel="stylesheet" href="../icons/material-icons/material-icons.css">
@@ -607,25 +608,25 @@
           </div>
         </div>
 
-        <!-- MD1 纯正规范滑动开关 -->
-        <label class="md1-switch">
+        <!-- M2.9 纯正规范滑动开关 -->
+        <label class="m29-switch">
           <input type="checkbox" id="switch-demo" checked>
-          <span class="md1-switch-track">
-            <span class="md1-switch-thumb"></span>
+          <span class="m29-switch-track">
+            <span class="m29-switch-thumb"></span>
           </span>
-          <span style="font-size: 13px; font-weight: 500;">MD1 动态色开关</span>
+          <span style="font-size: 13px; font-weight: 500;">M2.9 动态色开关</span>
         </label>
 
         <!-- MD1 / MDUI 纯正规范大头针数字滑块 (Discrete Slider with Teardrop Pin) -->
-        <div class="md1-slider-container">
+        <div class="m29-slider-container">
           <span style="font-size: 13px; font-weight: 600;">色阶滑块:</span>
-          <div class="md1-slider" id="md1SliderBox">
+          <div class="m29-slider" id="m29SliderBox">
             <input type="range" id="slider-tone" min="10" max="90" value="40">
-            <div class="md1-slider-track"></div>
-            <div class="md1-slider-fill" id="md1SliderFill" style="width: 37.5%;"></div>
-            <div class="md1-slider-thumb-wrapper" id="md1SliderThumbWrapper" style="left: 37.5%;">
-              <div class="md1-slider-thumb">
-                <span id="md1SliderPinText">40</span>
+            <div class="m29-slider-track"></div>
+            <div class="m29-slider-fill" id="m29SliderFill" style="width: 37.5%;"></div>
+            <div class="m29-slider-thumb-wrapper" id="m29SliderThumbWrapper" style="left: 37.5%;">
+              <div class="m29-slider-thumb">
+                <span id="m29SliderPinText">40</span>
               </div>
             </div>
           </div>
@@ -745,39 +746,39 @@
     <div class="demo-card" id="section-tabs">
       <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
         <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">tab</i>
-        7. 选项卡联动系统 (MD1 Tabs & Sliding Indicator)
+        7. 选项卡联动系统 (M2.9 Tabs & Sliding Indicator)
       </h3>
       
-      <!-- MD1 选项卡条 -->
-      <div class="md1-tabs-bar" id="demoTabsBar">
-        <div class="md1-tab-item is-active" onclick="switchMd1Tab(0, this)">
+      <!-- M2.9 选项卡条 -->
+      <div class="m29-tabs-bar" id="demoTabsBar">
+        <div class="m29-tab-item is-active" onclick="switchM29Tab(0, this)">
           <i class="material-icons" style="font-size: 18px;">widgets</i>
           <span>1. 组件全景</span>
         </div>
-        <div class="md1-tab-item" onclick="switchMd1Tab(1, this)">
+        <div class="m29-tab-item" onclick="switchM29Tab(1, this)">
           <i class="material-icons" style="font-size: 18px;">palette</i>
           <span>2. CAM16 色彩算法</span>
         </div>
-        <div class="md1-tab-item" onclick="switchMd1Tab(2, this)">
+        <div class="m29-tab-item" onclick="switchM29Tab(2, this)">
           <i class="material-icons" style="font-size: 18px;">navigation</i>
           <span>3. Navigation Rail 架构</span>
         </div>
-        <div class="md1-tab-indicator" id="md1TabIndicator"></div>
+        <div class="m29-tab-indicator" id="m29TabIndicator"></div>
       </div>
 
       <!-- 选项卡内容面板 (水波纹以目标Tab为起点在内部扩散) -->
-      <div class="md1-tab-content-container" id="tabContentContainer">
-        <div class="md1-tab-panel is-active" id="tab-panel-0">
+      <div class="m29-tab-content-container" id="tabContentContainer">
+        <div class="m29-tab-panel is-active" id="tab-panel-0">
           <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【面板 1】MDC-Web v0.34.1 纯直角全功能矩阵</h4>
           <p>所有组件边角坚守 0px 直角，保留纯正 MD1 工业美学与 Google Sans Flex 变量字体。</p>
         </div>
 
-        <div class="md1-tab-panel" id="tab-panel-1">
+        <div class="m29-tab-panel" id="tab-panel-1">
           <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【面板 2】Google Material Color Utilities (CAM16 / HCT)</h4>
           <p>基于真正的感知色彩模型，支持单色、双色、三色及壁纸种子提取，在亮暗模式下自适应生成和谐全色阶。</p>
         </div>
 
-        <div class="md1-tab-panel" id="tab-panel-2">
+        <div class="m29-tab-panel" id="tab-panel-2">
           <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【面板 3】Navigation Rail 紧凑与水波纹二级架构</h4>
           <p>左侧 72px 常驻单图标，展开 260px，一级菜单仅含主页、目录、设置与关于，点击目录以水波纹涟漪平滑覆盖展开二级菜单！</p>
         </div>
@@ -793,8 +794,8 @@
       <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 16px;">
         <div>
           <div style="font-size: 12px; font-weight: 600; margin-bottom: 8px;">双波形不确定线性进度条 (Indeterminate Progress from Master):</div>
-          <div class="mdui-progress">
-            <div class="mdui-progress-indeterminate"></div>
+          <div class="m29-progress">
+            <div class="m29-progress-indeterminate"></div>
           </div>
         </div>
 
@@ -803,8 +804,8 @@
             <span>确定型线性进度条 (Determinate Progress):</span>
             <span id="determinate-val" style="font-family: monospace; color: var(--mdc-theme-primary);">65%</span>
           </div>
-          <div class="mdui-progress">
-            <div class="mdui-progress-determinate" id="demoDeterminateBar" style="width: 65%;"></div>
+          <div class="m29-progress">
+            <div class="m29-progress-determinate" id="demoDeterminateBar" style="width: 65%;"></div>
           </div>
         </div>
 
@@ -1172,16 +1173,14 @@
     window.closeOverlay = closeOverlay;
 
     function handleNavClick() {
-      if (window.innerWidth < 600) {
-        closeMobileDrawer();
-      }
+      // 展开侧边栏之后 点击侧边栏内元素不触发收纳，保持侧边栏状态
     }
 
     // =========================================================================
-    // 移动端交互系统：左边缘右滑唤出 + 左下角悬浮按钮 (静止 N 秒浮现)
+    // 移动端交互系统：左边缘右滑唤出 + 左下角悬浮按钮 (静止 2.9 秒浮现)
     // 修复：点击/触摸悬浮按钮及侧边栏内部时不清除 page-is-idle，确保悬浮按钮顺利打开侧边栏
     // =========================================================================
-    let idleTimeoutSeconds = 2.5;
+    let idleTimeoutSeconds = 2.9;
     let idleTimer = null;
 
     function resetIdleTimer(e) {
@@ -1217,6 +1216,23 @@
       if (activeOverlayId) closeOverlay(activeOverlayId);
     }
 
+    // 绑定侧边栏阻止内部点击向外触发全局收纳，但支持点击内部一级菜单空白处收回
+    const appRailEl = document.getElementById('app-rail');
+    const drawerNavSec = document.getElementById('drawerNavSection');
+
+    if (drawerNavSec) {
+      drawerNavSec.addEventListener('click', (e) => {
+        // 如果点击的不是具体的可交互菜单项/按钮/头像/链接，则收回收纳
+        if (!e.target.closest('.rail-nav-item, .rail-header, button, a, input, .mdc-button')) {
+          if (activeOverlayId) {
+            closeOverlay(activeOverlayId, e);
+          } else if (window.innerWidth < 600) {
+            closeMobileDrawer();
+          }
+        }
+      });
+    }
+
     // 绑定移动端悬浮按钮独立事件，阻止冒泡
     const btnMobileFab = document.getElementById('btnMobileFloatingMenu');
     if (btnMobileFab) {
@@ -1232,13 +1248,20 @@
     // 移动端边缘滑动唤出与收起手势
     let touchStartX = 0;
     let touchStartY = 0;
+    let touchStartedInRail = false;
 
     window.addEventListener('touchstart', (e) => {
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
+      touchStartedInRail = !!(e.target && e.target.closest('#app-rail'));
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
+      // 若触摸起始或结束于侧边栏内部，绝对不触发侧边栏收起手势
+      if (touchStartedInRail || (e.target && e.target.closest('#app-rail'))) {
+        return;
+      }
+
       const touchEndX = e.changedTouches[0].clientX;
       const touchEndY = e.changedTouches[0].clientY;
       const deltaX = touchEndX - touchStartX;
@@ -1271,7 +1294,7 @@
       const radius = Math.hypot(Math.max(x, rect.width - x), Math.max(y, rect.height - y));
       
       const wave = document.createElement('div');
-      wave.className = 'mdui-ripple-wave';
+      wave.className = 'm29-ripple-wave';
       wave.style.width = `${radius * 2}px`;
       wave.style.height = `${radius * 2}px`;
       wave.style.left = `${x - radius}px`;
@@ -1317,7 +1340,7 @@
       '.rail-nav-item',
       '.preview-img-box',
       '.expansion-header',
-      '.md1-tab-item',
+      '.m29-tab-item',
       '.mdc-fab'
     ].join(',');
     const CARD_CONTAINER_SELECTOR = '.demo-card';
@@ -1327,7 +1350,7 @@
       if (!e || !e.target || typeof e.target.closest !== 'function') return;
 
       // 1. 忽略原生输入框、单选、复选、滑块、自定义选择框以及 Picker 与复合控件、Tab 内容区域
-      if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-checkbox, .mdc-radio, .mdc-select-custom, .mdc-date-picker, .mdc-time-picker, .expansion-panel, .md1-tab-content-container, .md1-tab-panel')) {
+      if (e.target.closest('input, select, textarea, .m29-slider, .m29-switch, .mdc-checkbox, .mdc-radio, .mdc-select-custom, .mdc-date-picker, .mdc-time-picker, .expansion-panel, .m29-tab-content-container, .m29-tab-panel')) {
         const btn = e.target.closest('.mdc-button, button, .mdc-date-picker__nav-btn');
         if (btn) createRipple(e, btn);
         return;
@@ -1475,7 +1498,7 @@
 
     function finishMonetSelection() {
       applyMonetTheme();
-      setTimeout(() => closeOverlay('themePickerPanel'), 180);
+      showDemoToast('已成功应用选定的莫奈三色主题');
     }
 
     function extractFromSample(p, s, t) {
@@ -1718,29 +1741,29 @@
     }
 
     // =========================================================================
-    // MD1 选项卡系统交互 (Sliding Indicator 动态滑块 ✖ 水平向左/向右方向切换动画)
+    // M2.9 选项卡系统交互 (Sliding Indicator 动态滑块 ✖ 水平向左/向右方向切换动画)
     // 修复：根据前进/后退索引动态赋予 slide-right 或 slide-left 动画
     // =========================================================================
-    let currentMd1TabIndex = 0;
+    let currentM29TabIndex = 0;
 
-    function switchMd1Tab(index, eventOrElement) {
+    function switchM29Tab(index, eventOrElement) {
       let tabElement;
       if (eventOrElement && eventOrElement.target) {
-        tabElement = eventOrElement.target.closest('.md1-tab-item');
+        tabElement = eventOrElement.target.closest('.m29-tab-item');
       } else if (eventOrElement instanceof HTMLElement) {
-        tabElement = eventOrElement.closest('.md1-tab-item') || eventOrElement;
+        tabElement = eventOrElement.closest('.m29-tab-item') || eventOrElement;
       }
       
-      const tabs = document.querySelectorAll('.md1-tab-item');
-      const panels = document.querySelectorAll('.md1-tab-panel');
-      const indicator = document.getElementById('md1TabIndicator');
+      const tabs = document.querySelectorAll('.m29-tab-item');
+      const panels = document.querySelectorAll('.m29-tab-panel');
+      const indicator = document.getElementById('m29TabIndicator');
       
       if (!tabElement && tabs[index]) {
         tabElement = tabs[index];
       }
 
-      const isSlideRight = index >= currentMd1TabIndex;
-      currentMd1TabIndex = index;
+      const isSlideRight = index >= currentM29TabIndex;
+      currentM29TabIndex = index;
 
       tabs.forEach((tab, i) => {
         if (i === index) {
@@ -1770,17 +1793,17 @@
       }
     }
 
-    function initMd1TabIndicator() {
-      const activeTab = document.querySelector('.md1-tab-item.is-active');
-      const indicator = document.getElementById('md1TabIndicator');
+    function initM29TabIndicator() {
+      const activeTab = document.querySelector('.m29-tab-item.is-active');
+      const indicator = document.getElementById('m29TabIndicator');
       if (activeTab && indicator) {
         indicator.style.width = `${activeTab.offsetWidth}px`;
         indicator.style.left = `${activeTab.offsetLeft}px`;
       }
     }
 
-    window.addEventListener('load', initMd1TabIndicator);
-    window.addEventListener('resize', initMd1TabIndicator);
+    window.addEventListener('load', initM29TabIndicator);
+    window.addEventListener('resize', initM29TabIndicator);
 
     // =========================================================================
     // 确定型线性进度条动态控制
@@ -1822,11 +1845,11 @@
     // MD1 / MDUI 纯正大头针滑块联动 (Discrete Slider with Teardrop Pin)
     // =========================================================================
     const sliderInput = document.getElementById('slider-tone');
-    const sliderFill = document.getElementById('md1SliderFill');
-    const sliderThumbWrapper = document.getElementById('md1SliderThumbWrapper');
+    const sliderFill = document.getElementById('m29SliderFill');
+    const sliderThumbWrapper = document.getElementById('m29SliderThumbWrapper');
     const sliderVal = document.getElementById('slider-val');
-    const sliderPinText = document.getElementById('md1SliderPinText');
-    const sliderBox = document.getElementById('md1SliderBox');
+    const sliderPinText = document.getElementById('m29SliderPinText');
+    const sliderBox = document.getElementById('m29SliderBox');
 
     if (sliderInput) {
       function updateSlider(val) {
@@ -1871,17 +1894,6 @@
       btn.addEventListener('click', (e) => {
         const text = btn.textContent.trim();
         showDemoToast(text ? `这是一个无用的按钮 (${text})` : '这是一个无用的按钮');
-      });
-    });
-
-    // =========================================================================
-    // 二级菜单空白处点击返回一级菜单
-    // =========================================================================
-    document.querySelectorAll('.secondary-overlay-panel').forEach(panel => {
-      panel.addEventListener('click', (e) => {
-        if (!e.target.closest('a, button, input, label, .theme-tile, .mdc-button')) {
-          closeOverlay(panel.id);
-        }
       });
     });
 
@@ -1997,8 +2009,8 @@
     // 初始化色彩方案维度与莫奈主题
     setColorPaletteMode(colorPaletteMode);
     setTimeout(() => {
-      const firstTab = document.querySelector('.md1-tab-item.is-active');
-      const indicator = document.getElementById('md1TabIndicator');
+      const firstTab = document.querySelector('.m29-tab-item.is-active');
+      const indicator = document.getElementById('m29TabIndicator');
       if (firstTab && indicator) {
         indicator.style.width = `${firstTab.offsetWidth}px`;
         indicator.style.left = `${firstTab.offsetLeft}px`;
@@ -2012,7 +2024,7 @@
     // =========================================================================
     const SVG_NS = 'http://www.w3.org/2000/svg';
 
-    class MduiFlatEdgeEffect {
+    class M29FlatEdgeEffect {
       constructor(container = null) {
         this.isWindow = !container || container === document.body || container === document.documentElement;
         this.container = this.isWindow ? document.body : container;
@@ -2030,11 +2042,11 @@
 
       initDOM() {
         this.wrapper = document.createElement('div');
-        this.wrapper.className = `md1-overscroll-edge-container ${this.isWindow ? 'md1-overscroll-edge-container--fixed' : ''}`;
+        this.wrapper.className = `m29-overscroll-edge-container ${this.isWindow ? 'm29-overscroll-edge-container--fixed' : ''}`;
 
         ['top', 'bottom', 'left', 'right'].forEach((dir) => {
           const svg = document.createElementNS(SVG_NS, 'svg');
-          svg.setAttribute('class', `md1-overscroll-edge-arc md1-overscroll-edge-arc--${dir}`);
+          svg.setAttribute('class', `m29-overscroll-edge-arc m29-overscroll-edge-arc--${dir}`);
           svg.setAttribute('preserveAspectRatio', 'none');
           
           const isVertical = dir === 'top' || dir === 'bottom';
@@ -2282,13 +2294,13 @@
     }
 
     // 全局启动原生 Android 5-11 扁平化边界弧形动效
-    window.rootFlatEdgeEffect = new MduiFlatEdgeEffect(null);
+    window.rootFlatEdgeEffect = new M29FlatEdgeEffect(null);
     const scrollContainerMap = new WeakMap();
 
     window.addEventListener('wheel', (e) => {
       let el = e.target;
       while (el && el !== document.body && el !== document.documentElement) {
-        if (el.classList && el.classList.contains('md1-overscroll-edge-container')) {
+        if (el.classList && el.classList.contains('m29-overscroll-edge-container')) {
           el = el.parentElement;
           continue;
         }
@@ -2297,7 +2309,7 @@
         const isScrollableX = (style.overflowX === 'auto' || style.overflowX === 'scroll') && el.scrollWidth > el.clientWidth;
         if (isScrollableY || isScrollableX) {
           if (!scrollContainerMap.has(el)) {
-            scrollContainerMap.set(el, new MduiFlatEdgeEffect(el));
+            scrollContainerMap.set(el, new M29FlatEdgeEffect(el));
           }
           break;
         }

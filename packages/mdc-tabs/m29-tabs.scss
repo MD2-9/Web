@@ -6,10 +6,10 @@
 // Direction-aware sliding tab transitions adapted and inspired by MDUI
 // (https://github.com/zdhxiong/mdui), Copyright (c) 2016-2021 zdhxiong (MIT License).
 //
-// MD1 Tab 选项卡系统规范 (Indicator 动态下划线滑块 ✖ 跟随滑块方向平滑切换)
+// M29 Tab 选项卡系统规范 (Indicator 动态下划线滑块 ✖ 跟随滑块方向平滑切换)
 //
 
-.md1-tabs-bar {
+.m29-tabs-bar {
   display: flex;
   position: relative;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
@@ -18,15 +18,15 @@
   scrollbar-width: none;
 }
 
-.md1-tabs-bar::-webkit-scrollbar {
+.m29-tabs-bar::-webkit-scrollbar {
   display: none;
 }
 
-.dark-theme .md1-tabs-bar {
+.dark-theme .m29-tabs-bar {
   border-bottom-color: rgba(255, 255, 255, 0.12);
 }
 
-.md1-tab-item {
+.m29-tab-item {
   padding: 12px 24px;
   font-size: 14px;
   font-weight: 600;
@@ -42,16 +42,16 @@
   white-space: nowrap;
 }
 
-.md1-tab-item:hover {
+.m29-tab-item:hover {
   opacity: 1;
 }
 
-.md1-tab-item.is-active {
+.m29-tab-item.is-active {
   opacity: 1;
   color: var(--mdc-theme-primary, #6750a4) !important;
 }
 
-.md1-tab-indicator {
+.m29-tab-indicator {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -62,12 +62,12 @@
   z-index: 2;
 }
 
-.md1-tab-content-container {
+.m29-tab-content-container {
   position: relative;
   overflow: hidden;
 }
 
-.md1-tab-panel {
+.m29-tab-panel {
   padding: 20px 0;
   font-size: 13px;
   line-height: 1.6;
@@ -77,7 +77,7 @@
   will-change: transform, opacity;
 }
 
-.md1-tab-panel.is-active {
+.m29-tab-panel.is-active {
   display: block;
 }
 
@@ -85,11 +85,11 @@
    - 滑条向右切换 -> 内容向右移动 (from -28px to 0)
    - 滑条向左切换 -> 内容向左移动 (from +28px to 0)
 */
-.md1-tab-panel.slide-right {
+.m29-tab-panel.slide-right {
   animation: tabSlideFollowRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-.md1-tab-panel.slide-left {
+.m29-tab-panel.slide-left {
   animation: tabSlideFollowLeft 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 

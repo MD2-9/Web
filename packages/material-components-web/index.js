@@ -30,7 +30,7 @@ import * as formField from '@material/form-field/index';
 import * as gridList from '@material/grid-list/index';
 import * as iconToggle from '@material/icon-toggle/index';
 import * as linearProgress from '@material/linear-progress/index';
-import { MduiLinearProgress } from '@material/linear-progress/mdui-linear-progress';
+import { M29LinearProgress, MduiLinearProgress } from '@material/linear-progress/m29-linear-progress';
 import * as lineRipple from '@material/line-ripple/index';
 import * as menu from '@material/menu/index';
 import * as notchedOutline from '@material/notched-outline/index';
@@ -38,24 +38,29 @@ import * as picker from '@material/picker/index';
 import { MdcTimePicker, MdcDatePicker } from '@material/picker/index';
 import * as radio from '@material/radio/index';
 import * as ripple from '@material/ripple/index';
-import { createRipple, attachRipples } from '@material/ripple/mdui-ripple';
+import { createRipple, attachRipples } from '@material/ripple/m29-ripple';
 import { 
+  M29FlatEdgeEffect,
+  M29FlatEdgeEffectManager,
+  attachFlatEdgeEffect,
+  M29EdgeEffect,
+  M29EdgeEffectManager,
+  attachEdgeEffect,
+  M29OverscrollGlow,
+  attachOverscrollGlow,
   MduiFlatEdgeEffect,
   MduiFlatEdgeEffectManager,
-  attachFlatEdgeEffect,
   MduiEdgeEffect,
   MduiEdgeEffectManager,
-  attachEdgeEffect,
-  MduiOverscrollGlow,
-  attachOverscrollGlow
-} from '@material/ripple/mdui-overscroll-glow';
+  MduiOverscrollGlow
+} from '@material/ripple/m29-overscroll-glow';
 import * as select from '@material/select/index';
 import * as selectionControl from '@material/selection-control/index';
 import * as slider from '@material/slider/index';
-import { Md1Slider } from '@material/slider/md1-slider';
+import { M29Slider, Md1Slider } from '@material/slider/m29-slider';
 import * as snackbar from '@material/snackbar/index';
 import * as tabs from '@material/tabs/index';
-import { Md1Tabs } from '@material/tabs/md1-tabs';
+import { M29Tabs, Md1Tabs } from '@material/tabs/m29-tabs';
 import * as textField from '@material/textfield/index';
 import * as toolbar from '@material/toolbar/index';
 import * as topAppBar from '@material/top-app-bar/index';
@@ -86,8 +91,11 @@ autoInit.register('MDCSelect', select.MDCSelect);
 autoInit.register('MDCSlider', slider.MDCSlider);
 autoInit.register('MDCToolbar', toolbar.MDCToolbar);
 autoInit.register('MDCTopAppBar', topAppBar.MDCTopAppBar);
+autoInit.register('M29Slider', M29Slider);
 autoInit.register('Md1Slider', Md1Slider);
+autoInit.register('M29Tabs', M29Tabs);
 autoInit.register('Md1Tabs', Md1Tabs);
+autoInit.register('M29LinearProgress', M29LinearProgress);
 autoInit.register('MduiLinearProgress', MduiLinearProgress);
 autoInit.register('MdcExpansionPanel', expansionPanel.MdcExpansionPanel);
 autoInit.register('MdcTimePicker', picker.MdcTimePicker);
@@ -110,6 +118,7 @@ export {
   iconToggle,
   lineRipple,
   linearProgress,
+  M29LinearProgress,
   MduiLinearProgress,
   menu,
   notchedOutline,
@@ -120,20 +129,27 @@ export {
   ripple,
   createRipple,
   attachRipples,
+  M29FlatEdgeEffect,
+  M29FlatEdgeEffectManager,
+  attachFlatEdgeEffect,
+  M29EdgeEffect,
+  M29EdgeEffectManager,
+  attachEdgeEffect,
+  M29OverscrollGlow,
+  attachOverscrollGlow,
   MduiFlatEdgeEffect,
   MduiFlatEdgeEffectManager,
-  attachFlatEdgeEffect,
   MduiEdgeEffect,
   MduiEdgeEffectManager,
-  attachEdgeEffect,
   MduiOverscrollGlow,
-  attachOverscrollGlow,
   select,
   selectionControl,
   slider,
+  M29Slider,
   Md1Slider,
   snackbar,
   tabs,
+  M29Tabs,
   Md1Tabs,
   textField,
   toolbar,

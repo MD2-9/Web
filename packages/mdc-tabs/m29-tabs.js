@@ -13,9 +13,9 @@
  */
 
 /**
- * MD1 选项卡系统控制器 (Sliding Indicator ✖ 跟随滑块方向平滑切换)
+ * M29 选项卡系统控制器 (Sliding Indicator ✖ 跟随滑块方向平滑切换)
  */
-export class Md1Tabs {
+export class M29Tabs {
   /**
    * @param {HTMLElement} barContainer
    * @param {HTMLElement} [panelsContainer]
@@ -23,9 +23,9 @@ export class Md1Tabs {
   constructor(barContainer, panelsContainer = document) {
     this.bar = barContainer;
     this.container = panelsContainer;
-    this.tabs = Array.from(this.bar.querySelectorAll('.md1-tab-item'));
-    this.panels = Array.from(this.container.querySelectorAll('.md1-tab-panel'));
-    this.indicator = this.bar.querySelector('.md1-tab-indicator');
+    this.tabs = Array.from(this.bar.querySelectorAll('.m29-tab-item'));
+    this.panels = Array.from(this.container.querySelectorAll('.m29-tab-panel'));
+    this.indicator = this.bar.querySelector('.m29-tab-indicator');
     this.currentIndex = 0;
 
     this.init();
@@ -88,3 +88,6 @@ export class Md1Tabs {
     this.indicator.style.left = `${tabElement.offsetLeft}px`;
   }
 }
+
+// 保持向后兼容导出
+export const Md1Tabs = M29Tabs;

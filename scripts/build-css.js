@@ -32,12 +32,12 @@ const packageFiles = [
   'packages/mdc-card/mdc-card.scss',
   'packages/mdc-navigation-rail/mdc-navigation-rail.scss',
   'packages/mdc-monet/mdc-monet.scss',
-  'packages/mdc-ripple/mdui-ripple.scss',
-  'packages/mdc-ripple/mdui-overscroll-glow.scss',
-  'packages/mdc-slider/md1-slider.scss',
-  'packages/mdc-switch/md1-switch.scss',
-  'packages/mdc-tabs/md1-tabs.scss',
-  'packages/mdc-linear-progress/mdui-linear-progress.scss',
+  'packages/mdc-ripple/m29-ripple.scss',
+  'packages/mdc-ripple/m29-overscroll-glow.scss',
+  'packages/mdc-slider/m29-slider.scss',
+  'packages/mdc-switch/m29-switch.scss',
+  'packages/mdc-tabs/m29-tabs.scss',
+  'packages/mdc-linear-progress/m29-linear-progress.scss',
   'packages/mdc-expansion-panel/mdc-expansion-panel.scss',
   'packages/mdc-segmented-button/mdc-segmented-button.scss',
   'packages/mdc-badge/mdc-badge.scss',
@@ -89,15 +89,16 @@ function build() {
 @media (max-width: 599.9px) {
   .main-container {
     margin-left: 0 !important;
-    padding: 16px !important;
+    padding: 16px 16px 80px 16px !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden;
   }
-}
 
-.component-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-top: 16px;
+  .component-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
 }
 `;
 

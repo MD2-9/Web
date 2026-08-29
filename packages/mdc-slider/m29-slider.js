@@ -13,18 +13,18 @@
  */
 
 /**
- * MD1 / MDUI 经典离散滑块控制器 (Teardrop Pin Discrete Slider)
+ * M29 经典离散滑块控制器 (Teardrop Pin Discrete Slider)
  */
-export class Md1Slider {
+export class M29Slider {
   /**
    * @param {HTMLElement} root
    */
   constructor(root) {
     this.root = root;
     this.input = root.querySelector('input[type="range"]');
-    this.fill = root.querySelector('.md1-slider-fill');
-    this.thumbWrapper = root.querySelector('.md1-slider-thumb-wrapper');
-    this.pinText = root.querySelector('.md1-slider-thumb span');
+    this.fill = root.querySelector('.m29-slider-fill');
+    this.thumbWrapper = root.querySelector('.m29-slider-thumb-wrapper');
+    this.pinText = root.querySelector('.m29-slider-thumb span');
     this.valueDisplay = root.parentElement ? root.parentElement.querySelector('#slider-val') : null;
 
     if (this.input) {
@@ -56,10 +56,13 @@ export class Md1Slider {
   }
 
   static attachTo(root) {
-    return new Md1Slider(root);
+    return new M29Slider(root);
   }
 
-  static initAll(selector = '.md1-slider') {
-    return Array.from(document.querySelectorAll(selector)).map(el => new Md1Slider(el));
+  static initAll(selector = '.m29-slider') {
+    return Array.from(document.querySelectorAll(selector)).map(el => new M29Slider(el));
   }
 }
+
+// 保持向后兼容导出
+export const Md1Slider = M29Slider;

@@ -1,7 +1,15 @@
 /**
  * @license
  * Copyright 2026 安秋 <github.com/unjal29>
- * Licensed under the Apache License, Version 2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Acknowledgment & Attribution:
+ * Dynamic ripple interaction concept inspired by MDUI
+ * (https://github.com/zdhxiong/mdui), Copyright (c) 2016-2021 zdhxiong (MIT License).
  */
 
 /**
@@ -23,7 +31,7 @@ export function createRipple(e, container) {
   const radius = Math.hypot(Math.max(x, rect.width - x), Math.max(y, rect.height - y));
 
   const wave = document.createElement('div');
-  wave.className = 'mdui-ripple-wave';
+  wave.className = 'm29-ripple-wave';
   wave.style.width = `${radius * 2}px`;
   wave.style.height = `${radius * 2}px`;
   wave.style.left = `${x - radius}px`;
@@ -63,12 +71,12 @@ export function createRipple(e, container) {
  * 优先响应最近子交互元素（如按钮、标签），点击卡片空白区才作用于卡片自身，绝不向上重叠触发
  */
 export function attachRipples() {
-  const INNER_INTERACTIVE_SELECTOR = '.mdc-button, button, .mdc-icon-button, .segmented-button, .surface-token-chip, .theme-tile, .rail-nav-item, .preview-img-box, .expansion-header, .md1-tab-item, .mdc-fab';
-  const CARD_CONTAINER_SELECTOR = '.demo-card, .mdc-card, [data-mdui-ripple]';
+  const INNER_INTERACTIVE_SELECTOR = '.mdc-button, button, .mdc-icon-button, .segmented-button, .surface-token-chip, .theme-tile, .rail-nav-item, .preview-img-box, .expansion-header, .m29-tab-item, .mdc-fab';
+  const CARD_CONTAINER_SELECTOR = '.demo-card, .mdc-card, [data-m29-ripple], [data-mdui-ripple]';
 
   window.addEventListener('pointerdown', (e) => {
     // 1. 如果点击了复选框、单选框、滑块等原生 input 控件或 Tab 内容区，不触发水波纹
-    if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .md1-tab-content-container, .md1-tab-panel')) {
+    if (e.target.closest('input, select, textarea, .m29-slider, .m29-switch, .m29-tab-content-container, .m29-tab-panel')) {
       return;
     }
 

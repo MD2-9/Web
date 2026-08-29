@@ -6,7 +6,7 @@
 // 100% 严格复刻 AOSP 原生扁平二次贝塞尔/半椭圆弧顶，纯色微透，无多余外发光或杂乱渐变
 //
 
-.md1-overscroll-edge-container {
+.m29-overscroll-edge-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -17,12 +17,12 @@
   z-index: 99998;
 }
 
-.md1-overscroll-edge-container--fixed {
+.m29-overscroll-edge-container--fixed {
   position: fixed;
   z-index: 99999;
 }
 
-.md1-overscroll-edge-arc {
+.m29-overscroll-edge-arc {
   position: absolute;
   pointer-events: none;
   display: block;
@@ -33,7 +33,7 @@
 }
 
 /* 顶部触顶弧形：从顶部向下突出的半椭圆弧 */
-.md1-overscroll-edge-arc--top {
+.m29-overscroll-edge-arc--top {
   top: 0;
   left: 0;
   width: 100%;
@@ -43,7 +43,7 @@
 }
 
 /* 底部触底弧形：从底部向上突出的半椭圆弧 */
-.md1-overscroll-edge-arc--bottom {
+.m29-overscroll-edge-arc--bottom {
   bottom: 0;
   left: 0;
   width: 100%;
@@ -53,7 +53,7 @@
 }
 
 /* 左侧触界弧形 */
-.md1-overscroll-edge-arc--left {
+.m29-overscroll-edge-arc--left {
   top: 0;
   left: 0;
   width: 80px;
@@ -63,7 +63,7 @@
 }
 
 /* 右侧触界弧形 */
-.md1-overscroll-edge-arc--right {
+.m29-overscroll-edge-arc--right {
   top: 0;
   right: 0;
   width: 80px;
@@ -72,13 +72,13 @@
   transform-origin: right center;
 }
 
-.md1-overscroll-edge-arc.is-receding {
+.m29-overscroll-edge-arc.is-receding {
   opacity: 0 !important;
   transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.45s cubic-bezier(0.2, 0.8, 0.25, 1) !important;
 }
 
 /* 暗色主题适配 (高透白弧) */
-.dark-theme .md1-overscroll-edge-arc,
-[data-theme="dark"] .md1-overscroll-edge-arc {
+.dark-theme .m29-overscroll-edge-arc,
+[data-theme="dark"] .m29-overscroll-edge-arc {
   fill: var(--mdc-edge-effect-color, #ffffff);
 }

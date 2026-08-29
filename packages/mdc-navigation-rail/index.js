@@ -18,7 +18,7 @@ export class MdcNavigationRail {
     this.backdrop = document.getElementById('mobileDrawerBackdrop') || document.querySelector('.mobile-drawer-backdrop');
     this.floatingBtn = document.getElementById('btnMobileFloatingMenu') || document.querySelector('.mobile-floating-menu-btn');
     this.activeOverlayId = null;
-    this.idleTimeoutSeconds = options.idleTimeoutSeconds || 2.5;
+    this.idleTimeoutSeconds = options.idleTimeoutSeconds || 2.9;
     this.idleTimer = null;
 
     this.titleTop = document.getElementById('railVerticalTitleTop') || root.querySelector('#railVerticalTitleTop');
@@ -119,36 +119,45 @@ export class MdcNavigationRail {
     let touchStartX = 0;
     let touchStartY = 0;
 
-    window.addEventListener('touchstart', (e) => {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-    }, { passive: true });
+      let touchStartedInRail = false;
+      window.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartedInRail = !!(e.target && e.target.closest('.mdc-navigation-rail'));
+      }, { passive: true });
 
-    window.addEventListener('touchend', (e) => {
-      const touchEndX = e.changedTouches[0].clientX;
-      const touchEndY = e.changedTouches[0].clientY;
-      const deltaX = touchEndX - touchStartX;
-      const deltaY = Math.abs(touchEndY - touchStartY);
-
-      if (touchStartX < 35 && deltaX > 45 && deltaY < 80) {
-        this.openMobileDrawer();
-      } else if (touchStartX > 40 && deltaX < -50 && deltaY < 80) {
-        if (this.root.classList.contains('mobile-open')) {
-          this.closeMobileDrawer();
+      window.addEventListener('touchend', (e) => {
+        if (touchStartedInRail || (e.target && e.target.closest('.mdc-navigation-rail'))) {
+          return;
         }
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = Math.abs(touchEndY - touchStartY);
+
+        if (touchStartX < 35 && deltaX > 45 && deltaY < 80) {
+          this.openMobileDrawer();
+        } else if (touchStartX > 40 && deltaX < -50 && deltaY < 80) {
+          if (this.root.classList.contains('mobile-open')) {
+            this.closeMobileDrawer();
+          }
+        }
+      }, { passive: true });
+    }
+
+    initOverlayEvents() {
+      if (this.navSection) {
+        this.navSection.addEventListener('click', (e) => {
+          if (!e.target.closest('.rail-nav-item, .rail-header, button, a, input, .mdc-button')) {
+            if (this.activeOverlayId) {
+              this.closeOverlay(this.activeOverlayId);
+            } else if (window.innerWidth < 600) {
+              this.closeMobileDrawer();
+            }
+          }
+        });
       }
-    }, { passive: true });
-  }
-
-  initOverlayEvents() {
-    this.root.querySelectorAll('.secondary-overlay-panel').forEach(panel => {
-      panel.addEventListener('click', (e) => {
-        if (!e.target.closest('a, button, input, label, .theme-tile, .mdc-button')) {
-          this.closeOverlay(panel.id);
-        }
-      });
-    });
-  }
+    }
 
   static attachTo(root, options) {
     return new MdcNavigationRail(root, options);

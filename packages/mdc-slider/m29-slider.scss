@@ -7,14 +7,14 @@
 // Copyright (c) 2016-2021 zdhxiong (MIT License).
 //
 
-.md1-slider-container {
+.m29-slider-container {
   display: inline-flex;
   align-items: center;
   gap: 14px;
   user-select: none;
 }
 
-.md1-slider {
+.m29-slider {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -23,7 +23,7 @@
   cursor: pointer;
 }
 
-.md1-slider input[type="range"] {
+.m29-slider input[type="range"] {
   position: absolute;
   left: 0;
   top: 50%;
@@ -36,7 +36,7 @@
   margin: 0;
 }
 
-.md1-slider-track {
+.m29-slider-track {
   position: absolute;
   left: 0;
   right: 0;
@@ -46,11 +46,11 @@
   transition: background-color 0.3s ease;
 }
 
-.dark-theme .md1-slider-track {
+.dark-theme .m29-slider-track {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
-.md1-slider-fill {
+.m29-slider-fill {
   position: absolute;
   left: 0;
   height: 2px;
@@ -60,7 +60,7 @@
   transition: width 0.05s ease;
 }
 
-.md1-slider-thumb-wrapper {
+.m29-slider-thumb-wrapper {
   position: absolute;
   top: 50%;
   left: 0%;
@@ -73,7 +73,7 @@
   z-index: 10;
 }
 
-.md1-slider-thumb {
+.m29-slider-thumb {
   position: relative;
   width: 12px;
   height: 12px;
@@ -92,7 +92,7 @@
   will-change: transform, border-radius;
 }
 
-.md1-slider-thumb span {
+.m29-slider-thumb span {
   position: absolute;
   color: var(--mdc-theme-on-primary, #ffffff);
   font-size: 11px;
@@ -107,8 +107,8 @@
 }
 
 /* 拖动 / 聚焦 / 悬停时原来的点变成经典泪滴大头针 */
-.md1-slider.is-active .md1-slider-thumb,
-.md1-slider:hover .md1-slider-thumb {
+.m29-slider.is-active .m29-slider-thumb,
+.m29-slider:hover .m29-slider-thumb {
   width: 30px;
   height: 30px;
   border-radius: 15px 15px 15px 0 !important;
@@ -116,7 +116,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
-.md1-slider.is-active .md1-slider-thumb span,
-.md1-slider:hover .md1-slider-thumb span {
+.m29-slider.is-active .m29-slider-thumb span,
+.m29-slider:hover .m29-slider-thumb span {
   opacity: 1;
 }

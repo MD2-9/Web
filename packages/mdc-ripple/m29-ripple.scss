@@ -18,7 +18,7 @@ button {
   -webkit-tap-highlight-color: transparent;
 }
 
-.mdui-ripple-wave {
+.m29-ripple-wave {
   position: absolute !important;
   top: 0;
   left: 0;
@@ -35,27 +35,29 @@ button {
 }
 
 /* 大卡片涟漪透明度调高（更透、更细腻，略小于常规按钮涟漪效果） */
-.demo-card .mdui-ripple-wave,
-.mdc-card .mdui-ripple-wave,
-[data-mdui-ripple] .mdui-ripple-wave {
+.demo-card .m29-ripple-wave,
+.mdc-card .m29-ripple-wave,
+[data-m29-ripple] .m29-ripple-wave,
+[data-mdui-ripple] .m29-ripple-wave {
   background-color: rgba(103, 80, 164, 0.06);
 }
 
-.dark-theme .mdui-ripple-wave {
+.dark-theme .m29-ripple-wave {
   background-color: rgba(255, 255, 255, 0.14) !important;
 }
 
-.dark-theme .demo-card .mdui-ripple-wave,
-.dark-theme .mdc-card .mdui-ripple-wave,
-.dark-theme [data-mdui-ripple] .mdui-ripple-wave {
+.dark-theme .demo-card .m29-ripple-wave,
+.dark-theme .mdc-card .m29-ripple-wave,
+.dark-theme [data-m29-ripple] .m29-ripple-wave,
+.dark-theme [data-mdui-ripple] .m29-ripple-wave {
   background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
-.mdui-ripple-wave.is-active {
+.m29-ripple-wave.is-active {
   transform: translate3d(0, 0, 0) scale(1);
   opacity: 1;
 }
 
-.mdui-ripple-wave.is-fading {
+.m29-ripple-wave.is-fading {
   opacity: 0;
 }

@@ -2,10 +2,10 @@
 // Copyright 2026 安秋 <github.com/unjal29>
 // Licensed under the Apache License, Version 2.0
 //
-// 经典双波形线性进度条规范 (Progress Linear from Master)
+// M29 经典双波形线性进度条规范 (Progress Linear from Master)
 //
 
-.mdui-progress {
+.m29-progress {
   position: relative;
   display: block;
   width: 100%;
@@ -15,11 +15,11 @@
   border-radius: 0;
 }
 
-.dark-theme .mdui-progress {
+.dark-theme .m29-progress {
   background-color: rgba(255, 255, 255, 0.15);
 }
 
-.mdui-progress-determinate {
+.m29-progress-determinate {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -28,33 +28,33 @@
   transition: width 0.3s linear;
 }
 
-.mdui-progress-indeterminate {
+.m29-progress-indeterminate {
   background-color: var(--mdc-theme-primary, #6750a4);
 }
 
-.mdui-progress-indeterminate::before {
+.m29-progress-indeterminate::before {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   background-color: inherit;
-  animation: mdui-progress-indeterminate 2s linear infinite;
+  animation: m29-progress-indeterminate 2s linear infinite;
   content: ' ';
   will-change: left, width;
 }
 
-.mdui-progress-indeterminate::after {
+.m29-progress-indeterminate::after {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   background-color: inherit;
-  animation: mdui-progress-indeterminate-short 2s linear infinite;
+  animation: m29-progress-indeterminate-short 2s linear infinite;
   content: ' ';
   will-change: left, width;
 }
 
-@keyframes mdui-progress-indeterminate {
+@keyframes m29-progress-indeterminate {
   0% {
     left: 0;
     width: 0;
@@ -69,7 +69,7 @@
   }
 }
 
-@keyframes mdui-progress-indeterminate-short {
+@keyframes m29-progress-indeterminate-short {
   0% {
     left: 0;
     width: 0;

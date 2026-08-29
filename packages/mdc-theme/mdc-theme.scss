@@ -72,13 +72,14 @@ body {
 .mdc-fab:not(.mdc-fab--extended),
 .mdc-fab--mini,
 .rail-header-avatar,
-.md1-slider-thumb,
-.md1-switch-thumb,
+.m29-slider-thumb,
+.m29-switch-thumb,
 .mobile-floating-menu-btn,
 .theme-tile.active::after,
 .mdc-radio__background,
 .mdc-radio__outer-circle,
 .mdc-radio__inner-circle,
+.m29-ripple-wave,
 .mdui-ripple-wave,
 .badge-dot,
 .mdc-date-picker__nav-btn,
@@ -89,6 +90,7 @@ body {
   border-radius: 50% !important;
 }
 
+.m29-switch-track,
 .md1-switch-track {
   border-radius: 7px !important;
 }

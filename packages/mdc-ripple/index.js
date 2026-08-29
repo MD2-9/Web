@@ -154,16 +154,23 @@ export {
   util
 };
 
-export { createRipple, attachRipples } from './mdui-ripple';
+export { createRipple, attachRipples } from './m29-ripple';
 export { 
+  M29FlatEdgeEffect,
+  M29FlatEdgeEffectManager,
+  attachFlatEdgeEffect,
+  M29EdgeEffect, 
+  M29EdgeEffectManager, 
+  attachEdgeEffect,
+  M29OverscrollRipple,
+  M29OverscrollGlow, 
+  attachOverscrollGlow,
   MduiFlatEdgeEffect,
   MduiFlatEdgeEffectManager,
-  attachFlatEdgeEffect,
-  MduiEdgeEffect, 
-  MduiEdgeEffectManager, 
-  attachEdgeEffect,
+  MduiEdgeEffect,
+  MduiEdgeEffectManager,
   MduiOverscrollRipple,
-  MduiEdgeEffect as MduiOverscrollGlow, 
-  attachEdgeEffect as attachOverscrollGlow 
-} from './mdui-overscroll-glow';
+  MduiOverscrollGlow
+} from './m29-overscroll-glow';
+
 

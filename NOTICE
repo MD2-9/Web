@@ -38,15 +38,23 @@ and released under the Apache License, Version 2.0:
 =========================================================================
 3. Acknowledgements and Third-Party Attributions
 =========================================================================
-This project incorporates design concepts and code structures from the following
+This project incorporates design concepts and inspirations from the following
 open-source projects:
 
 * MDUI (Material Design UI)
   Author: zdhxiong (https://github.com/zdhxiong/mdui)
   License: MIT License (https://github.com/zdhxiong/mdui/blob/master/LICENSE)
   Acknowledgment:
-  - Direction-aware sliding tab transition animation (md1-tabs.js / md1-tabs.scss)
-  - Teardrop pin discrete slider design and interaction (md1-slider.js / md1-slider.scss)
+  - Direction-aware sliding tab transition animation concept (m29-tabs.js / m29-tabs.scss)
+  - Teardrop pin discrete slider design and interaction concept (m29-slider.js / m29-slider.scss)
+  - Dynamic ripple interaction design inspiration (m29-ripple.js / m29-ripple.scss)
+  - Linear progress bar design inspiration (m29-linear-progress.js / m29-linear-progress.scss)
+
+* Android Open Source Project (AOSP) EdgeEffect
+  Author: Google LLC / The Android Open Source Project
+  Acknowledgment:
+  - Flat arc edge overscroll glow physics and state machine (m29-overscroll-glow.js / m29-overscroll-glow.scss)
+    is independently authored and implemented by 安秋 based on original AOSP EdgeEffect specifications.
 
 * Focus Trap
   Author: David Clark (https://github.com/focus-trap/focus-trap)

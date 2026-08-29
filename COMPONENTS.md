@@ -30,12 +30,12 @@ import {
   navigationRail,
   monet,
   expansionPanel,
-  Md1Slider,
-  Md1Tabs,
-  MduiLinearProgress,
+  M29Slider,
+  M29Tabs,
+  M29LinearProgress,
   createRipple,
   attachRipples,
-  MduiOverscrollGlow,
+  M29OverscrollGlow,
   attachOverscrollGlow,
   dialog,
   card,
@@ -62,18 +62,18 @@ autoInit();
 ├───────────────────────┼──────────────────────────────────┼─────────────────────────────┤
 │ 莫奈动态色彩与调色盘  │ @material/monet                  │ MdcMonetEngine, Picker     │
 │ 竖向导航栏 (Nav Rail) │ @material/navigation-rail        │ MdcNavigationRail           │
-│ 触顶触底水波纹泛光    │ @material/ripple                 │ MduiOverscrollGlow          │
+│ 触顶触底水波纹泛光    │ @material/ripple                 │ M29OverscrollGlow          │
 │ 纯圆目标隔离水波纹    │ @material/ripple                 │ createRipple, attachRipples │
 │ 0px 纯直角分段按钮组  │ @material/segmented-button       │ segmented-button 规范       │
 │ 0px 纯直角自定义下拉  │ @material/select                 │ mdc-select-custom 规范      │
 │ 徽标与计数角标        │ @material/badge                  │ badge-container 规范        │
 │ 0px 直角提示框        │ @material/tooltip                │ tooltip-wrapper 规范        │
 │ 分割线                │ @material/divider                │ mdc-divider 规范            │
-│ 离散大头针滑块        │ @material/slider                 │ Md1Slider                   │
-│ 方向感知平滑选项卡    │ @material/tabs                   │ Md1Tabs                     │
-│ 双波形线性进度条      │ @material/linear-progress        │ MduiLinearProgress          │
+│ 离散大头针滑块        │ @material/slider                 │ M29Slider                   │
+│ 方向感知平滑选项卡    │ @material/tabs                   │ M29Tabs                     │
+│ 双波形线性进度条      │ @material/linear-progress        │ M29LinearProgress          │
 │ 手风琴折叠面板        │ @material/expansion-panel        │ MdcExpansionPanel           │
-│ MD1 胶囊滑动开关      │ @material/switch                 │ md1-switch 规范             │
+│ MD1 胶囊滑动开关      │ @material/switch                 │ m29-switch 规范             │
 │ 日历与时钟选择器      │ @material/picker                 │ MdcDatePicker, TimePicker   │
 │ 莫奈动态三色与Container│ @material/theme, @material/monet │ M3 全局三色与Container规范  │
 │ 0px 纯直角几何体系    │ @material/button, card, dialog.. │ 全局 Straight Angle 规范    │
@@ -128,17 +128,17 @@ const picker = new MdcMonetPicker({
 
 * **功能定位**：1:1 严格复刻 Android 5.0 (Lollipop) 至 Android 11.0 (R) AOSP 系统的 `android.widget.EdgeEffect` 扁平化半椭圆弧顶临界动效。配色与 Material Ripple 同源（纯色微透，无发光/光晕），支持手指实时阻尼拉伸 (`onPull`)、触点横向偏置 (`mDisplacement`)、滚轮/惯性冲击吸能 (`onAbsorb`) 与 Material 经典 Fast-Out Slow-In 回弹消退 (`onRelease`)。
 * **引入路径**：
-  * SCSS: `@import "@material/ripple/mdui-overscroll-glow";`
-  * JS: `import { MduiFlatEdgeEffect, attachFlatEdgeEffect, MduiEdgeEffect, attachEdgeEffect } from '@material/ripple';`
+  * SCSS: `@import "@material/ripple/m29-overscroll-glow";`
+  * JS: `import { M29FlatEdgeEffect, attachFlatEdgeEffect, M29EdgeEffect, attachEdgeEffect } from '@material/ripple';`
 
 #### HTML 结构 (自动挂载或手动声明)
 ```html
 <!-- 全局视口/容器边界弧顶 (JS 自动注入 SVG 贝塞尔穹顶) -->
-<div class="md1-overscroll-edge-container md1-overscroll-edge-container--fixed">
-  <svg class="md1-overscroll-edge-arc md1-overscroll-edge-arc--top" viewBox="0 0 1000 100" preserveAspectRatio="none">
+<div class="m29-overscroll-edge-container m29-overscroll-edge-container--fixed">
+  <svg class="m29-overscroll-edge-arc m29-overscroll-edge-arc--top" viewBox="0 0 1000 100" preserveAspectRatio="none">
     <path d="M 0 0 C 250 120, 750 120, 1000 0 Z"></path>
   </svg>
-  <svg class="md1-overscroll-edge-arc md1-overscroll-edge-arc--bottom" viewBox="0 0 1000 100" preserveAspectRatio="none">
+  <svg class="m29-overscroll-edge-arc m29-overscroll-edge-arc--bottom" viewBox="0 0 1000 100" preserveAspectRatio="none">
     <path d="M 0 100 C 250 -20, 750 -20, 1000 100 Z"></path>
   </svg>
 </div>
@@ -161,13 +161,13 @@ edgeManager.triggerGlow(document.querySelector('.my-scroll-box'), true /* isTop 
 
 * **功能定位**：将水波纹扩散速率调慢 3/5（动画时长由 0.4s 扩展至 0.65s），并实现**点击精确目标隔离**——点击按钮只有按钮产生涟漪，绝不连带触发卡片或父容器。
 * **引入路径**：
-  * SCSS: `@import "@material/ripple/mdui-ripple";`
+  * SCSS: `@import "@material/ripple/m29-ripple";`
   * JS: `import { createRipple, attachRipples } from '@material/ripple';`
 
 #### HTML 结构
 ```html
-<!-- 声明 data-mdui-ripple 即可拥有独立隔离水波纹 -->
-<button class="mdc-button mdc-button--raised" data-mdui-ripple>
+<!-- 声明 data-m29-ripple 即可拥有独立隔离水波纹 -->
+<button class="mdc-button mdc-button--raised" data-m29-ripple>
   Raised Button
 </button>
 ```
@@ -176,7 +176,7 @@ edgeManager.triggerGlow(document.querySelector('.my-scroll-box'), true /* isTop 
 ```javascript
 import { attachRipples } from '@material/ripple';
 
-// 初始化页面内所有带有 data-mdui-ripple 的元素
+// 初始化页面内所有带有 data-m29-ripple 的元素
 attachRipples();
 ```
 
@@ -302,36 +302,36 @@ attachRipples();
 
 * **功能定位**：具备 Sliding Indicator 动态滑块、方向感知滑动动画（左滑/右滑），并支持**以目标 Tab 按钮为原点向 Tab 内容容器全景扩散水波纹（Tab 按钮本身不显示涟漪，仅在内容容器内部显示）**。
 * **引入路径**：
-  * SCSS: `@import "@material/tabs/md1-tabs";`
-  * JS: `import { Md1Tabs } from '@material/tabs';`
+  * SCSS: `@import "@material/tabs/m29-tabs";`
+  * JS: `import { M29Tabs } from '@material/tabs';`
 
 #### HTML 结构
 ```html
-<div class="md1-tabs-bar" id="myTabsBar">
-  <div class="md1-tab-item is-active" onclick="switchMd1Tab(0, this)">
+<div class="m29-tabs-bar" id="myTabsBar">
+  <div class="m29-tab-item is-active" onclick="switchM29Tab(0, this)">
     <i class="material-icons">widgets</i>
     <span>Tab 1</span>
   </div>
-  <div class="md1-tab-item" onclick="switchMd1Tab(1, this)">
+  <div class="m29-tab-item" onclick="switchM29Tab(1, this)">
     <i class="material-icons">palette</i>
     <span>Tab 2</span>
   </div>
-  <div class="md1-tab-indicator" id="myTabIndicator"></div>
+  <div class="m29-tab-indicator" id="myTabIndicator"></div>
 </div>
 
 <!-- Tab 内容容器 (水波纹以点击 Tab 为起点在此容器内部扩散) -->
-<div class="md1-tab-content-container" id="myTabContent">
-  <div class="md1-tab-panel is-active" id="tab-panel-0">内容 1</div>
-  <div class="md1-tab-panel" id="tab-panel-1">内容 2</div>
+<div class="m29-tab-content-container" id="myTabContent">
+  <div class="m29-tab-panel is-active" id="tab-panel-0">内容 1</div>
+  <div class="m29-tab-panel" id="tab-panel-1">内容 2</div>
 </div>
 ```
 
 #### JavaScript 调用
 ```javascript
-import { Md1Tabs } from '@material/tabs';
+import { M29Tabs } from '@material/tabs';
 
 // 实例化选项卡控制器
-const tabs = new Md1Tabs(
+const tabs = new M29Tabs(
   document.getElementById('myTabsBar'),
   document.getElementById('myTabContent')
 );
@@ -442,10 +442,10 @@ const tabs = new Md1Tabs(
 </div>
 
 <!-- MD1 经典滑动开关 -->
-<label class="md1-switch">
+<label class="m29-switch">
   <input type="checkbox" checked>
-  <span class="md1-switch-track"></span>
-  <span class="md1-switch-thumb"></span>
+  <span class="m29-switch-track"></span>
+  <span class="m29-switch-thumb"></span>
 </label>
 ```
 
@@ -492,7 +492,7 @@ body {
 
 ---
 
-### 7. 🌊 Android 5.0 ~ 11.0 经典页面边界水波纹 (`@material/ripple/mdui-overscroll-glow`)
+### 7. 🌊 Android 5.0 ~ 11.0 经典页面边界水波纹 (`@material/ripple/m29-overscroll-glow`)
 
 与 Material Ripple 涟漪完全同款风格的页面触顶/触底边界水波纹涟漪动效。
 
@@ -502,13 +502,13 @@ body {
 - **全容器自动支持**：自动适配全局视口与页面内所有 `overflow-y: auto / scroll` 滚动容器。
 
 ```javascript
-import { MduiOverscrollRipple, attachOverscrollRipple } from '@material/ripple';
+import { M29OverscrollRipple, attachOverscrollRipple } from '@material/ripple';
 
 // 1. 全局视口自动挂载
 attachOverscrollRipple();
 
 // 2. 指定容器单独挂载
-const containerRipple = new MduiOverscrollRipple(document.getElementById('my-scroll-container'));
+const containerRipple = new M29OverscrollRipple(document.getElementById('my-scroll-container'));
 ```
 
 ---

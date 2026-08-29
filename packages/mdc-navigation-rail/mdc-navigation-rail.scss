@@ -408,7 +408,7 @@
   background-color: #19181e;
 }
 
-/* 移动端 (< 600px)：左边缘向右滑动 / 静止悬浮按钮呼出 */
+/* 移动端 (< 600px)：左边缘向右滑动 / 静止 2.9 秒悬浮按钮呼出 (全量 260px 抽屉模式) */
 @media (max-width: 599.9px) {
   .mdc-navigation-rail {
     display: flex !important;
@@ -421,6 +421,7 @@
 
   .mdc-navigation-rail.mobile-open {
     transform: translateX(0) !important;
+    width: 260px !important;
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5) !important;
   }
 
@@ -429,6 +430,7 @@
   .mdc-navigation-rail.mobile-open .rail-footer-text {
     opacity: 1 !important;
     visibility: visible !important;
+    display: block !important;
     pointer-events: auto !important;
   }
 
