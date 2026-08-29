@@ -982,14 +982,15 @@ body.layout-double-columns .main-container {
   flex-direction: row !important;
   flex-wrap: wrap !important;
   align-items: flex-start !important;
-  gap: 20px !important;
+  row-gap: 24px !important;
+  column-gap: 20px !important;
 
   .masonry-col {
     flex: 1 1 calc(50% - 10px) !important;
     min-width: 280px !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 20px !important;
+    gap: 24px !important;
     box-sizing: border-box !important;
   }
 
@@ -1010,14 +1011,15 @@ body.layout-triple-columns .main-container {
   flex-direction: row !important;
   flex-wrap: wrap !important;
   align-items: flex-start !important;
-  gap: 20px !important;
+  row-gap: 24px !important;
+  column-gap: 20px !important;
 
   .masonry-col {
     flex: 1 1 calc(33.333% - 14px) !important;
     min-width: 260px !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 20px !important;
+    gap: 24px !important;
     box-sizing: border-box !important;
   }
 

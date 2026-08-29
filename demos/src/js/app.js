@@ -38,21 +38,63 @@ window.addEventListener('m29:loaded', function() {
     }
     window.executeThemeRippleTransition = executeThemeRippleTransition;
 
-    // 暗色模式状态 (水波纹圆形覆盖切换)
+    // 暗色模式状态与 3 档切换系统 (auto: 跟随系统, light: 浅色, dark: 暗色)
     let isDarkMode = false;
+    let currentGlobalThemeMode = localStorage.getItem('m29_theme_mode') || 'auto';
+
+    function applyGlobalThemeMode(mode) {
+      currentGlobalThemeMode = mode || 'auto';
+      localStorage.setItem('m29_theme_mode', currentGlobalThemeMode);
+
+      if (currentGlobalThemeMode === 'auto') {
+        const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        isDarkMode = !!systemPrefersDark;
+      } else if (currentGlobalThemeMode === 'dark') {
+        isDarkMode = true;
+      } else {
+        isDarkMode = false;
+      }
+
+      if (isDarkMode) {
+        document.body.classList.add('dark-theme');
+        document.documentElement.classList.add('dark-theme');
+      } else {
+        document.body.classList.remove('dark-theme');
+        document.documentElement.classList.remove('dark-theme');
+      }
+
+      updateThemeModeTexts();
+      applyMonetTheme();
+
+      // 如果组件栏是 auto 状态，同步刷新组件栏
+      const panelTheme = localStorage.getItem('m29_component_panel_theme') || 'auto';
+      if (typeof applyComponentPanelTheme === 'function') {
+        applyComponentPanelTheme(panelTheme);
+      }
+    }
+    window.applyGlobalThemeMode = applyGlobalThemeMode;
+
     function toggleThemeMode(event) {
       const evt = event || (window.event ? window.event : null);
+      let nextMode = 'light';
+      if (currentGlobalThemeMode === 'auto') {
+        nextMode = 'light';
+      } else if (currentGlobalThemeMode === 'light') {
+        nextMode = 'dark';
+      } else {
+        nextMode = 'auto';
+      }
+
       executeThemeRippleTransition(evt, () => {
-        isDarkMode = !isDarkMode;
-        if (isDarkMode) {
-          document.body.classList.add('dark-theme');
-          document.documentElement.classList.add('dark-theme');
+        applyGlobalThemeMode(nextMode);
+        const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+        if (nextMode === 'auto') {
+          showDemoToast(isEn ? 'Theme set to Auto (Following System Theme)' : '全局主题已切换为自动模式（跟随系统设置）');
+        } else if (nextMode === 'light') {
+          showDemoToast(isEn ? 'Theme set to Light Mode' : '全局主题已切换为浅色模式');
         } else {
-          document.body.classList.remove('dark-theme');
-          document.documentElement.classList.remove('dark-theme');
+          showDemoToast(isEn ? 'Theme set to Dark Mode' : '全局主题已切换为暗色模式');
         }
-        updateThemeModeTexts();
-        applyMonetTheme();
       });
     }
     window.toggleThemeMode = toggleThemeMode;
@@ -61,19 +103,43 @@ window.addEventListener('m29:loaded', function() {
       const railDarkIcon = document.getElementById('rail-dark-icon');
       const railCompactDarkIcon = document.getElementById('rail-compact-dark-icon');
       const mobileDarkIcon = document.getElementById('mobile-dark-icon');
-      const icon = isDarkMode ? 'brightness_7' : 'brightness_4';
+
+      let icon = 'brightness_auto';
+      if (currentGlobalThemeMode === 'light') {
+        icon = 'brightness_5';
+      } else if (currentGlobalThemeMode === 'dark') {
+        icon = 'brightness_4';
+      }
+
       if (railDarkIcon) railDarkIcon.textContent = icon;
       if (railCompactDarkIcon) railCompactDarkIcon.textContent = icon;
       if (mobileDarkIcon) mobileDarkIcon.textContent = icon;
 
-      const isEn = currentLang === 'en';
-      const tip = isDarkMode ? (isEn ? 'Switch to Light Mode' : '切换为亮色模式') : (isEn ? 'Switch to Dark Mode' : '切换为暗色模式');
+      const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+      let tip = '';
+      if (currentGlobalThemeMode === 'auto') {
+        tip = isEn ? 'Current: Auto (Following System Theme) · Click for Light Mode' : '当前: 自动模式 (跟随系统设置) · 点击切换为浅色';
+      } else if (currentGlobalThemeMode === 'light') {
+        tip = isEn ? 'Current: Light Mode · Click for Dark Mode' : '当前: 浅色模式 · 点击切换为暗色';
+      } else {
+        tip = isEn ? 'Current: Dark Mode · Click for Auto Mode' : '当前: 暗色模式 · 点击切换为自动跟随系统';
+      }
+
       const btnDark = document.getElementById('btn-toggle-dark');
       const btnCompactDark = document.getElementById('btn-toggle-dark-compact');
       const btnMobileDark = document.getElementById('btn-toggle-dark-mobile');
       if (btnDark) btnDark.title = tip;
       if (btnCompactDark) btnCompactDark.title = tip;
       if (btnMobileDark) btnMobileDark.title = tip;
+    }
+
+    // 监听系统深色/浅色偏好实时变更
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if (currentGlobalThemeMode === 'auto') {
+          applyGlobalThemeMode('auto');
+        }
+      });
     }
 
     // =========================================================================
@@ -290,15 +356,22 @@ window.addEventListener('m29:loaded', function() {
 
         startNewColumnsGroup();
 
-        let colIdx = 0;
         normalCards.forEach(card => {
           if (card.getAttribute('data-span') === 'full') {
             container.appendChild(card); // 独占满宽，跨层级
             startNewColumnsGroup();      // 强制重启一组新的瀑布流
-            colIdx = 0;
           } else {
-            currentColsDivs[colIdx % targetCols].appendChild(card);
-            colIdx++;
+            // 寻找当前高度最短的列进行填充 (自适应紧凑瀑布流)
+            let shortestCol = currentColsDivs[0];
+            let minHeight = shortestCol.scrollHeight || shortestCol.offsetHeight || 0;
+            for (let i = 1; i < currentColsDivs.length; i++) {
+              const h = currentColsDivs[i].scrollHeight || currentColsDivs[i].offsetHeight || 0;
+              if (h < minHeight) {
+                minHeight = h;
+                shortestCol = currentColsDivs[i];
+              }
+            }
+            shortestCol.appendChild(card);
           }
         });
       }
@@ -3511,44 +3584,75 @@ window.addEventListener('m29:loaded', function() {
         const btnEl = document.getElementById('btnTogglePanelTheme');
         if (!panel) return;
 
+        const effectiveTheme = theme || localStorage.getItem('m29_component_panel_theme') || 'auto';
         panel.classList.remove('dark-theme', 'light-theme');
-        if (theme === 'dark') {
+        if (effectiveTheme === 'dark') {
           panel.classList.add('dark-theme');
-        } else if (theme === 'light') {
+        } else if (effectiveTheme === 'light') {
           panel.classList.add('light-theme');
         }
 
-        const isDark = theme === 'dark' || (theme !== 'light' && document.body.classList.contains('dark-theme'));
+        const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+        let icon = 'brightness_auto';
+        let tip = '';
+
+        if (effectiveTheme === 'auto') {
+          icon = 'brightness_auto';
+          tip = isEn ? 'Current: Auto (Follows Global Theme) · Click for Light Mode' : '当前: 自动模式 (跟随全局主题) · 点击切换为浅色';
+        } else if (effectiveTheme === 'light') {
+          icon = 'brightness_5';
+          tip = isEn ? 'Current: Light Mode · Click for Dark Mode' : '当前: 浅色模式 · 点击切换为暗色';
+        } else {
+          icon = 'brightness_4';
+          tip = isEn ? 'Current: Dark Mode · Click for Auto Mode' : '当前: 暗色模式 · 点击切换为自动跟随全局';
+        }
+
         if (iconEl) {
-          iconEl.textContent = isDark ? 'wb_sunny' : 'brightness_4';
+          iconEl.textContent = icon;
         }
         if (btnEl) {
-          const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
-          btnEl.title = isDark ? (isEn ? 'Current: Dark Mode (Click for Light Mode)' : '当前: 暗色模式 (点击切换为浅色)') : (isEn ? 'Current: Light Mode (Click for Dark Mode)' : '当前: 浅色模式 (点击切换为暗色)');
+          btnEl.title = tip;
+        }
+
+        // 如果设置了独立配色，根据当前组件栏的深/浅色计算独立色彩阶
+        const savedPanelColor = localStorage.getItem('m29_component_panel_color');
+        if (savedPanelColor && savedPanelColor !== 'auto') {
+          applyComponentPanelMonetTheme(savedPanelColor);
         }
       }
 
       function toggleComponentPanelTheme() {
         const panel = document.getElementById('app-component-panel');
         if (!panel) return;
-        const isCurrentlyDark = panel.classList.contains('dark-theme') || (!panel.classList.contains('light-theme') && document.body.classList.contains('dark-theme'));
-        const nextTheme = isCurrentlyDark ? 'light' : 'dark';
+
+        const currentTheme = localStorage.getItem('m29_component_panel_theme') || 'auto';
+        let nextTheme = 'light';
+        if (currentTheme === 'auto') {
+          nextTheme = 'light';
+        } else if (currentTheme === 'light') {
+          nextTheme = 'dark';
+        } else {
+          nextTheme = 'auto';
+        }
+
         localStorage.setItem('m29_component_panel_theme', nextTheme);
         applyComponentPanelTheme(nextTheme);
         const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
-        showDemoToast(nextTheme === 'dark' ? (isEn ? 'Component Panel set to Dark Mode' : '组件栏已切换为独立暗色模式') : (isEn ? 'Component Panel set to Light Mode' : '组件栏已切换为独立浅色模式'));
+        if (nextTheme === 'auto') {
+          showDemoToast(isEn ? 'Component panel set to Auto (Follows Global Theme)' : '组件栏已切换为自动模式（跟随全局主题）');
+        } else if (nextTheme === 'light') {
+          showDemoToast(isEn ? 'Component panel set to Light Mode' : '组件栏已切换为独立浅色模式');
+        } else {
+          showDemoToast(isEn ? 'Component panel set to Dark Mode' : '组件栏已切换为独立暗色模式');
+        }
       }
 
       window.applyComponentPanelTheme = applyComponentPanelTheme;
       window.toggleComponentPanelTheme = toggleComponentPanelTheme;
 
-      // 恢复组件栏独立主题设置
-      const savedPanelTheme = localStorage.getItem('m29_component_panel_theme');
-      if (savedPanelTheme) {
-        applyComponentPanelTheme(savedPanelTheme);
-      } else {
-        applyComponentPanelTheme('auto');
-      }
+      // 恢复组件栏独立主题设置 (默认 auto 跟随全局)
+      const savedPanelTheme = localStorage.getItem('m29_component_panel_theme') || 'auto';
+      applyComponentPanelTheme(savedPanelTheme);
 
       let paletteLongPressTimer = null;
       let isPaletteLongPressTriggered = false;
