@@ -8,8 +8,16 @@
   "scripts": {
     "build": "node scripts/build-css.js",
     "build:css": "node scripts/build-css.js",
-    "deploy": "node scripts/build-css.js && wrangler deploy",
+    "dev": "wrangler dev",
     "preview": "node scripts/build-css.js && wrangler dev",
+    "deploy": "node scripts/build-css.js && wrangler deploy",
     "dist": "npm run build"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "esbuild": "^0.23.1",
+    "postcss": "^8.4.41",
+    "sass": "^1.103.1",
+    "wrangler": "^3.114.17"
   }
 }
