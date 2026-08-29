@@ -3338,10 +3338,25 @@ window.addEventListener('m29:loaded', function() {
       window.addEventListener('touchend', () => stopResize());
       window.addEventListener('touchcancel', () => stopResize());
 
-      // 双击重置为默认 290px
-      resizer.addEventListener('dblclick', () => {
-        document.documentElement.style.setProperty('--component-panel-width', `${DEFAULT_WIDTH}px`);
-        localStorage.setItem('m29_component_panel_width', String(DEFAULT_WIDTH));
+      function updateComponentPanelWidthIcon() {
+        const rawWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--component-panel-width'), 10);
+        const currentWidth = (!isNaN(rawWidth) && rawWidth > 0) ? rawWidth : 290;
+        const iconEl = document.getElementById('componentPanelWidthIcon');
+        const btnEl = document.getElementById('btnTogglePanelWidth');
+        const is2Col = currentWidth >= 435;
+        if (iconEl) {
+          iconEl.textContent = is2Col ? 'view_column' : 'view_agenda';
+        }
+        if (btnEl) {
+          const isEn = currentLang === 'en';
+          btnEl.title = is2Col ? (isEn ? 'Current: Dual Columns 580px (Click for 290px Single Column)' : '当前: 双列 580px (点击切换为 290px 单列)') : (isEn ? 'Current: Single Column 290px (Click for 580px Dual Columns)' : '当前: 单列 290px (点击切换为 580px 双列)');
+        }
+      }
+
+      function setComponentPanelWidth(width) {
+        document.documentElement.style.setProperty('--component-panel-width', `${width}px`);
+        localStorage.setItem('m29_component_panel_width', String(width));
+        updateComponentPanelWidthIcon();
         if (typeof updateMainLayoutColumns === 'function') {
           updateMainLayoutColumns();
         }
@@ -3349,7 +3364,25 @@ window.addEventListener('m29:loaded', function() {
           window.pageOverlayScrollbar.update();
         }
         window.dispatchEvent(new Event('resize'));
-        showDemoToast('组件栏宽度已重置为 290px');
+        showDemoToast(width >= 435 ? (currentLang === 'en' ? 'Component panel set to 580px (Dual Columns)' : '组件栏已切换为 580px 宽版双列') : (currentLang === 'en' ? 'Component panel set to 290px (Single Column)' : '组件栏已切换为 290px 标准单列'));
+      }
+
+      function toggleComponentPanelWidth() {
+        const rawWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--component-panel-width'), 10);
+        const currentWidth = (!isNaN(rawWidth) && rawWidth > 0) ? rawWidth : 290;
+        const nextWidth = currentWidth >= 435 ? 290 : 580;
+        setComponentPanelWidth(nextWidth);
+      }
+      window.setComponentPanelWidth = setComponentPanelWidth;
+      window.toggleComponentPanelWidth = toggleComponentPanelWidth;
+      window.updateComponentPanelWidthIcon = updateComponentPanelWidthIcon;
+
+      // 启动时初始化图标
+      updateComponentPanelWidthIcon();
+
+      // 双击手柄在 290px (单列) 与 580px (双列) 两档之间智能切换
+      resizer.addEventListener('dblclick', () => {
+        toggleComponentPanelWidth();
       });
     }
 
@@ -3662,6 +3695,8 @@ window.addEventListener('m29:loaded', function() {
     window.renderDemoDatePicker = renderDemoDatePicker;
     window.renderDemoTimePicker = renderDemoTimePicker;
     window.initComponentPanelResizer = initComponentPanelResizer;
+    window.setComponentPanelWidth = setComponentPanelWidth;
+    window.toggleComponentPanelWidth = toggleComponentPanelWidth;
     window.M29OverlayScrollbar = M29OverlayScrollbar;
     window.M29TooltipEngine = M29TooltipEngine;
 });
