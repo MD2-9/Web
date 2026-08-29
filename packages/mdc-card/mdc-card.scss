@@ -90,3 +90,111 @@
   color: var(--mdc-theme-on-surface, #e6e1e5);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
+
+/* 🌟 M2.9 单/双/三栏自适应瀑布流布局系统 */
+.main-container {
+  margin-left: 72px;
+  padding: 28px 36px 80px 36px;
+  max-width: 960px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              max-width 0.3s ease;
+
+  > [id^="section-"] {
+    width: 100%;
+    margin-bottom: 0;
+    box-sizing: border-box;
+  }
+}
+
+/* 双栏满宽布局 */
+body.layout-double-columns .main-container {
+  max-width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: flex-start !important;
+  gap: 20px !important;
+
+  .masonry-col {
+    flex: 1 1 calc(50% - 10px) !important;
+    min-width: 280px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+    box-sizing: border-box !important;
+  }
+
+  > [data-span="full"],
+  > [data-pin="top"],
+  > [data-pin="bottom"],
+  > [id="section-overview"],
+  > [id="section-footer"] {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+  }
+}
+
+/* 三栏满宽布局 */
+body.layout-triple-columns .main-container {
+  max-width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: flex-start !important;
+  gap: 20px !important;
+
+  .masonry-col {
+    flex: 1 1 calc(33.333% - 14px) !important;
+    min-width: 260px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+    box-sizing: border-box !important;
+  }
+
+  > [data-span="full"],
+  > [data-pin="top"],
+  > [data-pin="bottom"],
+  > [id="section-overview"],
+  > [id="section-footer"] {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+  }
+}
+
+/* 阶梯降级 (双栏状态) */
+body.downgrade-2col .main-container .masonry-col {
+  flex: 1 1 calc(50% - 10px) !important;
+}
+
+/* 阶梯降级 (单栏状态) */
+body.downgrade-1col .main-container {
+  max-width: 960px !important;
+  display: flex !important;
+  flex-direction: column !important;
+
+  .masonry-col {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 599.9px) {
+  .main-container {
+    margin-left: 0 !important;
+    padding: 16px 16px 80px 16px !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden;
+  }
+
+  .main-container .masonry-col {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+  }
+}

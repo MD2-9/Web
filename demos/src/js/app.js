@@ -376,12 +376,6 @@ window.addEventListener('m29:loaded', function() {
           card.style.setProperty('--card-theme-color', 'var(--mdc-theme-primary)');
         });
       }
-
-      // 🌟 组件栏（右侧面板）：统一应用莫奈第三色 (Tertiary)
-      const componentPanel = document.getElementById('app-component-panel');
-      if (componentPanel) {
-        componentPanel.style.setProperty('--panel-accent-color', 'var(--mdc-theme-tertiary)');
-      }
     }
     window.applyColumnColorTones = applyColumnColorTones;
 
