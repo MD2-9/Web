@@ -3487,27 +3487,30 @@ window.addEventListener('m29:loaded', function() {
           panel.style.removeProperty('--mdc-theme-surface-variant');
           panel.style.removeProperty('--panel-accent-color');
           panel.style.removeProperty('--panel-bg-color');
+          panel.style.removeProperty('--panel-surface-color');
           showDemoToast(isEn ? 'Component panel is following global palette' : '组件栏已恢复跟随全局配色');
         } else {
           localStorage.setItem('m29_component_panel_color', hex);
           const [h, s, l] = hexToHsl(hex);
           const isDark = panel.classList.contains('dark-theme') || (!panel.classList.contains('light-theme') && document.body.classList.contains('dark-theme'));
 
-          let p, pCont, onP, onPCont, surfaceContHigh, panelBg;
+          let p, pCont, onP, onPCont, surfaceContHigh, panelBg, panelSurface;
           if (isDark) {
             p = hslToHex(h, Math.min(100, Math.max(25, s * 0.85)), 78);
             onP = '#000000';
             pCont = hslToHex(h, Math.min(100, s * 0.5), 32);
             onPCont = hslToHex(h, Math.min(100, s * 0.5), 90);
             surfaceContHigh = hslToHex(h, Math.min(100, s * 0.18), 18);
-            panelBg = hslToHex(h, Math.min(100, s * 0.2), 12);
+            panelBg = hslToHex(h, Math.min(100, s * 0.2), 10);
+            panelSurface = hslToHex(h, Math.min(100, s * 0.2), 16);
           } else {
             p = hex;
             onP = '#ffffff';
             pCont = hslToHex(h, Math.min(100, s * 0.45), 90);
             onPCont = hslToHex(h, Math.min(100, s * 0.6), 15);
             surfaceContHigh = hslToHex(h, Math.min(100, s * 0.25), 96);
-            panelBg = hslToHex(h, Math.min(100, s * 0.35), 92);
+            panelBg = hslToHex(h, Math.min(100, s * 0.3), 96); // Tone 50
+            panelSurface = hslToHex(h, Math.min(100, s * 0.35), 90); // Tone 100
           }
 
           panel.style.setProperty('--mdc-theme-primary', p);
@@ -3518,6 +3521,7 @@ window.addEventListener('m29:loaded', function() {
           panel.style.setProperty('--mdc-theme-surface-variant', surfaceContHigh);
           panel.style.setProperty('--panel-accent-color', p);
           panel.style.setProperty('--panel-bg-color', panelBg);
+          panel.style.setProperty('--panel-surface-color', panelSurface);
           showDemoToast(isEn ? `Component panel palette updated: ${hex}` : `组件栏已切换独立配色: ${hex}`);
         }
 

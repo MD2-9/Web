@@ -84,7 +84,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   padding: 14px 16px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
-  background-color: var(--mdc-theme-surface, #ffffff);
+  background-color: var(--panel-surface-color, var(--mdc-theme-primary-100, #eaddff)) !important;
   transition: background-color 0.28s cubic-bezier(0.2, 0, 0, 1),
               border-color 0.28s cubic-bezier(0.2, 0, 0, 1);
   position: relative;
@@ -96,7 +96,17 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   gap: 8px;
   font-size: 15px;
   font-weight: 700;
-  color: var(--mdc-theme-on-surface, #1d1b20);
+  color: var(--panel-accent-color, var(--mdc-theme-primary, #6750a4)) !important;
+}
+
+.component-panel-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 700 !important;
+  color: var(--panel-accent-color, var(--mdc-theme-primary, #6750a4)) !important;
+  margin-bottom: 8px;
 }
 
 .component-panel-action-btn {
@@ -108,8 +118,8 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   border: none;
   background: transparent;
   cursor: pointer;
-  color: var(--mdc-theme-on-surface, #1d1b20);
-  opacity: 0.8;
+  color: var(--panel-accent-color, var(--mdc-theme-primary, #6750a4));
+  opacity: 0.85;
   border-radius: 0 !important;
   transition: opacity 0.2s ease, background-color 0.2s ease;
   padding: 0;
@@ -129,7 +139,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   border: none;
   background: transparent;
   cursor: pointer;
-  color: var(--mdc-theme-on-surface, #1d1b20);
+  color: var(--panel-accent-color, var(--mdc-theme-primary, #6750a4));
   opacity: 0.7;
   transition: opacity 0.2s ease, background-color 0.2s ease;
   padding: 0;
@@ -165,7 +175,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   position: absolute;
   top: 56px;
   right: 12px;
-  width: 240px;
+  width: 220px;
   background-color: var(--mdc-theme-surface, #ffffff);
   border: 1px solid rgba(0, 0, 0, 0.12);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
@@ -276,14 +286,14 @@ body.is-resizing-component-panel .component-panel-resizer::after {
 
 .mdc-component-panel.dark-theme .component-panel-header,
 .dark-theme .mdc-component-panel:not(.light-theme) .component-panel-header {
-  background-color: var(--mdc-theme-surface, #1e1b22) !important;
-  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+  background-color: var(--panel-surface-color, #1e1b22) !important;
+  color: var(--panel-accent-color, #e6e1e5) !important;
   border-bottom-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 .mdc-component-panel.dark-theme .component-panel-action-btn,
 .dark-theme .mdc-component-panel:not(.light-theme) .component-panel-action-btn {
-  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+  color: var(--panel-accent-color, #e6e1e5) !important;
 }
 
 .mdc-component-panel.dark-theme .component-panel-palette-menu,
@@ -312,7 +322,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
 .mdc-component-panel.dark-theme .mdc-time-picker,
 .dark-theme .mdc-component-panel:not(.light-theme) .mdc-date-picker,
 .dark-theme .mdc-component-panel:not(.light-theme) .mdc-time-picker {
-  background-color: #1e1b22 !important;
+  background-color: var(--panel-surface-color, #1e1b22) !important;
   color: #e6e1e5 !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
@@ -333,7 +343,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   --mdc-theme-on-surface: #1d1b20;
   --mdc-theme-surface-variant: #f7f2fa;
   --mdc-theme-on-surface-variant: #49454f;
-  background-color: var(--panel-bg-color, var(--mdc-theme-primary-100, #eaddff)) !important;
+  background-color: var(--panel-bg-color, var(--mdc-theme-primary-50, #f6edff)) !important;
   color: #1d1b20 !important;
   border-left-color: rgba(0, 0, 0, 0.08) !important;
   border-right-color: rgba(0, 0, 0, 0.08) !important;
@@ -341,21 +351,21 @@ body.is-resizing-component-panel .component-panel-resizer::after {
 }
 
 .mdc-component-panel.light-theme .component-panel-header {
-  background-color: #ffffff !important;
-  color: #1d1b20 !important;
+  background-color: var(--panel-surface-color, var(--mdc-theme-primary-100, #eaddff)) !important;
+  color: var(--panel-accent-color, var(--mdc-theme-primary, #6750a4)) !important;
   border-bottom-color: rgba(0, 0, 0, 0.08) !important;
 }
 
 .mdc-component-panel.light-theme .component-panel-action-btn {
-  color: #1d1b20 !important;
+  color: var(--panel-accent-color, var(--mdc-theme-primary, #6750a4)) !important;
 }
 
 .mdc-component-panel.light-theme .mdc-date-picker,
 .mdc-component-panel.light-theme .mdc-time-picker {
-  background-color: #ffffff !important;
+  background-color: var(--panel-surface-color, var(--mdc-theme-primary-100, #eaddff)) !important;
   color: #1d1b20 !important;
   border-color: rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
 }
 
 .mdc-component-panel.light-theme .mdc-date-picker__cell {
@@ -363,7 +373,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
 }
 
 .mdc-component-panel.light-theme .mdc-time-picker__clock-face {
-  background-color: #f7f2fa !important;
+  background-color: var(--panel-bg-color, var(--mdc-theme-primary-50, #f6edff)) !important;
 }
 
 /* 组件栏内的 Picker 自适应宽度与完整局部配色覆盖 */
@@ -372,6 +382,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
+  background-color: var(--panel-surface-color, var(--mdc-theme-primary-100, #eaddff)) !important;
 }
 
 #app-component-panel .component-panel-section-title i.material-icons,
@@ -383,7 +394,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
 }
 
 #app-component-panel .mdc-time-picker__clock-face {
-  background-color: var(--mdc-theme-surface-container-high, #f7f2fa) !important;
+  background-color: var(--panel-bg-color, var(--mdc-theme-primary-50, #f6edff)) !important;
 }
 
 #app-component-panel .mdc-time-picker__center-pivot,
@@ -393,11 +404,11 @@ body.is-resizing-component-panel .component-panel-resizer::after {
 #app-component-panel .mdc-date-picker__header,
 #app-component-panel .mdc-date-picker__day.is-selected,
 #app-component-panel .mdc-button--raised {
-  background-color: var(--mdc-theme-primary) !important;
+  background-color: var(--panel-accent-color, var(--mdc-theme-primary)) !important;
 }
 
 #app-component-panel .mdc-button:not(.mdc-button--raised):not(.mdc-button--outlined) {
-  color: var(--mdc-theme-primary) !important;
+  color: var(--panel-accent-color, var(--mdc-theme-primary)) !important;
 }
 
 /* 组件栏遮罩 (仅移动端) */
@@ -536,4 +547,83 @@ body.component-panel-closed .m29-overlay-scrollbar-track.is-window {
 .dark-theme .m29-overlay-scrollbar-track.is-dragging .m29-overlay-scrollbar-thumb {
   opacity: 1;
   background-color: var(--mdc-theme-primary, #d0bcff);
+}
+
+/* 🔀 布局左右互换 (Layout Swap: 侧边栏与组件栏对调位置) */
+body.layout-swap {
+  .mdc-navigation-rail {
+    left: auto !important;
+    right: 0 !important;
+    border-right: none !important;
+    border-left: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: -1px 0 3px rgba(0, 0, 0, 0.05) !important;
+
+    &:hover,
+    &.is-expanded {
+      box-shadow: -4px 0 24px rgba(0, 0, 0, 0.2) !important;
+    }
+  }
+
+  &.dark-theme .mdc-navigation-rail,
+  .dark-theme .mdc-navigation-rail {
+    border-left-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .mdc-component-panel {
+    right: auto !important;
+    left: 0 !important;
+    border-left: none !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05) !important;
+
+    .component-panel-resizer {
+      left: auto !important;
+      right: -6px !important;
+    }
+  }
+
+  &.dark-theme .mdc-component-panel,
+  .dark-theme .mdc-component-panel {
+    border-right-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  @media (min-width: 768px) {
+    .main-container {
+      margin-left: var(--component-panel-width, 290px) !important;
+      margin-right: 72px !important;
+    }
+
+    &.component-panel-closed .mdc-component-panel {
+      transform: translateX(-100%) !important;
+    }
+
+    &.component-panel-closed .main-container {
+      margin-left: 0 !important;
+      margin-right: 72px !important;
+    }
+
+    .m29-overlay-scrollbar-track.is-window {
+      right: auto !important;
+      left: var(--component-panel-width, 290px) !important;
+      transform: translateX(-50%) !important;
+    }
+
+    &.component-panel-closed .m29-overlay-scrollbar-track.is-window {
+      left: 0 !important;
+      right: auto !important;
+    }
+  }
+
+  @media (max-width: 767.9px) {
+    .mdc-component-panel {
+      right: auto !important;
+      left: 0 !important;
+      transform: translateX(-100%) !important;
+    }
+
+    .mdc-component-panel.is-open {
+      transform: translateX(0) !important;
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5) !important;
+    }
+  }
 }
