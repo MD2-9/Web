@@ -11,8 +11,5 @@
     "deploy": "node scripts/build-css.js && wrangler deploy",
     "preview": "node scripts/build-css.js && wrangler dev",
     "dist": "npm run build"
-  },
-  "devDependencies": {
-    "wrangler": "^3.111.0"
   }
 }
