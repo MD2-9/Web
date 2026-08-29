@@ -290,22 +290,15 @@ window.addEventListener('m29:loaded', function() {
 
         startNewColumnsGroup();
 
+        let colIdx = 0;
         normalCards.forEach(card => {
           if (card.getAttribute('data-span') === 'full') {
             container.appendChild(card); // 独占满宽，跨层级
             startNewColumnsGroup();      // 强制重启一组新的瀑布流
+            colIdx = 0;
           } else {
-            // 寻找当前高度最短的列进行填充
-            let shortestCol = currentColsDivs[0];
-            let minHeight = shortestCol.scrollHeight || shortestCol.offsetHeight || 0;
-            for (let i = 1; i < currentColsDivs.length; i++) {
-              const h = currentColsDivs[i].scrollHeight || currentColsDivs[i].offsetHeight || 0;
-              if (h < minHeight) {
-                minHeight = h;
-                shortestCol = currentColsDivs[i];
-              }
-            }
-            shortestCol.appendChild(card);
+            currentColsDivs[colIdx % targetCols].appendChild(card);
+            colIdx++;
           }
         });
       }
