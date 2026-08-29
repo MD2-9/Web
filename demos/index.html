@@ -2644,15 +2644,24 @@
         return;
       }
 
-      const containerRect = container.getBoundingClientRect();
-      const cellRect = activeCell.getBoundingClientRect();
-
       const isMonth = pickerMode === 'month';
-      const thumbW = isMonth ? cellRect.width : 34;
-      const thumbH = isMonth ? 42 : 34;
+      const cellW = activeCell.offsetWidth || (isMonth ? 88 : 38);
+      const cellH = activeCell.offsetHeight || (isMonth ? 42 : 38);
+      const thumbW = isMonth ? cellW : 34;
+      const thumbH = isMonth ? cellH : 34;
 
-      const x = (cellRect.left - containerRect.left) + (cellRect.width - thumbW) / 2;
-      const y = (cellRect.top - containerRect.top) + (cellRect.height - thumbH) / 2;
+      // 使用 offsetLeft/offsetTop 遍历计算布局偏移（免疫 CSS Transform 动画干扰）
+      let offsetLeft = 0;
+      let offsetTop = 0;
+      let curr = activeCell;
+      while (curr && curr !== container) {
+        offsetLeft += curr.offsetLeft;
+        offsetTop += curr.offsetTop;
+        curr = curr.offsetParent;
+      }
+
+      const x = offsetLeft + (cellW - thumbW) / 2;
+      const y = offsetTop + (cellH - thumbH) / 2;
 
       thumb.style.width = `${Math.round(thumbW)}px`;
       thumb.style.height = `${Math.round(thumbH)}px`;
@@ -2665,6 +2674,16 @@
       pickerMode = targetMode || (pickerMode === 'day' ? 'month' : 'day');
       if (root) root.classList.toggle('is-month-mode', pickerMode === 'month');
       renderDemoDatePicker('is-switching-in', '', true);
+    }
+
+    // 🌟 动画重放辅助：移除旧动画类 → 强制 reflow → 重新添加，确保每次都能触发
+    function triggerDemoAnim(el, className) {
+      if (!el) return;
+      el.classList.remove('slide-left', 'slide-right', 'is-switching-in', 'm29-year-anim-prev', 'm29-year-anim-next');
+      void el.offsetWidth;
+      if (className) {
+        el.classList.add(className);
+      }
     }
 
     function renderDemoDatePicker(slideDirection = '', yearAnimClass = '', animateHeight = false) {
@@ -2692,11 +2711,10 @@
           const sDay = pickerSelectedDate.getDate();
           const sW = weekdays[pickerSelectedDate.getDay()];
           dateEl.textContent = `${sMonth}月${sDay}日 ${sW}`;
-          dateEl.className = 'mdc-date-picker__header-date';
         }
         if (monthLabel) {
           monthLabel.textContent = `${year} 年 ${month + 1} 月`;
-          monthLabel.className = 'mdc-date-picker__month-label';
+          triggerDemoAnim(monthLabel, yearAnimClass);
         }
         if (prevBtn) prevBtn.title = '上个月';
         if (nextBtn) nextBtn.title = '下个月';
@@ -2705,11 +2723,11 @@
         if (yearEl) yearEl.textContent = '选择月份';
         if (dateEl) {
           dateEl.textContent = `${year} 年`;
-          dateEl.className = yearAnimClass ? 'mdc-date-picker__header-date ' + yearAnimClass : 'mdc-date-picker__header-date';
+          triggerDemoAnim(dateEl, yearAnimClass);
         }
         if (monthLabel) {
           monthLabel.textContent = `${year} 年`;
-          monthLabel.className = yearAnimClass ? 'mdc-date-picker__month-label ' + yearAnimClass : 'mdc-date-picker__month-label';
+          triggerDemoAnim(monthLabel, yearAnimClass);
         }
         if (prevBtn) prevBtn.title = '上一年';
         if (nextBtn) nextBtn.title = '下一年';
@@ -2719,9 +2737,7 @@
       if (!grid) return;
       grid.innerHTML = '';
       grid.className = pickerMode === 'day' ? 'mdc-date-picker__grid' : 'mdc-date-picker__month-grid';
-      if (slideDirection) {
-        grid.classList.add(slideDirection);
-      }
+      triggerDemoAnim(grid, slideDirection);
 
       let activeCell = null;
 

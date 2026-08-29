@@ -124,6 +124,8 @@
   font-weight: 600;
   opacity: 0.6;
   transition: opacity 0.2s ease;
+  position: relative;
+  z-index: 2;
 }
 
 .mdc-date-picker__body-container {
@@ -137,6 +139,8 @@
   grid-template-columns: repeat(7, 1fr);
   padding: 4px 12px 14px;
   gap: 4px 0;
+  position: relative;
+  z-index: 2;
 }
 
 .mdc-date-picker__month-grid {
@@ -145,6 +149,8 @@
   grid-template-rows: repeat(4, 1fr);
   padding: 10px 14px 16px;
   gap: 8px 10px;
+  position: relative;
+  z-index: 2;
 }
 
 .mdc-date-picker__grid.is-switching-in,

@@ -98,15 +98,24 @@ export class MdcDatePicker {
       return;
     }
 
-    const containerRect = this.bodyContainer.getBoundingClientRect();
-    const cellRect = activeCell.getBoundingClientRect();
-
     const isMonth = this.mode === 'month';
-    const thumbW = isMonth ? cellRect.width : 34;
-    const thumbH = isMonth ? 42 : 34;
+    const cellW = activeCell.offsetWidth || (isMonth ? 88 : 38);
+    const cellH = activeCell.offsetHeight || (isMonth ? 42 : 38);
+    const thumbW = isMonth ? cellW : 34;
+    const thumbH = isMonth ? cellH : 34;
 
-    const x = (cellRect.left - containerRect.left) + (cellRect.width - thumbW) / 2;
-    const y = (cellRect.top - containerRect.top) + (cellRect.height - thumbH) / 2;
+    // 使用 offsetLeft/offsetTop 遍历计算布局偏移（免疫 CSS Transform 动画干扰）
+    let offsetLeft = 0;
+    let offsetTop = 0;
+    let curr = activeCell;
+    while (curr && curr !== this.bodyContainer) {
+      offsetLeft += curr.offsetLeft;
+      offsetTop += curr.offsetTop;
+      curr = curr.offsetParent;
+    }
+
+    const x = offsetLeft + (cellW - thumbW) / 2;
+    const y = offsetTop + (cellH - thumbH) / 2;
 
     this.selectionThumb.style.width = `${Math.round(thumbW)}px`;
     this.selectionThumb.style.height = `${Math.round(thumbH)}px`;
