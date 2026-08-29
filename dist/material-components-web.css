@@ -45,33 +45,6 @@
   --mdc-theme-surface-container-high: #f7f2fa;
 }
 
-/* =============================================================== */
-/* 全页面莫奈主题长按水波纹扩散揭示动效 (Ripple Theme Reveal)        */
-/* 严格遵循长按水波纹曲线，覆盖到的地方才变色，到达右下角刚好终止     */
-/* =============================================================== */
-::view-transition,
-::view-transition-group(root),
-::view-transition-image-pair(root),
-::view-transition-old(root),
-::view-transition-new(root) {
-  pointer-events: none !important;
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-  will-change: clip-path;
-}
-
-::view-transition-old(root) {
-  z-index: 1;
-}
-
-::view-transition-new(root) {
-  z-index: 999999;
-}
-
 body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, div, label, li {
   font-family: 'Google Sans Flex', 'GoogleSansFlex', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
@@ -480,7 +453,7 @@ span.material-icons,
   line-height: 0;
   white-space: nowrap;
   cursor: pointer;
-  vertical-align: bottom;
+  vertical-align: middle;
 }
 
 .mdc-checkbox__native-control {
@@ -506,20 +479,28 @@ span.material-icons,
   box-sizing: border-box;
   width: 18px;
   height: 18px;
-  border: 2px solid rgba(0, 0, 0, 0.54);
+  border: 2px solid rgba(0, 0, 0, 0.54) !important;
   border-radius: 0 !important;
-  background-color: transparent;
+  background-color: transparent !important;
   pointer-events: none;
   transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.dark-theme .mdc-checkbox__background {
-  border-color: rgba(255, 255, 255, 0.7);
+.dark-theme .mdc-checkbox__background,
+.dark-theme .mdc-checkbox .mdc-checkbox__background,
+.dark-theme .mdc-checkbox__native-control:not(:checked) ~ .mdc-checkbox__background {
+  border-color: rgba(255, 255, 255, 0.75) !important;
+  background-color: transparent !important;
 }
 
 .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background {
-  background-color: var(--mdc-theme-primary, #6750a4);
-  border-color: var(--mdc-theme-primary, #6750a4);
+  background-color: var(--mdc-theme-primary, #6750a4) !important;
+  border-color: var(--mdc-theme-primary, #6750a4) !important;
+}
+
+.dark-theme .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background {
+  background-color: var(--mdc-theme-primary, #d0bcff) !important;
+  border-color: var(--mdc-theme-primary, #d0bcff) !important;
 }
 
 .mdc-checkbox__checkmark {
@@ -558,6 +539,10 @@ span.material-icons,
   vertical-align: middle;
 }
 
+.dark-theme .mdc-form-field label {
+  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+}
+
 
 /* --- Component: packages/mdc-radio/mdc-radio.scss --- */
 
@@ -586,7 +571,7 @@ span.material-icons,
   height: 20px;
   padding: 10px;
   cursor: pointer;
-  vertical-align: bottom;
+  vertical-align: middle;
 }
 
 .mdc-radio__native-control {
@@ -621,13 +606,15 @@ span.material-icons,
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  border: 2px solid rgba(0, 0, 0, 0.54);
+  border: 2px solid rgba(0, 0, 0, 0.54) !important;
   border-radius: 50% !important;
   transition: border-color 0.12s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.dark-theme .mdc-radio__outer-circle {
-  border-color: rgba(255, 255, 255, 0.7);
+.dark-theme .mdc-radio__outer-circle,
+.dark-theme .mdc-radio .mdc-radio__outer-circle,
+.dark-theme .mdc-radio__native-control:not(:checked) ~ .mdc-radio__background .mdc-radio__outer-circle {
+  border-color: rgba(255, 255, 255, 0.75) !important;
 }
 
 .mdc-radio__inner-circle {
@@ -643,8 +630,16 @@ span.material-icons,
   transition: transform 0.12s cubic-bezier(0, 0, 0.2, 1);
 }
 
+.dark-theme .mdc-radio__inner-circle {
+  background-color: var(--mdc-theme-primary, #d0bcff) !important;
+}
+
 .mdc-radio__native-control:checked ~ .mdc-radio__background .mdc-radio__outer-circle {
-  border-color: var(--mdc-theme-primary, #6750a4);
+  border-color: var(--mdc-theme-primary, #6750a4) !important;
+}
+
+.dark-theme .mdc-radio__native-control:checked ~ .mdc-radio__background .mdc-radio__outer-circle {
+  border-color: var(--mdc-theme-primary, #d0bcff) !important;
 }
 
 .mdc-radio__native-control:checked ~ .mdc-radio__background .mdc-radio__inner-circle {
@@ -1370,8 +1365,77 @@ span.material-icons,
 .dark-theme .surface-token-chip {
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.1);
+  color: var(--mdc-theme-on-surface, #e6e1e5);
 }
 
+/* 🌟 局部双主题隔离容器适配 (Local Theme Isolation with Dark Adaptation) */
+.local-theme-card-emerald {
+  --mdc-theme-primary: #006A6A;
+  --mdc-theme-secondary: #006874;
+  --mdc-theme-surface-container: #E6F5F5;
+  background-color: #E6F5F5 !important;
+  border: 1px solid #006A6A !important;
+}
+
+.local-theme-card-emerald .local-theme-title {
+  color: #006A6A;
+}
+
+.local-theme-card-emerald .mdc-button--raised {
+  background-color: #006A6A !important;
+  color: #ffffff !important;
+}
+
+.dark-theme .local-theme-card-emerald {
+  --mdc-theme-primary: #4CDAD8;
+  --mdc-theme-secondary: #4ED8E8;
+  --mdc-theme-surface-container: #002020;
+  background-color: #002020 !important;
+  border: 1px solid #4CDAD8 !important;
+}
+
+.dark-theme .local-theme-card-emerald .local-theme-title {
+  color: #4CDAD8 !important;
+}
+
+.dark-theme .local-theme-card-emerald .mdc-button--raised {
+  background-color: #4CDAD8 !important;
+  color: #003737 !important;
+}
+
+.local-theme-card-amber {
+  --mdc-theme-primary: #825500;
+  --mdc-theme-secondary: #8C5000;
+  --mdc-theme-surface-container: #FFF8F0;
+  background-color: #FFF8F0 !important;
+  border: 1px solid #825500 !important;
+}
+
+.local-theme-card-amber .local-theme-title {
+  color: #825500;
+}
+
+.local-theme-card-amber .mdc-button--raised {
+  background-color: #825500 !important;
+  color: #ffffff !important;
+}
+
+.dark-theme .local-theme-card-amber {
+  --mdc-theme-primary: #FFBA28;
+  --mdc-theme-secondary: #FFB77B;
+  --mdc-theme-surface-container: #261900;
+  background-color: #261900 !important;
+  border: 1px solid #FFBA28 !important;
+}
+
+.dark-theme .local-theme-card-amber .local-theme-title {
+  color: #FFBA28 !important;
+}
+
+.dark-theme .local-theme-card-amber .mdc-button--raised {
+  background-color: #FFBA28 !important;
+  color: #452B00 !important;
+}
 
 
 /* --- Component: packages/mdc-ripple/mdui-ripple.scss --- */
@@ -1403,8 +1467,7 @@ button {
   margin: 0;
   padding: 0;
   font-size: 0;
-  background-color: var(--mdc-theme-primary, #6750a4);
-  opacity: 0;
+  background-color: rgba(103, 80, 164, 0.16);
   border-radius: 50% !important;
   transform: translate3d(0, 0, 0) scale(0);
   transition: transform 1.35s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.85s cubic-bezier(0.2, 0.8, 0.25, 1);
@@ -1412,56 +1475,30 @@ button {
   will-change: transform, opacity;
 }
 
+/* 大卡片涟漪透明度调高（更透、更细腻，略小于常规按钮涟漪效果） */
+.demo-card .mdui-ripple-wave,
+.mdc-card .mdui-ripple-wave,
+[data-mdui-ripple] .mdui-ripple-wave {
+  background-color: rgba(103, 80, 164, 0.06);
+}
+
+.dark-theme .mdui-ripple-wave {
+  background-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.dark-theme .demo-card .mdui-ripple-wave,
+.dark-theme .mdc-card .mdui-ripple-wave,
+.dark-theme [data-mdui-ripple] .mdui-ripple-wave {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
 .mdui-ripple-wave.is-active {
   transform: translate3d(0, 0, 0) scale(1);
-  opacity: 0.22;
-}
-
-/* 卡片水波纹增强对比度 (使用主色与清晰的 0.18 不透明度，轮廓分明) */
-.demo-card .mdui-ripple-wave.is-active,
-.mdc-card .mdui-ripple-wave.is-active,
-[data-mdui-ripple] .mdui-ripple-wave.is-active {
-  opacity: 0.18;
-}
-
-/* 当主色/暗色填充型按钮 (Primary Raised / FAB 等) 涟漪使用 on-primary 对比色 */
-.mdc-button--raised .mdui-ripple-wave,
-.mdc-button--unelevated .mdui-ripple-wave,
-.mdc-fab .mdui-ripple-wave,
-.rail-header .mdui-ripple-wave {
-  background-color: var(--mdc-theme-on-primary, #ffffff) !important;
-}
-
-.mdc-button--raised .mdui-ripple-wave.is-active,
-.mdc-button--unelevated .mdui-ripple-wave.is-active,
-.mdc-fab .mdui-ripple-wave.is-active,
-.rail-header .mdui-ripple-wave.is-active {
-  opacity: 0.32 !important;
-}
-
-/* 🌙 暗色模式水波纹高对比度跟随 */
-.dark-theme .mdui-ripple-wave {
-  background-color: var(--mdc-theme-primary, #d0bcff);
-}
-
-.dark-theme .mdui-ripple-wave.is-active {
-  opacity: 0.25;
-}
-
-.dark-theme .demo-card .mdui-ripple-wave.is-active,
-.dark-theme .mdc-card .mdui-ripple-wave.is-active {
-  opacity: 0.18;
-}
-
-.dark-theme .mdc-button--raised .mdui-ripple-wave,
-.dark-theme .mdc-button--unelevated .mdui-ripple-wave,
-.dark-theme .mdc-fab .mdui-ripple-wave {
-  background-color: #000000 !important;
-  opacity: 0.22 !important;
+  opacity: 1;
 }
 
 .mdui-ripple-wave.is-fading {
-  opacity: 0 !important;
+  opacity: 0;
 }
 
 
@@ -1809,72 +1846,29 @@ button {
   display: none;
   position: relative;
   z-index: 2;
+  will-change: transform, opacity;
 }
 
 .md1-tab-panel.is-active {
   display: block;
 }
 
+/* 🌟 内容变换动画严格跟随滑条方向：
+   - 滑条向右切换 -> 内容向右移动 (from -28px to 0)
+   - 滑条向左切换 -> 内容向左移动 (from +28px to 0)
+*/
 .md1-tab-panel.slide-right {
-  animation: tabSlideRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: tabSlideFollowRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .md1-tab-panel.slide-left {
-  animation: tabSlideLeft 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: tabSlideFollowLeft 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* 目标 Tab 为起点向全内容扩散的水波纹 */
-.md1-tab-content-ripple {
-  position: absolute;
-  border-radius: 50% !important;
-  pointer-events: none;
-  z-index: 1;
-  background-color: var(--mdc-theme-primary, #6750a4);
-  opacity: 0.2;
-  transform: translate(-50%, -50%) scale(0.01);
-  will-change: transform, opacity;
-}
-
-.md1-tab-content-ripple.slide-right {
-  animation: tabRippleSlideRight 0.6s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
-}
-
-.md1-tab-content-ripple.slide-left {
-  animation: tabRippleSlideLeft 0.6s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
-}
-
-@keyframes tabRippleSlideRight {
-  0% {
-    transform: translate(-50%, -50%) scale(0.01) translateX(-30px);
-    opacity: 0.22;
-  }
-  60% {
-    opacity: 0.16;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1) translateX(40px);
-    opacity: 0;
-  }
-}
-
-@keyframes tabRippleSlideLeft {
-  0% {
-    transform: translate(-50%, -50%) scale(0.01) translateX(30px);
-    opacity: 0.22;
-  }
-  60% {
-    opacity: 0.16;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1) translateX(-40px);
-    opacity: 0;
-  }
-}
-
-@keyframes tabSlideRight {
+@keyframes tabSlideFollowRight {
   from {
     opacity: 0;
-    transform: translateX(28px);
+    transform: translateX(-28px);
   }
   to {
     opacity: 1;
@@ -1882,10 +1876,10 @@ button {
   }
 }
 
-@keyframes tabSlideLeft {
+@keyframes tabSlideFollowLeft {
   from {
     opacity: 0;
-    transform: translateX(-28px);
+    transform: translateX(28px);
   }
   to {
     opacity: 1;
@@ -2350,9 +2344,7 @@ button {
 
 
 
-/* =========================================================================
- * 1. MDC 标准填充型输入框 (Filled Text Field)
- * ========================================================================= */
+/* 🌟 标准 MDC Text Field 容器 (56px 标准高度) */
 .mdc-text-field {
   position: relative;
   display: inline-flex;
@@ -2362,154 +2354,180 @@ button {
   background-color: rgba(0, 0, 0, 0.04);
   border-bottom: 2px solid var(--mdc-theme-primary, #6750a4);
   border-radius: 0 !important;
-  vertical-align: middle;
+  overflow: visible !important;
 }
 
 .dark-theme .mdc-text-field {
-  background-color: rgba(255, 255, 255, 0.06);
-  border-bottom-color: var(--mdc-theme-primary, #d0bcff);
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-bottom-color: var(--mdc-theme-primary, #d0bcff) !important;
 }
 
-.mdc-text-field .mdc-text-field__icon,
-.mdc-text-field--with-leading-icon .mdc-text-field__icon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--mdc-theme-primary, #6750a4);
-  font-size: 20px;
-  line-height: 1;
-  pointer-events: none;
-  z-index: 2;
+/* 🌟 核心前缀图标垂直精准居中 (Absolute Center: top 50% + translateY(-50%)) */
+.mdc-text-field__icon,
+.mdc-text-field--with-leading-icon .mdc-text-field__icon,
+.mdc-text-field--outlined .mdc-text-field__icon {
+  position: absolute !important;
+  left: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  bottom: auto !important;
+  right: auto !important;
+  color: var(--mdc-theme-primary, #6750a4) !important;
+  font-size: 22px !important;
+  width: 24px !important;
+  height: 24px !important;
+  line-height: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: none !important;
+  z-index: 5 !important;
   margin: 0 !important;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.dark-theme .mdc-text-field .mdc-text-field__icon,
-.dark-theme .mdc-text-field--with-leading-icon .mdc-text-field__icon {
-  color: var(--mdc-theme-primary, #d0bcff);
+.dark-theme .mdc-text-field__icon,
+.dark-theme .mdc-text-field--with-leading-icon .mdc-text-field__icon,
+.dark-theme .mdc-text-field--outlined .mdc-text-field__icon {
+  color: var(--mdc-theme-primary, #d0bcff) !important;
 }
 
+/* 🌟 Filled 输入框内部文字与上部标签对齐 */
 .mdc-text-field--with-leading-icon .mdc-text-field__input {
   padding-left: 44px !important;
-  padding-right: 14px !important;
+  padding-right: 12px !important;
   padding-top: 18px !important;
-  padding-bottom: 6px !important;
-  width: 100%;
-  height: 100%;
+  padding-bottom: 4px !important;
+  width: 100% !important;
+  height: 100% !important;
   border: none !important;
   background: transparent !important;
   outline: none !important;
   font-size: 14px !important;
+  color: var(--mdc-theme-on-surface, #1d1b20) !important;
+  box-sizing: border-box !important;
   line-height: 20px !important;
-  color: inherit;
-  box-sizing: border-box;
 }
 
+.dark-theme .mdc-text-field--with-leading-icon .mdc-text-field__input {
+  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+}
+
+/* 🌟 Filled 浮动标签定位 (置于左上方，留出空间给正文) */
 .mdc-text-field--with-leading-icon .mdc-floating-label {
-  position: absolute;
-  left: 44px;
-  top: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--mdc-theme-primary, #6750a4);
-  pointer-events: none;
-  line-height: 1;
+  position: absolute !important;
+  left: 44px !important;
+  top: 8px !important;
+  font-size: 11.5px !important;
+  color: rgba(0, 0, 0, 0.6) !important;
+  pointer-events: none !important;
+  line-height: 1 !important;
   transform: none !important;
+  margin: 0 !important;
+  z-index: 3 !important;
 }
 
 .dark-theme .mdc-text-field--with-leading-icon .mdc-floating-label {
-  color: var(--mdc-theme-primary, #d0bcff);
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
-/* =========================================================================
- * 2. MDC 标准描边型输入框 (Outlined Text Field)
- * ========================================================================= */
+.mdc-text-field--with-leading-icon .mdc-floating-label--float-above {
+  color: var(--mdc-theme-primary, #6750a4) !important;
+  font-weight: 600 !important;
+  font-size: 11.5px !important;
+}
+
+.dark-theme .mdc-text-field--with-leading-icon .mdc-floating-label--float-above {
+  color: var(--mdc-theme-primary, #d0bcff) !important;
+}
+
+/* 🌟 Outlined Text Field 标准描边框 */
+.mdc-text-field--outlined.mdc-text-field--with-leading-icon,
 .mdc-text-field--outlined {
   background: transparent !important;
-  border: 1px solid var(--mdc-theme-primary, #6750a4) !important;
+  border: 1px solid rgba(0, 0, 0, 0.24) !important;
   border-radius: 0 !important;
-  height: 56px;
-  position: relative;
-  box-sizing: border-box;
+  height: 56px !important;
+  position: relative !important;
+  box-sizing: border-box !important;
   overflow: visible !important;
-  transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-width 0.1s ease;
-}
-
-.dark-theme .mdc-text-field--outlined {
-  border-color: var(--mdc-theme-primary, #d0bcff) !important;
+  transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mdc-text-field--outlined:focus-within,
 .mdc-text-field--outlined.mdc-text-field--focused {
+  border-color: var(--mdc-theme-primary, #6750a4) !important;
   border-width: 2px !important;
 }
 
-.mdc-text-field--outlined .mdc-text-field__icon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 20px;
-  line-height: 1;
-  color: var(--mdc-theme-primary, #6750a4);
-  pointer-events: none;
-  z-index: 2;
-  margin: 0 !important;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.dark-theme .mdc-text-field--outlined.mdc-text-field--with-leading-icon,
+.dark-theme .mdc-text-field--outlined {
+  border-color: rgba(255, 255, 255, 0.38) !important;
 }
 
-.dark-theme .mdc-text-field--outlined .mdc-text-field__icon {
-  color: var(--mdc-theme-primary, #d0bcff);
+.dark-theme .mdc-text-field--outlined:focus-within,
+.dark-theme .mdc-text-field--outlined.mdc-text-field--focused {
+  border-color: var(--mdc-theme-primary, #d0bcff) !important;
 }
 
 .mdc-text-field--outlined .mdc-text-field__input {
   height: 100% !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
-  line-height: 54px !important;
+  line-height: 52px !important;
   padding-left: 44px !important;
   padding-right: 14px !important;
   font-size: 14px !important;
-  width: 100%;
+  width: 100% !important;
   border: none !important;
   background: transparent !important;
   outline: none !important;
   box-shadow: none !important;
-  color: inherit;
-  box-sizing: border-box;
-  display: block;
+  color: var(--mdc-theme-on-surface, #1d1b20) !important;
+  box-sizing: border-box !important;
 }
 
-.mdc-text-field--outlined .mdc-floating-label {
+.dark-theme .mdc-text-field--outlined .mdc-text-field__input {
+  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+}
+
+/* 🌟 实体不透明背景色完全遮挡顶边框线条 (Outlined Label Top Line Cutout) */
+.mdc-text-field--outlined .mdc-floating-label,
+.mdc-text-field--outlined .mdc-floating-label--float-above {
   position: absolute !important;
   top: -8px !important;
-  left: 12px !important;
+  left: 10px !important;
   bottom: auto !important;
   right: auto !important;
   width: auto !important;
   max-width: fit-content !important;
   height: 16px !important;
+  max-height: 16px !important;
   line-height: 16px !important;
-  padding: 0 4px !important;
+  padding: 0 6px !important;
   margin: 0 !important;
-  font-size: 11px !important;
+  font-size: 11.5px !important;
   font-weight: 600 !important;
   color: var(--mdc-theme-primary, #6750a4) !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  z-index: 5 !important;
+  background: var(--mdc-theme-surface-container, #ffffff) !important;
+  background-color: var(--mdc-theme-surface-container, #ffffff) !important;
+  z-index: 20 !important;
   transform: none !important;
   pointer-events: none !important;
   display: inline-block !important;
   white-space: nowrap !important;
+  opacity: 1 !important;
 }
 
-.dark-theme .mdc-text-field--outlined .mdc-floating-label {
+.demo-card .mdc-text-field--outlined .mdc-floating-label,
+.demo-card .mdc-text-field--outlined .mdc-floating-label--float-above {
+  background: var(--mdc-theme-surface-container, #ffffff) !important;
+  background-color: var(--mdc-theme-surface-container, #ffffff) !important;
+}
+
+.dark-theme .mdc-text-field--outlined .mdc-floating-label,
+.dark-theme .demo-card .mdc-text-field--outlined .mdc-floating-label {
+  background: var(--mdc-theme-surface-container, #131217) !important;
+  background-color: var(--mdc-theme-surface-container, #131217) !important;
   color: var(--mdc-theme-primary, #d0bcff) !important;
 }
 

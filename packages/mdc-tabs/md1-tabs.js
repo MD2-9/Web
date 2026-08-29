@@ -5,7 +5,7 @@
  */
 
 /**
- * MD1 选项卡系统控制器 (Sliding Indicator ✖ 方向感知平滑切换 ✖ 目标Tab为起点扩散至全内容水波纹)
+ * MD1 选项卡系统控制器 (Sliding Indicator ✖ 跟随滑块方向平滑切换 ✖ 内容区域无水波纹)
  */
 export class Md1Tabs {
   /**
@@ -36,13 +36,14 @@ export class Md1Tabs {
   }
 
   /**
-   * 切换到指定 Tab 索引并以目标 Tab 为原点在内容容器内扩散水波纹
+   * 切换到指定 Tab 索引，内容动画严格跟随滑块方向
    * @param {number} index
    * @param {Event|HTMLElement} [eventOrElement]
    */
   switchTo(index, eventOrElement) {
     if (index < 0 || index >= this.tabs.length) return;
 
+    // 滑块向右移动 (index > currentIndex) 还是向左移动 (index < currentIndex)
     const isSlideRight = index >= this.currentIndex;
     this.currentIndex = index;
 
@@ -71,51 +72,11 @@ export class Md1Tabs {
     });
 
     this.updateIndicator(tab);
-    this.triggerTabContentRipple(tab, index, isSlideRight);
-  }
-
-  triggerTabContentRipple(tabElement, index, isSlideRight = true) {
-    const activePanel = this.panels[index];
-    if (!activePanel || !tabElement) return;
-
-    const contentContainer = activePanel.closest('.md1-tab-content-container') || activePanel.parentElement;
-    if (!contentContainer) return;
-
-    if (window.getComputedStyle(contentContainer).position === 'static') {
-      contentContainer.style.position = 'relative';
-    }
-    contentContainer.style.overflow = 'hidden';
-
-    const tabRect = tabElement.getBoundingClientRect();
-    const containerRect = contentContainer.getBoundingClientRect();
-    const originX = (tabRect.left + tabRect.width / 2) - containerRect.left;
-    const originY = 0;
-
-    const maxRadius = Math.hypot(
-      Math.max(originX, containerRect.width - originX),
-      containerRect.height
-    ) * 1.05;
-
-    const wave = document.createElement('div');
-    wave.className = `md1-tab-content-ripple ${isSlideRight ? 'slide-right' : 'slide-left'}`;
-    wave.style.width = `${maxRadius * 2}px`;
-    wave.style.height = `${maxRadius * 2}px`;
-    wave.style.left = `${originX}px`;
-    wave.style.top = `${originY}px`;
-    contentContainer.appendChild(wave);
-
-    setTimeout(() => {
-      if (wave.parentNode) wave.parentNode.removeChild(wave);
-    }, 650);
   }
 
   updateIndicator(tabElement) {
     if (!this.indicator || !tabElement) return;
     this.indicator.style.width = `${tabElement.offsetWidth}px`;
     this.indicator.style.left = `${tabElement.offsetLeft}px`;
-  }
-
-  static attachTo(barElement, panelsContainer) {
-    return new Md1Tabs(barElement, panelsContainer);
   }
 }

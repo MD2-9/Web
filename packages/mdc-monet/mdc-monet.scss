@@ -144,5 +144,74 @@
 .dark-theme .surface-token-chip {
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.1);
+  color: var(--mdc-theme-on-surface, #e6e1e5);
 }
 
+/* 🌟 局部双主题隔离容器适配 (Local Theme Isolation with Dark Adaptation) */
+.local-theme-card-emerald {
+  --mdc-theme-primary: #006A6A;
+  --mdc-theme-secondary: #006874;
+  --mdc-theme-surface-container: #E6F5F5;
+  background-color: #E6F5F5 !important;
+  border: 1px solid #006A6A !important;
+}
+
+.local-theme-card-emerald .local-theme-title {
+  color: #006A6A;
+}
+
+.local-theme-card-emerald .mdc-button--raised {
+  background-color: #006A6A !important;
+  color: #ffffff !important;
+}
+
+.dark-theme .local-theme-card-emerald {
+  --mdc-theme-primary: #4CDAD8;
+  --mdc-theme-secondary: #4ED8E8;
+  --mdc-theme-surface-container: #002020;
+  background-color: #002020 !important;
+  border: 1px solid #4CDAD8 !important;
+}
+
+.dark-theme .local-theme-card-emerald .local-theme-title {
+  color: #4CDAD8 !important;
+}
+
+.dark-theme .local-theme-card-emerald .mdc-button--raised {
+  background-color: #4CDAD8 !important;
+  color: #003737 !important;
+}
+
+.local-theme-card-amber {
+  --mdc-theme-primary: #825500;
+  --mdc-theme-secondary: #8C5000;
+  --mdc-theme-surface-container: #FFF8F0;
+  background-color: #FFF8F0 !important;
+  border: 1px solid #825500 !important;
+}
+
+.local-theme-card-amber .local-theme-title {
+  color: #825500;
+}
+
+.local-theme-card-amber .mdc-button--raised {
+  background-color: #825500 !important;
+  color: #ffffff !important;
+}
+
+.dark-theme .local-theme-card-amber {
+  --mdc-theme-primary: #FFBA28;
+  --mdc-theme-secondary: #FFB77B;
+  --mdc-theme-surface-container: #261900;
+  background-color: #261900 !important;
+  border: 1px solid #FFBA28 !important;
+}
+
+.dark-theme .local-theme-card-amber .local-theme-title {
+  color: #FFBA28 !important;
+}
+
+.dark-theme .local-theme-card-amber .mdc-button--raised {
+  background-color: #FFBA28 !important;
+  color: #452B00 !important;
+}

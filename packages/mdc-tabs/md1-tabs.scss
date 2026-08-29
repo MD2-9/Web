@@ -2,7 +2,7 @@
 // Copyright 2026 unjal <unjal29@outlook.com>
 // Licensed under the Apache License, Version 2.0
 //
-// MD1 Tab 选项卡系统规范 (Indicator 动态下划线滑块 ✖ 方向感知平滑切换 ✖ 目标Tab扩散至全内容水波纹)
+// MD1 Tab 选项卡系统规范 (Indicator 动态下划线滑块 ✖ 跟随滑块方向平滑切换 ✖ 内容区域无水波纹干扰)
 //
 
 .md1-tabs-bar {
@@ -70,72 +70,29 @@
   display: none;
   position: relative;
   z-index: 2;
+  will-change: transform, opacity;
 }
 
 .md1-tab-panel.is-active {
   display: block;
 }
 
+/* 🌟 内容变换动画严格跟随滑条方向：
+   - 滑条向右切换 -> 内容向右移动 (from -28px to 0)
+   - 滑条向左切换 -> 内容向左移动 (from +28px to 0)
+*/
 .md1-tab-panel.slide-right {
-  animation: tabSlideRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: tabSlideFollowRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .md1-tab-panel.slide-left {
-  animation: tabSlideLeft 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: tabSlideFollowLeft 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* 目标 Tab 为起点向全内容扩散的水波纹 */
-.md1-tab-content-ripple {
-  position: absolute;
-  border-radius: 50% !important;
-  pointer-events: none;
-  z-index: 1;
-  background-color: var(--mdc-theme-primary, #6750a4);
-  opacity: 0.2;
-  transform: translate(-50%, -50%) scale(0.01);
-  will-change: transform, opacity;
-}
-
-.md1-tab-content-ripple.slide-right {
-  animation: tabRippleSlideRight 0.6s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
-}
-
-.md1-tab-content-ripple.slide-left {
-  animation: tabRippleSlideLeft 0.6s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
-}
-
-@keyframes tabRippleSlideRight {
-  0% {
-    transform: translate(-50%, -50%) scale(0.01) translateX(-30px);
-    opacity: 0.22;
-  }
-  60% {
-    opacity: 0.16;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1) translateX(40px);
-    opacity: 0;
-  }
-}
-
-@keyframes tabRippleSlideLeft {
-  0% {
-    transform: translate(-50%, -50%) scale(0.01) translateX(30px);
-    opacity: 0.22;
-  }
-  60% {
-    opacity: 0.16;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1) translateX(-40px);
-    opacity: 0;
-  }
-}
-
-@keyframes tabSlideRight {
+@keyframes tabSlideFollowRight {
   from {
     opacity: 0;
-    transform: translateX(28px);
+    transform: translateX(-28px);
   }
   to {
     opacity: 1;
@@ -143,10 +100,10 @@
   }
 }
 
-@keyframes tabSlideLeft {
+@keyframes tabSlideFollowLeft {
   from {
     opacity: 0;
-    transform: translateX(-28px);
+    transform: translateX(28px);
   }
   to {
     opacity: 1;

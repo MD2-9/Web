@@ -5,7 +5,7 @@
  */
 
 /**
- * Material 核心动态水波纹涟漪发生器 (速率已调慢 3/5，支持高精度目标定位)
+ * Material 核心动态水波纹涟漪发生器 (速率已调慢 3/5，支持高精度目标定位与 0.12s 最小留存时间)
  * @param {PointerEvent|MouseEvent|TouchEvent} e
  * @param {HTMLElement} container
  */
@@ -35,11 +35,20 @@ export function createRipple(e, container) {
     wave.classList.add('is-active');
   });
 
+  const startTime = Date.now();
+  const MIN_HOLD_TIME = 120; // 🌟 严格提供 0.12s (120ms) 单点留存时间
+
   function removeRipple() {
-    wave.classList.add('is-fading');
+    const elapsed = Date.now() - startTime;
+    const remaining = Math.max(0, MIN_HOLD_TIME - elapsed);
+
     setTimeout(() => {
-      if (wave.parentNode) wave.parentNode.removeChild(wave);
-    }, 850);
+      wave.classList.add('is-fading');
+      setTimeout(() => {
+        if (wave.parentNode) wave.parentNode.removeChild(wave);
+      }, 850);
+    }, remaining);
+
     window.removeEventListener('pointerup', removeRipple);
     window.removeEventListener('pointercancel', removeRipple);
   }
@@ -58,26 +67,27 @@ export function attachRipples() {
   const CARD_CONTAINER_SELECTOR = '.demo-card, .mdc-card, [data-mdui-ripple]';
 
   window.addEventListener('pointerdown', (e) => {
-    // 1. 忽略原生输入框、单选、复选、滑块、自定义选择框以及 Picker 与复合控件区域
-    if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-checkbox, .mdc-radio, .mdc-select-custom, .mdc-date-picker, .mdc-time-picker, .expansion-panel')) {
-      // 若是 picker 内部具体的常规按钮，仍保留按钮自身涟漪
-      const btn = e.target.closest('.mdc-button, button, .mdc-date-picker__nav-btn');
-      if (btn) createRipple(e, btn);
+    // 1. 如果点击了复选框、单选框、滑块等原生 input 控件或 Tab 内容区，不触发水波纹
+    if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .md1-tab-content-container, .md1-tab-panel')) {
       return;
     }
 
-    // 2. 优先查找最内层的具体交互元素（如按钮、标签、选项等）
+    // 2. 检查是否点击了内部精准交互元素
     const innerTarget = e.target.closest(INNER_INTERACTIVE_SELECTOR);
     if (innerTarget) {
+      const btn = innerTarget.closest('.mdc-button, button');
+      if (btn) {
+        createRipple(e, btn);
+        return;
+      }
       createRipple(e, innerTarget);
-      return; // 精确隔离：绝不向外冒泡触发外部卡片的水波纹！
+      return;
     }
 
-    // 3. 若未点击在内部具体交互元素上，且点击在卡片空白区，则仅触发当前卡片自身的水波纹
+    // 3. 点击卡片空白区域时，触发卡片整体浅淡水波纹
     const cardTarget = e.target.closest(CARD_CONTAINER_SELECTOR);
     if (cardTarget) {
       createRipple(e, cardTarget);
     }
   });
 }
-

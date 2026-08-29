@@ -490,9 +490,9 @@
 
     <!-- 📝 模块 4: 表单输入、选择器、滑块与开关 (Form Controls) -->
     <div class="demo-card" id="section-form">
-      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
-        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">tune</i>
-        4. 表单输入、选择器、滑块与开关 (Form Controls)
+      <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+        <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); flex-shrink: 0;">tune</i>
+        <span>4. 表单输入、选择器、滑块与开关 (Form Controls)</span>
       </h3>
       <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 16px;">
         
@@ -855,16 +855,16 @@
       <div style="margin-top: 24px;">
         <h4 style="margin: 0 0 12px 0; font-size: 14px;">局部双主题隔离容器 (Local Theme Isolation):</h4>
         <div class="component-grid">
-          <div class="demo-card" style="margin: 0; --mdc-theme-primary: #006A6A; --mdc-theme-secondary: #006874; --mdc-theme-surface-container: #E6F5F5; border-color: #006A6A;">
-            <h4 style="margin: 0 0 6px 0; color: #006A6A;">独立容器 A (翡翠绿主题)</h4>
+          <div class="demo-card local-theme-card-emerald" style="margin: 0;">
+            <h4 class="local-theme-title" style="margin: 0 0 6px 0;">独立容器 A (翡翠绿主题)</h4>
             <p style="font-size: 12px; opacity: 0.85;">该容器内部独立隔离，不随全局主题变化而受污染。</p>
-            <button class="mdc-button mdc-button--raised" style="background-color: #006A6A;">独立按钮</button>
+            <button class="mdc-button mdc-button--raised">独立按钮</button>
           </div>
 
-          <div class="demo-card" style="margin: 0; --mdc-theme-primary: #825500; --mdc-theme-secondary: #8C5000; --mdc-theme-surface-container: #FFF8F0; border-color: #825500;">
-            <h4 style="margin: 0 0 6px 0; color: #825500;">独立容器 B (暖琥珀主题)</h4>
+          <div class="demo-card local-theme-card-amber" style="margin: 0;">
+            <h4 class="local-theme-title" style="margin: 0 0 6px 0;">独立容器 B (暖琥珀主题)</h4>
             <p style="font-size: 12px; opacity: 0.85;">支持局部独立定义不同的 CAM16/HCT 种子与表面层级。</p>
-            <button class="mdc-button mdc-button--raised" style="background-color: #825500;">独立按钮</button>
+            <button class="mdc-button mdc-button--raised">独立按钮</button>
           </div>
         </div>
       </div>
@@ -1043,52 +1043,18 @@
     // 实例化 MDC 组件
     if (window.mdc && mdc.autoInit) mdc.autoInit();
 
-    // =========================================================================
-    // 原生轻量水波纹 (纯 GPU 动画，极速丝滑，无卡顿)
-    // =========================================================================
-    function triggerThemeRipple(callback) {
-      if (typeof callback === 'function') callback();
-
-      // 直接复用系统标准的 mdui-ripple-wave，以左上角 (0, 0) 为中心极速扩散
-      const radius = Math.hypot(window.innerWidth, window.innerHeight);
-      const wave = document.createElement('div');
-      wave.className = 'mdui-ripple-wave';
-      wave.style.position = 'fixed';
-      wave.style.width = `${radius * 2}px`;
-      wave.style.height = `${radius * 2}px`;
-      wave.style.left = `${-radius}px`;
-      wave.style.top = `${-radius}px`;
-      wave.style.zIndex = '999999';
-      wave.style.pointerEvents = 'none';
-      wave.style.backgroundColor = 'var(--mdc-theme-primary, #6750a4)';
-      document.body.appendChild(wave);
-
-      requestAnimationFrame(() => {
-        wave.classList.add('is-active');
-      });
-
-      setTimeout(() => {
-        wave.classList.add('is-fading');
-        setTimeout(() => {
-          if (wave.parentNode) wave.parentNode.removeChild(wave);
-        }, 850);
-      }, 350);
-    }
-
     // 暗色模式状态
     let isDarkMode = false;
     function toggleThemeMode() {
-      triggerThemeRipple(() => {
-        isDarkMode = !isDarkMode;
-        if (isDarkMode) {
-          document.body.classList.add('dark-theme');
-          document.documentElement.classList.add('dark-theme');
-        } else {
-          document.body.classList.remove('dark-theme');
-          document.documentElement.classList.remove('dark-theme');
-        }
-        applyMonetTheme(true);
-      });
+      isDarkMode = !isDarkMode;
+      if (isDarkMode) {
+        document.body.classList.add('dark-theme');
+        document.documentElement.classList.add('dark-theme');
+      } else {
+        document.body.classList.remove('dark-theme');
+        document.documentElement.classList.remove('dark-theme');
+      }
+      applyMonetTheme();
     }
     const btnToggleDark = document.getElementById('btn-toggle-dark');
     if (btnToggleDark) btnToggleDark.onclick = toggleThemeMode;
@@ -1300,11 +1266,20 @@
         wave.classList.add('is-active');
       });
       
+      const startTime = Date.now();
+      const MIN_HOLD_TIME = 120; // 🌟 严格提供 0.12s (120ms) 单点留存时间
+
       function removeRipple() {
-        wave.classList.add('is-fading');
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, MIN_HOLD_TIME - elapsed);
+
         setTimeout(() => {
-          if (wave.parentNode) wave.parentNode.removeChild(wave);
-        }, 850);
+          wave.classList.add('is-fading');
+          setTimeout(() => {
+            if (wave.parentNode) wave.parentNode.removeChild(wave);
+          }, 850);
+        }, remaining);
+
         window.removeEventListener('pointerup', removeRipple);
         window.removeEventListener('pointercancel', removeRipple);
       }
@@ -1334,8 +1309,8 @@
     document.addEventListener('pointerdown', (e) => {
       if (!e || !e.target || typeof e.target.closest !== 'function') return;
 
-      // 1. 忽略原生输入框、单选、复选、滑块、自定义选择框以及 Picker 与复合控件区域
-      if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-checkbox, .mdc-radio, .mdc-select-custom, .mdc-date-picker, .mdc-time-picker, .expansion-panel')) {
+      // 1. 忽略原生输入框、单选、复选、滑块、自定义选择框以及 Picker 与复合控件、Tab 内容区域
+      if (e.target.closest('input, select, textarea, .md1-slider, .md1-switch, .mdc-checkbox, .mdc-radio, .mdc-select-custom, .mdc-date-picker, .mdc-time-picker, .expansion-panel, .md1-tab-content-container, .md1-tab-panel')) {
         const btn = e.target.closest('.mdc-button, button, .mdc-date-picker__nav-btn');
         if (btn) createRipple(e, btn);
         return;
@@ -1576,15 +1551,7 @@
       showDemoToast(`已切换色彩维度: ${modeNames[mode]}`);
     }
 
-    function applyMonetTheme(skipTransition = false) {
-      if (!skipTransition) {
-        triggerThemeRipple(() => applyMonetThemeCore());
-      } else {
-        applyMonetThemeCore();
-      }
-    }
-
-    function applyMonetThemeCore() {
+    function applyMonetTheme() {
       // 🌟 1. 色彩维度自由配置与色相收敛
       const [hp, sp, lp] = hexToHsl(selectedPrimary);
       
@@ -1783,33 +1750,6 @@
       if (indicator && tabElement) {
         indicator.style.width = `${tabElement.offsetWidth}px`;
         indicator.style.left = `${tabElement.offsetLeft}px`;
-      }
-
-      // 目标 Tab 为起点向内容容器扩散的水波纹 (只在 Tab 内容容器内部显示，Tab 头部不显示)
-      if (tabElement) {
-        const contentContainer = document.getElementById('tabContentContainer');
-        if (contentContainer) {
-          const tabRect = tabElement.getBoundingClientRect();
-          const containerRect = contentContainer.getBoundingClientRect();
-          const originX = (tabRect.left + tabRect.width / 2) - containerRect.left;
-          const originY = 0;
-          const maxRadius = Math.hypot(
-            Math.max(originX, containerRect.width - originX),
-            containerRect.height
-          ) * 1.05;
-
-          const wave = document.createElement('div');
-          wave.className = `md1-tab-content-ripple ${isSlideRight ? 'slide-right' : 'slide-left'}`;
-          wave.style.width = `${maxRadius * 2}px`;
-          wave.style.height = `${maxRadius * 2}px`;
-          wave.style.left = `${originX}px`;
-          wave.style.top = `${originY}px`;
-          contentContainer.appendChild(wave);
-
-          setTimeout(() => {
-            if (wave.parentNode) wave.parentNode.removeChild(wave);
-          }, 650);
-        }
       }
     }
 

@@ -26,63 +26,36 @@ button {
   margin: 0;
   padding: 0;
   font-size: 0;
-  background-color: var(--mdc-theme-primary, #6750a4);
-  opacity: 0;
+  background-color: rgba(103, 80, 164, 0.16);
   border-radius: 50% !important;
   transform: translate3d(0, 0, 0) scale(0);
-  transition: transform 1.25s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.85s cubic-bezier(0.2, 0.8, 0.25, 1);
+  transition: transform 1.35s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.85s cubic-bezier(0.2, 0.8, 0.25, 1);
   pointer-events: none;
   will-change: transform, opacity;
 }
 
+/* 大卡片涟漪透明度调高（更透、更细腻，略小于常规按钮涟漪效果） */
+.demo-card .mdui-ripple-wave,
+.mdc-card .mdui-ripple-wave,
+[data-mdui-ripple] .mdui-ripple-wave {
+  background-color: rgba(103, 80, 164, 0.06);
+}
+
+.dark-theme .mdui-ripple-wave {
+  background-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.dark-theme .demo-card .mdui-ripple-wave,
+.dark-theme .mdc-card .mdui-ripple-wave,
+.dark-theme [data-mdui-ripple] .mdui-ripple-wave {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
 .mdui-ripple-wave.is-active {
   transform: translate3d(0, 0, 0) scale(1);
-  opacity: 0.16;
-}
-
-/* 大卡片涟漪透明度调高（更透、更细腻） */
-.demo-card .mdui-ripple-wave.is-active,
-.mdc-card .mdui-ripple-wave.is-active,
-[data-mdui-ripple] .mdui-ripple-wave.is-active {
-  opacity: 0.08;
-}
-
-/* 当主色/暗色填充型按钮 (Primary Raised / FAB 等) 涟漪使用 on-primary 对比色 */
-.mdc-button--raised .mdui-ripple-wave,
-.mdc-button--unelevated .mdui-ripple-wave,
-.mdc-fab .mdui-ripple-wave,
-.rail-header .mdui-ripple-wave {
-  background-color: var(--mdc-theme-on-primary, #ffffff) !important;
-}
-
-.mdc-button--raised .mdui-ripple-wave.is-active,
-.mdc-button--unelevated .mdui-ripple-wave.is-active,
-.mdc-fab .mdui-ripple-wave.is-active,
-.rail-header .mdui-ripple-wave.is-active {
-  opacity: 0.24 !important;
-}
-
-/* 🌙 暗色模式水波纹动态跟随主色 */
-.dark-theme .mdui-ripple-wave {
-  background-color: var(--mdc-theme-primary, #d0bcff);
-}
-
-.dark-theme .mdui-ripple-wave.is-active {
-  opacity: 0.18;
-}
-
-.dark-theme .demo-card .mdui-ripple-wave.is-active,
-.dark-theme .mdc-card .mdui-ripple-wave.is-active {
-  opacity: 0.06;
-}
-
-.dark-theme .mdc-button--raised .mdui-ripple-wave,
-.dark-theme .mdc-button--unelevated .mdui-ripple-wave,
-.dark-theme .mdc-fab .mdui-ripple-wave {
-  background-color: #000000 !important;
-  opacity: 0.16 !important;
+  opacity: 1;
 }
 
 .mdui-ripple-wave.is-fading {
-  opacity: 0 !important;
+  opacity: 0;
 }

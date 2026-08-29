@@ -24,7 +24,7 @@
   height: 20px;
   padding: 10px;
   cursor: pointer;
-  vertical-align: bottom;
+  vertical-align: middle;
 }
 
 .mdc-radio__native-control {
@@ -59,13 +59,15 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  border: 2px solid rgba(0, 0, 0, 0.54);
+  border: 2px solid rgba(0, 0, 0, 0.54) !important;
   border-radius: 50% !important;
   transition: border-color 0.12s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.dark-theme .mdc-radio__outer-circle {
-  border-color: rgba(255, 255, 255, 0.7);
+.dark-theme .mdc-radio__outer-circle,
+.dark-theme .mdc-radio .mdc-radio__outer-circle,
+.dark-theme .mdc-radio__native-control:not(:checked) ~ .mdc-radio__background .mdc-radio__outer-circle {
+  border-color: rgba(255, 255, 255, 0.75) !important;
 }
 
 .mdc-radio__inner-circle {
@@ -81,8 +83,16 @@
   transition: transform 0.12s cubic-bezier(0, 0, 0.2, 1);
 }
 
+.dark-theme .mdc-radio__inner-circle {
+  background-color: var(--mdc-theme-primary, #d0bcff) !important;
+}
+
 .mdc-radio__native-control:checked ~ .mdc-radio__background .mdc-radio__outer-circle {
-  border-color: var(--mdc-theme-primary, #6750a4);
+  border-color: var(--mdc-theme-primary, #6750a4) !important;
+}
+
+.dark-theme .mdc-radio__native-control:checked ~ .mdc-radio__background .mdc-radio__outer-circle {
+  border-color: var(--mdc-theme-primary, #d0bcff) !important;
 }
 
 .mdc-radio__native-control:checked ~ .mdc-radio__background .mdc-radio__inner-circle {
