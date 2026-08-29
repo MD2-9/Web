@@ -853,7 +853,8 @@ span.material-icons,
   overflow: hidden !important;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              background-color 0.3s ease;
+              background-color 0.28s cubic-bezier(0.2, 0, 0, 1),
+              border-color 0.28s cubic-bezier(0.2, 0, 0, 1);
 }
 
 /* 悬浮展开至 260px */
@@ -911,6 +912,7 @@ span.material-icons,
   color: var(--mdc-theme-primary, #6750a4);
   flex-shrink: 0;
   font-size: 24px !important;
+  transition: color 0.28s cubic-bezier(0.2, 0, 0, 1);
 }
 
 /* 一级导航项固定左右各 24px 内边距 (24+24+24=72px 绝对对称居中) */
@@ -924,7 +926,7 @@ span.material-icons,
   color: inherit;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.28s cubic-bezier(0.2, 0, 0, 1), color 0.28s cubic-bezier(0.2, 0, 0, 1);
   white-space: nowrap;
   overflow: hidden;
   flex-shrink: 0;
@@ -960,6 +962,7 @@ span.material-icons,
   overflow: hidden !important;
   box-sizing: border-box;
   padding: 0 0 8px 0;
+  transition: background-color 0.28s cubic-bezier(0.2, 0, 0, 1);
 }
 
 /* 顶部 Brand Header (点击触发调色盘水波纹) */
@@ -975,7 +978,7 @@ span.material-icons,
   flex-shrink: 0;
   cursor: pointer;
   user-select: none;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.28s cubic-bezier(0.2, 0, 0, 1), color 0.28s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .rail-header-avatar {
@@ -989,6 +992,7 @@ span.material-icons,
   font-weight: bold;
   font-size: 15px;
   flex-shrink: 0;
+  transition: background-color 0.28s cubic-bezier(0.2, 0, 0, 1), color 0.28s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .rail-header-text {
@@ -1025,7 +1029,7 @@ span.material-icons,
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: opacity 0.25s ease, color 0.3s ease;
+  transition: color 0.28s cubic-bezier(0.2, 0, 0, 1), opacity 0.25s ease;
 }
 
 /* 一级导航菜单容器 (绝对居中，置于顶层，覆盖过长文本) */
@@ -1046,6 +1050,7 @@ span.material-icons,
   transform: translateY(-50%);
   z-index: 10;
   background-color: var(--mdc-theme-surface, #ffffff);
+  transition: background-color 0.28s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .drawer-nav-section .rail-nav-list::-webkit-scrollbar {
@@ -1147,6 +1152,7 @@ span.material-icons,
   font-weight: 600 !important;
 }
 
+/* 底部控制面板 (支持 72px 单图标模式与 260px 展开模式自由切换) */
 /* 底部控制面板 */
 .rail-footer {
   padding: 8px;
@@ -1154,6 +1160,7 @@ span.material-icons,
   background: inherit;
   flex-shrink: 0;
   overflow: hidden;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .rail-footer-text {
@@ -1162,6 +1169,13 @@ span.material-icons,
   pointer-events: none;
   white-space: nowrap;
   transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mdc-navigation-rail:hover .rail-footer-text,
+.mdc-navigation-rail.is-expanded .rail-footer-text {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 /* =========================================================================
@@ -3094,6 +3108,14 @@ button {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.25s ease, filter 0.2s ease;
+}
+
+.mdc-date-picker__header:hover {
+  filter: brightness(1.06);
 }
 
 .mdc-date-picker__header-year {
@@ -3101,6 +3123,7 @@ button {
   font-weight: 500;
   opacity: 0.85;
   letter-spacing: 0.5px;
+  transition: all 0.28s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .mdc-date-picker__header-date {
@@ -3108,6 +3131,16 @@ button {
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.2px;
+  transition: all 0.28s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.mdc-date-picker.is-month-mode .mdc-date-picker__header-year {
+  opacity: 0.75;
+  font-size: 11px;
+}
+
+.mdc-date-picker.is-month-mode .mdc-date-picker__header-date {
+  font-size: 24px;
 }
 
 .mdc-date-picker__controls {
@@ -3123,6 +3156,18 @@ button {
   display: flex;
   align-items: center;
   gap: 6px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 0 !important;
+  transition: background-color 0.2s ease;
+}
+
+.mdc-date-picker__current-month:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.dark-theme .mdc-date-picker__current-month:hover {
+  background-color: rgba(255, 255, 255, 0.06);
 }
 
 .mdc-date-picker__nav-btn {
@@ -3136,11 +3181,15 @@ button {
   border: none;
   color: inherit;
   border-radius: 50% !important;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.15s ease, transform 0.15s ease;
 }
 
 .mdc-date-picker__nav-btn:hover {
   background-color: rgba(0, 0, 0, 0.06);
+}
+
+.mdc-date-picker__nav-btn:active {
+  transform: scale(0.92);
 }
 
 .mdc-date-picker__weekdays {
@@ -3151,6 +3200,13 @@ button {
   font-size: 11px;
   font-weight: 600;
   opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.mdc-date-picker__body-container {
+  position: relative;
+  overflow: hidden;
+  transition: height 0.32s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .mdc-date-picker__grid {
@@ -3158,6 +3214,78 @@ button {
   grid-template-columns: repeat(7, 1fr);
   padding: 4px 12px 14px;
   gap: 4px 0;
+}
+
+.mdc-date-picker__month-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  padding: 10px 14px 16px;
+  gap: 8px 10px;
+}
+
+.mdc-date-picker__grid.is-switching-in,
+.mdc-date-picker__month-grid.is-switching-in {
+  animation: m29PickerFadeInRight 0.28s cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
+@keyframes m29PickerFadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 🌟 日历浮动滑动选中指示器 (类似时钟表盘指针选区，带平滑位移与文字反色) */
+.mdc-date-picker__selection-thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--mdc-theme-primary);
+  border-radius: 50% !important;
+  pointer-events: none;
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+  transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1),
+              width 0.24s cubic-bezier(0.2, 0, 0, 1),
+              height 0.24s cubic-bezier(0.2, 0, 0, 1),
+              border-radius 0.24s cubic-bezier(0.2, 0, 0, 1),
+              opacity 0.22s ease;
+  will-change: transform, opacity;
+}
+
+.mdc-date-picker.is-month-mode .mdc-date-picker__selection-thumb {
+  border-radius: 0 !important;
+}
+
+.mdc-date-picker__month-cell {
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 0 !important;
+  background: transparent;
+  position: relative;
+  z-index: 2;
+  transition: color 0.2s ease, background-color 0.18s ease;
+  color: inherit;
+}
+
+.mdc-date-picker__month-cell:hover:not(.is-selected) {
+  background-color: var(--mdc-theme-primary-container, rgba(103, 80, 164, 0.12));
+  color: var(--mdc-theme-primary);
+}
+
+.mdc-date-picker__month-cell.is-selected {
+  color: var(--mdc-theme-on-primary) !important;
+  font-weight: 700;
 }
 
 .mdc-date-picker__cell {
@@ -3169,6 +3297,7 @@ button {
   font-weight: 500;
   cursor: pointer;
   position: relative;
+  z-index: 2;
 }
 
 .mdc-date-picker__cell > span {
@@ -3178,7 +3307,9 @@ button {
   align-items: center;
   justify-content: center;
   border-radius: 50% !important;
-  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 2;
+  transition: color 0.2s ease, background-color 0.18s ease;
 }
 
 .mdc-date-picker__cell:hover:not(.is-empty):not(.is-selected) > span {
@@ -3193,15 +3324,52 @@ button {
 }
 
 .mdc-date-picker__cell.is-selected > span {
-  background-color: var(--mdc-theme-primary) !important;
   color: var(--mdc-theme-on-primary) !important;
   font-weight: 700;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .mdc-date-picker__cell.is-empty {
   cursor: default;
   opacity: 0.25;
+}
+
+/* 🌟 年份切换专属动画 (左右淡入) */
+.m29-year-anim-prev {
+  display: inline-block;
+  animation: m29YearSlideLeft 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.m29-year-anim-next {
+  display: inline-block;
+  animation: m29YearSlideRight 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes m29YearSlideLeft {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes m29YearSlideRight {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.mdc-date-picker__grid.slide-left {
+  animation: m29PickerSlideLeft 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.mdc-date-picker__grid.slide-right {
+  animation: m29PickerSlideRight 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes m29PickerSlideLeft {
+  from { opacity: 0; transform: translateX(18px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes m29PickerSlideRight {
+  from { opacity: 0; transform: translateX(-18px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .mdc-date-picker__actions {

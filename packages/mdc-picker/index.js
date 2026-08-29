@@ -21,93 +21,242 @@ export class MdcDatePicker {
 
     this.currentDate = new Date(this.options.initialDate);
     this.selectedDate = new Date(this.options.initialDate);
+    this.mode = 'day'; // 'day' | 'month'
+
+    this.headerEl = root.querySelector('.mdc-date-picker__header');
     this.yearEl = root.querySelector('.mdc-date-picker__header-year');
     this.dateEl = root.querySelector('.mdc-date-picker__header-date');
     this.monthTitleEl = root.querySelector('.mdc-date-picker__month-label');
-    this.gridEl = root.querySelector('.mdc-date-picker__grid');
+    this.currentMonthEl = root.querySelector('.mdc-date-picker__current-month');
+    this.bodyContainer = root.querySelector('.mdc-date-picker__body-container');
+    this.weekdaysEl = root.querySelector('.mdc-date-picker__weekdays');
+    this.gridEl = root.querySelector('.mdc-date-picker__grid') || root.querySelector('.mdc-date-picker__month-grid');
     this.prevBtn = root.querySelector('.mdc-date-picker__prev-btn');
     this.nextBtn = root.querySelector('.mdc-date-picker__next-btn');
+
+    // 🌟 创建浮动滑动选中指示器 (类似时钟指针的位移反馈)
+    this.selectionThumb = document.createElement('div');
+    this.selectionThumb.className = 'mdc-date-picker__selection-thumb';
+    if (this.bodyContainer) {
+      this.bodyContainer.appendChild(this.selectionThumb);
+    }
 
     this.bindEvents();
     this.render();
   }
 
   bindEvents() {
-    if (this.prevBtn) {
-      this.prevBtn.addEventListener('click', () => {
-        this.currentDate.setMonth(this.currentDate.getMonth() - 1);
-        this.render();
+    if (this.headerEl) {
+      this.headerEl.addEventListener('click', () => {
+        this.toggleMode();
       });
     }
+
+    if (this.currentMonthEl) {
+      this.currentMonthEl.addEventListener('click', () => {
+        this.toggleMode();
+      });
+    }
+
+    if (this.prevBtn) {
+      this.prevBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (this.mode === 'day') {
+          this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+          this.render('slide-right', '', true);
+        } else {
+          this.currentDate.setFullYear(this.currentDate.getFullYear() - 1);
+          this.render('', 'm29-year-anim-prev', true);
+        }
+      });
+    }
+
     if (this.nextBtn) {
-      this.nextBtn.addEventListener('click', () => {
-        this.currentDate.setMonth(this.currentDate.getMonth() + 1);
-        this.render();
+      this.nextBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (this.mode === 'day') {
+          this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+          this.render('slide-left', '', true);
+        } else {
+          this.currentDate.setFullYear(this.currentDate.getFullYear() + 1);
+          this.render('', 'm29-year-anim-next', true);
+        }
       });
     }
   }
 
-  render() {
-    const year = this.currentDate.getFullYear();
-    const month = this.currentDate.getMonth();
+  toggleMode(targetMode) {
+    this.mode = targetMode || (this.mode === 'day' ? 'month' : 'day');
+    this.root.classList.toggle('is-month-mode', this.mode === 'month');
+    this.render('is-switching-in', '', true);
+  }
 
-    if (this.yearEl) this.yearEl.textContent = `${year} 年`;
-    if (this.monthTitleEl) {
-      this.monthTitleEl.textContent = `${year} 年 ${month + 1} 月`;
+  updateThumbPosition(activeCell) {
+    if (!this.selectionThumb || !this.bodyContainer) return;
+    if (!activeCell) {
+      this.selectionThumb.style.opacity = '0';
+      return;
     }
 
+    const containerRect = this.bodyContainer.getBoundingClientRect();
+    const cellRect = activeCell.getBoundingClientRect();
+
+    const isMonth = this.mode === 'month';
+    const thumbW = isMonth ? cellRect.width : 34;
+    const thumbH = isMonth ? 42 : 34;
+
+    const x = (cellRect.left - containerRect.left) + (cellRect.width - thumbW) / 2;
+    const y = (cellRect.top - containerRect.top) + (cellRect.height - thumbH) / 2;
+
+    this.selectionThumb.style.width = `${Math.round(thumbW)}px`;
+    this.selectionThumb.style.height = `${Math.round(thumbH)}px`;
+    this.selectionThumb.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
+    this.selectionThumb.style.opacity = '1';
+  }
+
+  render(slideDirection = '', yearAnimClass = '', animateHeight = false) {
+    const year = this.currentDate.getFullYear();
+    const month = this.currentDate.getMonth();
     const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-    if (this.dateEl) {
-      const sYear = this.selectedDate.getFullYear();
-      const sMonth = this.selectedDate.getMonth() + 1;
-      const sDay = this.selectedDate.getDate();
-      const sW = weekdays[this.selectedDate.getDay()];
-      this.dateEl.textContent = `${sMonth}月${sDay}日 ${sW}`;
+
+    const startH = this.bodyContainer ? this.bodyContainer.offsetHeight : 0;
+
+    // 🌟 1. 顶部 Header 与副标题文案联动
+    if (this.mode === 'day') {
+      if (this.yearEl) this.yearEl.textContent = `${year} 年`;
+      if (this.dateEl) {
+        const sMonth = this.selectedDate.getMonth() + 1;
+        const sDay = this.selectedDate.getDate();
+        const sW = weekdays[this.selectedDate.getDay()];
+        this.dateEl.textContent = `${sMonth}月${sDay}日 ${sW}`;
+        this.dateEl.className = 'mdc-date-picker__header-date';
+      }
+      if (this.monthTitleEl) {
+        this.monthTitleEl.textContent = `${year} 年 ${month + 1} 月`;
+        this.monthTitleEl.className = 'mdc-date-picker__month-label';
+      }
+      if (this.prevBtn) this.prevBtn.title = '上个月';
+      if (this.nextBtn) this.nextBtn.title = '下个月';
+      if (this.weekdaysEl) this.weekdaysEl.style.display = 'grid';
+    } else {
+      if (this.yearEl) this.yearEl.textContent = '选择月份';
+      if (this.dateEl) {
+        this.dateEl.textContent = `${year} 年`;
+        this.dateEl.className = yearAnimClass ? 'mdc-date-picker__header-date ' + yearAnimClass : 'mdc-date-picker__header-date';
+      }
+      if (this.monthTitleEl) {
+        this.monthTitleEl.textContent = `${year} 年`;
+        this.monthTitleEl.className = yearAnimClass ? 'mdc-date-picker__month-label ' + yearAnimClass : 'mdc-date-picker__month-label';
+      }
+      if (this.prevBtn) this.prevBtn.title = '上一年';
+      if (this.nextBtn) this.nextBtn.title = '下一年';
+      if (this.weekdaysEl) this.weekdaysEl.style.display = 'none';
     }
 
     if (!this.gridEl) return;
     this.gridEl.innerHTML = '';
-
-    const firstDayIndex = new Date(year, month, 1).getDay();
-    const totalDays = new Date(year, month + 1, 0).getDate();
-    const today = new Date();
-
-    // 填充上月占位空白
-    for (let i = 0; i < firstDayIndex; i++) {
-      const emptyCell = document.createElement('div');
-      emptyCell.className = 'mdc-date-picker__cell is-empty';
-      this.gridEl.appendChild(emptyCell);
+    this.gridEl.className = this.mode === 'day' ? 'mdc-date-picker__grid' : 'mdc-date-picker__month-grid';
+    if (slideDirection) {
+      this.gridEl.classList.add(slideDirection);
     }
 
-    // 填充当月日期
-    for (let day = 1; day <= totalDays; day++) {
-      const cell = document.createElement('div');
-      cell.className = 'mdc-date-picker__cell';
+    let activeCell = null;
 
-      const isSelected = this.selectedDate.getFullYear() === year &&
-                         this.selectedDate.getMonth() === month &&
-                         this.selectedDate.getDate() === day;
-      const isToday = today.getFullYear() === year &&
-                      today.getMonth() === month &&
-                      today.getDate() === day;
+    // 🌟 2. 渲染 日期网格 (Day View)
+    if (this.mode === 'day') {
+      const firstDayIndex = new Date(year, month, 1).getDay();
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const today = new Date();
 
-      if (isSelected) cell.classList.add('is-selected');
-      if (isToday) cell.classList.add('is-today');
+      // 填充上月占位空白
+      for (let i = 0; i < firstDayIndex; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'mdc-date-picker__cell is-empty';
+        this.gridEl.appendChild(emptyCell);
+      }
 
-      const span = document.createElement('span');
-      span.textContent = day;
-      cell.appendChild(span);
+      // 填充当月日期
+      for (let day = 1; day <= totalDays; day++) {
+        const cell = document.createElement('div');
+        cell.className = 'mdc-date-picker__cell';
 
-      cell.addEventListener('click', () => {
-        this.selectedDate = new Date(year, month, day);
-        this.render();
-        if (typeof this.options.onSelect === 'function') {
-          this.options.onSelect(this.selectedDate);
+        const isSelected = this.selectedDate.getFullYear() === year &&
+                           this.selectedDate.getMonth() === month &&
+                           this.selectedDate.getDate() === day;
+        const isToday = today.getFullYear() === year &&
+                        today.getMonth() === month &&
+                        today.getDate() === day;
+
+        if (isSelected) {
+          cell.classList.add('is-selected');
+          activeCell = cell;
         }
-      });
+        if (isToday) cell.classList.add('is-today');
 
-      this.gridEl.appendChild(cell);
+        const span = document.createElement('span');
+        span.textContent = day;
+        cell.appendChild(span);
+
+        cell.addEventListener('click', () => {
+          this.selectedDate = new Date(year, month, day);
+          this.gridEl.querySelectorAll('.mdc-date-picker__cell').forEach(c => c.classList.remove('is-selected'));
+          cell.classList.add('is-selected');
+          this.updateThumbPosition(cell);
+          
+          if (this.dateEl) {
+            const sMonth = this.selectedDate.getMonth() + 1;
+            const sDay = this.selectedDate.getDate();
+            const sW = weekdays[this.selectedDate.getDay()];
+            this.dateEl.textContent = `${sMonth}月${sDay}日 ${sW}`;
+          }
+
+          if (typeof this.options.onSelect === 'function') {
+            this.options.onSelect(this.selectedDate);
+          }
+        });
+
+        this.gridEl.appendChild(cell);
+      }
+    } 
+    // 🌟 3. 渲染 12 个月月份网格 (Month View)
+    else {
+      for (let m = 0; m < 12; m++) {
+        const monthCell = document.createElement('div');
+        monthCell.className = 'mdc-date-picker__month-cell';
+        if (this.currentDate.getMonth() === m && this.selectedDate.getFullYear() === year) {
+          monthCell.classList.add('is-selected');
+          activeCell = monthCell;
+        }
+        monthCell.textContent = `${m + 1} 月`;
+
+        monthCell.addEventListener('click', () => {
+          this.currentDate.setMonth(m);
+          this.selectedDate.setFullYear(year);
+          this.selectedDate.setMonth(m);
+          this.toggleMode('day');
+        });
+
+        this.gridEl.appendChild(monthCell);
+      }
     }
+
+    // 🌟 4. 手风琴容器高度弹性拉伸过渡
+    if (this.bodyContainer && animateHeight && startH) {
+      const targetH = this.bodyContainer.scrollHeight;
+      if (startH !== targetH) {
+        this.bodyContainer.style.height = `${startH}px`;
+        requestAnimationFrame(() => {
+          this.bodyContainer.style.height = `${targetH}px`;
+          setTimeout(() => {
+            if (this.bodyContainer) this.bodyContainer.style.height = 'auto';
+          }, 330);
+        });
+      }
+    }
+
+    requestAnimationFrame(() => {
+      this.updateThumbPosition(activeCell);
+    });
   }
 
   static attachTo(root, options) {

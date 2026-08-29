@@ -1034,11 +1034,14 @@
                 </button>
               </div>
             </div>
-            <div class="mdc-date-picker__weekdays">
-              <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
-            </div>
-            <div class="mdc-date-picker__grid">
-              <!-- 动态由 JS 生成日期网格 -->
+            <div class="mdc-date-picker__body-container">
+              <div class="mdc-date-picker__selection-thumb"></div>
+              <div class="mdc-date-picker__weekdays">
+                <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+              </div>
+              <div class="mdc-date-picker__grid">
+                <!-- 动态由 JS 生成日期网格 -->
+              </div>
             </div>
             <div class="mdc-date-picker__actions">
               <button class="mdc-button mdc-button--dense" onclick="showDemoToast('已取消日期选择')">取消</button>
@@ -1170,13 +1173,13 @@
     if (window.mdc && mdc.autoInit) mdc.autoInit();
 
     // =========================================================================
-    // 页面背景与卡片独享水波纹主题动效 (背景与卡片底层扩散，前景控件保持平滑过渡)
+    // 页面背景独享水波纹主题动效 (仅页面背景底层扩散水波纹，侧边栏与卡片保持直接平滑渐变)
     // =========================================================================
     function executeThemeRippleTransition(event, changeCallback) {
-      // 1. 立即计算并更新色彩数据
+      // 1. 立即更新色彩数据与主题变量（侧边栏、卡片、控件等保持原生直接平滑过渡）
       changeCallback();
 
-      // 2. 页面背景层独立水波纹扩散 (从窗口左上角 0,0 扩散)
+      // 2. 仅在页面背景底层独立扩散水波纹 (从窗口左上角 0,0 扩散至全屏，速率 29% 经典慢速)
       const bgLayer = document.getElementById('app-bg-layer');
       if (bgLayer) {
         const maxDim = Math.max(window.innerWidth, window.innerHeight);
@@ -1196,30 +1199,8 @@
 
         setTimeout(() => {
           if (bgWave.parentNode) bgWave.parentNode.removeChild(bgWave);
-        }, 460);
+        }, 1500);
       }
-
-      // 3. 所有卡片背景底层独立水波纹扩散 (z-index: 0 位于文字和按钮下方)
-      const cards = document.querySelectorAll('.demo-card, .mdc-card');
-      cards.forEach(card => {
-        const w = card.offsetWidth || 300;
-        const h = card.offsetHeight || 200;
-        const radius = Math.hypot(w, h) * 2;
-        const cWave = document.createElement('div');
-        cWave.className = 'm29-card-theme-wave';
-        cWave.style.width = `${radius * 2}px`;
-        cWave.style.height = `${radius * 2}px`;
-        cWave.style.backgroundColor = isDarkMode ? 'var(--mdc-theme-surface-container, #131217)' : 'var(--mdc-theme-surface-container, #ffffff)';
-        card.appendChild(cWave);
-
-        requestAnimationFrame(() => {
-          cWave.style.transform = 'translate3d(-50%, -50%, 0) scale(1)';
-        });
-
-        setTimeout(() => {
-          if (cWave.parentNode) cWave.parentNode.removeChild(cWave);
-        }, 460);
-      });
     }
     window.executeThemeRippleTransition = executeThemeRippleTransition;
 
@@ -2652,79 +2633,222 @@
     // =========================================================================
     let pickerCurrentDate = new Date();
     let pickerSelectedDate = new Date();
+    let pickerMode = 'day'; // 'day' | 'month'
 
-    function renderDemoDatePicker() {
+    function updateDemoThumbPosition(activeCell) {
+      const thumb = document.querySelector('#demoDatePicker .mdc-date-picker__selection-thumb');
+      const container = document.querySelector('#demoDatePicker .mdc-date-picker__body-container');
+      if (!thumb || !container) return;
+      if (!activeCell) {
+        thumb.style.opacity = '0';
+        return;
+      }
+
+      const containerRect = container.getBoundingClientRect();
+      const cellRect = activeCell.getBoundingClientRect();
+
+      const isMonth = pickerMode === 'month';
+      const thumbW = isMonth ? cellRect.width : 34;
+      const thumbH = isMonth ? 42 : 34;
+
+      const x = (cellRect.left - containerRect.left) + (cellRect.width - thumbW) / 2;
+      const y = (cellRect.top - containerRect.top) + (cellRect.height - thumbH) / 2;
+
+      thumb.style.width = `${Math.round(thumbW)}px`;
+      thumb.style.height = `${Math.round(thumbH)}px`;
+      thumb.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
+      thumb.style.opacity = '1';
+    }
+
+    function toggleDemoDatePickerMode(targetMode) {
+      const root = document.getElementById('demoDatePicker');
+      pickerMode = targetMode || (pickerMode === 'day' ? 'month' : 'day');
+      if (root) root.classList.toggle('is-month-mode', pickerMode === 'month');
+      renderDemoDatePicker('is-switching-in', '', true);
+    }
+
+    function renderDemoDatePicker(slideDirection = '', yearAnimClass = '', animateHeight = false) {
       const year = pickerCurrentDate.getFullYear();
       const month = pickerCurrentDate.getMonth();
+
+      const container = document.querySelector('#demoDatePicker .mdc-date-picker__body-container');
+      const startH = container ? container.offsetHeight : 0;
 
       const yearEl = document.querySelector('#demoDatePicker .mdc-date-picker__header-year');
       const dateEl = document.querySelector('#demoDatePicker .mdc-date-picker__header-date');
       const monthLabel = document.querySelector('#demoDatePicker .mdc-date-picker__month-label');
-      const grid = document.querySelector('#demoDatePicker .mdc-date-picker__grid');
-
-      if (yearEl) yearEl.textContent = `${year} 年`;
-      if (monthLabel) monthLabel.textContent = `${year} 年 ${month + 1} 月`;
+      const weekdaysEl = document.querySelector('#demoDatePicker .mdc-date-picker__weekdays');
+      const grid = document.querySelector('#demoDatePicker .mdc-date-picker__grid') || document.querySelector('#demoDatePicker .mdc-date-picker__month-grid');
+      const prevBtn = document.querySelector('#demoDatePicker .mdc-date-picker__prev-btn');
+      const nextBtn = document.querySelector('#demoDatePicker .mdc-date-picker__next-btn');
 
       const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-      if (dateEl) {
-        const sMonth = pickerSelectedDate.getMonth() + 1;
-        const sDay = pickerSelectedDate.getDate();
-        const sW = weekdays[pickerSelectedDate.getDay()];
-        dateEl.textContent = `${sMonth}月${sDay}日 ${sW}`;
+
+      // 🌟 1. 顶部 Header 与副标题文案联动
+      if (pickerMode === 'day') {
+        if (yearEl) yearEl.textContent = `${year} 年`;
+        if (dateEl) {
+          const sMonth = pickerSelectedDate.getMonth() + 1;
+          const sDay = pickerSelectedDate.getDate();
+          const sW = weekdays[pickerSelectedDate.getDay()];
+          dateEl.textContent = `${sMonth}月${sDay}日 ${sW}`;
+          dateEl.className = 'mdc-date-picker__header-date';
+        }
+        if (monthLabel) {
+          monthLabel.textContent = `${year} 年 ${month + 1} 月`;
+          monthLabel.className = 'mdc-date-picker__month-label';
+        }
+        if (prevBtn) prevBtn.title = '上个月';
+        if (nextBtn) nextBtn.title = '下个月';
+        if (weekdaysEl) weekdaysEl.style.display = 'grid';
+      } else {
+        if (yearEl) yearEl.textContent = '选择月份';
+        if (dateEl) {
+          dateEl.textContent = `${year} 年`;
+          dateEl.className = yearAnimClass ? 'mdc-date-picker__header-date ' + yearAnimClass : 'mdc-date-picker__header-date';
+        }
+        if (monthLabel) {
+          monthLabel.textContent = `${year} 年`;
+          monthLabel.className = yearAnimClass ? 'mdc-date-picker__month-label ' + yearAnimClass : 'mdc-date-picker__month-label';
+        }
+        if (prevBtn) prevBtn.title = '上一年';
+        if (nextBtn) nextBtn.title = '下一年';
+        if (weekdaysEl) weekdaysEl.style.display = 'none';
       }
 
       if (!grid) return;
       grid.innerHTML = '';
-
-      const firstDay = new Date(year, month, 1).getDay();
-      const totalDays = new Date(year, month + 1, 0).getDate();
-      const today = new Date();
-
-      for (let i = 0; i < firstDay; i++) {
-        const empty = document.createElement('div');
-        empty.className = 'mdc-date-picker__cell is-empty';
-        grid.appendChild(empty);
+      grid.className = pickerMode === 'day' ? 'mdc-date-picker__grid' : 'mdc-date-picker__month-grid';
+      if (slideDirection) {
+        grid.classList.add(slideDirection);
       }
 
-      for (let d = 1; d <= totalDays; d++) {
-        const cell = document.createElement('div');
-        cell.className = 'mdc-date-picker__cell';
+      let activeCell = null;
 
-        const isSelected = pickerSelectedDate.getFullYear() === year &&
-                           pickerSelectedDate.getMonth() === month &&
-                           pickerSelectedDate.getDate() === d;
-        const isToday = today.getFullYear() === year &&
-                        today.getMonth() === month &&
-                        today.getDate() === d;
+      // 🌟 2. 渲染 日期网格 (Day View)
+      if (pickerMode === 'day') {
+        const firstDay = new Date(year, month, 1).getDay();
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        const today = new Date();
 
-        if (isSelected) cell.classList.add('is-selected');
-        if (isToday) cell.classList.add('is-today');
+        for (let i = 0; i < firstDay; i++) {
+          const empty = document.createElement('div');
+          empty.className = 'mdc-date-picker__cell is-empty';
+          grid.appendChild(empty);
+        }
 
-        const span = document.createElement('span');
-        span.textContent = d;
-        cell.appendChild(span);
+        for (let d = 1; d <= totalDays; d++) {
+          const cell = document.createElement('div');
+          cell.className = 'mdc-date-picker__cell';
 
-        cell.addEventListener('click', () => {
-          pickerSelectedDate = new Date(year, month, d);
-          renderDemoDatePicker();
-        });
+          const isSelected = pickerSelectedDate.getFullYear() === year &&
+                             pickerSelectedDate.getMonth() === month &&
+                             pickerSelectedDate.getDate() === d;
+          const isToday = today.getFullYear() === year &&
+                          today.getMonth() === month &&
+                          today.getDate() === d;
 
-        grid.appendChild(cell);
+          if (isSelected) {
+            cell.classList.add('is-selected');
+            activeCell = cell;
+          }
+          if (isToday) cell.classList.add('is-today');
+
+          const span = document.createElement('span');
+          span.textContent = d;
+          cell.appendChild(span);
+
+          cell.addEventListener('click', () => {
+            pickerSelectedDate = new Date(year, month, d);
+            grid.querySelectorAll('.mdc-date-picker__cell').forEach(c => c.classList.remove('is-selected'));
+            cell.classList.add('is-selected');
+            updateDemoThumbPosition(cell);
+
+            if (dateEl) {
+              const sMonth = pickerSelectedDate.getMonth() + 1;
+              const sDay = pickerSelectedDate.getDate();
+              const sW = weekdays[pickerSelectedDate.getDay()];
+              dateEl.textContent = `${sMonth}月${sDay}日 ${sW}`;
+            }
+          });
+
+          grid.appendChild(cell);
+        }
+      } 
+      // 🌟 3. 渲染 12 个月月份网格 (Month View)
+      else {
+        for (let m = 0; m < 12; m++) {
+          const monthCell = document.createElement('div');
+          monthCell.className = 'mdc-date-picker__month-cell';
+          if (pickerCurrentDate.getMonth() === m && pickerSelectedDate.getFullYear() === year) {
+            monthCell.classList.add('is-selected');
+            activeCell = monthCell;
+          }
+          monthCell.textContent = `${m + 1} 月`;
+
+          monthCell.addEventListener('click', () => {
+            pickerCurrentDate.setMonth(m);
+            pickerSelectedDate.setFullYear(year);
+            pickerSelectedDate.setMonth(m);
+            toggleDemoDatePickerMode('day');
+          });
+
+          grid.appendChild(monthCell);
+        }
       }
+
+      // 🌟 4. 手风琴容器高度弹性拉伸过渡
+      if (container && animateHeight && startH) {
+        const targetH = container.scrollHeight;
+        if (startH !== targetH) {
+          container.style.height = `${startH}px`;
+          requestAnimationFrame(() => {
+            container.style.height = `${targetH}px`;
+            setTimeout(() => {
+              if (container) container.style.height = 'auto';
+            }, 330);
+          });
+        }
+      }
+
+      requestAnimationFrame(() => {
+        updateDemoThumbPosition(activeCell);
+      });
+    }
+
+    const datePickerHeader = document.querySelector('#demoDatePicker .mdc-date-picker__header');
+    const datePickerCurrentMonth = document.querySelector('#demoDatePicker .mdc-date-picker__current-month');
+    if (datePickerHeader) {
+      datePickerHeader.addEventListener('click', () => toggleDemoDatePickerMode());
+    }
+    if (datePickerCurrentMonth) {
+      datePickerCurrentMonth.addEventListener('click', () => toggleDemoDatePickerMode());
     }
 
     const prevMonthBtn = document.querySelector('#demoDatePicker .mdc-date-picker__prev-btn');
     const nextMonthBtn = document.querySelector('#demoDatePicker .mdc-date-picker__next-btn');
     if (prevMonthBtn) {
-      prevMonthBtn.addEventListener('click', () => {
-        pickerCurrentDate.setMonth(pickerCurrentDate.getMonth() - 1);
-        renderDemoDatePicker();
+      prevMonthBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (pickerMode === 'day') {
+          pickerCurrentDate.setMonth(pickerCurrentDate.getMonth() - 1);
+          renderDemoDatePicker('slide-right', '', true);
+        } else {
+          pickerCurrentDate.setFullYear(pickerCurrentDate.getFullYear() - 1);
+          renderDemoDatePicker('', 'm29-year-anim-prev', true);
+        }
       });
     }
     if (nextMonthBtn) {
-      nextMonthBtn.addEventListener('click', () => {
-        pickerCurrentDate.setMonth(pickerCurrentDate.getMonth() + 1);
-        renderDemoDatePicker();
+      nextMonthBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (pickerMode === 'day') {
+          pickerCurrentDate.setMonth(pickerCurrentDate.getMonth() + 1);
+          renderDemoDatePicker('slide-left', '', true);
+        } else {
+          pickerCurrentDate.setFullYear(pickerCurrentDate.getFullYear() + 1);
+          renderDemoDatePicker('', 'm29-year-anim-next', true);
+        }
       });
     }
 
