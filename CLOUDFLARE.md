@@ -3,7 +3,7 @@
 本项目 **M2.9 (MDC-Web Extended)** 已完全适配 **Cloudflare Workers** (支持 Workers Static Assets) 与 **Cloudflare Pages**。
 
 - 署名：**安秋** ([github.com/unjal29](https://github.com/unjal29))
-- 开源协议：修改与扩展组件遵循 **MIT License** | 原版 Google MDC 基础遵循 **Apache License 2.0**
+- 开源协议：全部组件统一遵循 **Apache License 2.0**
 - 上游官方基准库：[Google MDC-Web (github.com/material-components/material-components-web)](https://github.com/material-components/material-components-web)
 - 参考说明：部分 UI 借用与参考自 [MDUI (github.com/zdhxiong/mdui)](https://github.com/zdhxiong/mdui)
 - 字体声明：排版演示采用 **Google Sans Flex** 变量字体，版权归 **Google LLC** 所有。

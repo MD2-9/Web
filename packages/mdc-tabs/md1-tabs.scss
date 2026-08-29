@@ -2,7 +2,11 @@
 // Copyright 2026 安秋 <github.com/unjal29>
 // Licensed under the Apache License, Version 2.0
 //
-// MD1 Tab 选项卡系统规范 (Indicator 动态下划线滑块 ✖ 跟随滑块方向平滑切换 ✖ 内容区域无水波纹干扰)
+// Acknowledgment & Attribution:
+// Direction-aware sliding tab transitions adapted and inspired by MDUI
+// (https://github.com/zdhxiong/mdui), Copyright (c) 2016-2021 zdhxiong (MIT License).
+//
+// MD1 Tab 选项卡系统规范 (Indicator 动态下划线滑块 ✖ 跟随滑块方向平滑切换)
 //
 
 .md1-tabs-bar {

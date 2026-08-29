@@ -1,11 +1,19 @@
 /**
  * @license
  * Copyright 2026 安秋 <github.com/unjal29>
- * Licensed under the Apache License, Version 2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Acknowledgment & Attribution:
+ * Discrete slider interaction and teardrop pin concept adapted and inspired by MDUI
+ * (https://github.com/zdhxiong/mdui), Copyright (c) 2016-2021 zdhxiong (MIT License).
  */
 
 /**
- * MD1 / MDUI 经典离散滑块控制器
+ * MD1 / MDUI 经典离散滑块控制器 (Teardrop Pin Discrete Slider)
  */
 export class Md1Slider {
   /**

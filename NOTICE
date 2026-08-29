@@ -1,0 +1,55 @@
+Material Components Web (M2.9 Edition / Material Design 2.9)
+Copyright 2016-2018 Google Inc.
+Copyright 2026 安秋 <github.com/unjal29>
+
+=========================================================================
+1. Primary Project and Upstream Basis
+=========================================================================
+This product includes software developed by Google Inc.
+(https://github.com/material-components/material-components-web).
+Original codebase is licensed under the Apache License, Version 2.0.
+
+=========================================================================
+2. Modifications and Extensions (Apache-2.0)
+=========================================================================
+Modifications to original MDC components and newly developed M2.9
+components in this project are authored by 安秋 <github.com/unjal29>
+and released under the Apache License, Version 2.0:
+
+- New M2.9 Packages:
+  * @material/badge
+  * @material/divider
+  * @material/expansion-panel
+  * @material/monet
+  * @material/navigation-rail
+  * @material/picker
+  * @material/segmented-button
+  * @material/tooltip
+- M3 Global Variable System and unified CSS compilation pipeline
+
+=========================================================================
+3. Acknowledgements and Third-Party Attributions
+=========================================================================
+This project incorporates design concepts and code structures from the following
+open-source projects:
+
+* MDUI (Material Design UI)
+  Author: zdhxiong (https://github.com/zdhxiong/mdui)
+  License: MIT License (https://github.com/zdhxiong/mdui/blob/master/LICENSE)
+  Acknowledgment:
+  - Direction-aware sliding tab transition animation (md1-tabs.js / md1-tabs.scss)
+  - Teardrop pin discrete slider design and interaction (md1-slider.js / md1-slider.scss)
+
+* Focus Trap
+  Author: David Clark (https://github.com/focus-trap/focus-trap)
+  License: MIT License
+
+* Google Sans Flex Font
+  License: SIL Open Font License, Version 1.1 (OFL-1.1)
+
+* Material Icons
+  Author: Google LLC
+  License: Creative Commons Attribution 4.0 International (CC-BY 4.0) / Apache-2.0
+
+* TC39 Object Ponyfills & David Walsh Debounce Utilities
+  License: MIT License
