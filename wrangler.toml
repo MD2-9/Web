@@ -8,6 +8,9 @@ main = "worker.js"
 compatibility_date = "2024-04-01"
 compatibility_flags = ["nodejs_compat"]
 
+# Cloudflare Pages Build Output Directory
+pages_build_output_dir = "."
+
 # Workers Static Assets Configuration
 [assets]
 directory = "."

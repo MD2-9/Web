@@ -86,7 +86,8 @@
    npm run dist
    ```
 
-5. **部署至 Cloudflare Workers**：
+5. **部署至 Cloudflare Workers & Pages (支持 Git 自动化部署)**：
+   详情请查阅完整 [Cloudflare 部署指南](CLOUDFLARE.md)。
    ```bash
    npm run deploy
    ```
