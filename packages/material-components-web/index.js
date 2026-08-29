@@ -23,6 +23,8 @@ import * as chips from '@material/chips/index';
 import * as dialog from '@material/dialog/index';
 import * as drawer from '@material/drawer/index';
 import * as navigationRail from '@material/navigation-rail/index';
+import * as mobileDrawer from '@material/mobile-drawer/index';
+import { MdcMobileDrawer } from '@material/mobile-drawer/index';
 import * as monet from '@material/monet/index';
 import * as expansionPanel from '@material/expansion-panel/index';
 import * as floatingLabel from '@material/floating-label/index';
@@ -73,6 +75,8 @@ autoInit.register('MDCDialog', dialog.MDCDialog);
 autoInit.register('MDCPersistentDrawer', drawer.MDCPersistentDrawer);
 autoInit.register('MDCTemporaryDrawer', drawer.MDCTemporaryDrawer);
 autoInit.register('MDCNavigationRail', navigationRail.MdcNavigationRail);
+autoInit.register('MDCMobileDrawer', MdcMobileDrawer);
+autoInit.register('MdcMobileDrawer', MdcMobileDrawer);
 autoInit.register('MDCFloatingLabel', floatingLabel.MDCFloatingLabel);
 autoInit.register('MDCFormField', formField.MDCFormField);
 autoInit.register('MDCRipple', ripple.MDCRipple);
@@ -110,6 +114,8 @@ export {
   dialog,
   drawer,
   navigationRail,
+  mobileDrawer,
+  MdcMobileDrawer,
   monet,
   expansionPanel,
   floatingLabel,

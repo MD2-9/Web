@@ -552,6 +552,43 @@ export class MdcTimePicker {
       this.clockFace.addEventListener('touchstart', (e) => { e.preventDefault(); }, { passive: false });
       this.clockFace.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
       this.clockFace.addEventListener('wheel', (e) => { e.preventDefault(); e.stopPropagation(); }, { passive: false });
+
+      // 🌟 响应式尺寸监听：当右侧可用空间少于 29% 时隐藏上午/下午，表盘与滑块指示器位置实时自适应
+      const updateNarrowState = () => {
+        if (!this.root) return;
+        const headerEl = this.root.querySelector('.mdc-time-picker__header');
+        const displayEl = this.digitalDisplay;
+
+        let shouldHide = false;
+        if (headerEl && displayEl) {
+          const headerWidth = headerEl.offsetWidth || this.root.offsetWidth;
+          const displayRect = displayEl.getBoundingClientRect();
+          const headerRect = headerEl.getBoundingClientRect();
+          const rightSpace = headerRect.right - displayRect.right;
+          const rightSpaceRatio = headerWidth > 0 ? (rightSpace / headerWidth) : 1;
+
+          // 🌟 核心规则：当右侧可用空间少于 32% 时隐藏上午/下午
+          shouldHide = rightSpaceRatio < 0.32;
+        } else {
+          shouldHide = this.root.offsetWidth < 260;
+        }
+
+        if (shouldHide) {
+          this.root.classList.add('is-narrow');
+        } else {
+          this.root.classList.remove('is-narrow');
+        }
+        this.renderNumbers(false);
+        this.setIndicatorPosition(this.mode);
+      };
+
+      if (window.ResizeObserver) {
+        const ro = new ResizeObserver(() => {
+          updateNarrowState();
+        });
+        if (this.root) ro.observe(this.root);
+      }
+      window.addEventListener('resize', updateNarrowState);
     }
   }
 
@@ -764,8 +801,14 @@ export class MdcTimePicker {
       });
     }
 
-    const center = 115;
-    const radius = 88; // 统一优雅大外圈 88px
+    const faceRect = this.clockFace ? this.clockFace.getBoundingClientRect() : null;
+    const faceSize = (faceRect && faceRect.width > 50) ? faceRect.width : 230;
+    const center = faceSize / 2;
+    const radius = faceSize * (88 / 230);
+
+    if (this.clockHand) {
+      this.clockHand.style.height = `${radius}px`;
+    }
 
     if (isHour) {
       // 🌟 小时模式：24小时 0 3 6 .. 架构 ✖ 动态数字平滑滑翔跟随（最大位移仅 15°）

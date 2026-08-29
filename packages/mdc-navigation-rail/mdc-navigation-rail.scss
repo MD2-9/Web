@@ -240,29 +240,47 @@
   z-index: 1;
 }
 
-/* 二级面板列表与内容区域上下居中 */
+/* 二级面板列表与内容区域：顶部对齐起始 ✖ 独立顺畅滚动 ✖ 绝不挤压到顶栏下方 */
 .secondary-overlay-panel .rail-nav-list {
-  flex: 1;
+  flex: 1 1 auto;
+  height: calc(100% - 112px);
   display: flex !important;
   flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
-  padding: 12px 0 !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  padding: 8px 0 !important;
   width: 100% !important;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
   scrollbar-width: none;
-  margin: auto 0;
+  margin: 0 !important;
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  background: transparent !important;
+  box-sizing: border-box !important;
 }
 
 .secondary-overlay-content {
-  flex: 1;
+  flex: 1 1 auto;
+  height: calc(100% - 112px);
   display: flex !important;
   flex-direction: column !important;
-  justify-content: center !important;
-  padding: 20px 16px !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  padding: 16px !important;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: none;
+  margin: 0 !important;
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  box-sizing: border-box !important;
 }
 
 /* 二级面板内的导航项样式 (完全无缩进瑕疵) */
@@ -324,7 +342,7 @@
   display: none;
   flex-direction: column;
   justify-content: space-between;
-  overflow-y: auto;
+  overflow: hidden !important;
   scrollbar-width: none;
   will-change: clip-path, opacity;
 }
@@ -379,6 +397,8 @@
   background: var(--mdc-theme-primary, #6750a4);
   color: var(--mdc-theme-on-primary, #ffffff);
   flex-shrink: 0;
+  z-index: 10;
+  position: relative;
 }
 
 .overlay-header-title {
@@ -392,10 +412,17 @@
 .overlay-bottom-bar {
   padding: 10px 14px;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
-  background: inherit;
+  background-color: var(--mdc-theme-surface, #ffffff);
   flex-shrink: 0;
   display: flex;
   justify-content: center;
+  z-index: 10;
+  position: relative;
+}
+
+.dark-theme .overlay-bottom-bar {
+  background-color: #19181e;
+  border-top-color: rgba(255, 255, 255, 0.08);
 }
 
 .dark-theme .mdc-navigation-rail {

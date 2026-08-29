@@ -5,7 +5,7 @@
 // Material Components for Web - Monet Dynamic Color & Tonal Palette System
 //
 
-/* 调色盘无缝拼接色块网格 (0 间距 ✖ 双行文本 ✖ 上下无间隙 ✖ 垂直居中) */
+/* 调色盘无缝拼接色块网格 (0 间距 ✖ 双行文本 ✖ 顶部对其 ✖ 顺畅滚动) */
 .theme-grid {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
@@ -15,13 +15,15 @@
   column-gap: 0 !important;
   width: 100% !important;
   padding: 0 !important;
-  margin: auto 0 !important;
-  align-content: center !important;
-  justify-content: center !important;
+  margin: 0 !important;
+  align-content: start !important;
+  justify-content: stretch !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
   border: none !important;
   scrollbar-width: none;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
 }
 
 .theme-grid::-webkit-scrollbar {

@@ -1,0 +1,243 @@
+//
+// Copyright 2026 安秋 <github.com/unjal29>
+// Licensed under the Apache License, Version 2.0
+//
+// Material Components Web - Mobile Drawer (移动端独立专用抽屉组件 ✖ 从下往上排列 ✖ 0.39s 页面跳转收回)
+//
+
+/* 桌面端默认彻底隐藏移动端抽屉组件与悬浮按钮 */
+@media (min-width: 600px) {
+  .mdc-mobile-drawer,
+  .mobile-drawer-backdrop,
+  .mobile-floating-menu-btn {
+    display: none !important;
+  }
+}
+
+/* 移动端 (< 600px)：独立抽屉组件 */
+@media (max-width: 599.9px) {
+  /* 移动端隐藏桌面端 Navigation Rail */
+  .mdc-navigation-rail {
+    display: none !important;
+  }
+
+  .mdc-mobile-drawer {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background-color: var(--mdc-theme-surface, #ffffff);
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: none;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden !important;
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(0, 0, 0.2, 1),
+                box-shadow 0.35s ease,
+                background-color 0.3s ease;
+    will-change: transform;
+    box-sizing: border-box;
+  }
+
+  .mdc-mobile-drawer.is-open,
+  .mdc-mobile-drawer.mobile-open {
+    transform: translateX(0) !important;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .mobile-drawer-nav-section {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: space-between;
+    align-items: stretch;
+    position: relative;
+    z-index: 1;
+    overflow: hidden !important;
+    box-sizing: border-box;
+    padding: 0;
+  }
+
+  /* 顶部 Header */
+  .mobile-drawer-header {
+    display: flex;
+    align-items: center;
+    min-height: 64px;
+    width: 100%;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    background-color: var(--mdc-theme-primary, #6750a4);
+    color: var(--mdc-theme-on-primary, #ffffff);
+    flex-shrink: 0;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .mobile-drawer-header .rail-header-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .mobile-drawer-header .rail-header-text {
+    margin-left: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  /* 🌟 核心要求：移动端按钮从下往上靠底排列 (Bottom-to-Top / Bottom-Aligned) 而非居中排列 */
+  .mobile-drawer-nav-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-top: auto;
+    margin-bottom: 0;
+    padding: 16px 0;
+    gap: 8px;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden !important;
+    scrollbar-width: none;
+    z-index: 10;
+    background-color: var(--mdc-theme-surface, #ffffff);
+    box-sizing: border-box;
+  }
+
+  .mobile-drawer-nav-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-drawer-nav-item {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 48px !important;
+    padding: 0 20px !important;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
+
+  .mobile-drawer-nav-item:hover,
+  .mobile-drawer-nav-item:active {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .mobile-drawer-nav-item.is-active {
+    background-color: var(--mdc-theme-secondary-container, #e8def8) !important;
+    color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+    font-weight: 700;
+  }
+
+  .mobile-drawer-nav-item .rail-item-icon {
+    width: 24px !important;
+    height: 24px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: 0 !important;
+    margin-right: 16px !important;
+    color: var(--mdc-theme-primary, #6750a4);
+    flex-shrink: 0;
+    font-size: 24px !important;
+  }
+
+  .mobile-drawer-nav-item.is-active .rail-item-icon {
+    color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+  }
+
+  .mobile-drawer-nav-item .rail-item-text {
+    display: inline-block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    white-space: nowrap !important;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* 底部控制面板 */
+  .mobile-drawer-footer {
+    padding: 10px 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    background: inherit;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  /* 遮罩层 */
+  .mobile-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99990;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .mobile-drawer-backdrop.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* 悬浮唤出按钮 (页面静止 2.9 秒唤出) */
+  .mobile-floating-menu-btn {
+    display: flex !important;
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 9000;
+    background-color: var(--mdc-theme-primary, #6750a4);
+    color: var(--mdc-theme-on-primary, #ffffff);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    border-radius: 50% !important;
+    width: 48px;
+    height: 48px;
+    opacity: 0;
+    transform: scale(0.8) translateY(16px);
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0, 0, 0.2, 1),
+                transform 0.35s cubic-bezier(0, 0, 0.2, 1),
+                background-color 0.3s ease;
+  }
+
+  body.page-is-idle .mobile-floating-menu-btn {
+    opacity: 0.95;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+  }
+}
+
+.dark-theme .mdc-mobile-drawer {
+  background-color: var(--mdc-theme-surface, #19181e);
+  border-right-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-theme .mobile-drawer-nav-list {
+  background-color: var(--mdc-theme-surface, #19181e);
+}

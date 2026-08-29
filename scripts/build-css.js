@@ -31,6 +31,7 @@ const packageFiles = [
   'packages/mdc-radio/mdc-radio.scss',
   'packages/mdc-card/mdc-card.scss',
   'packages/mdc-navigation-rail/mdc-navigation-rail.scss',
+  'packages/mdc-mobile-drawer/mdc-mobile-drawer.scss',
   'packages/mdc-monet/mdc-monet.scss',
   'packages/mdc-ripple/m29-ripple.scss',
   'packages/mdc-ripple/m29-overscroll-glow.scss',
@@ -84,6 +85,16 @@ function build() {
   max-width: 1200px;
   box-sizing: border-box;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🌟 核心网格布局：宽屏自适应多列/双列，窄屏自动单列 */
+.component-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 20px !important;
+  margin-top: 16px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 @media (max-width: 599.9px) {

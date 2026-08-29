@@ -977,29 +977,47 @@ span.material-icons,
   z-index: 1;
 }
 
-/* 二级面板列表与内容区域上下居中 */
+/* 二级面板列表与内容区域：顶部对齐起始 ✖ 独立顺畅滚动 ✖ 绝不挤压到顶栏下方 */
 .secondary-overlay-panel .rail-nav-list {
-  flex: 1;
+  flex: 1 1 auto;
+  height: calc(100% - 112px);
   display: flex !important;
   flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
-  padding: 12px 0 !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  padding: 8px 0 !important;
   width: 100% !important;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
   scrollbar-width: none;
-  margin: auto 0;
+  margin: 0 !important;
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  background: transparent !important;
+  box-sizing: border-box !important;
 }
 
 .secondary-overlay-content {
-  flex: 1;
+  flex: 1 1 auto;
+  height: calc(100% - 112px);
   display: flex !important;
   flex-direction: column !important;
-  justify-content: center !important;
-  padding: 20px 16px !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  padding: 16px !important;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: none;
+  margin: 0 !important;
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  box-sizing: border-box !important;
 }
 
 /* 二级面板内的导航项样式 (完全无缩进瑕疵) */
@@ -1061,7 +1079,7 @@ span.material-icons,
   display: none;
   flex-direction: column;
   justify-content: space-between;
-  overflow-y: auto;
+  overflow: hidden !important;
   scrollbar-width: none;
   will-change: clip-path, opacity;
 }
@@ -1116,6 +1134,8 @@ span.material-icons,
   background: var(--mdc-theme-primary, #6750a4);
   color: var(--mdc-theme-on-primary, #ffffff);
   flex-shrink: 0;
+  z-index: 10;
+  position: relative;
 }
 
 .overlay-header-title {
@@ -1129,10 +1149,17 @@ span.material-icons,
 .overlay-bottom-bar {
   padding: 10px 14px;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
-  background: inherit;
+  background-color: var(--mdc-theme-surface, #ffffff);
   flex-shrink: 0;
   display: flex;
   justify-content: center;
+  z-index: 10;
+  position: relative;
+}
+
+.dark-theme .overlay-bottom-bar {
+  background-color: #19181e;
+  border-top-color: rgba(255, 255, 255, 0.08);
 }
 
 .dark-theme .mdc-navigation-rail {
@@ -1223,6 +1250,252 @@ span.material-icons,
 }
 
 
+/* --- Component: packages/mdc-mobile-drawer/mdc-mobile-drawer.scss --- */
+
+
+
+
+
+
+
+/* 桌面端默认彻底隐藏移动端抽屉组件与悬浮按钮 */
+@media (min-width: 600px) {
+  .mdc-mobile-drawer,
+  .mobile-drawer-backdrop,
+  .mobile-floating-menu-btn {
+    display: none !important;
+  }
+}
+
+/* 移动端 (< 600px)：独立抽屉组件 */
+@media (max-width: 599.9px) {
+  /* 移动端隐藏桌面端 Navigation Rail */
+  .mdc-navigation-rail {
+    display: none !important;
+  }
+
+  .mdc-mobile-drawer {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background-color: var(--mdc-theme-surface, #ffffff);
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: none;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden !important;
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(0, 0, 0.2, 1),
+                box-shadow 0.35s ease,
+                background-color 0.3s ease;
+    will-change: transform;
+    box-sizing: border-box;
+  }
+
+  .mdc-mobile-drawer.is-open,
+  .mdc-mobile-drawer.mobile-open {
+    transform: translateX(0) !important;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .mobile-drawer-nav-section {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: space-between;
+    align-items: stretch;
+    position: relative;
+    z-index: 1;
+    overflow: hidden !important;
+    box-sizing: border-box;
+    padding: 0;
+  }
+
+  /* 顶部 Header */
+  .mobile-drawer-header {
+    display: flex;
+    align-items: center;
+    min-height: 64px;
+    width: 100%;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    background-color: var(--mdc-theme-primary, #6750a4);
+    color: var(--mdc-theme-on-primary, #ffffff);
+    flex-shrink: 0;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .mobile-drawer-header .rail-header-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .mobile-drawer-header .rail-header-text {
+    margin-left: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  /* 🌟 核心要求：移动端按钮从下往上靠底排列 (Bottom-to-Top / Bottom-Aligned) 而非居中排列 */
+  .mobile-drawer-nav-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-top: auto;
+    margin-bottom: 0;
+    padding: 16px 0;
+    gap: 8px;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden !important;
+    scrollbar-width: none;
+    z-index: 10;
+    background-color: var(--mdc-theme-surface, #ffffff);
+    box-sizing: border-box;
+  }
+
+  .mobile-drawer-nav-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-drawer-nav-item {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 48px !important;
+    padding: 0 20px !important;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
+
+  .mobile-drawer-nav-item:hover,
+  .mobile-drawer-nav-item:active {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .mobile-drawer-nav-item.is-active {
+    background-color: var(--mdc-theme-secondary-container, #e8def8) !important;
+    color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+    font-weight: 700;
+  }
+
+  .mobile-drawer-nav-item .rail-item-icon {
+    width: 24px !important;
+    height: 24px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: 0 !important;
+    margin-right: 16px !important;
+    color: var(--mdc-theme-primary, #6750a4);
+    flex-shrink: 0;
+    font-size: 24px !important;
+  }
+
+  .mobile-drawer-nav-item.is-active .rail-item-icon {
+    color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+  }
+
+  .mobile-drawer-nav-item .rail-item-text {
+    display: inline-block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    white-space: nowrap !important;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* 底部控制面板 */
+  .mobile-drawer-footer {
+    padding: 10px 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    background: inherit;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  /* 遮罩层 */
+  .mobile-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99990;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .mobile-drawer-backdrop.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* 悬浮唤出按钮 (页面静止 2.9 秒唤出) */
+  .mobile-floating-menu-btn {
+    display: flex !important;
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 9000;
+    background-color: var(--mdc-theme-primary, #6750a4);
+    color: var(--mdc-theme-on-primary, #ffffff);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    border-radius: 50% !important;
+    width: 48px;
+    height: 48px;
+    opacity: 0;
+    transform: scale(0.8) translateY(16px);
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0, 0, 0.2, 1),
+                transform 0.35s cubic-bezier(0, 0, 0.2, 1),
+                background-color 0.3s ease;
+  }
+
+  body.page-is-idle .mobile-floating-menu-btn {
+    opacity: 0.95;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+  }
+}
+
+.dark-theme .mdc-mobile-drawer {
+  background-color: var(--mdc-theme-surface, #19181e);
+  border-right-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-theme .mobile-drawer-nav-list {
+  background-color: var(--mdc-theme-surface, #19181e);
+}
+
+
 /* --- Component: packages/mdc-monet/mdc-monet.scss --- */
 
 
@@ -1231,7 +1504,7 @@ span.material-icons,
 
 
 
-/* 调色盘无缝拼接色块网格 (0 间距 ✖ 双行文本 ✖ 上下无间隙 ✖ 垂直居中) */
+/* 调色盘无缝拼接色块网格 (0 间距 ✖ 双行文本 ✖ 顶部对其 ✖ 顺畅滚动) */
 .theme-grid {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
@@ -1241,13 +1514,15 @@ span.material-icons,
   column-gap: 0 !important;
   width: 100% !important;
   padding: 0 !important;
-  margin: auto 0 !important;
-  align-content: center !important;
-  justify-content: center !important;
+  margin: 0 !important;
+  align-content: start !important;
+  justify-content: stretch !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
   border: none !important;
   scrollbar-width: none;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
 }
 
 .theme-grid::-webkit-scrollbar {
@@ -1809,6 +2084,9 @@ button {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   margin-top: 16px;
   overflow-x: auto;
+  overflow-y: hidden !important;
+  overscroll-behavior-y: none !important;
+  touch-action: pan-x pinch-zoom !important;
   scrollbar-width: none;
 }
 
@@ -1875,22 +2153,22 @@ button {
   display: block;
 }
 
-/* 🌟 内容变换动画严格跟随滑条方向：
-   - 滑条向右切换 -> 内容向右移动 (from -28px to 0)
-   - 滑条向左切换 -> 内容向左移动 (from +28px to 0)
+/* 🌟 内容变换动画与滑条相反方向：
+   - 滑条向右切换 (index 增加) -> 内容从右向左移入 (from +28px to 0)
+   - 滑条向左切换 (index 减小) -> 内容从左向右移入 (from -28px to 0)
 */
 .m29-tab-panel.slide-right {
-  animation: tabSlideFollowRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: tabSlideOppositeRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .m29-tab-panel.slide-left {
-  animation: tabSlideFollowLeft 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: tabSlideOppositeLeft 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-@keyframes tabSlideFollowRight {
+@keyframes tabSlideOppositeRight {
   from {
     opacity: 0;
-    transform: translateX(-28px);
+    transform: translateX(28px);
   }
   to {
     opacity: 1;
@@ -1898,10 +2176,10 @@ button {
   }
 }
 
-@keyframes tabSlideFollowLeft {
+@keyframes tabSlideOppositeLeft {
   from {
     opacity: 0;
-    transform: translateX(28px);
+    transform: translateX(-28px);
   }
   to {
     opacity: 1;
@@ -2573,7 +2851,8 @@ button {
 .mdc-date-picker {
   display: inline-flex;
   flex-direction: column;
-  width: 328px;
+  width: 100%;
+  max-width: 328px;
   background-color: var(--mdc-theme-surface, #ffffff);
   color: var(--mdc-theme-on-surface, #1d1b20);
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -2717,7 +2996,8 @@ button {
 .mdc-time-picker {
   display: inline-flex;
   flex-direction: column;
-  width: 310px;
+  width: 100%;
+  max-width: 328px;
   background-color: var(--mdc-theme-surface, #ffffff);
   color: var(--mdc-theme-on-surface, #1d1b20);
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -2880,14 +3160,19 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 0;
+  padding: 20px 12px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
   touch-action: none !important;
   overscroll-behavior: contain;
 }
 
 .mdc-time-picker__clock-face {
   width: 230px;
-  height: 230px;
+  max-width: 100%;
+  aspect-ratio: 1 / 1 !important;
+  height: auto !important;
   background-color: var(--mdc-theme-surface-container-high, #f7f2fa);
   border-radius: 50% !important;
   position: relative;
@@ -2900,6 +3185,7 @@ button {
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
   cursor: grab;
+  margin: 0 auto;
 }
 
 .mdc-time-picker__clock-face:active {
@@ -2910,8 +3196,9 @@ button {
   position: absolute;
   top: 0;
   left: 0;
-  width: 230px;
-  height: 230px;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
   pointer-events: none;
 }
 
@@ -3033,6 +3320,70 @@ button {
   background-color: #1c1a22;
 }
 
+@media (max-width: 599.9px) {
+  .mdc-date-picker,
+  .mdc-time-picker {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .mdc-date-picker__cell {
+    height: 34px;
+  }
+
+  .mdc-date-picker__cell > span {
+    width: 30px;
+    height: 30px;
+  }
+
+  .mdc-time-picker__header {
+    padding: 14px 12px;
+  }
+
+  .mdc-time-picker__digit-box {
+    font-size: 34px;
+    width: 52px;
+    min-width: 52px;
+    height: 46px;
+  }
+
+  .mdc-time-picker__digit-slot {
+    width: 52px;
+    height: 46px;
+  }
+
+  .mdc-time-picker__digit-indicator {
+    width: 52px;
+    height: 46px;
+  }
+
+  .mdc-time-picker__digital-display {
+    height: 46px;
+  }
+
+  .mdc-time-picker__digital-content {
+    height: 46px;
+  }
+
+  .mdc-time-picker__dial-container {
+    padding: 16px 0;
+  }
+
+  .mdc-time-picker__ampm-toggle {
+    margin-left: 8px;
+  }
+
+  .mdc-time-picker__ampm-btn {
+    padding: 4px 8px;
+    font-size: 11.5px;
+  }
+}
+
+/* 🌟 当右侧可用空间少于 29% 时触发 is-narrow 隐藏上午/下午切换器 */
+.mdc-time-picker.is-narrow .mdc-time-picker__ampm-toggle {
+  display: none !important;
+}
+
 
 /* =============================================================== */
 /* Demo Catalog & Layout Helpers                                   */
@@ -3043,6 +3394,16 @@ button {
   max-width: 1200px;
   box-sizing: border-box;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🌟 核心网格布局：宽屏自适应多列/双列，窄屏自动单列 */
+.component-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 20px !important;
+  margin-top: 16px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 @media (max-width: 599.9px) {

@@ -43,7 +43,7 @@
 </head>
 <body>
 
-  <!-- 左侧 Navigation Rail -->
+  <!-- 左侧 Navigation Rail (桌面端 72px 紧凑 / 260px 悬浮展开) -->
   <aside class="mdc-navigation-rail" id="app-rail">
     
     <!-- 1. 主导航抽屉区域 (4 个核心一级菜单：主页、目录、设置、关于) -->
@@ -120,47 +120,47 @@
       </div>
       
       <nav class="rail-nav-list" style="padding: 8px 0;">
-        <a href="#section-buttons" class="rail-nav-item" onclick="handleNavClick()" title="1. 按钮与 FAB">
+        <a href="#section-buttons" class="rail-nav-item" title="1. 按钮与 FAB">
           <i class="material-icons rail-item-icon">touch_app</i>
           <span class="rail-item-text">1. 按钮与 FAB</span>
         </a>
-        <a href="#section-cards" class="rail-nav-item" onclick="handleNavClick()" title="2. 直角卡片">
+        <a href="#section-cards" class="rail-nav-item" title="2. 直角卡片">
           <i class="material-icons rail-item-icon">view_agenda</i>
           <span class="rail-item-text">2. 直角卡片</span>
         </a>
-        <a href="#section-chips" class="rail-nav-item" onclick="handleNavClick()" title="3. 标签与徽标">
+        <a href="#section-chips" class="rail-nav-item" title="3. 标签与徽标">
           <i class="material-icons rail-item-icon">label</i>
           <span class="rail-item-text">3. 标签与徽标</span>
         </a>
-        <a href="#section-form" class="rail-nav-item" onclick="handleNavClick()" title="4. 表单与开关">
+        <a href="#section-form" class="rail-nav-item" title="4. 表单与开关">
           <i class="material-icons rail-item-icon">tune</i>
           <span class="rail-item-text">4. 表单与开关</span>
         </a>
-        <a href="#section-list" class="rail-nav-item" onclick="handleNavClick()" title="5. 列表与手风琴">
+        <a href="#section-list" class="rail-nav-item" title="5. 列表与手风琴">
           <i class="material-icons rail-item-icon">format_list_bulleted</i>
           <span class="rail-item-text">5. 列表与手风琴</span>
         </a>
-        <a href="#section-dialogs" class="rail-nav-item" onclick="handleNavClick()" title="6. 对话框与菜单">
+        <a href="#section-dialogs" class="rail-nav-item" title="6. 对话框与菜单">
           <i class="material-icons rail-item-icon">aspect_ratio</i>
           <span class="rail-item-text">6. 对话框与菜单</span>
         </a>
-        <a href="#section-tabs" class="rail-nav-item" onclick="handleNavClick()" title="7. 选项卡 Tab">
+        <a href="#section-tabs" class="rail-nav-item" title="7. 选项卡 Tab">
           <i class="material-icons rail-item-icon">tab</i>
           <span class="rail-item-text">7. 选项卡 Tab</span>
         </a>
-        <a href="#section-progress" class="rail-nav-item" onclick="handleNavClick()" title="8. 进度指示器">
+        <a href="#section-progress" class="rail-nav-item" title="8. 进度指示器">
           <i class="material-icons rail-item-icon">hourglass_empty</i>
           <span class="rail-item-text">8. 进度指示器</span>
         </a>
-        <a href="#section-monet-lab" class="rail-nav-item" onclick="handleNavClick()" title="9. 莫奈色彩实验室">
+        <a href="#section-monet-lab" class="rail-nav-item" title="9. 莫奈色彩实验室">
           <i class="material-icons rail-item-icon">wallpaper</i>
           <span class="rail-item-text">9. 莫奈色彩实验室</span>
         </a>
-        <a href="#section-typography" class="rail-nav-item" onclick="handleNavClick()" title="10. 排版与变量字体">
+        <a href="#section-typography" class="rail-nav-item" title="10. 排版与变量字体">
           <i class="material-icons rail-item-icon">text_fields</i>
           <span class="rail-item-text">10. 排版与变量字体</span>
         </a>
-        <a href="#section-pickers" class="rail-nav-item" onclick="handleNavClick()" title="11. 日历与时钟">
+        <a href="#section-pickers" class="rail-nav-item" title="11. 日历与时钟">
           <i class="material-icons rail-item-icon">date_range</i>
           <span class="rail-item-text">11. 日历与时钟</span>
         </a>
@@ -272,13 +272,13 @@
           <button class="mdc-button mdc-button--dense" onclick="closeOverlay('themePickerPanel', event)" style="color: #fff; min-width: 32px; padding: 0 4px;" title="返回一级菜单">
             <i class="material-icons">arrow_back</i>
           </button>
-          <div style="display: flex; flex-direction: column;">
-            <span id="pickerStepTitle" style="font-size: 13px;">第 1 步: 选择主色 (Primary)</span>
-            <span id="pickerStepSub" style="font-size: 10px; opacity: 0.85;">点击莫奈色块设置核心主基调</span>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span id="pickerStepTitle" style="font-size: 14px; font-weight: 700; line-height: 1.2;">单色模式</span>
+            <span id="pickerStepSub" style="font-size: 12px; opacity: 0.9; font-weight: 500; line-height: 1.2;">选择主色</span>
           </div>
         </div>
       </div>
-      <div class="theme-grid" id="themeGrid" style="flex: 1;">
+      <div class="theme-grid" id="themeGrid">
         <!-- 动态渲染真实 Monet 色阶与跳过选项 -->
       </div>
       <div class="overlay-bottom-bar">
@@ -289,6 +289,56 @@
       </div>
     </div>
 
+  </aside>
+
+  <!-- 📱 移动端独立抽屉导航组件 (Mobile Drawer · 按钮从下往上靠底排列 ✖ 0.39s 页面跳转收回) -->
+  <aside class="mdc-mobile-drawer" id="app-mobile-drawer">
+    <div class="mobile-drawer-nav-section" id="mobileDrawerNavSection">
+      
+      <!-- 顶部 Header -->
+      <div class="mobile-drawer-header" onclick="openOverlay('themePickerPanel', event)" title="点击打开莫奈动态调色盘">
+        <div class="rail-header-avatar">M2.9</div>
+        <div class="rail-header-text">
+          <div style="font-weight: bold; font-size: 15px;">M2.9 · MDC-Web</div>
+          <div style="font-size: 11px; opacity: 0.85;">点击取色</div>
+        </div>
+      </div>
+
+      <!-- 🌟 核心要求：移动端按钮从下往上靠底排列 (Bottom-to-Top) -->
+      <nav class="mobile-drawer-nav-list">
+        <!-- 1. 主页 (跳转页面内容，保持 0.39s 延迟后平滑收回) -->
+        <a href="#section-overview" class="mobile-drawer-nav-item" title="主页 (Overview)">
+          <i class="material-icons rail-item-icon">home</i>
+          <span class="rail-item-text">主页</span>
+        </a>
+
+        <!-- 2. 目录 (展开二级全景组件，非跳转按钮，不收回) -->
+        <div class="mobile-drawer-nav-item" onclick="openOverlay('catalogSubmenuPanel', event)" title="目录 (点击展开二级全景组件)">
+          <i class="material-icons rail-item-icon" style="color: var(--mdc-theme-primary);">toc</i>
+          <span class="rail-item-text">目录</span>
+        </div>
+
+        <!-- 3. 设置 (非跳转按钮，不收回) -->
+        <div class="mobile-drawer-nav-item" onclick="openOverlay('settingsSubmenuPanel', event)" title="设置 (暗色与主题配置)">
+          <i class="material-icons rail-item-icon">settings</i>
+          <span class="rail-item-text">设置</span>
+        </div>
+
+        <!-- 4. 关于 (非跳转按钮，不收回) -->
+        <div class="mobile-drawer-nav-item" onclick="openOverlay('aboutSubmenuPanel', event)" title="关于项目">
+          <i class="material-icons rail-item-icon">info</i>
+          <span class="rail-item-text">关于</span>
+        </div>
+      </nav>
+
+      <!-- 底部控制面板 -->
+      <div class="mobile-drawer-footer">
+        <button id="btn-toggle-dark-mobile" onclick="toggleThemeMode()" class="mdc-button mdc-button--raised" style="width: 100%;">
+          <i class="material-icons mdc-button__icon">brightness_4</i>
+          切换暗色模式
+        </button>
+      </div>
+    </div>
   </aside>
 
   <!-- 主内容区域 -->
@@ -958,10 +1008,10 @@
         <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">date_range</i>
         11. 日历与时钟选择器 (Date & Time Pickers)
       </h3>
-      <div style="display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap; margin-top: 16px;">
+      <div style="display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; margin-top: 16px; width: 100%;">
         
         <!-- 📅 Material 纯直角日历选择器 (DatePicker) -->
-        <div>
+        <div style="flex: 1 1 300px; min-width: 0; max-width: 100%;">
           <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px; opacity: 0.85;">日历选择器 (DatePicker · 0px 纯直角与 50% 纯圆几何)</div>
           <div class="mdc-date-picker" id="demoDatePicker">
             <div class="mdc-date-picker__header">
@@ -996,7 +1046,7 @@
         </div>
 
         <!-- ⏰ Material 纯正表盘时钟选择器 (TimePicker) -->
-        <div>
+        <div style="flex: 1 1 300px; min-width: 0; max-width: 100%;">
           <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px; opacity: 0.85;">时钟表盘选择器 (TimePicker · 240px 纯圆表盘与指针)</div>
           <div class="mdc-time-picker" id="demoTimePicker">
             <div class="mdc-time-picker__header">
@@ -1047,12 +1097,37 @@
   </button>
 
   <!-- 轻量提示 Snackbar -->
-  <div id="demoSnackbar" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #323232; color: #fff; padding: 12px 24px; font-size: 13px; z-index: 99999; display: flex; align-items: center; gap: 16px; box-shadow: 0 3px 8px rgba(0,0,0,0.3); transition: transform 0.3s cubic-bezier(0,0,0.2,1);">
+  <div id="demoSnackbar" class="m29-demo-toast">
     <span>MDC-Web 纯直角与莫奈动态色彩已就绪！</span>
     <button class="mdc-button mdc-button--dense" onclick="hideDemoToast()" style="color: var(--mdc-theme-primary); font-weight: bold; min-width: auto; padding: 0;">知道了</button>
   </div>
 
   <style>
+    .m29-demo-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      background: #323232;
+      color: #fff;
+      padding: 12px 24px;
+      font-size: 13px;
+      z-index: 99990;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+      transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0,0,0.2,1), visibility 0.25s;
+    }
+    .m29-demo-toast.is-active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
     @keyframes spin { 100% { transform: rotate(360deg); } }
   </style>
 
@@ -1081,15 +1156,21 @@
     if (btnToggleDark) btnToggleDark.onclick = toggleThemeMode;
 
     // =========================================================================
-    // 二级覆层菜单管理系统 (水波纹扩散覆盖一级菜单 ✖ 提供返回按钮)
+    // 导航系统：桌面端 Navigation Rail (Hover展开/移开收起) ✖ 移动端独立抽屉 (0.39s跳转收起)
     // =========================================================================
     let activeOverlayId = null;
+    let mobileNavDelayTimer = null;
 
     function openOverlay(panelId, event) {
-      const navSec = document.getElementById('drawerNavSection');
+      const isMobile = window.innerWidth < 600;
+      const targetContainer = isMobile ? document.getElementById('app-mobile-drawer') : document.getElementById('app-rail');
       const panel = document.getElementById(panelId);
-      const rail = document.getElementById('app-rail');
-      if (!navSec || !panel) return;
+      if (!targetContainer || !panel) return;
+
+      // 确保面板放置在当前宿主容器内
+      if (panel.parentElement !== targetContainer) {
+        targetContainer.appendChild(panel);
+      }
 
       if (panelId === 'themePickerPanel') {
         currentStep = 1;
@@ -1098,29 +1179,27 @@
         renderThemeTiles();
       }
 
-      // 计算点击坐标相对于 Navigation Rail 的原点 (水波纹圆形展开原点)
-      if (rail) {
-        const railRect = rail.getBoundingClientRect();
-        let originX = 36;
-        let originY = 80;
+      // 计算点击坐标相对于宿主容器的原点 (水波纹圆形展开原点)
+      const rect = targetContainer.getBoundingClientRect();
+      let originX = 36;
+      let originY = 80;
 
-        const evt = event || (window.event ? window.event : null);
-        if (evt) {
-          const clientX = evt.clientX !== undefined ? evt.clientX : (evt.touches && evt.touches[0] ? evt.touches[0].clientX : null);
-          const clientY = evt.clientY !== undefined ? evt.clientY : (evt.touches && evt.touches[0] ? evt.touches[0].clientY : null);
-          if (clientX !== null && clientY !== null) {
-            originX = Math.max(0, Math.min(railRect.width, clientX - railRect.left));
-            originY = Math.max(0, Math.min(railRect.height, clientY - railRect.top));
-          } else if (evt.currentTarget && evt.currentTarget.getBoundingClientRect) {
-            const itemRect = evt.currentTarget.getBoundingClientRect();
-            originX = (itemRect.left + itemRect.width / 2) - railRect.left;
-            originY = (itemRect.top + itemRect.height / 2) - railRect.top;
-          }
+      const evt = event || (window.event ? window.event : null);
+      if (evt) {
+        const clientX = evt.clientX !== undefined ? evt.clientX : (evt.touches && evt.touches[0] ? evt.touches[0].clientX : null);
+        const clientY = evt.clientY !== undefined ? evt.clientY : (evt.touches && evt.touches[0] ? evt.touches[0].clientY : null);
+        if (clientX !== null && clientY !== null) {
+          originX = Math.max(0, Math.min(rect.width, clientX - rect.left));
+          originY = Math.max(0, Math.min(rect.height, clientY - rect.top));
+        } else if (evt.currentTarget && evt.currentTarget.getBoundingClientRect) {
+          const itemRect = evt.currentTarget.getBoundingClientRect();
+          originX = (itemRect.left + itemRect.width / 2) - rect.left;
+          originY = (itemRect.top + itemRect.height / 2) - rect.top;
         }
-
-        panel.style.setProperty('--ripple-origin-x', `${originX}px`);
-        panel.style.setProperty('--ripple-origin-y', `${originY}px`);
       }
+
+      panel.style.setProperty('--ripple-origin-x', `${originX}px`);
+      panel.style.setProperty('--ripple-origin-y', `${originY}px`);
 
       // 若之前已有其他展开的二级菜单，先关闭它
       if (activeOverlayId && activeOverlayId !== panelId) {
@@ -1131,32 +1210,39 @@
         }
       }
 
-      rail.classList.add('is-expanded');
+      if (!isMobile) {
+        targetContainer.classList.add('is-expanded');
+      }
       panel.style.display = 'flex';
       panel.classList.remove('anim-out');
       panel.classList.add('anim-in');
       activeOverlayId = panelId;
+
+      const scrollable = panel.querySelector('.rail-nav-list, .secondary-overlay-content, .theme-grid') || panel;
+      if (scrollable) {
+        scrollable.scrollTop = 0;
+      }
     }
 
     function closeOverlay(panelId, event) {
       const id = panelId || activeOverlayId;
       if (!id) return;
 
-      const navSec = document.getElementById('drawerNavSection');
       const panel = document.getElementById(id);
-      const rail = document.getElementById('app-rail');
-      if (!navSec || !panel) return;
+      const isMobile = window.innerWidth < 600;
+      const targetContainer = isMobile ? document.getElementById('app-mobile-drawer') : document.getElementById('app-rail');
+      if (!panel) return;
 
       // 如果有传入关闭点击事件，设置水波纹收缩原点
-      if (rail) {
-        const railRect = rail.getBoundingClientRect();
+      if (targetContainer) {
+        const rect = targetContainer.getBoundingClientRect();
         let originX = 36;
         let originY = 36;
         const evt = event || (window.event ? window.event : null);
         if (evt && evt.currentTarget && evt.currentTarget.getBoundingClientRect) {
           const itemRect = evt.currentTarget.getBoundingClientRect();
-          originX = (itemRect.left + itemRect.width / 2) - railRect.left;
-          originY = (itemRect.top + itemRect.height / 2) - railRect.top;
+          originX = (itemRect.left + itemRect.width / 2) - rect.left;
+          originY = (itemRect.top + itemRect.height / 2) - rect.top;
           panel.style.setProperty('--ripple-origin-x', `${originX}px`);
           panel.style.setProperty('--ripple-origin-y', `${originY}px`);
         }
@@ -1168,7 +1254,9 @@
       setTimeout(() => {
         panel.style.display = 'none';
         panel.classList.remove('anim-out');
-        rail.classList.remove('is-expanded');
+        if (!isMobile && targetContainer) {
+          targetContainer.classList.remove('is-expanded');
+        }
         if (activeOverlayId === id) activeOverlayId = null;
       }, 260);
     }
@@ -1176,20 +1264,68 @@
     window.closeOverlay = closeOverlay;
 
     function handleNavClick() {
-      // 展开侧边栏之后 点击侧边栏内元素不触发收纳，保持侧边栏状态
+      // 兼容函数
     }
 
     // =========================================================================
-    // 移动端交互系统：左边缘右滑唤出 + 左下角悬浮按钮 (静止 2.9 秒浮现)
-    // 修复：点击/触摸悬浮按钮及侧边栏内部时不清除 page-is-idle，确保悬浮按钮顺利打开侧边栏
+    // 桌面端 Navigation Rail 交互：单图标模式 ✖ Hover 展开 ✖ 移开/单击空白收回
+    // =========================================================================
+    const desktopRail = document.getElementById('app-rail');
+    if (desktopRail) {
+      desktopRail.addEventListener('mouseenter', () => {
+        if (window.innerWidth >= 600) {
+          desktopRail.classList.add('is-expanded');
+        }
+      });
+
+      desktopRail.addEventListener('mouseleave', () => {
+        if (window.innerWidth >= 600 && !activeOverlayId) {
+          desktopRail.classList.remove('is-expanded');
+        }
+      });
+
+      // 桌面端点击侧边栏空白区域收回
+      desktopRail.addEventListener('click', (e) => {
+        if (window.innerWidth >= 600) {
+          const isInteractive = e.target.closest('.rail-nav-item, .rail-header, button, a, input, select, .mdc-button, .segmented-button, .theme-swatch');
+          if (!isInteractive) {
+            if (activeOverlayId) {
+              closeOverlay(activeOverlayId, e);
+            } else {
+              desktopRail.classList.remove('is-expanded');
+            }
+          }
+        }
+      });
+    }
+
+    // 点击页面主体空白处时，收回桌面端二级覆层
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth >= 600 && activeOverlayId) {
+        if (!e.target.closest('#app-rail') && !e.target.closest('.secondary-overlay-panel')) {
+          closeOverlay(activeOverlayId, e);
+        }
+      }
+    });
+
+    // =========================================================================
+    // 移动端独立抽屉交互 (MdcMobileDrawer 核心规范)
+    // 1. 默认不显示，点击悬浮按钮或屏幕边缘右滑呼出
+    // 2. 点击右侧空白区域(Backdrop)、反向左滑、点击侧边栏内部空白区域立即收回
+    // 3. 点击【跳转页面内容】的导航链接时，保持 0.39s (390ms) 延迟后平滑收回
+    // 4. 点击【非跳转按钮】(如二级目录展开、设置、关于、调色盘、暗色切换) 不收回侧边栏
     // =========================================================================
     let idleTimeoutSeconds = 2.9;
     let idleTimer = null;
 
     function resetIdleTimer(e) {
-      // 若触摸/点击来自悬浮按钮、侧边栏或遮罩，直接放行，避免瞬间隐藏悬浮按钮
-      if (e && e.target && typeof e.target.closest === 'function' && (e.target.closest('#btnMobileFloatingMenu') || e.target.closest('#app-rail') || e.target.closest('#mobileDrawerBackdrop'))) {
-        return;
+      if (e && e.target && typeof e.target.closest === 'function') {
+        if (e.target.closest('#btnMobileFloatingMenu') || 
+            e.target.closest('#app-mobile-drawer') || 
+            e.target.closest('#mobileDrawerBackdrop') ||
+            e.target.closest('.mobile-drawer-backdrop')) {
+          return;
+        }
       }
       document.body.classList.remove('page-is-idle');
       if (idleTimer) clearTimeout(idleTimer);
@@ -1205,38 +1341,71 @@
     resetIdleTimer();
 
     function openMobileDrawer() {
-      const rail = document.getElementById('app-rail');
+      const mobileDrawer = document.getElementById('app-mobile-drawer');
       const backdrop = document.getElementById('mobileDrawerBackdrop');
-      if (rail) rail.classList.add('mobile-open');
+      if (mobileDrawer) {
+        mobileDrawer.classList.add('mobile-open', 'is-open');
+      }
       if (backdrop) backdrop.classList.add('is-active');
     }
 
     function closeMobileDrawer() {
-      const rail = document.getElementById('app-rail');
+      const mobileDrawer = document.getElementById('app-mobile-drawer');
       const backdrop = document.getElementById('mobileDrawerBackdrop');
-      if (rail) rail.classList.remove('mobile-open');
+      if (mobileDrawer) {
+        mobileDrawer.classList.remove('mobile-open', 'is-open');
+      }
       if (backdrop) backdrop.classList.remove('is-active');
       if (activeOverlayId) closeOverlay(activeOverlayId);
+      if (mobileNavDelayTimer) {
+        clearTimeout(mobileNavDelayTimer);
+        mobileNavDelayTimer = null;
+      }
     }
+    window.openMobileDrawer = openMobileDrawer;
+    window.closeMobileDrawer = closeMobileDrawer;
 
-    // 绑定侧边栏阻止内部点击向外触发全局收纳，但支持点击内部一级菜单空白处收回
-    const appRailEl = document.getElementById('app-rail');
-    const drawerNavSec = document.getElementById('drawerNavSection');
+    // 绑定移动端抽屉内部交互事件
+    const mobileDrawerEl = document.getElementById('app-mobile-drawer');
+    if (mobileDrawerEl) {
+      mobileDrawerEl.addEventListener('click', (e) => {
+        const target = e.target;
+        if (!target || typeof target.closest !== 'function') return;
 
-    if (drawerNavSec) {
-      drawerNavSec.addEventListener('click', (e) => {
-        // 如果点击的不是具体的可交互菜单项/按钮/头像/链接，则收回收纳
-        if (!e.target.closest('.rail-nav-item, .rail-header, button, a, input, .mdc-button')) {
-          if (activeOverlayId) {
-            closeOverlay(activeOverlayId, e);
-          } else if (window.innerWidth < 600) {
-            closeMobileDrawer();
+        // 🌟 1. 检查是否点击了跳转页面内容的导航链接 (a[href^="#"] 或 a[href])
+        const navLink = target.closest('a[href]');
+        if (navLink) {
+          const href = navLink.getAttribute('href');
+          if (href && (href.startsWith('#') || href.startsWith('http') || href.startsWith('/'))) {
+            // 保持 0.39s (390ms) 延迟后再平滑收回抽屉
+            if (mobileNavDelayTimer) clearTimeout(mobileNavDelayTimer);
+            mobileNavDelayTimer = setTimeout(() => {
+              closeMobileDrawer();
+              mobileNavDelayTimer = null;
+            }, 390);
+            return;
           }
+        }
+
+        // 🌟 2. 检查是否点击了非跳转功能按钮 (展开二级菜单、调色盘、暗色切换、返回按钮等)
+        const nonNavAction = target.closest(
+          'button, .mobile-drawer-header, .rail-header, [onclick*="openOverlay"], [onclick*="closeOverlay"], [onclick*="toggleThemeMode"], [onclick*="setColorPaletteMode"], .segmented-button, .theme-swatch, input, select'
+        );
+        if (nonNavAction) {
+          // 不收回侧边栏，放行内部操作
+          return;
+        }
+
+        // 🌟 3. 点击抽屉内部空白区域：收回收纳
+        if (activeOverlayId) {
+          closeOverlay(activeOverlayId, e);
+        } else {
+          closeMobileDrawer();
         }
       });
     }
 
-    // 绑定移动端悬浮按钮独立事件，阻止冒泡
+    // 绑定移动端悬浮按钮独立事件
     const btnMobileFab = document.getElementById('btnMobileFloatingMenu');
     if (btnMobileFab) {
       btnMobileFab.addEventListener('click', (e) => {
@@ -1248,35 +1417,35 @@
       }, { passive: true });
     }
 
-    // 移动端边缘滑动唤出与收起手势
+    // 移动端边缘手势滑动唤出 (边缘右滑呼出 ✖ 反向左滑收起)
     let touchStartX = 0;
     let touchStartY = 0;
-    let touchStartedInRail = false;
+    let touchStartedInDrawer = false;
 
     window.addEventListener('touchstart', (e) => {
+      if (!e.touches || !e.touches[0]) return;
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
-      touchStartedInRail = !!(e.target && e.target.closest('#app-rail'));
+      touchStartedInDrawer = !!(e.target && e.target.closest('#app-mobile-drawer'));
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
-      // 若触摸起始或结束于侧边栏内部，绝对不触发侧边栏收起手势
-      if (touchStartedInRail || (e.target && e.target.closest('#app-rail'))) {
-        return;
-      }
-
+      if (!e.changedTouches || !e.changedTouches[0]) return;
       const touchEndX = e.changedTouches[0].clientX;
       const touchEndY = e.changedTouches[0].clientY;
       const deltaX = touchEndX - touchStartX;
       const deltaY = Math.abs(touchEndY - touchStartY);
 
-      if (touchStartX < 35 && deltaX > 45 && deltaY < 80) {
+      const mobileDrawer = document.getElementById('app-mobile-drawer');
+      const isDrawerOpen = mobileDrawer && (mobileDrawer.classList.contains('mobile-open') || mobileDrawer.classList.contains('is-open'));
+
+      // 边缘右滑呼出
+      if (!isDrawerOpen && touchStartX < 35 && deltaX > 45 && deltaY < 80) {
         openMobileDrawer();
-      } else if (touchStartX > 40 && deltaX < -50 && deltaY < 80) {
-        const rail = document.getElementById('app-rail');
-        if (rail && rail.classList.contains('mobile-open')) {
-          closeMobileDrawer();
-        }
+      }
+      // 反向左滑收起
+      else if (isDrawerOpen && deltaX < -50 && deltaY < 80) {
+        closeMobileDrawer();
       }
     }, { passive: true });
 
@@ -1416,20 +1585,18 @@
       const stepSub = document.getElementById('pickerStepSub');
       if (!grid) return;
       grid.innerHTML = '';
+      grid.scrollTop = 0;
 
-      if (colorPaletteMode === 1) {
-        stepTitle.textContent = '单色模式: 选择核心主色 (Primary)';
-        stepSub.textContent = '点击色块一键应用主色及全套衍生色阶 (严格只允许主色色阶)';
-      } else if (currentStep === 1) {
-        stepTitle.textContent = '第 1 步: 选择主色 (Primary)';
-        stepSub.textContent = '点击莫奈色块设置核心主基调';
-      } else if (currentStep === 2) {
-        stepTitle.textContent = '第 2 步: 选择次色 (Secondary)';
-        stepSub.textContent = colorPaletteMode === 2 ? '选择次色后即完成双色调配' : '选择次色，或点击跳过直接完成';
-      } else {
-        stepTitle.textContent = '第 3 步: 选择第三色 (Tertiary)';
-        stepSub.textContent = '选择第三色，或点击跳过直接完成';
+      const modeText = colorPaletteMode === 1 ? '单色模式' : (colorPaletteMode === 2 ? '双色模式' : '三色模式');
+      if (stepTitle) stepTitle.textContent = modeText;
+
+      let subText = '选择主色';
+      if (currentStep === 2) {
+        subText = '选择次色';
+      } else if (currentStep === 3) {
+        subText = '选择第三色';
       }
+      if (stepSub) stepSub.textContent = subText;
 
       MONET_PALETTES.forEach(t => {
         const tile = document.createElement('div');
@@ -1835,13 +2002,24 @@
     let toastTimer = null;
     function showDemoToast(msg) {
       const sb = document.getElementById('demoSnackbar');
-      if (msg) sb.querySelector('span').textContent = msg;
-      sb.style.transform = 'translateX(-50%) translateY(0)';
+      if (!sb) return;
+      if (msg) {
+        const span = sb.querySelector('span');
+        if (span) span.textContent = msg;
+      }
+      sb.classList.add('is-active');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(hideDemoToast, 3000);
+      toastTimer = setTimeout(() => {
+        hideDemoToast();
+      }, 2200);
     }
     function hideDemoToast() {
-      document.getElementById('demoSnackbar').style.transform = 'translateX(-50%) translateY(100px)';
+      const sb = document.getElementById('demoSnackbar');
+      if (sb) sb.classList.remove('is-active');
+      if (toastTimer) {
+        clearTimeout(toastTimer);
+        toastTimer = null;
+      }
     }
 
     // =========================================================================
@@ -2113,11 +2291,14 @@
 
         this.updatePathD(path, dir, displacement);
 
-        const pull = Math.abs(delta);
-        const scale = Math.min(2.0, Math.max(0.12, (pull / 65) * (1 - pull / 700)));
-        const opacity = Math.min(0.24, Math.max(0.08, 0.08 + (pull / 300) * 0.14));
-
         const isVertical = dir === 'top' || dir === 'bottom';
+        // 🌟 缩小左右两侧临界数值为原来的 10%，上下为 20%，需更大阻尼力度触发
+        const scaleFactor = isVertical ? 0.20 : 0.10;
+
+        const pull = Math.abs(delta);
+        const scale = Math.min(scaleFactor * 2.0, Math.max(0.015, (pull / 65) * (1 - pull / 700) * scaleFactor));
+        const opacity = Math.min(0.24, Math.max(0.06, 0.06 + (pull / 300) * 0.14));
+
         arc.style.transition = 'none';
         arc.style.transform = isVertical ? `scaleY(${scale})` : `scaleX(${scale})`;
         arc.style.opacity = `${opacity}`;
@@ -2145,9 +2326,12 @@
         this.updatePathD(path, dir, displacement);
 
         const isVertical = dir === 'top' || dir === 'bottom';
+        // 🌟 缩小左右两侧临界数值为原来的 10%，上下为 20%
+        const scaleFactor = isVertical ? 0.20 : 0.10;
+
         const v = Math.abs(velocity);
-        const peakScale = Math.min(1.8, Math.max(0.65, 0.4 + v / 85));
-        const peakOpacity = Math.min(0.22, Math.max(0.12, 0.10 + v / 400));
+        const peakScale = Math.min(scaleFactor * 1.8, Math.max(scaleFactor * 0.65, (0.4 + v / 85) * scaleFactor));
+        const peakOpacity = Math.min(0.22, Math.max(0.08, 0.08 + (v / 400) * 0.12));
 
         // 阶段 1：快速吸能扩张 (Fast Expand ~140ms)
         arc.style.transition = 'transform 0.14s cubic-bezier(0, 0, 0.2, 1), opacity 0.14s ease-out';
@@ -2632,12 +2816,15 @@
       const baseMin = baseContent.querySelector('.mdc-time-picker__digit-minute');
       if (!baseHour || !baseMin) return;
 
-      const targetBox = mode === 'minute' ? baseMin : baseHour;
+      const isMin = mode === 'minute';
+      const targetBox = isMin ? baseMin : baseHour;
       const targetX = targetBox.offsetLeft;
-      const baseW = targetBox.offsetWidth || 62;
+      const baseW = targetBox.offsetWidth || (window.innerWidth < 600 ? 52 : 62);
+      const baseH = targetBox.offsetHeight || (window.innerWidth < 600 ? 46 : 52);
 
       indicator.style.transform = `translateX(${targetX}px)`;
       indicator.style.width = `${baseW}px`;
+      indicator.style.height = `${baseH}px`;
       invContent.style.transform = `translateX(${-targetX}px)`;
     }
 
@@ -2655,10 +2842,13 @@
 
       const hourX = baseHour.offsetLeft;
       const minX = baseMin.offsetLeft;
-      const baseW = baseHour.offsetWidth || 62;
-      const stretchW = baseW + 34; // 96px: 冲刺拉伸宽度
-
       const isRight = toMode === 'minute';
+      const startBox = isRight ? baseHour : baseMin;
+      const endBox = isRight ? baseMin : baseHour;
+      const baseW = endBox.offsetWidth || (window.innerWidth < 600 ? 52 : 62);
+      const baseH = endBox.offsetHeight || (window.innerWidth < 600 ? 46 : 52);
+      const stretchW = baseW + 34; // 冲刺拉伸宽度
+
       const startX = isRight ? hourX : minX;
       const endX = isRight ? minX : hourX;
 
@@ -2670,29 +2860,29 @@
       if (isRight) {
         keyframes = [
           { transform: `translateX(${startX}px)`, width: `${baseW}px`, offset: 0, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
-          // 蓄力压缩：向左回拉 5px，宽度压缩至 56px
+          // 蓄力压缩：向左回拉 5px，宽度压缩
           { transform: `translateX(${startX - 5}px)`, width: `${baseW - 6}px`, offset: 0.12, easing: 'cubic-bezier(0.2, 0, 0.1, 1)' },
-          // 弹射拉伸：向右爆发冲刺，拉伸至 96px
+          // 弹射拉伸：向右爆发冲刺，拉伸
           { transform: `translateX(${startX + (endX - startX) * 0.22}px)`, width: `${stretchW}px`, offset: 0.36, easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)' },
           // 跨越冒号区
           { transform: `translateX(${startX + (endX - startX) * 0.65}px)`, width: `${stretchW - 4}px`, offset: 0.64, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
           // 缓冲过冲：向右探出 3px
           { transform: `translateX(${endX + 3}px)`, width: `${baseW + 2}px`, offset: 0.85, easing: 'cubic-bezier(0.2, 1, 0.3, 1)' },
-          // 阻尼归位：锁定目标位置 62px
+          // 阻尼归位：锁定目标位置与尺寸
           { transform: `translateX(${endX}px)`, width: `${baseW}px`, offset: 1 }
         ];
       } else {
         keyframes = [
           { transform: `translateX(${startX}px)`, width: `${baseW}px`, offset: 0, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
-          // 蓄力压缩：向右回拉 5px，宽度压缩至 56px
+          // 蓄力压缩：向右回拉 5px，宽度压缩
           { transform: `translateX(${startX + 5}px)`, width: `${baseW - 6}px`, offset: 0.12, easing: 'cubic-bezier(0.2, 0, 0.1, 1)' },
-          // 弹射拉伸：向左爆发冲刺，拉伸至 96px
+          // 弹射拉伸：向左爆发冲刺，拉伸
           { transform: `translateX(${startX - (startX - endX) * 0.38 - (stretchW - baseW)}px)`, width: `${stretchW}px`, offset: 0.36, easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)' },
           // 跨越冒号区
           { transform: `translateX(${startX - (startX - endX) * 0.75 - (stretchW - 4 - baseW)}px)`, width: `${stretchW - 4}px`, offset: 0.64, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
           // 缓冲过冲：向左探出 3px
           { transform: `translateX(${endX - 3}px)`, width: `${baseW + 2}px`, offset: 0.85, easing: 'cubic-bezier(0.2, 1, 0.3, 1)' },
-          // 阻尼归位：锁定目标位置 62px
+          // 阻尼归位：锁定目标位置与尺寸
           { transform: `translateX(${endX}px)`, width: `${baseW}px`, offset: 1 }
         ];
       }
@@ -2719,6 +2909,7 @@
       indicator._anim.onfinish = () => {
         indicator.style.transform = `translateX(${endX}px)`;
         indicator.style.width = `${baseW}px`;
+        indicator.style.height = `${baseH}px`;
         invContent.style.transform = `translateX(${-endX}px)`;
         if (onFinished) onFinished();
       };
@@ -2812,8 +3003,15 @@
         });
       }
 
-      const center = 115;
-      const radius = 88; // 统一优雅大外圈 88px
+      const clockFace = document.querySelector('#demoTimePicker .mdc-time-picker__clock-face');
+      const faceRect = clockFace ? clockFace.getBoundingClientRect() : null;
+      const faceSize = (faceRect && faceRect.width > 50) ? faceRect.width : 230;
+      const center = faceSize / 2;
+      const radius = faceSize * (88 / 230);
+
+      if (demoClockHand) {
+        demoClockHand.style.height = `${radius}px`;
+      }
 
       if (isHour) {
         // 🌟 小时模式：24小时 0 3 6 .. 架构 ✖ 动态数字平滑滑翔跟随（最大位移仅 15°）
@@ -3132,6 +3330,47 @@
       demoClockFace.addEventListener('touchstart', (e) => { e.preventDefault(); }, { passive: false });
       demoClockFace.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
       demoClockFace.addEventListener('wheel', (e) => { e.preventDefault(); e.stopPropagation(); }, { passive: false });
+
+      // 🌟 尺寸响应式监听：表盘缩放时数字实时跟随缩放、当右侧可用空间少于 29% 时隐藏上午/下午
+      const updateTimePickerNarrowState = () => {
+        const pickerEl = document.getElementById('demoTimePicker');
+        if (!pickerEl) return;
+
+        const headerEl = pickerEl.querySelector('.mdc-time-picker__header');
+        const displayEl = pickerEl.querySelector('.mdc-time-picker__digital-display');
+        
+        let shouldHide = false;
+        if (headerEl && displayEl) {
+          const headerWidth = headerEl.offsetWidth || pickerEl.offsetWidth;
+          const displayRect = displayEl.getBoundingClientRect();
+          const headerRect = headerEl.getBoundingClientRect();
+          // 右侧剩余可用空间比例 = (header 右边缘 - 数字区右边缘) / header 总宽度
+          const rightSpace = headerRect.right - displayRect.right;
+          const rightSpaceRatio = headerWidth > 0 ? (rightSpace / headerWidth) : 1;
+
+          // 🌟 核心规则：当右侧可用空间少于 32% 时隐藏上午/下午
+          shouldHide = rightSpaceRatio < 0.32;
+        } else {
+          shouldHide = pickerEl.offsetWidth < 260;
+        }
+
+        if (shouldHide) {
+          pickerEl.classList.add('is-narrow');
+        } else {
+          pickerEl.classList.remove('is-narrow');
+        }
+        renderDemoNumbers(false);
+        setDemoIndicatorPosition(timeMode);
+      };
+
+      if (window.ResizeObserver) {
+        const pickerEl = document.getElementById('demoTimePicker');
+        const ro = new ResizeObserver(() => {
+          updateTimePickerNarrowState();
+        });
+        if (pickerEl) ro.observe(pickerEl);
+      }
+      window.addEventListener('resize', updateTimePickerNarrowState);
     }
 
     function confirmDemoTime() {

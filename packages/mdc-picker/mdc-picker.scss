@@ -11,7 +11,8 @@
 .mdc-date-picker {
   display: inline-flex;
   flex-direction: column;
-  width: 328px;
+  width: 100%;
+  max-width: 328px;
   background-color: var(--mdc-theme-surface, #ffffff);
   color: var(--mdc-theme-on-surface, #1d1b20);
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -155,7 +156,8 @@
 .mdc-time-picker {
   display: inline-flex;
   flex-direction: column;
-  width: 310px;
+  width: 100%;
+  max-width: 328px;
   background-color: var(--mdc-theme-surface, #ffffff);
   color: var(--mdc-theme-on-surface, #1d1b20);
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -318,14 +320,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 0;
+  padding: 20px 12px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
   touch-action: none !important;
   overscroll-behavior: contain;
 }
 
 .mdc-time-picker__clock-face {
   width: 230px;
-  height: 230px;
+  max-width: 100%;
+  aspect-ratio: 1 / 1 !important;
+  height: auto !important;
   background-color: var(--mdc-theme-surface-container-high, #f7f2fa);
   border-radius: 50% !important;
   position: relative;
@@ -338,6 +345,7 @@
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
   cursor: grab;
+  margin: 0 auto;
 }
 
 .mdc-time-picker__clock-face:active {
@@ -348,8 +356,9 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 230px;
-  height: 230px;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
   pointer-events: none;
 }
 
@@ -469,4 +478,68 @@
 
 .dark-theme .mdc-time-picker__clock-face {
   background-color: #1c1a22;
+}
+
+@media (max-width: 599.9px) {
+  .mdc-date-picker,
+  .mdc-time-picker {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .mdc-date-picker__cell {
+    height: 34px;
+  }
+
+  .mdc-date-picker__cell > span {
+    width: 30px;
+    height: 30px;
+  }
+
+  .mdc-time-picker__header {
+    padding: 14px 12px;
+  }
+
+  .mdc-time-picker__digit-box {
+    font-size: 34px;
+    width: 52px;
+    min-width: 52px;
+    height: 46px;
+  }
+
+  .mdc-time-picker__digit-slot {
+    width: 52px;
+    height: 46px;
+  }
+
+  .mdc-time-picker__digit-indicator {
+    width: 52px;
+    height: 46px;
+  }
+
+  .mdc-time-picker__digital-display {
+    height: 46px;
+  }
+
+  .mdc-time-picker__digital-content {
+    height: 46px;
+  }
+
+  .mdc-time-picker__dial-container {
+    padding: 16px 0;
+  }
+
+  .mdc-time-picker__ampm-toggle {
+    margin-left: 8px;
+  }
+
+  .mdc-time-picker__ampm-btn {
+    padding: 4px 8px;
+    font-size: 11.5px;
+  }
+}
+
+/* 🌟 当右侧可用空间少于 29% 时触发 is-narrow 隐藏上午/下午切换器 */
+.mdc-time-picker.is-narrow .mdc-time-picker__ampm-toggle {
+  display: none !important;
 }

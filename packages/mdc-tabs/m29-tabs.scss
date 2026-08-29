@@ -15,6 +15,9 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   margin-top: 16px;
   overflow-x: auto;
+  overflow-y: hidden !important;
+  overscroll-behavior-y: none !important;
+  touch-action: pan-x pinch-zoom !important;
   scrollbar-width: none;
 }
 
@@ -81,22 +84,22 @@
   display: block;
 }
 
-/* 🌟 内容变换动画严格跟随滑条方向：
-   - 滑条向右切换 -> 内容向右移动 (from -28px to 0)
-   - 滑条向左切换 -> 内容向左移动 (from +28px to 0)
+/* 🌟 内容变换动画与滑条相反方向：
+   - 滑条向右切换 (index 增加) -> 内容从右向左移入 (from +28px to 0)
+   - 滑条向左切换 (index 减小) -> 内容从左向右移入 (from -28px to 0)
 */
 .m29-tab-panel.slide-right {
-  animation: tabSlideFollowRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: tabSlideOppositeRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .m29-tab-panel.slide-left {
-  animation: tabSlideFollowLeft 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: tabSlideOppositeLeft 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-@keyframes tabSlideFollowRight {
+@keyframes tabSlideOppositeRight {
   from {
     opacity: 0;
-    transform: translateX(-28px);
+    transform: translateX(28px);
   }
   to {
     opacity: 1;
@@ -104,10 +107,10 @@
   }
 }
 
-@keyframes tabSlideFollowLeft {
+@keyframes tabSlideOppositeLeft {
   from {
     opacity: 0;
-    transform: translateX(28px);
+    transform: translateX(-28px);
   }
   to {
     opacity: 1;

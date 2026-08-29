@@ -130,13 +130,17 @@ export class M29FlatEdgeEffect {
     }
     arc.classList.remove('is-receding');
 
-    // 阻尼非线性曲线：AOSP 经典 log 级阻尼递增
-    const pullDistance = Math.min(1.0, Math.max(0, delta));
-    const scale = Math.min(1.0, pullDistance * 2.2);
-    // Android 原生默认纯色不透明度 0.35 (微透，绝不突兀)
-    const alpha = Math.min(0.38, pullDistance * 0.45);
+    const isVertical = dir === 'top' || dir === 'bottom';
+    // 🌟 缩小左右两侧临界数值为原来的 10%，上下为 20%，需更大阻尼力度触发
+    const scaleFactor = isVertical ? 0.20 : 0.10;
 
-    if (dir === 'top' || dir === 'bottom') {
+    // 阻尼非线性曲线：AOSP 经典 log 级阻尼递增
+    const pullDistance = Math.min(1.0, Math.max(0, delta)) * scaleFactor;
+    const scale = Math.min(scaleFactor, pullDistance * 2.2);
+    // Android 原生默认纯色不透明度 0.35 (微透，绝不突兀)
+    const alpha = Math.min(0.38, pullDistance * 0.45 / scaleFactor);
+
+    if (isVertical) {
       arc.style.transform = `scaleY(${scale})`;
       // 偏置微调：依据触摸 X 位置微调弧形倾角
       const skew = (displacement - 0.5) * 8; 
@@ -188,12 +192,16 @@ export class M29FlatEdgeEffect {
     }
     arc.classList.remove('is-receding');
 
+    const isVertical = dir === 'top' || dir === 'bottom';
+    // 🌟 缩小左右两侧临界数值为原来的 10%，上下为 20%
+    const scaleFactor = isVertical ? 0.20 : 0.10;
+
     const intensity = Math.min(1.0, Math.max(0.3, velocity / 1000));
-    const targetScale = Math.min(1.0, 0.4 + intensity * 0.6);
+    const targetScale = Math.min(scaleFactor, (0.4 + intensity * 0.6) * scaleFactor);
     const targetAlpha = Math.min(0.38, 0.2 + intensity * 0.18);
 
     arc.style.transition = 'transform 0.12s cubic-bezier(0.0, 0.0, 0.2, 1), opacity 0.12s cubic-bezier(0.0, 0.0, 0.2, 1)';
-    if (dir === 'top' || dir === 'bottom') {
+    if (isVertical) {
       arc.style.transform = `scaleY(${targetScale})`;
     } else {
       arc.style.transform = `scaleX(${targetScale})`;

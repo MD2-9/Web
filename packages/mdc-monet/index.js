@@ -51,16 +51,17 @@ export class MdcMonetPicker {
   render() {
     if (!this.container) return;
     this.container.innerHTML = '';
+    this.container.scrollTop = 0;
 
     if (this.currentStep === 1) {
-      if (this.stepTitle) this.stepTitle.textContent = '第 1 步: 选择主色 (Primary)';
-      if (this.stepSub) this.stepSub.textContent = '点击莫奈色块设置核心主基调';
+      if (this.stepTitle) this.stepTitle.textContent = '单色模式';
+      if (this.stepSub) this.stepSub.textContent = '选择主色';
     } else if (this.currentStep === 2) {
-      if (this.stepTitle) this.stepTitle.textContent = '第 2 步: 选择次色 (Secondary)';
-      if (this.stepSub) this.stepSub.textContent = '选择次色，或点击跳过直接完成';
+      if (this.stepTitle) this.stepTitle.textContent = '双色模式';
+      if (this.stepSub) this.stepSub.textContent = '选择次色';
     } else {
-      if (this.stepTitle) this.stepTitle.textContent = '第 3 步: 选择第三色 (Tertiary)';
-      if (this.stepSub) this.stepSub.textContent = '选择第三色，或点击跳过直接完成';
+      if (this.stepTitle) this.stepTitle.textContent = '三色模式';
+      if (this.stepSub) this.stepSub.textContent = '选择第三色';
     }
 
     MONET_PALETTES.forEach(t => {

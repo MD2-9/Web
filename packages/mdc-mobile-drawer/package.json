@@ -1,0 +1,11 @@
+{
+  "name": "@material/mobile-drawer",
+  "version": "1.0.0",
+  "description": "Material Components Web Extended - Mobile Drawer Component (M2.9 / MD3.1)",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "module": "index.js",
+  "dependencies": {
+    "@material/base": "^0.34.1"
+  }
+}
