@@ -1,5 +1,5 @@
 #
-# Cloudflare Workers Configuration for MDC-Web M2.9
+# Cloudflare Workers & Pages Configuration for MDC-Web M2.9
 # Authored by 安秋 (github.com/unjal29)
 #
 
@@ -14,7 +14,7 @@ pages_build_output_dir = "."
 # Workers Static Assets Configuration
 [assets]
 directory = "."
-binding = "ASSETS"
+binding = "STATIC_ASSETS"
 run_worker_first = true
 
 # Environment Configuration

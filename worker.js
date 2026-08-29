@@ -26,6 +26,8 @@ export default {
     const url = new URL(request.url);
     let pathname = url.pathname;
 
+    const assetsBinding = env.STATIC_ASSETS || env.ASSETS;
+
     // 1. Root & demo routing: '/' or '/demos' -> '/demos/index.html'
     if (pathname === '/' || pathname === '/demos' || pathname === '/demos/') {
       pathname = '/demos/index.html';
@@ -37,27 +39,27 @@ export default {
       const assetFile = pathname.replace('/assets/', '');
       // Try /demos/<file> first, then /dist/<file>
       const demoUrl = new URL(`/demos/${assetFile}`, request.url);
-      const demoRes = await env.ASSETS ? env.ASSETS.fetch(new Request(demoUrl, request)) : fetch(demoUrl);
+      const demoRes = assetsBinding ? await assetsBinding.fetch(new Request(demoUrl, request)) : await fetch(demoUrl);
       if (demoRes && demoRes.status === 200) {
         return addCorsHeaders(demoRes);
       }
       
       const distUrl = new URL(`/dist/${assetFile}`, request.url);
-      const distRes = await env.ASSETS ? env.ASSETS.fetch(new Request(distUrl, request)) : fetch(distUrl);
+      const distRes = assetsBinding ? await assetsBinding.fetch(new Request(distUrl, request)) : await fetch(distUrl);
       if (distRes && distRes.status === 200) {
         return addCorsHeaders(distRes);
       }
     }
 
     // 3. Serve via Workers Static Assets binding
-    if (env.ASSETS) {
+    if (assetsBinding) {
       const assetRequest = new Request(url.toString(), request);
-      let response = await env.ASSETS.fetch(assetRequest);
+      let response = await assetsBinding.fetch(assetRequest);
 
       // If not found, fallback to /demos/index.html
       if (!response || response.status === 404) {
         const fallbackUrl = new URL('/demos/index.html', request.url);
-        response = await env.ASSETS.fetch(new Request(fallbackUrl, request));
+        response = await assetsBinding.fetch(new Request(fallbackUrl, request));
       }
 
       return addCorsHeaders(response);
