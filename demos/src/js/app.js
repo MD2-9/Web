@@ -164,17 +164,13 @@ window.addEventListener('m29:loaded', function() {
 
       document.body.classList.remove('downgrade-1col', 'downgrade-2col');
 
-      if (currentCardColumns === '3') {
-        // 🌟 三栏阶梯降级：< 560px 降为 1 栏；560px ~ 860px 先降为 2 栏；>= 860px 始终完整呈现 3 栏
-        if (availableWidth < 560) {
-          document.body.classList.add('downgrade-1col');
-        } else if (availableWidth < 860) {
+      // 🌟 768px 平板/小屏断点或主区域可用宽度不足时，卡片强制切为单栏
+      if (window.innerWidth <= 768 || availableWidth < 560) {
+        document.body.classList.add('downgrade-1col');
+      } else if (currentCardColumns === '3') {
+        // 🌟 三栏阶梯降级：560px ~ 860px 先降为 2 栏；>= 860px 始终完整呈现 3 栏
+        if (availableWidth < 860) {
           document.body.classList.add('downgrade-2col');
-        }
-      } else if (currentCardColumns === '2') {
-        // 🌟 双栏阶梯降级：< 560px 降为 1 栏；>= 560px 正常 2 栏
-        if (availableWidth < 560) {
-          document.body.classList.add('downgrade-1col');
         }
       }
 
@@ -3343,13 +3339,13 @@ window.addEventListener('m29:loaded', function() {
         const currentWidth = (!isNaN(rawWidth) && rawWidth > 0) ? rawWidth : 290;
         const iconEl = document.getElementById('componentPanelWidthIcon');
         const btnEl = document.getElementById('btnTogglePanelWidth');
-        const is2Col = currentWidth >= 435;
+        const is2Col = currentWidth >= 460;
         if (iconEl) {
           iconEl.textContent = is2Col ? 'view_column' : 'view_agenda';
         }
         if (btnEl) {
           const isEn = currentLang === 'en';
-          btnEl.title = is2Col ? (isEn ? 'Current: Dual Columns 580px (Click for 290px Single Column)' : '当前: 双列 580px (点击切换为 290px 单列)') : (isEn ? 'Current: Single Column 290px (Click for 580px Dual Columns)' : '当前: 单列 290px (点击切换为 580px 双列)');
+          btnEl.title = is2Col ? (isEn ? 'Current: Dual Columns 629px (Click for 290px Single Column)' : '当前: 双列 629px (点击切换为 290px 单列)') : (isEn ? 'Current: Single Column 290px (Click for 629px Dual Columns)' : '当前: 单列 290px (点击切换为 629px 双列)');
         }
       }
 
@@ -3364,13 +3360,13 @@ window.addEventListener('m29:loaded', function() {
           window.pageOverlayScrollbar.update();
         }
         window.dispatchEvent(new Event('resize'));
-        showDemoToast(width >= 435 ? (currentLang === 'en' ? 'Component panel set to 580px (Dual Columns)' : '组件栏已切换为 580px 宽版双列') : (currentLang === 'en' ? 'Component panel set to 290px (Single Column)' : '组件栏已切换为 290px 标准单列'));
+        showDemoToast(width >= 460 ? (currentLang === 'en' ? 'Component panel set to 629px (Dual Columns)' : '组件栏已切换为 629px 宽版双列') : (currentLang === 'en' ? 'Component panel set to 290px (Single Column)' : '组件栏已切换为 290px 标准单列'));
       }
 
       function toggleComponentPanelWidth() {
         const rawWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--component-panel-width'), 10);
         const currentWidth = (!isNaN(rawWidth) && rawWidth > 0) ? rawWidth : 290;
-        const nextWidth = currentWidth >= 435 ? 290 : 580;
+        const nextWidth = currentWidth >= 460 ? 290 : 629;
         setComponentPanelWidth(nextWidth);
       }
       window.setComponentPanelWidth = setComponentPanelWidth;
@@ -3380,7 +3376,7 @@ window.addEventListener('m29:loaded', function() {
       // 启动时初始化图标
       updateComponentPanelWidthIcon();
 
-      // 双击手柄在 290px (单列) 与 580px (双列) 两档之间智能切换
+      // 双击手柄在 290px (单列) 与 629px (双列) 两档之间智能切换
       resizer.addEventListener('dblclick', () => {
         toggleComponentPanelWidth();
       });
