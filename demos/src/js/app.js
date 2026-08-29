@@ -3433,12 +3433,6 @@ window.addEventListener('m29:loaded', function() {
           const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
           btnEl.title = isDark ? (isEn ? 'Current: Dark Mode (Click for Light Mode)' : '当前: 暗色模式 (点击切换为浅色)') : (isEn ? 'Current: Light Mode (Click for Dark Mode)' : '当前: 浅色模式 (点击切换为暗色)');
         }
-
-        // 如果设置了独立配色，重新计算暗/亮对比色
-        const savedPanelColor = localStorage.getItem('m29_component_panel_color');
-        if (savedPanelColor && savedPanelColor !== 'auto') {
-          setComponentPanelColor(savedPanelColor);
-        }
       }
 
       function toggleComponentPanelTheme() {
@@ -3452,95 +3446,8 @@ window.addEventListener('m29:loaded', function() {
         showDemoToast(nextTheme === 'dark' ? (isEn ? 'Component Panel set to Dark Mode' : '组件栏已切换为独立暗色模式') : (isEn ? 'Component Panel set to Light Mode' : '组件栏已切换为独立浅色模式'));
       }
 
-      function toggleComponentPanelPaletteMenu(e) {
-        if (e) e.stopPropagation();
-        const menu = document.getElementById('componentPanelPaletteMenu');
-        if (!menu) return;
-        const isOpen = menu.style.display !== 'none';
-        menu.style.display = isOpen ? 'none' : 'flex';
-      }
-
-      function closeComponentPanelPaletteMenu() {
-        const menu = document.getElementById('componentPanelPaletteMenu');
-        if (menu) menu.style.display = 'none';
-      }
-
-      function rgbToHex(rgb) {
-        if (!rgb || !rgb.startsWith('rgb')) return rgb;
-        const nums = rgb.match(/\d+/g);
-        if (!nums || nums.length < 3) return rgb;
-        return '#' + nums.slice(0, 3).map(x => parseInt(x, 10).toString(16).padStart(2, '0')).join('');
-      }
-
-      function setComponentPanelColor(hex) {
-        const panel = document.getElementById('app-component-panel');
-        if (!panel) return;
-        const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
-
-        if (!hex || hex === 'auto') {
-          localStorage.removeItem('m29_component_panel_color');
-          panel.style.removeProperty('--mdc-theme-primary');
-          panel.style.removeProperty('--mdc-theme-primary-container');
-          panel.style.removeProperty('--mdc-theme-on-primary');
-          panel.style.removeProperty('--mdc-theme-on-primary-container');
-          panel.style.removeProperty('--mdc-theme-surface-container-high');
-          panel.style.removeProperty('--mdc-theme-surface-variant');
-          panel.style.removeProperty('--panel-accent-color');
-          panel.style.removeProperty('--panel-bg-color');
-          panel.style.removeProperty('--panel-surface-color');
-          showDemoToast(isEn ? 'Component panel is following global palette' : '组件栏已恢复跟随全局配色');
-        } else {
-          localStorage.setItem('m29_component_panel_color', hex);
-          const [h, s, l] = hexToHsl(hex);
-          const isDark = panel.classList.contains('dark-theme') || (!panel.classList.contains('light-theme') && document.body.classList.contains('dark-theme'));
-
-          let p, pCont, onP, onPCont, surfaceContHigh, panelBg, panelSurface;
-          if (isDark) {
-            p = hslToHex(h, Math.min(100, Math.max(25, s * 0.85)), 78);
-            onP = '#000000';
-            pCont = hslToHex(h, Math.min(100, s * 0.5), 32);
-            onPCont = hslToHex(h, Math.min(100, s * 0.5), 90);
-            surfaceContHigh = hslToHex(h, Math.min(100, s * 0.18), 18);
-            panelBg = hslToHex(h, Math.min(100, s * 0.2), 10);
-            panelSurface = hslToHex(h, Math.min(100, s * 0.2), 16);
-          } else {
-            p = hex;
-            onP = '#ffffff';
-            pCont = hslToHex(h, Math.min(100, s * 0.45), 90);
-            onPCont = hslToHex(h, Math.min(100, s * 0.6), 15);
-            surfaceContHigh = hslToHex(h, Math.min(100, s * 0.25), 96);
-            panelBg = hslToHex(h, Math.min(100, s * 0.3), 96); // Tone 50
-            panelSurface = hslToHex(h, Math.min(100, s * 0.35), 90); // Tone 100
-          }
-
-          panel.style.setProperty('--mdc-theme-primary', p);
-          panel.style.setProperty('--mdc-theme-primary-container', pCont);
-          panel.style.setProperty('--mdc-theme-on-primary', onP);
-          panel.style.setProperty('--mdc-theme-on-primary-container', onPCont);
-          panel.style.setProperty('--mdc-theme-surface-container-high', surfaceContHigh);
-          panel.style.setProperty('--mdc-theme-surface-variant', surfaceContHigh);
-          panel.style.setProperty('--panel-accent-color', p);
-          panel.style.setProperty('--panel-bg-color', panelBg);
-          panel.style.setProperty('--panel-surface-color', panelSurface);
-          showDemoToast(isEn ? `Component panel palette updated: ${hex}` : `组件栏已切换独立配色: ${hex}`);
-        }
-
-        // 高亮选中项
-        const dots = document.querySelectorAll('.panel-swatch-dot');
-        dots.forEach(dot => {
-          const bg = dot.style.backgroundColor;
-          dot.classList.toggle('is-active', hex && hex !== 'auto' && (bg === hex || rgbToHex(bg) === hex.toLowerCase()));
-        });
-
-        closeComponentPanelPaletteMenu();
-        refreshDatePickerThumb(true);
-      }
-
       window.applyComponentPanelTheme = applyComponentPanelTheme;
       window.toggleComponentPanelTheme = toggleComponentPanelTheme;
-      window.toggleComponentPanelPaletteMenu = toggleComponentPanelPaletteMenu;
-      window.closeComponentPanelPaletteMenu = closeComponentPanelPaletteMenu;
-      window.setComponentPanelColor = setComponentPanelColor;
 
       // 恢复组件栏独立主题设置
       const savedPanelTheme = localStorage.getItem('m29_component_panel_theme');
@@ -3550,20 +3457,20 @@ window.addEventListener('m29:loaded', function() {
         applyComponentPanelTheme('auto');
       }
 
-      // 恢复组件栏独立配色设置
-      const savedPanelColor = localStorage.getItem('m29_component_panel_color');
-      if (savedPanelColor) {
-        setComponentPanelColor(savedPanelColor);
+      // 清除可能遗留的旧独立配色变量，彻底恢复统一 MD3 莫奈调色体系
+      localStorage.removeItem('m29_component_panel_color');
+      const panelEl = document.getElementById('app-component-panel');
+      if (panelEl) {
+        panelEl.style.removeProperty('--mdc-theme-primary');
+        panelEl.style.removeProperty('--mdc-theme-primary-container');
+        panelEl.style.removeProperty('--mdc-theme-on-primary');
+        panelEl.style.removeProperty('--mdc-theme-on-primary-container');
+        panelEl.style.removeProperty('--mdc-theme-surface-container-high');
+        panelEl.style.removeProperty('--mdc-theme-surface-variant');
+        panelEl.style.removeProperty('--panel-accent-color');
+        panelEl.style.removeProperty('--panel-bg-color');
+        panelEl.style.removeProperty('--panel-surface-color');
       }
-
-      // 点击页面任意外部关闭配色菜单
-      document.addEventListener('click', (e) => {
-        const menu = document.getElementById('componentPanelPaletteMenu');
-        const btn = document.getElementById('btnTogglePanelPalette');
-        if (menu && menu.style.display !== 'none' && !menu.contains(e.target) && (!btn || !btn.contains(e.target))) {
-          closeComponentPanelPaletteMenu();
-        }
-      });
 
       // 启动时初始化图标
       updateComponentPanelWidthIcon();

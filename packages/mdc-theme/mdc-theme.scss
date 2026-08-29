@@ -56,6 +56,27 @@ html, body {
   transition: background-color 0.3s ease, color 0.3s ease;
   min-height: 100vh;
   overflow-x: hidden;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+/* 🌟 彻底隐藏全浏览器原生粗糙滚动条 (Firefox / IE / Edge / Webkit)，交由 M2.9 自研浮动悬浮滚动条接管 */
+html,
+body,
+:root,
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+::-webkit-scrollbar,
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
 }
 
 /* 🌟 全局选中文本样式 (独立分块，避免不同内核前缀互相使规则失效)：
