@@ -1,0 +1,39 @@
+<!--
+  M2.9 Content Card: 主题总览卡片 (Theme Overview)
+  ═══════════════════════════════════════════════════
+  📦 示例调用:
+    直接将此 HTML 片段插入到 <main class="main-container"> 内即可。
+    需确保已引入全局 CSS (index.css) 与 Monet JS (monet-mdc.iife.js)。
+-->
+<!-- 顶部置顶主题总览卡片 (主页) -->
+<div class="demo-card" id="section-overview">
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+    <h2 style="margin: 0; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+      <i class="material-icons" style="color: var(--mdc-theme-primary);">palette</i>
+      MDC-Web Monet 动态取色控制台 (CAM16 / HCT)
+    </h2>
+    <button class="mdc-button mdc-button--raised" onclick="openOverlay('themePickerPanel', event)" style="background-color: var(--mdc-theme-primary);">
+      <i class="material-icons mdc-button__icon">color_lens</i>
+      打开水波纹 3 步调色盘
+    </button>
+  </div>
+
+  <p style="font-size: 13px; opacity: 0.85; margin-top: 0;">
+    严守 <strong>MD1 纯直角 (0px) 与 50% 纯圆</strong> 几何骨架。侧边栏以<strong>一级菜单 (主页/目录/设置/关于)</strong>为基准，点击目录或调色盘将平滑展开二级功能面板。
+  </p>
+
+  <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
+    <div style="font-size: 13px; padding: 6px 14px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
+      <span>Primary 主色:</span>
+      <strong id="label-cur-p" style="color: var(--mdc-theme-primary);">#6750A4</strong>
+    </div>
+    <div style="font-size: 13px; padding: 6px 14px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
+      <span>Secondary 次色:</span>
+      <strong id="label-cur-s" style="color: var(--mdc-theme-secondary);">#625B71</strong>
+    </div>
+    <div style="font-size: 13px; padding: 6px 14px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
+      <span>Tertiary 第三色:</span>
+      <strong id="label-cur-t" style="color: var(--mdc-theme-tertiary);">#7D5260</strong>
+    </div>
+  </div>
+</div>

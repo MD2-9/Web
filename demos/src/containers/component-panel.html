@@ -1,0 +1,49 @@
+<!--
+  M2.9 Container: 右侧常驻组件栏
+  ═══════════════════════════════════════════════════
+  📦 示例调用包:
+
+  1. CSS: .mdc-component-panel, .component-panel-resizer, .component-panel-header,
+     .component-panel-body, .component-panel-section
+
+  2. HTML: 插入到 </main> 之后
+
+  3. JS:
+     - openComponentPanel() / closeComponentPanel()
+     - initComponentPanelResizer()  // 拖拽宽度调节
+     - 桌面端 (≥768px): 常驻右侧，body.component-panel-closed 控制折叠
+     - 移动端 (<768px): 隐藏，通过按钮或从右往左滑入手势唤出
+
+  4. 内部 Widget 通过 data-include 加载:
+     - src/widgets/date-picker.html
+     - src/widgets/time-picker.html
+-->
+<!-- 🧩 右侧常驻组件栏 (≥768px 常驻 / <768px 从右往左滑入 · 自由调节宽度) -->
+<aside class="mdc-component-panel" id="app-component-panel">
+  <!-- 左边缘可拖拽调整宽度手柄 (双击恢复默认 290px) -->
+  <div class="component-panel-resizer" id="componentPanelResizer" title="左右拖动调整组件栏宽度（双击重置为 290px）"></div>
+
+  <div class="component-panel-header">
+    <div class="component-panel-header-title">
+      <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary);">widgets</i>
+      <span>组件</span>
+    </div>
+    <div style="display: flex; gap: 4px; align-items: center;">
+      <button class="component-panel-action-btn" onclick="toggleLayoutSwap()" title="左右布局互换 (调换侧边栏与组件栏位置)">
+        <i class="material-icons" style="font-size: 20px;">swap_horiz</i>
+      </button>
+      <button class="component-panel-action-btn component-panel-close-btn" onclick="closeComponentPanel()" title="关闭组件栏">
+        <i class="material-icons" style="font-size: 20px;">close</i>
+      </button>
+    </div>
+  </div>
+  <div class="component-panel-body">
+
+    <!-- 📅 日历选择器 (通过 include 加载) -->
+    <div data-include="/demos/src/widgets/date-picker.html"></div>
+
+    <!-- ⏰ 时钟选择器 (通过 include 加载) -->
+    <div data-include="/demos/src/widgets/time-picker.html"></div>
+
+  </div>
+</aside>

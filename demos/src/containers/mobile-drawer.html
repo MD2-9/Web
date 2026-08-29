@@ -1,0 +1,71 @@
+<!--
+  M2.9 Container: 移动端独立抽屉导航
+  ═══════════════════════════════════════════════════
+  📦 示例调用包:
+
+  1. CSS: .mdc-mobile-drawer, .mobile-drawer-nav-section, .mobile-drawer-header,
+     .mobile-drawer-nav-list, .mobile-drawer-nav-item, .mobile-drawer-footer
+
+  2. HTML: 插入到 <body> 中 (在 <main> 之前)
+
+  3. JS: openMobileDrawer(), closeMobileDrawer()
+     手势: 左边缘右滑呼出，反向左滑收起
+     导航跳转: 点击 a[href="#..."] 后 0.39s 延迟收回
+-->
+<!-- 📱 移动端独立抽屉导航组件 (Mobile Drawer · 按钮从下往上靠底排列 ✖ 0.39s 页面跳转收回) -->
+<aside class="mdc-mobile-drawer" id="app-mobile-drawer">
+  <div class="mobile-drawer-nav-section" id="mobileDrawerNavSection">
+    
+    <!-- 顶部 Header -->
+    <div class="mobile-drawer-header" onclick="openOverlay('themePickerPanel', event)" title="点击打开莫奈动态调色盘">
+      <div class="rail-header-avatar">M2.9</div>
+      <div class="rail-header-text">
+        <div style="font-weight: bold; font-size: 15px;">M2.9 · MDC-Web</div>
+        <div style="font-size: 11px; opacity: 0.85;">点击取色</div>
+      </div>
+    </div>
+
+    <!-- 🌟 核心要求：移动端按钮从下往上靠底排列 (Bottom-to-Top) -->
+    <nav class="mobile-drawer-nav-list">
+      <!-- 1. 主页 (跳转页面内容，保持 0.39s 延迟后平滑收回) -->
+      <a href="#section-overview" class="mobile-drawer-nav-item" title="主页 (Overview)">
+        <i class="material-icons rail-item-icon">home</i>
+        <span class="rail-item-text">主页</span>
+      </a>
+
+      <!-- 2. 目录 (展开二级全景组件，非跳转按钮，不收回) -->
+      <div class="mobile-drawer-nav-item" onclick="openOverlay('catalogSubmenuPanel', event)" title="目录 (点击展开二级全景组件)">
+        <i class="material-icons rail-item-icon" style="color: var(--mdc-theme-primary);">toc</i>
+        <span class="rail-item-text">目录</span>
+      </div>
+
+      <!-- 3. 设置 (非跳转按钮，不收回) -->
+      <div class="mobile-drawer-nav-item" onclick="openOverlay('settingsSubmenuPanel', event)" title="设置 (暗色与主题配置)">
+        <i class="material-icons rail-item-icon">settings</i>
+        <span class="rail-item-text">设置</span>
+      </div>
+
+      <!-- 4. 关于 (非跳转按钮，不收回) -->
+      <div class="mobile-drawer-nav-item" onclick="openOverlay('aboutSubmenuPanel', event)" title="关于项目">
+        <i class="material-icons rail-item-icon">info</i>
+        <span class="rail-item-text">关于</span>
+      </div>
+    </nav>
+
+    <!-- 底部控制面板 (横排 4 个纯图标按钮) -->
+    <div class="mobile-drawer-footer">
+      <button class="rail-footer-icon-btn" id="btn-toggle-panel-mobile" onclick="toggleComponentPanelTrigger(event)" title="组件栏 (调出右侧组件栏)">
+        <i class="material-icons">widgets</i>
+      </button>
+      <button class="rail-footer-icon-btn" id="btn-toggle-lang-mobile" onclick="toggleLanguage(event)" title="切换语言 (Language)">
+        <i class="material-icons">translate</i>
+      </button>
+      <button class="rail-footer-icon-btn" id="btn-toggle-layout-mobile" onclick="toggleCardColumns(event)" title="切换单双栏布局 (Columns)">
+        <i class="material-icons" id="mobile-layout-icon">view_column</i>
+      </button>
+      <button class="rail-footer-icon-btn" id="btn-toggle-dark-mobile" onclick="toggleThemeMode(event)" title="切换暗色模式 (Dark Mode)">
+        <i class="material-icons" id="mobile-dark-icon">brightness_4</i>
+      </button>
+    </div>
+  </div>
+</aside>

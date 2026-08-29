@@ -1,0 +1,42 @@
+<!--
+  M2.9 Content Card: 标签、胶囊芯片与徽标
+  ═══════════════════════════════════════════════════
+  📦 示例调用:
+    <div class="demo-card" id="section-chips">...</div>
+    需引入: mdc-chips.css, index.css (.surface-token-chip)
+-->
+<!-- 🏷️ 模块 3: 标签、胶囊芯片与徽标 (Chips & Badges) -->
+<div class="demo-card" id="section-chips">
+  <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+    <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">label</i>
+    3. 标签、胶囊芯片与徽标矩阵 (Chips &amp; Badges)
+  </h3>
+  <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 16px;">
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <span style="font-size: 13px; font-weight: 600; width: 120px;">Action Chips:</span>
+      <span class="surface-token-chip" style="cursor: pointer;"><i class="material-icons" style="font-size: 16px;">event</i> 添加日程</span>
+      <span class="surface-token-chip" style="cursor: pointer;"><i class="material-icons" style="font-size: 16px;">bookmark</i> 收藏项目</span>
+      <span class="surface-token-chip" style="cursor: pointer;"><i class="material-icons" style="font-size: 16px;">share</i> 分享链接</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <span style="font-size: 13px; font-weight: 600; width: 120px;">Filter Chips:</span>
+      <span class="surface-token-chip" style="border-color: var(--mdc-theme-primary); color: var(--mdc-theme-primary); font-weight: 600;"><i class="material-icons" style="font-size: 16px;">check</i> 已启用 Monet</span>
+      <span class="surface-token-chip"><i class="material-icons" style="font-size: 16px;">check_box_outline_blank</i> 离线渲染</span>
+      <span class="surface-token-chip"><i class="material-icons" style="font-size: 16px;">check_box_outline_blank</i> 变量字体</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <span style="font-size: 13px; font-weight: 600; width: 120px;">Input Chips:</span>
+      <span class="surface-token-chip">Google Sans Flex <i class="material-icons" style="font-size: 14px; cursor: pointer;" onclick="this.parentElement.remove()">close</i></span>
+      <span class="surface-token-chip">MDC-Web v0.34.1 <i class="material-icons" style="font-size: 14px; cursor: pointer;" onclick="this.parentElement.remove()">close</i></span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <span style="font-size: 13px; font-weight: 600; width: 120px;">Suggestion Chips:</span>
+      <span class="surface-token-chip" style="border-style: dashed;">Material 3.1</span>
+      <span class="surface-token-chip" style="border-style: dashed;">CAM16 色彩空间</span>
+      <span class="surface-token-chip" style="border-style: dashed;">Android 15 原生</span>
+    </div>
+  </div>
+</div>

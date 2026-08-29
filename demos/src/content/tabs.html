@@ -1,0 +1,49 @@
+<!--
+  M2.9 Content Card: 选项卡联动系统
+  ═══════════════════════════════════════════════════
+  📦 示例调用:
+    需引入: mdc-tab.css (.m29-tabs-bar, .m29-tab-item, .m29-tab-indicator, .m29-tab-panel)
+    JS 初始化: switchM29Tab(index, element), initM29TabIndicator()
+-->
+<!-- 📑 模块 7: 选项卡联动系统 -->
+<div class="demo-card" id="section-tabs">
+  <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+    <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">tab</i>
+    7. 选项卡联动系统 (M2.9 Tabs &amp; Sliding Indicator)
+  </h3>
+  
+  <!-- M2.9 选项卡条 -->
+  <div class="m29-tabs-bar" id="demoTabsBar">
+    <div class="m29-tab-item is-active" onclick="switchM29Tab(0, this)" data-full-title="1. 组件全景" data-tooltip="1. 组件全景">
+      <i class="material-icons" style="font-size: 18px;">widgets</i>
+      <span>1. 组件全景</span>
+    </div>
+    <div class="m29-tab-item" onclick="switchM29Tab(1, this)" data-full-title="2. CAM16 色彩算法" data-tooltip="2. CAM16 色彩算法">
+      <i class="material-icons" style="font-size: 18px;">palette</i>
+      <span>2. CAM16 色彩算法</span>
+    </div>
+    <div class="m29-tab-item" onclick="switchM29Tab(2, this)" data-full-title="3. Navigation Rail 架构" data-tooltip="3. Navigation Rail 架构">
+      <i class="material-icons" style="font-size: 18px;">navigation</i>
+      <span>3. Navigation Rail 架构</span>
+    </div>
+    <div class="m29-tab-indicator" id="m29TabIndicator"></div>
+  </div>
+
+  <!-- 选项卡内容面板 -->
+  <div class="m29-tab-content-container" id="tabContentContainer">
+    <div class="m29-tab-panel is-active" id="tab-panel-0">
+      <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【面板 1】MDC-Web v0.34.1 纯直角全功能矩阵</h4>
+      <p>所有组件边角坚守 0px 直角，保留纯正 MD1 工业美学与 Google Sans Flex 变量字体。</p>
+    </div>
+
+    <div class="m29-tab-panel" id="tab-panel-1">
+      <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【面板 2】Google Material Color Utilities (CAM16 / HCT)</h4>
+      <p>基于真正的感知色彩模型，支持单色、双色、三色及壁纸种子提取，在亮暗模式下自适应生成和谐全色阶。</p>
+    </div>
+
+    <div class="m29-tab-panel" id="tab-panel-2">
+      <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【面板 3】Navigation Rail 紧凑与水波纹二级架构</h4>
+      <p>左侧 72px 常驻单图标，展开 260px，一级菜单仅含主页、目录、设置与关于，点击目录以水波纹涟漪平滑覆盖展开二级菜单！</p>
+    </div>
+  </div>
+</div>

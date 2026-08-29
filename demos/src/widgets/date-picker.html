@@ -1,0 +1,60 @@
+<!--
+  M2.9 Widget: 日历选择器 (DatePicker)
+  ═══════════════════════════════════════════════════
+  📦 示例调用包:
+  
+  1. 引入 CSS:
+    <link rel="stylesheet" href="/assets/index.css">
+    需要的 CSS class: .mdc-date-picker, .mdc-date-picker__header, .mdc-date-picker__controls,
+    .mdc-date-picker__body-container, .mdc-date-picker__weekdays, .mdc-date-picker__grid,
+    .mdc-date-picker__cell, .mdc-date-picker__selection-thumb, .mdc-date-picker__actions
+
+  2. 引入 HTML:
+    将下方整个 <div class="component-panel-section"> 片段插入到页面中
+
+  3. 引入 JS:
+    <script src="src/js/picker.js"></script>
+    自动初始化: renderDemoDatePicker(), refreshDatePickerThumb()
+    交互 API:
+      - confirmDemoDate()   // 确认选择日期
+      - toggleDemoDatePickerMode('day'|'month')  // 切换日/月视图
+-->
+<div class="component-panel-section">
+  <div class="component-panel-section-title">
+    <i class="material-icons" style="font-size: 16px; color: var(--mdc-theme-primary);">date_range</i>
+    日历选择器 (DatePicker)
+  </div>
+  <div class="mdc-date-picker" id="demoDatePicker">
+    <div class="mdc-date-picker__header">
+      <span class="mdc-date-picker__header-year">2026 年</span>
+      <span class="mdc-date-picker__header-date">8月29日 周六</span>
+    </div>
+    <div class="mdc-date-picker__controls">
+      <span class="mdc-date-picker__current-month">
+        <i class="material-icons" style="font-size: 18px; color: var(--mdc-theme-primary);">event</i>
+        <span class="mdc-date-picker__month-label">2026 年 8 月</span>
+      </span>
+      <div style="display: flex; gap: 4px;">
+        <button class="mdc-date-picker__nav-btn mdc-date-picker__prev-btn" title="上个月">
+          <i class="material-icons" style="font-size: 20px;">chevron_left</i>
+        </button>
+        <button class="mdc-date-picker__nav-btn mdc-date-picker__next-btn" title="下个月">
+          <i class="material-icons" style="font-size: 20px;">chevron_right</i>
+        </button>
+      </div>
+    </div>
+    <div class="mdc-date-picker__body-container">
+      <div class="mdc-date-picker__selection-thumb"></div>
+      <div class="mdc-date-picker__weekdays">
+        <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+      </div>
+      <div class="mdc-date-picker__grid">
+        <!-- 动态由 JS 生成日期网格 -->
+      </div>
+    </div>
+    <div class="mdc-date-picker__actions">
+      <button class="mdc-button mdc-button--dense" onclick="showDemoToast('已取消日期选择')">取消</button>
+      <button class="mdc-button mdc-button--raised mdc-button--dense" style="background-color: var(--mdc-theme-primary);" onclick="confirmDemoDate()">确定</button>
+    </div>
+  </div>
+</div>

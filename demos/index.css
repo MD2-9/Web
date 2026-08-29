@@ -4168,14 +4168,16 @@ body.is-resizing-component-panel .main-container {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: -4px;
-  width: 8px;
+  left: -6px;
+  width: 12px;
   cursor: col-resize;
-  z-index: 100;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
   background: transparent;
+  touch-action: none !important;
+  user-select: none !important;
   transition: background-color 0.2s ease;
 }
 
@@ -4389,8 +4391,8 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   width: 6px;
   right: 2px;
   z-index: 9999;
-  pointer-events: none;
-  opacity: 0;
+  pointer-events: auto;
+  opacity: 0.35; /* 常驻轻量半透明，滚动或悬停时完全高亮 */
   transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1), width 0.15s ease;
   border-radius: 3px !important;
 }
@@ -4483,5 +4485,187 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   background-color: var(--mdc-theme-inverse-surface, #e6e1e5);
   color: var(--mdc-theme-inverse-on-surface, #313033);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+
+
+
+/* ------------------------------------------------------------------------- */
+/* Extracted from index.html inline style */
+/* ------------------------------------------------------------------------- */
+    .m29-demo-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      background: #323232;
+      color: #fff;
+      padding: 12px 24px;
+      font-size: 13px;
+      z-index: 99990;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+      transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0,0,0.2,1), visibility 0.25s;
+    }
+    .m29-demo-toast.is-active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    /* 🌟 全局选中文本样式 (独立声明，确保 100% 浏览器兼容) */
+    ::selection {
+      background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
+      color: var(--mdc-theme-primary-900, #21005d) !important;
+    }
+    *::selection {
+      background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
+      color: var(--mdc-theme-primary-900, #21005d) !important;
+    }
+    .dark-theme ::selection,
+    .dark-theme *::selection {
+      background-color: var(--mdc-theme-primary-700, #4f378b) !important;
+      color: var(--mdc-theme-primary-50, #f6edff) !important;
+    }
+    ::-moz-selection {
+      background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
+      color: var(--mdc-theme-primary-900, #21005d) !important;
+    }
+    *::-moz-selection {
+      background-color: var(--mdc-theme-primary-200, #d0bcff) !important;
+      color: var(--mdc-theme-primary-900, #21005d) !important;
+    }
+    .dark-theme ::-moz-selection,
+    .dark-theme *::-moz-selection {
+      background-color: var(--mdc-theme-primary-700, #4f378b) !important;
+      color: var(--mdc-theme-primary-50, #f6edff) !important;
+    }
+
+html { scroll-behavior: smooth; }
+
+
+/* =============================================================== */
+/* 🔀 Layout Swap Logic (Navigation Rail on Right, Component Panel on Left) */
+/* =============================================================== */
+body.layout-swap .mdc-navigation-rail {
+  left: auto !important;
+  right: 0 !important;
+  border-right: none !important;
+  border-left: 1px solid rgba(0,0,0,0.08) !important;
+  box-shadow: -1px 0 6px rgba(0,0,0,0.06);
+}
+.dark-theme body.layout-swap .mdc-navigation-rail {
+  border-left: 1px solid rgba(255,255,255,0.08) !important;
+  box-shadow: -1px 0 6px rgba(0, 0, 0, 0.6);
+}
+
+body.layout-swap .mdc-component-panel {
+  right: auto !important;
+  left: 0 !important;
+  border-left: none !important;
+  border-right: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 1px 0 6px rgba(0,0,0,0.06);
+}
+.dark-theme body.layout-swap .mdc-component-panel {
+  border-right: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.6);
+}
+
+/* 调整手柄移动至组件栏右侧边缘 */
+body.layout-swap .component-panel-resizer {
+  left: auto !important;
+  right: -6px !important;
+  cursor: col-resize !important;
+  transform: none !important;
+  touch-action: none !important;
+  user-select: none !important;
+}
+
+@media (min-width: 768px) {
+  body.layout-swap .main-container {
+    margin-left: var(--component-panel-width, 290px) !important;
+    margin-right: 72px !important;
+  }
+  body.layout-swap.component-panel-closed .main-container {
+    margin-left: 0 !important;
+    margin-right: 72px !important;
+  }
+  body.layout-swap.component-panel-closed .mdc-component-panel {
+    transform: translateX(-100%) !important;
+  }
+  /* 页面级悬浮滚动条直接位于左右分界线 (左侧组件栏右边缘) */
+  body.layout-swap .m29-overlay-scrollbar-track.is-window {
+    left: var(--component-panel-width, 290px) !important;
+    right: auto !important;
+  }
+  body.layout-swap.component-panel-closed .m29-overlay-scrollbar-track.is-window {
+    left: 2px !important;
+    right: auto !important;
+  }
+}
+@media (max-width: 767.9px) {
+  body.layout-swap .m29-overlay-scrollbar-track.is-window {
+    right: 2px !important;
+    left: auto !important;
+  }
+}
+
+
+/* =============================================================== */
+/* 📌 Masonry Layout & Advanced Card Attributes */
+/* =============================================================== */
+.main-container > .demo-card {
+  width: 100% !important;
+  flex-basis: 100% !important;
+  margin-bottom: calc(16px * 1.2) !important;
+  box-sizing: border-box !important;
+}
+
+/* 📌 Sticky Header Support */
+.demo-card[data-sticky="true"] {
+  position: sticky !important;
+  top: 16px;
+  z-index: 10;
+}
+@media (min-width: 768px) {
+  .demo-card[data-sticky="true"] {
+    top: 24px;
+  }
+}
+
+
+/* =============================================================== */
+/* 🧩 Component Panel Action Buttons (Swap & Close) */
+/* =============================================================== */
+.component-panel-action-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  opacity: 0.7;
+  transition: opacity 0.2s, background-color 0.2s;
+  padding: 0;
+  border-radius: 50% !important;
+}
+.component-panel-action-btn:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+.dark-theme .component-panel-action-btn {
+  color: #fff;
+}
+.dark-theme .component-panel-action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
 }
 

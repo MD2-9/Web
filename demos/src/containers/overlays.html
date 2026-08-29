@@ -1,0 +1,28 @@
+<!--
+  M2.9 Container: 全局浮层 (Backdrop, FAB, Snackbar)
+  ═══════════════════════════════════════════════════
+  📦 示例调用包:
+
+  1. CSS: .component-panel-backdrop, .mobile-drawer-backdrop,
+     .mobile-floating-menu-btn, .m29-demo-toast
+
+  2. JS:
+     - closeComponentPanel() — 点击 backdrop 关闭组件栏
+     - closeMobileDrawer() — 点击 backdrop 关闭抽屉
+     - openMobileDrawer() — 点击 FAB 打开抽屉
+     - showDemoToast(msg), hideDemoToast() — Snackbar 控制
+-->
+<!-- 🧩 组件栏移动端遮罩 -->
+<div id="componentPanelBackdrop" class="component-panel-backdrop" onclick="closeComponentPanel()"></div>
+
+<!-- 移动端侧边栏半透明遮罩与左下角悬浮按钮 -->
+<div id="mobileDrawerBackdrop" class="mobile-drawer-backdrop" onclick="closeMobileDrawer()"></div>
+<button id="btnMobileFloatingMenu" class="mobile-floating-menu-btn mdc-fab" onclick="openMobileDrawer()" title="打开侧边栏菜单">
+  <i class="material-icons mdc-fab__icon">menu</i>
+</button>
+
+<!-- 轻量提示 Snackbar -->
+<div id="demoSnackbar" class="m29-demo-toast">
+  <span>MDC-Web 纯直角与莫奈动态色彩已就绪！</span>
+  <button class="mdc-button mdc-button--dense" onclick="hideDemoToast()" style="color: var(--mdc-theme-primary); font-weight: bold; min-width: auto; padding: 0;">知道了</button>
+</div>

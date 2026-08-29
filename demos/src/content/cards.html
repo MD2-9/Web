@@ -1,0 +1,60 @@
+<!--
+  M2.9 Content Card: 直角卡片全形态矩阵
+  ═══════════════════════════════════════════════════
+  📦 示例调用:
+    <div class="demo-card" id="section-cards">...</div>
+    需引入: mdc-card.css, index.css (.demo-card, .component-grid)
+-->
+<!-- 🃏 模块 2: 直角卡片全形态矩阵 (Cards) -->
+<div class="demo-card" id="section-cards">
+  <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+    <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">view_agenda</i>
+    2. MD1 纯直角卡片全形态矩阵 (Card Grid)
+  </h3>
+  <div class="component-grid">
+    <div class="demo-card" style="margin: 0;">
+      <h4 style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;">
+        <i class="material-icons" style="font-size: 18px; color: var(--mdc-theme-primary);">dashboard</i>
+        纯直角 Elevated Card
+      </h4>
+      <p style="font-size: 13px; opacity: 0.8;">边角完全采用 0px 直角，保留经典的 Material 海拔投影层级。</p>
+      <div style="display: flex; gap: 8px; margin-top: 12px;">
+        <button class="mdc-button mdc-button--dense mdc-button--raised">操作 A</button>
+        <button class="mdc-button mdc-button--dense">操作 B</button>
+      </div>
+    </div>
+
+    <div class="demo-card" style="margin: 0; border: 1px solid var(--mdc-theme-primary);">
+      <h4 style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;">
+        <i class="material-icons" style="font-size: 18px; color: var(--mdc-theme-primary);">crop_square</i>
+        Outlined Card (描边型)
+      </h4>
+      <p style="font-size: 13px; opacity: 0.8;">采用主色描边，无悬浮投影，呈现极致极简的平整工业质感。</p>
+      <button class="mdc-button mdc-button--dense mdc-button--outlined" style="margin-top: 12px;">查看详情</button>
+    </div>
+
+    <div class="demo-card" style="margin: 0; background: var(--mdc-theme-surface-container-high);">
+      <h4 style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;">
+        <i class="material-icons" style="font-size: 18px; color: var(--mdc-theme-secondary);">layers</i>
+        Surface Container High
+      </h4>
+      <p style="font-size: 13px; opacity: 0.8;">暗色模式下具备略深于背景的舒适阶度，视觉立体不刺眼。</p>
+      <button class="mdc-button mdc-button--dense" style="padding: 0; margin-top: 12px;">展开参数</button>
+    </div>
+
+    <!-- 横向图文媒体卡片 (Horizontal Media Card) -->
+    <div class="demo-card" style="margin: 0; grid-column: 1 / -1; display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+      <div style="width: 120px; height: 80px; background-color: var(--mdc-theme-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold;">
+        <i class="material-icons" style="font-size: 32px;">image</i>
+      </div>
+      <div style="flex: 1; min-width: 220px;">
+        <h4 style="margin: 0 0 4px 0;">图文媒体横向复合卡片 (Media Card)</h4>
+        <p style="font-size: 12px; margin: 0; opacity: 0.85;">集成了左侧固定媒体区、文本描述段落与右侧动作响应插槽。</p>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="mdc-button mdc-button--dense mdc-button--raised">主动作</button>
+        <button class="mdc-button mdc-button--dense mdc-button--outlined">辅助</button>
+      </div>
+    </div>
+  </div>
+</div>

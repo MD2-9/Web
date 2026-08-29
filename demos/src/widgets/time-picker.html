@@ -1,0 +1,63 @@
+<!--
+  M2.9 Widget: 时钟表盘选择器 (TimePicker)
+  ═══════════════════════════════════════════════════
+  📦 示例调用包:
+
+  1. 引入 CSS:
+    <link rel="stylesheet" href="/assets/index.css">
+    需要的 CSS class: .mdc-time-picker, .mdc-time-picker__header, .mdc-time-picker__digital-display,
+    .mdc-time-picker__clock-face, .mdc-time-picker__clock-hand, .mdc-time-picker__thumb-circle,
+    .mdc-time-picker__number, .mdc-time-picker__ampm-toggle, .mdc-time-picker__actions
+
+  2. 引入 HTML:
+    将下方整个 <div class="component-panel-section"> 片段插入到页面中
+
+  3. 引入 JS:
+    <script src="src/js/picker.js"></script>
+    自动初始化: setupDemoDialDOM(), renderDemoTimePicker()
+    交互 API:
+      - confirmDemoTime()           // 确认选择时间
+      - snapDemoTimeToCurrent(true) // 磁吸到当前选中时间
+    表盘拖拽: 自动由 picker.js 绑定 pointerdown/pointermove/pointerup
+-->
+<div class="component-panel-section">
+  <div class="component-panel-section-title">
+    <i class="material-icons" style="font-size: 16px; color: var(--mdc-theme-primary);">access_time</i>
+    时钟表盘选择器 (TimePicker)
+  </div>
+  <div class="mdc-time-picker" id="demoTimePicker">
+    <div class="mdc-time-picker__header">
+      <div class="mdc-time-picker__digital-display">
+        <div class="mdc-time-picker__digit-slot mdc-time-picker__digit-slot--hour"></div>
+        <div class="mdc-time-picker__digit-slot mdc-time-picker__digit-slot--min"></div>
+        <div class="mdc-time-picker__digital-content mdc-time-picker__digital-content--base">
+          <span class="mdc-time-picker__digit-box mdc-time-picker__digit-hour">09</span>
+          <span class="mdc-time-picker__colon">:</span>
+          <span class="mdc-time-picker__digit-box mdc-time-picker__digit-minute">30</span>
+        </div>
+        <div class="mdc-time-picker__digit-indicator">
+          <div class="mdc-time-picker__digital-content mdc-time-picker__digital-content--inverted">
+            <span class="mdc-time-picker__digit-box mdc-time-picker__digit-hour">09</span>
+            <span class="mdc-time-picker__colon">:</span>
+            <span class="mdc-time-picker__digit-box mdc-time-picker__digit-minute">30</span>
+          </div>
+        </div>
+      </div>
+      <div class="mdc-time-picker__ampm-toggle">
+        <button class="mdc-time-picker__ampm-btn mdc-time-picker__ampm-am is-active">上午</button>
+        <button class="mdc-time-picker__ampm-btn mdc-time-picker__ampm-pm">下午</button>
+      </div>
+    </div>
+    <div class="mdc-time-picker__dial-container">
+      <div class="mdc-time-picker__clock-face">
+        <div class="mdc-time-picker__center-pivot"></div>
+        <div class="mdc-time-picker__clock-hand" style="transform: rotate(270deg);"></div>
+        <!-- 动态由 JS 生成刻度数字 -->
+      </div>
+    </div>
+    <div class="mdc-time-picker__actions">
+      <button class="mdc-button mdc-button--dense" onclick="showDemoToast('已取消时间选择')">取消</button>
+      <button class="mdc-button mdc-button--raised mdc-button--dense" style="background-color: var(--mdc-theme-primary);" onclick="confirmDemoTime()">确定</button>
+    </div>
+  </div>
+</div>
