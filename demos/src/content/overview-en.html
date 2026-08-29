@@ -1,0 +1,36 @@
+<!--
+  M2.9 Content Card: Theme Overview (English)
+  ═══════════════════════════════════════════════════
+  📦 Standard English content module for Theme Overview.
+-->
+<div class="demo-card" id="section-overview">
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+    <h2 style="margin: 0; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+      <i class="material-icons" style="color: var(--mdc-theme-primary);">palette</i>
+      MDC-Web Monet Dynamic Color Console (CAM16 / HCT)
+    </h2>
+    <button class="mdc-button mdc-button--raised" onclick="openOverlay('themePickerPanel', event)" style="background-color: var(--mdc-theme-primary);">
+      <i class="material-icons mdc-button__icon">color_lens</i>
+      Open 3-Step Palette
+    </button>
+  </div>
+
+  <p style="font-size: 13px; opacity: 0.85; margin-top: 0;">
+    Strictly adhering to <strong>MD1 0px Sharp Rectangles & 50% Circular</strong> geometric principles. The navigation rail provides <strong>Primary Menus (Home / Catalog / Settings / About)</strong> that smoothly transition into secondary panels with ripple effects.
+  </p>
+
+  <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
+    <div style="font-size: 13px; padding: 6px 14px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
+      <span>Primary:</span>
+      <strong id="label-cur-p" style="color: var(--mdc-theme-primary);">#6750A4</strong>
+    </div>
+    <div style="font-size: 13px; padding: 6px 14px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
+      <span>Secondary:</span>
+      <strong id="label-cur-s" style="color: var(--mdc-theme-secondary);">#625B71</strong>
+    </div>
+    <div style="font-size: 13px; padding: 6px 14px; background: rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px;">
+      <span>Tertiary:</span>
+      <strong id="label-cur-t" style="color: var(--mdc-theme-tertiary);">#7D5260</strong>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,293 @@
+<!--
+  M2.9 Container: Desktop Navigation Rail (English)
+  ═══════════════════════════════════════════════════
+  📦 Standard English container module for Navigation Rail.
+-->
+<aside class="mdc-navigation-rail" id="app-rail">
+  
+  <!-- 1. Primary Drawer Navigation Section (Home, Catalog, Settings, About) -->
+  <div class="drawer-nav-section" id="drawerNavSection">
+    
+    <!-- Top Brand Header (Click to trigger Monet Palette Ripple) -->
+    <div class="rail-header" onclick="openOverlay('themePickerPanel', event)" title="Click to open Monet Color Palette">
+      <div class="rail-header-avatar">M2.9</div>
+      <div class="rail-header-text">
+        <div style="font-weight: bold; font-size: 15px;">M2.9 · MDC-Web</div>
+        <div style="font-size: 11px; opacity: 0.85;">Theme Palette</div>
+      </div>
+    </div>
+
+    <!-- Top Vertical Dynamic Title -->
+    <div class="rail-vertical-title" id="railVerticalTitleTop">
+      M2.9
+    </div>
+
+    <!-- Primary Navigation Menu -->
+    <nav class="rail-nav-list" style="justify-content: center;">
+      
+      <!-- 1. Home -->
+      <a href="#section-overview" class="rail-nav-item" title="Home (Overview)">
+        <i class="material-icons rail-item-icon">home</i>
+        <span class="rail-item-text">Home</span>
+      </a>
+
+      <!-- 2. Catalog -->
+      <div class="rail-nav-item" onclick="openOverlay('catalogSubmenuPanel', event)" title="Catalog (All Components)">
+        <i class="material-icons rail-item-icon" style="color: var(--mdc-theme-primary);">toc</i>
+        <span class="rail-item-text">Catalog</span>
+      </div>
+
+      <!-- 3. Settings -->
+      <div class="rail-nav-item" onclick="openOverlay('settingsSubmenuPanel', event)" title="Settings (Themes & Dark Mode)">
+        <i class="material-icons rail-item-icon">settings</i>
+        <span class="rail-item-text">Settings</span>
+      </div>
+
+      <!-- 4. About -->
+      <div class="rail-nav-item" onclick="openOverlay('aboutSubmenuPanel', event)" title="About Project">
+        <i class="material-icons rail-item-icon">info</i>
+        <span class="rail-item-text">About</span>
+      </div>
+
+    </nav>
+
+    <!-- Bottom Vertical Dynamic Title -->
+    <div class="rail-vertical-title" id="railVerticalTitleBottom">
+      Unjal
+    </div>
+
+    <!-- Bottom Footer Control Bar -->
+    <div class="rail-footer">
+      <!-- 72px Compact Mode: Single Dark Mode Button -->
+      <div class="rail-footer-compact-btn" id="btn-toggle-dark-compact" onclick="toggleThemeMode(event)" title="Toggle Light / Dark Theme">
+        <i class="material-icons" id="rail-compact-dark-icon" style="font-size: 24px; color: var(--mdc-theme-primary);">brightness_4</i>
+      </div>
+      <!-- 260px Expanded Mode: 4 Action Buttons -->
+      <div class="rail-footer-expanded-row">
+        <button class="rail-footer-icon-btn" id="btn-toggle-panel" onclick="toggleComponentPanelTrigger(event)" title="Component Panel (Toggle Side Panel)">
+          <i class="material-icons" id="rail-panel-icon">widgets</i>
+        </button>
+        <button class="rail-footer-icon-btn" id="btn-toggle-lang" onclick="toggleLanguage(event)" title="Switch Language / 切换为中文">
+          <i class="material-icons">translate</i>
+        </button>
+        <button class="rail-footer-icon-btn" id="btn-toggle-layout" onclick="toggleCardColumns(event)" title="Switch Column Layout (1 / 2 / 3 Columns)">
+          <i class="material-icons" id="rail-layout-icon">view_column</i>
+        </button>
+        <button class="rail-footer-icon-btn" id="btn-toggle-dark" onclick="toggleThemeMode(event)" title="Toggle Light / Dark Theme">
+          <i class="material-icons" id="rail-dark-icon">brightness_4</i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Submenu: Component Catalog Panorama -->
+  <div id="catalogSubmenuPanel" class="secondary-overlay-panel">
+    <div class="overlay-top-bar">
+      <div class="overlay-header-title">
+        <button class="mdc-button mdc-button--dense" onclick="closeOverlay('catalogSubmenuPanel', event)" style="color: #fff; min-width: 32px; padding: 0 4px;" title="Back to Main Menu">
+          <i class="material-icons">arrow_back</i>
+        </button>
+        <span>Component Catalog</span>
+      </div>
+    </div>
+    
+    <nav class="rail-nav-list" style="padding: 8px 0;">
+      <a href="#section-buttons" class="rail-nav-item" title="1. Buttons & FAB">
+        <i class="material-icons rail-item-icon">touch_app</i>
+        <span class="rail-item-text">1. Buttons & FAB</span>
+      </a>
+      <a href="#section-cards" class="rail-nav-item" title="2. Sharp Cards">
+        <i class="material-icons rail-item-icon">view_agenda</i>
+        <span class="rail-item-text">2. Sharp Cards</span>
+      </a>
+      <a href="#section-chips" class="rail-nav-item" title="3. Chips & Badges">
+        <i class="material-icons rail-item-icon">label</i>
+        <span class="rail-item-text">3. Chips & Badges</span>
+      </a>
+      <a href="#section-form" class="rail-nav-item" title="4. Forms & Controls">
+        <i class="material-icons rail-item-icon">tune</i>
+        <span class="rail-item-text">4. Forms & Controls</span>
+      </a>
+      <a href="#section-list" class="rail-nav-item" title="5. Lists & Accordions">
+        <i class="material-icons rail-item-icon">format_list_bulleted</i>
+        <span class="rail-item-text">5. Lists & Accordions</span>
+      </a>
+      <a href="#section-dialogs" class="rail-nav-item" title="6. Dialogs & Menus">
+        <i class="material-icons rail-item-icon">aspect_ratio</i>
+        <span class="rail-item-text">6. Dialogs & Menus</span>
+      </a>
+      <a href="#section-tabs" class="rail-nav-item" title="7. Tabs">
+        <i class="material-icons rail-item-icon">tab</i>
+        <span class="rail-item-text">7. Tabs</span>
+      </a>
+      <a href="#section-progress" class="rail-nav-item" title="8. Progress Indicators">
+        <i class="material-icons rail-item-icon">hourglass_empty</i>
+        <span class="rail-item-text">8. Progress Indicators</span>
+      </a>
+      <a href="#section-monet-lab" class="rail-nav-item" title="9. Monet Color Lab">
+        <i class="material-icons rail-item-icon">wallpaper</i>
+        <span class="rail-item-text">9. Monet Color Lab</span>
+      </a>
+      <a href="#section-typography" class="rail-nav-item" title="10. Typography & Fonts">
+        <i class="material-icons rail-item-icon">text_fields</i>
+        <span class="rail-item-text">10. Typography & Fonts</span>
+      </a>
+      <a href="#section-pickers" class="rail-nav-item" title="11. Date & Time Pickers">
+        <i class="material-icons rail-item-icon">date_range</i>
+        <span class="rail-item-text">11. Date & Time Pickers</span>
+      </a>
+    </nav>
+
+    <!-- Bottom Back Button -->
+    <div class="overlay-bottom-bar">
+      <button class="mdc-button mdc-button--outlined" onclick="closeOverlay('catalogSubmenuPanel', event)" style="width: 100%;">
+        <i class="material-icons mdc-button__icon">arrow_back</i>
+        Back to Menu
+      </button>
+    </div>
+  </div>
+
+  <!-- 3. Submenu: Global Settings Panel -->
+  <div id="settingsSubmenuPanel" class="secondary-overlay-panel">
+    <div class="overlay-top-bar">
+      <div class="overlay-header-title">
+        <button class="mdc-button mdc-button--dense" onclick="closeOverlay('settingsSubmenuPanel', event)" style="color: #fff; min-width: 32px; padding: 0 4px;" title="Back to Main Menu">
+          <i class="material-icons">arrow_back</i>
+        </button>
+        <span>Global Settings</span>
+      </div>
+    </div>
+    <div class="secondary-overlay-content" style="gap: 16px;">
+      <div>
+        <div style="font-weight: 600; font-size: 13px; margin-bottom: 6px;">Color Palette Dimensions (1 / 2 / 3 Colors)</div>
+        <div style="font-size: 11px; opacity: 0.75; margin-bottom: 8px; line-height: 1.4;">
+          Configure layout color expressiveness: unified monochromatic, balanced dual-tone, or vibrant triple-tone:
+        </div>
+        <div class="segmented-button-group" style="width: 100%; display: flex;">
+          <button class="segmented-button" id="btn-color-mode-1" onclick="setColorPaletteMode(1)" style="flex: 1; justify-content: center; padding: 6px 0; font-size: 11px;">
+            1-Tone
+          </button>
+          <button class="segmented-button" id="btn-color-mode-2" onclick="setColorPaletteMode(2)" style="flex: 1; justify-content: center; padding: 6px 0; font-size: 11px;">
+            2-Tone
+          </button>
+          <button class="segmented-button is-selected" id="btn-color-mode-3" onclick="setColorPaletteMode(3)" style="flex: 1; justify-content: center; padding: 6px 0; font-size: 11px;">
+            3-Tone
+          </button>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">Monet Dynamic Color Palette</div>
+        <button class="mdc-button mdc-button--raised" onclick="closeOverlay('settingsSubmenuPanel', event); openOverlay('themePickerPanel', event);" style="width: 100%;">
+          Open 3-Step Palette Picker
+        </button>
+      </div>
+      <div>
+        <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">Theme Mode</div>
+        <button class="mdc-button mdc-button--outlined" onclick="toggleThemeMode()" style="width: 100%;">
+          Toggle Light / Dark Mode
+        </button>
+      </div>
+      <div>
+        <div style="font-weight: 600; font-size: 13px; margin-bottom: 8px;">System Configuration</div>
+        <button class="mdc-button" onclick="clearLocalStorageSettings()" style="width: 100%; color: var(--mdc-theme-error, #B00020);">
+          <i class="material-icons mdc-button__icon">delete_outline</i>
+          Reset All Stored Settings
+        </button>
+      </div>
+    </div>
+    <div class="overlay-bottom-bar">
+      <button class="mdc-button mdc-button--outlined" onclick="closeOverlay('settingsSubmenuPanel', event)" style="width: 100%;">
+        <i class="material-icons mdc-button__icon">arrow_back</i>
+        Back to Menu
+      </button>
+    </div>
+  </div>
+
+  <!-- 4. Submenu: About Panel -->
+  <div id="aboutSubmenuPanel" class="secondary-overlay-panel">
+    <div class="overlay-top-bar">
+      <div class="overlay-header-title">
+        <button class="mdc-button mdc-button--dense" onclick="closeOverlay('aboutSubmenuPanel', event)" style="color: #fff; min-width: 32px; padding: 0 4px;" title="Back to Main Menu">
+          <i class="material-icons">arrow_back</i>
+        </button>
+        <span>About M2.9</span>
+      </div>
+    </div>
+    <div class="secondary-overlay-content" style="font-size: 12.5px; line-height: 1.6; opacity: 0.95; display: flex; flex-direction: column; gap: 12px;">
+      <div>
+        <h4 style="margin: 0 0 4px 0; font-size: 15px; color: var(--mdc-theme-primary); font-weight: 700;">M2.9 · Material Components for Web</h4>
+        <div style="font-size: 11px; opacity: 0.75; margin-bottom: 6px;">Version: v2.9.0 (Extended from Google MDC-Web v0.34.1)</div>
+        <p style="margin: 0; line-height: 1.55;">
+          A next-generation responsive component library and interactive showroom blending <strong>Material Design 3 (Material You)</strong> dynamic color extraction with <strong>Classic Material Design</strong> 0px sharp geometric aesthetics.
+        </p>
+      </div>
+
+      <div style="padding: 10px 12px; background: rgba(0,0,0,0.04); font-size: 12px; line-height: 1.7; border-left: 3px solid var(--mdc-theme-primary); display: flex; flex-direction: column; gap: 4px;">
+        <div style="font-weight: bold; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; color: var(--mdc-theme-primary);">
+          <i class="material-icons" style="font-size: 16px;">stars</i> Core Architecture Features
+        </div>
+        <div>• <strong>0px Sharp Geometry</strong>: Eliminates rounded corners for a high-density, professional aesthetic.</div>
+        <div>• <strong>Monet Dynamic Color</strong>: CAM16 / HCT color science with customizable 1/2/3 tonal dimensions.</div>
+        <div>• <strong>AOSP Native EdgeEffect</strong>: 1:1 reproduction of Android 5-11 reciprocal curved edge glow ripples.</div>
+        <div>• <strong>Dual Responsive Navigation</strong>: Desktop hover rail + Mobile 0.39s bottom-anchored modal drawer.</div>
+        <div>• <strong>Sharp Extension Suite</strong>: Date/Time pickers, segmented buttons, accordions, floating scrollbars, etc.</div>
+      </div>
+
+      <div style="padding: 10px 12px; background: rgba(0,0,0,0.04); font-size: 12px; line-height: 1.8; border-left: 3px solid var(--mdc-theme-primary);">
+        <div style="font-weight: bold; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; color: var(--mdc-theme-primary);">
+          <i class="material-icons" style="font-size: 16px;">person</i> Developer & Credits
+        </div>
+        <div>• Author: <a href="https://github.com/unjal29" target="_blank" style="color: var(--mdc-theme-primary); text-decoration: underline; font-weight: bold;">Unjal (@unjal29)</a></div>
+        <div>• Open Source Repo: <a href="https://github.com/MD2-9/Web" target="_blank" style="color: var(--mdc-theme-primary); text-decoration: underline;">GitHub · MD2-9/Web</a></div>
+        <div>• Upstream Reference: <a href="https://github.com/material-components/material-components-web" target="_blank" style="color: var(--mdc-theme-primary); text-decoration: underline;">Google MDC-Web (v0.34.1)</a></div>
+        <div>• Inspirations: <a href="https://github.com/zdhxiong/mdui" target="_blank" style="color: var(--mdc-theme-primary); text-decoration: underline;">MDUI (zdhxiong)</a>, <a href="https://source.android.com/" target="_blank" style="color: var(--mdc-theme-primary); text-decoration: underline;">AOSP</a></div>
+      </div>
+
+      <div style="font-size: 11.5px; opacity: 0.85; line-height: 1.55;">
+        <div style="font-weight: bold; margin-bottom: 3px; display: flex; align-items: center; gap: 6px;">
+          <i class="material-icons" style="font-size: 15px; color: var(--mdc-theme-primary);">font_download</i> Variable Fonts & Icons
+        </div>
+        <div>• Typography: <strong>Google Sans Flex</strong> variable font (wght / opsz / GRAD axes), copyright <strong>Google LLC</strong> (OFL-1.1).</div>
+        <div>• Icons: <strong>Material Icons</strong> official icon set (CC-BY 4.0 / Apache 2.0).</div>
+      </div>
+
+      <div style="font-size: 11.5px; opacity: 0.85; line-height: 1.55;">
+        <div style="font-weight: bold; margin-bottom: 3px; display: flex; align-items: center; gap: 6px;">
+          <i class="material-icons" style="font-size: 15px; color: var(--mdc-theme-primary);">description</i> Open Source License
+        </div>
+        <div>• Released under the <strong>Apache License 2.0</strong>.</div>
+      </div>
+    </div>
+    <div class="overlay-bottom-bar">
+      <button class="mdc-button mdc-button--outlined" onclick="closeOverlay('aboutSubmenuPanel', event)" style="width: 100%;">
+        <i class="material-icons mdc-button__icon">arrow_back</i>
+        Back to Menu
+      </button>
+    </div>
+  </div>
+
+  <!-- 5. Submenu: 🎨 Monet Color Palette Overlay -->
+  <div id="themePickerPanel" class="secondary-overlay-panel">
+    <div class="overlay-top-bar">
+      <div class="overlay-header-title">
+        <button class="mdc-button mdc-button--dense" onclick="closeOverlay('themePickerPanel', event)" style="color: #fff; min-width: 32px; padding: 0 4px;" title="Back to Main Menu">
+          <i class="material-icons">arrow_back</i>
+        </button>
+        <div style="display: flex; flex-direction: column; gap: 2px;">
+          <span id="pickerStepTitle" style="font-size: 14px; font-weight: 700; line-height: 1.2;">Color Mode</span>
+          <span id="pickerStepSub" style="font-size: 12px; opacity: 0.9; font-weight: 500; line-height: 1.2;">Select Primary Color</span>
+        </div>
+      </div>
+    </div>
+    <div class="theme-grid" id="themeGrid">
+      <!-- Dynamic Monet Palette Swatches -->
+    </div>
+    <div class="overlay-bottom-bar">
+      <button class="mdc-button mdc-button--outlined" onclick="closeOverlay('themePickerPanel', event)" style="width: 100%;">
+        <i class="material-icons mdc-button__icon">arrow_back</i>
+        Back to Menu
+      </button>
+    </div>
+  </div>
+
+</aside>

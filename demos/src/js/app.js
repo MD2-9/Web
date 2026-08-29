@@ -100,8 +100,8 @@ window.addEventListener('m29:loaded', function() {
     function toggleLanguage(event) {
       if (event) event.stopPropagation();
       const nextLang = currentLang === 'zh' ? 'en' : 'zh';
-      applyLanguage(nextLang);
-      showDemoToast(nextLang === 'en' ? 'Switched to English' : '已切换为简体中文');
+      localStorage.setItem('m29_lang', nextLang);
+      window.location.reload();
     }
     window.toggleLanguage = toggleLanguage;
 
@@ -3341,7 +3341,8 @@ window.addEventListener('m29:loaded', function() {
         const btnEl = document.getElementById('btnTogglePanelWidth');
         const is2Col = currentWidth >= 460;
         if (iconEl) {
-          iconEl.textContent = is2Col ? 'view_column' : 'view_agenda';
+          // 🌟 纯正单双竖栏图标：单列使用 view_stream，双列使用 view_week
+          iconEl.textContent = is2Col ? 'view_week' : 'view_stream';
         }
         if (btnEl) {
           const isEn = currentLang === 'en';
@@ -3372,6 +3373,50 @@ window.addEventListener('m29:loaded', function() {
       window.setComponentPanelWidth = setComponentPanelWidth;
       window.toggleComponentPanelWidth = toggleComponentPanelWidth;
       window.updateComponentPanelWidthIcon = updateComponentPanelWidthIcon;
+
+      function applyComponentPanelTheme(theme) {
+        const panel = document.getElementById('app-component-panel');
+        const iconEl = document.getElementById('componentPanelThemeIcon');
+        const btnEl = document.getElementById('btnTogglePanelTheme');
+        if (!panel) return;
+
+        panel.classList.remove('dark-theme', 'light-theme');
+        if (theme === 'dark') {
+          panel.classList.add('dark-theme');
+        } else if (theme === 'light') {
+          panel.classList.add('light-theme');
+        }
+
+        const isDark = theme === 'dark' || (theme !== 'light' && document.body.classList.contains('dark-theme'));
+        if (iconEl) {
+          iconEl.textContent = isDark ? 'light_mode' : 'dark_mode';
+        }
+        if (btnEl) {
+          const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+          btnEl.title = isDark ? (isEn ? 'Current: Dark Mode (Click for Light Mode)' : '当前: 暗色模式 (点击切换为浅色)') : (isEn ? 'Current: Light Mode (Click for Dark Mode)' : '当前: 浅色模式 (点击切换为暗色)');
+        }
+      }
+
+      function toggleComponentPanelTheme() {
+        const panel = document.getElementById('app-component-panel');
+        if (!panel) return;
+        const isCurrentlyDark = panel.classList.contains('dark-theme') || (!panel.classList.contains('light-theme') && document.body.classList.contains('dark-theme'));
+        const nextTheme = isCurrentlyDark ? 'light' : 'dark';
+        localStorage.setItem('m29_component_panel_theme', nextTheme);
+        applyComponentPanelTheme(nextTheme);
+        const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+        showDemoToast(nextTheme === 'dark' ? (isEn ? 'Component Panel set to Dark Mode' : '组件栏已切换为独立暗色模式') : (isEn ? 'Component Panel set to Light Mode' : '组件栏已切换为独立浅色模式'));
+      }
+      window.applyComponentPanelTheme = applyComponentPanelTheme;
+      window.toggleComponentPanelTheme = toggleComponentPanelTheme;
+
+      // 恢复组件栏独立主题设置
+      const savedPanelTheme = localStorage.getItem('m29_component_panel_theme');
+      if (savedPanelTheme) {
+        applyComponentPanelTheme(savedPanelTheme);
+      } else {
+        applyComponentPanelTheme('auto');
+      }
 
       // 启动时初始化图标
       updateComponentPanelWidthIcon();
@@ -3693,6 +3738,8 @@ window.addEventListener('m29:loaded', function() {
     window.initComponentPanelResizer = initComponentPanelResizer;
     window.setComponentPanelWidth = setComponentPanelWidth;
     window.toggleComponentPanelWidth = toggleComponentPanelWidth;
+    window.applyComponentPanelTheme = applyComponentPanelTheme;
+    window.toggleComponentPanelTheme = toggleComponentPanelTheme;
     window.M29OverlayScrollbar = M29OverlayScrollbar;
     window.M29TooltipEngine = M29TooltipEngine;
 });

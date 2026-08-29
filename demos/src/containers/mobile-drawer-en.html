@@ -1,0 +1,61 @@
+<!--
+  M2.9 Container: Mobile Drawer (English)
+  ═══════════════════════════════════════════════════
+  📦 Standard English container module for Mobile Drawer.
+-->
+<aside class="mdc-mobile-drawer" id="app-mobile-drawer">
+  <div class="mobile-drawer-nav-section" id="mobileDrawerNavSection">
+    
+    <!-- Top Header -->
+    <div class="mobile-drawer-header" onclick="openOverlay('themePickerPanel', event)" title="Click to open Monet Color Palette">
+      <div class="rail-header-avatar">M2.9</div>
+      <div class="rail-header-text">
+        <div style="font-weight: bold; font-size: 15px;">M2.9 · MDC-Web</div>
+        <div style="font-size: 11px; opacity: 0.85;">Theme Palette</div>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Nav List (Bottom-to-Top) -->
+    <nav class="mobile-drawer-nav-list">
+      <!-- 1. Home -->
+      <a href="#section-overview" class="mobile-drawer-nav-item" title="Home (Overview)">
+        <i class="material-icons rail-item-icon">home</i>
+        <span class="rail-item-text">Home</span>
+      </a>
+
+      <!-- 2. Catalog -->
+      <div class="mobile-drawer-nav-item" onclick="openOverlay('catalogSubmenuPanel', event)" title="Catalog (All Components)">
+        <i class="material-icons rail-item-icon" style="color: var(--mdc-theme-primary);">toc</i>
+        <span class="rail-item-text">Catalog</span>
+      </div>
+
+      <!-- 3. Settings -->
+      <div class="mobile-drawer-nav-item" onclick="openOverlay('settingsSubmenuPanel', event)" title="Settings (Themes & Dark Mode)">
+        <i class="material-icons rail-item-icon">settings</i>
+        <span class="rail-item-text">Settings</span>
+      </div>
+
+      <!-- 4. About -->
+      <div class="mobile-drawer-nav-item" onclick="openOverlay('aboutSubmenuPanel', event)" title="About Project">
+        <i class="material-icons rail-item-icon">info</i>
+        <span class="rail-item-text">About</span>
+      </div>
+    </nav>
+
+    <!-- Bottom Action Footer Bar -->
+    <div class="mobile-drawer-footer">
+      <button class="rail-footer-icon-btn" id="btn-toggle-panel-mobile" onclick="toggleComponentPanelTrigger(event)" title="Component Panel (Toggle Side Panel)">
+        <i class="material-icons">widgets</i>
+      </button>
+      <button class="rail-footer-icon-btn" id="btn-toggle-lang-mobile" onclick="toggleLanguage(event)" title="Switch Language / 切换为中文">
+        <i class="material-icons">translate</i>
+      </button>
+      <button class="rail-footer-icon-btn" id="btn-toggle-layout-mobile" onclick="toggleCardColumns(event)" title="Switch Column Layout (Columns)">
+        <i class="material-icons" id="mobile-layout-icon">view_column</i>
+      </button>
+      <button class="rail-footer-icon-btn" id="btn-toggle-dark-mobile" onclick="toggleThemeMode(event)" title="Toggle Light / Dark Theme">
+        <i class="material-icons" id="mobile-dark-icon">brightness_4</i>
+      </button>
+    </div>
+  </div>
+</aside>

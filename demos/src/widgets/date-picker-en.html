@@ -1,0 +1,44 @@
+<!--
+  M2.9 Widget: DatePicker (English)
+  ═══════════════════════════════════════════════════
+  📦 Standard English widget module for DatePicker.
+-->
+<div class="component-panel-section">
+  <div class="component-panel-section-title">
+    <i class="material-icons" style="font-size: 16px; color: var(--mdc-theme-primary);">date_range</i>
+    Date Picker
+  </div>
+  <div class="mdc-date-picker" id="demoDatePicker">
+    <div class="mdc-date-picker__header">
+      <span class="mdc-date-picker__header-year">2026</span>
+      <span class="mdc-date-picker__header-date">Sat, Aug 29</span>
+    </div>
+    <div class="mdc-date-picker__controls">
+      <span class="mdc-date-picker__current-month">
+        <i class="material-icons" style="font-size: 18px; color: var(--mdc-theme-primary);">event</i>
+        <span class="mdc-date-picker__month-label">August 2026</span>
+      </span>
+      <div style="display: flex; gap: 4px;">
+        <button class="mdc-date-picker__nav-btn mdc-date-picker__prev-btn" title="Previous Month">
+          <i class="material-icons" style="font-size: 20px;">chevron_left</i>
+        </button>
+        <button class="mdc-date-picker__nav-btn mdc-date-picker__next-btn" title="Next Month">
+          <i class="material-icons" style="font-size: 20px;">chevron_right</i>
+        </button>
+      </div>
+    </div>
+    <div class="mdc-date-picker__body-container">
+      <div class="mdc-date-picker__selection-thumb"></div>
+      <div class="mdc-date-picker__weekdays">
+        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+      </div>
+      <div class="mdc-date-picker__grid">
+        <!-- Dynamically populated by JS -->
+      </div>
+    </div>
+    <div class="mdc-date-picker__actions">
+      <button class="mdc-button mdc-button--dense" onclick="showDemoToast('Date selection cancelled')">CANCEL</button>
+      <button class="mdc-button mdc-button--raised mdc-button--dense" style="background-color: var(--mdc-theme-primary);" onclick="confirmDemoDate()">OK</button>
+    </div>
+  </div>
+</div>

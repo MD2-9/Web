@@ -1,0 +1,19 @@
+<!--
+  M2.9 Container: Global Overlays (English)
+  ═══════════════════════════════════════════════════
+  📦 Standard English overlays module for Backdrop, FAB, and Toast.
+-->
+<!-- Component Panel Backdrop -->
+<div id="componentPanelBackdrop" class="component-panel-backdrop" onclick="closeComponentPanel()"></div>
+
+<!-- Mobile Drawer Backdrop & Floating Menu FAB -->
+<div id="mobileDrawerBackdrop" class="mobile-drawer-backdrop" onclick="closeMobileDrawer()"></div>
+<button id="btnMobileFloatingMenu" class="mobile-floating-menu-btn mdc-fab" onclick="openMobileDrawer()" title="Open Navigation Menu">
+  <i class="material-icons mdc-fab__icon">menu</i>
+</button>
+
+<!-- Snackbar Toast Notification -->
+<div id="demoSnackbar" class="m29-demo-toast">
+  <span>MDC-Web 0px Sharp Geometry & Monet Dynamic Color Ready!</span>
+  <button class="mdc-button mdc-button--dense" onclick="hideDemoToast()" style="color: var(--mdc-theme-primary); font-weight: bold; min-width: auto; padding: 0;">DISMISS</button>
+</div>

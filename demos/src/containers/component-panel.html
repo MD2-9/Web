@@ -25,18 +25,20 @@
 
   <div class="component-panel-header">
     <div class="component-panel-header-title">
-      <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary);">widgets</i>
+      <button class="component-panel-action-btn" onclick="closeComponentPanel()" title="关闭组件栏" style="margin-right: 2px;">
+        <i class="material-icons" style="font-size: 20px;">close</i>
+      </button>
       <span>组件</span>
     </div>
     <div style="display: flex; gap: 4px; align-items: center;">
-      <button class="component-panel-action-btn" id="btnTogglePanelWidth" onclick="toggleComponentPanelWidth()" title="切换组件栏预设档位 (290px 单列 / 629px 双列)">
-        <i class="material-icons" id="componentPanelWidthIcon" style="font-size: 18px;">view_agenda</i>
-      </button>
       <button class="component-panel-action-btn" onclick="toggleLayoutSwap()" title="左右布局互换 (调换侧边栏与组件栏位置)">
         <i class="material-icons" style="font-size: 20px;">swap_horiz</i>
       </button>
-      <button class="component-panel-action-btn component-panel-close-btn" onclick="closeComponentPanel()" title="关闭组件栏">
-        <i class="material-icons" style="font-size: 20px;">close</i>
+      <button class="component-panel-action-btn" id="btnTogglePanelWidth" onclick="toggleComponentPanelWidth()" title="切换组件栏预设档位 (290px 单列 / 629px 双列)">
+        <i class="material-icons" id="componentPanelWidthIcon" style="font-size: 18px;">view_stream</i>
+      </button>
+      <button class="component-panel-action-btn" id="btnTogglePanelTheme" onclick="toggleComponentPanelTheme()" title="切换组件栏独立暗色/浅色模式">
+        <i class="material-icons" id="componentPanelThemeIcon" style="font-size: 18px;">dark_mode</i>
       </button>
     </div>
   </div>

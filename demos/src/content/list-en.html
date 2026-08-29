@@ -1,0 +1,62 @@
+<!--
+  M2.9 Content Card: Lists & Accordions (English)
+  ═══════════════════════════════════════════════════
+  📦 Standard English content module for Lists & Accordions.
+-->
+<div class="demo-card" id="section-list">
+  <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+    <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">format_list_bulleted</i>
+    5. Lists, Expansion Panels &amp; Dividers
+  </h3>
+  <div class="component-grid">
+    
+    <!-- Two-line List -->
+    <div class="demo-card" style="margin: 0; padding: 12px;">
+      <h4 style="margin: 0 0 8px 0; font-size: 14px;">Two-line List Items</h4>
+      <ul class="mdc-list mdc-list--two-line" style="padding: 0;">
+        <li class="mdc-list-item" style="height: 56px;">
+          <span class="mdc-list-item__graphic material-icons" style="color: var(--mdc-theme-primary);">folder</span>
+          <span class="mdc-list-item__text">
+            Core Color Modules
+            <span class="mdc-list-item__secondary-text">CAM16 / HCT Color Science Engine</span>
+          </span>
+        </li>
+        <div class="mdc-divider mdc-divider--inset" style="margin: 0;"></div>
+        <li class="mdc-list-item" style="height: 56px;">
+          <span class="mdc-list-item__graphic material-icons" style="color: var(--mdc-theme-secondary);">dashboard</span>
+          <span class="mdc-list-item__text">
+            Navigation Rail System
+            <span class="mdc-list-item__secondary-text">72px Compact / 260px Expanded</span>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Expansion Panels -->
+    <div>
+      <div class="expansion-panel is-open" onclick="toggleExpansion(this)">
+        <div class="expansion-header">
+          <span>Panel 1: 0px Sharp Geometry</span>
+          <i class="material-icons expansion-arrow">keyboard_arrow_down</i>
+        </div>
+        <div class="expansion-body">
+          <div class="expansion-body__content">
+            Faithful to classic MD1 architectural principles with 0px corner radii and high-density elevation shadows.
+          </div>
+        </div>
+      </div>
+
+      <div class="expansion-panel" onclick="toggleExpansion(this)">
+        <div class="expansion-header">
+          <span>Panel 2: Monet Dark Tonal Standards</span>
+          <i class="material-icons expansion-arrow">keyboard_arrow_down</i>
+        </div>
+        <div class="expansion-body">
+          <div class="expansion-body__content">
+            Dark theme employs Tone 20 surfaces with Tone 12 container levels to deliver pristine contrast without stark solid blacks.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

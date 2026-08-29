@@ -1,0 +1,46 @@
+<!--
+  M2.9 Content Card: Tabs (English)
+  ═══════════════════════════════════════════════════
+  📦 Standard English content module for Tabs.
+-->
+<div class="demo-card" id="section-tabs">
+  <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+    <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">tab</i>
+    7. Tab Navigation &amp; Sliding Indicator
+  </h3>
+  
+  <!-- Tabs Bar -->
+  <div class="m29-tabs-bar" id="demoTabsBar">
+    <div class="m29-tab-item is-active" onclick="switchM29Tab(0, this)" data-full-title="1. Components" data-tooltip="1. Components">
+      <i class="material-icons" style="font-size: 18px;">widgets</i>
+      <span>1. Components</span>
+    </div>
+    <div class="m29-tab-item" onclick="switchM29Tab(1, this)" data-full-title="2. CAM16 Engine" data-tooltip="2. CAM16 Engine">
+      <i class="material-icons" style="font-size: 18px;">palette</i>
+      <span>2. CAM16 Engine</span>
+    </div>
+    <div class="m29-tab-item" onclick="switchM29Tab(2, this)" data-full-title="3. Navigation Rail" data-tooltip="3. Navigation Rail">
+      <i class="material-icons" style="font-size: 18px;">navigation</i>
+      <span>3. Navigation Rail</span>
+    </div>
+    <div class="m29-tab-indicator" id="m29TabIndicator"></div>
+  </div>
+
+  <!-- Tab Content Panels -->
+  <div class="m29-tab-content-container" id="tabContentContainer">
+    <div class="m29-tab-panel is-active" id="tab-panel-0">
+      <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">[Panel 1] MDC-Web v0.34.1 0px Sharp Feature Matrix</h4>
+      <p>All component corners maintain 0px sharp geometry, preserving industrial MD1 aesthetics and Google Sans Flex variable typography.</p>
+    </div>
+
+    <div class="m29-tab-panel" id="tab-panel-1">
+      <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">[Panel 2] Google Material Color Utilities (CAM16 / HCT)</h4>
+      <p>Perceptually uniform color science supporting monochromatic, dual-tone, triple-tone, and wallpaper seed extraction across themes.</p>
+    </div>
+
+    <div class="m29-tab-panel" id="tab-panel-2">
+      <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">[Panel 3] Navigation Rail Dual-Tier Architecture</h4>
+      <p>72px compact rail expandable to 260px, supporting primary menus with seamless ripple transitions to secondary submenus.</p>
+    </div>
+  </div>
+</div>

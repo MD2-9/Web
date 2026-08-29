@@ -22,27 +22,39 @@
     const slots = root.querySelectorAll('[data-include]');
     if (slots.length === 0) return;
 
+    const currentLang = localStorage.getItem('m29_lang') || 'zh';
+
     const promises = Array.from(slots).map(async (slot) => {
-      const src = slot.getAttribute('data-include');
-      if (!src) return;
+      const originalSrc = slot.getAttribute('data-include');
+      if (!originalSrc) return;
+
+      let targetSrc = originalSrc;
+      if (currentLang === 'en' && !originalSrc.endsWith('-en.html')) {
+        targetSrc = originalSrc.replace(/\.html$/, '-en.html');
+      }
 
       try {
-        const resp = await fetch(src);
+        let resp = await fetch(targetSrc);
+        if (!resp.ok && targetSrc !== originalSrc) {
+          // 如果对应英文版不存在，优雅回退至默认中文版
+          resp = await fetch(originalSrc);
+          targetSrc = originalSrc;
+        }
         if (!resp.ok) {
-          console.warn(`[M29 Loader] Failed to load: ${src} (${resp.status})`);
+          console.warn(`[M29 Loader] Failed to load: ${originalSrc} (${resp.status})`);
           return;
         }
         const html = await resp.text();
 
-        // 将片段 HTML 注入到占位 div 内部（保留外层 div 以维持 DOM 结构）
+        // 将片段 HTML 注入到占位 div 内部
         slot.innerHTML = html;
         slot.removeAttribute('data-include');
-        slot.setAttribute('data-loaded', src);
+        slot.setAttribute('data-loaded', targetSrc);
 
         // 递归处理嵌套 include（如 component-panel 内嵌 widget）
         await loadIncludes(slot);
       } catch (err) {
-        console.error(`[M29 Loader] Error loading ${src}:`, err);
+        console.error(`[M29 Loader] Error loading ${originalSrc}:`, err);
       }
     });
 

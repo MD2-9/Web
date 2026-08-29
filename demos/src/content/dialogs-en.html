@@ -1,0 +1,50 @@
+<!--
+  M2.9 Content Card: Dialogs, Menus & Tooltips (English)
+  ═══════════════════════════════════════════════════
+  📦 Standard English content module for Dialogs.
+-->
+<div class="demo-card" id="section-dialogs">
+  <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+    <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">aspect_ratio</i>
+    6. Sharp Dialogs, Menus &amp; Tooltips
+  </h3>
+  <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 16px;">
+    <button class="mdc-button mdc-button--raised" onclick="openDemoDialog()">
+      <i class="material-icons mdc-button__icon">open_in_new</i>
+      Open Sharp Dialog Modal
+    </button>
+
+    <button class="mdc-button mdc-button--outlined" onclick="showDemoToast()">
+      <i class="material-icons mdc-button__icon">notifications</i>
+      Trigger Snackbar Toast
+    </button>
+
+    <!-- Tooltip Demo -->
+    <div class="tooltip-wrapper">
+      <button class="mdc-button mdc-button--unelevated" style="background-color: var(--mdc-theme-secondary); color: var(--mdc-theme-on-secondary);">
+        <i class="material-icons mdc-button__icon">help_outline</i>
+        Hover for Tooltip
+      </button>
+      <div class="tooltip-box">
+        This is a 0px sharp corner Material tooltip!
+      </div>
+    </div>
+  </div>
+
+  <!-- Sharp Dialog Modal Overlay -->
+  <div id="demoDialogOverlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99999; display: none; align-items: center; justify-content: center;">
+    <div class="demo-card" style="width: 400px; margin: 0; box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12);">
+      <h3 style="margin-top: 0; display: flex; align-items: center; gap: 8px;">
+        <i class="material-icons" style="color: var(--mdc-theme-primary);">info</i>
+        Standard MD1 0px Sharp Dialog
+      </h3>
+      <p style="font-size: 13px; opacity: 0.85; line-height: 1.6;">
+        This modal dialog adheres strictly to 0px sharp corner geometry paired with Material Elevation 24 shadows.
+      </p>
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px;">
+        <button class="mdc-button" onclick="closeDemoDialog()">CANCEL</button>
+        <button class="mdc-button mdc-button--raised" onclick="closeDemoDialog()">CONFIRM</button>
+      </div>
+    </div>
+  </div>
+</div>

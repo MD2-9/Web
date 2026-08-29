@@ -1,0 +1,38 @@
+<!--
+  M2.9 Container: Component Panel (English)
+  ═══════════════════════════════════════════════════
+  📦 Standard English container module for Component Panel.
+-->
+<aside class="mdc-component-panel" id="app-component-panel">
+  <!-- Left Resizer Handle (Double-click to toggle 290px / 629px) -->
+  <div class="component-panel-resizer" id="componentPanelResizer" title="Drag to adjust width (Double-click to toggle 290px / 629px)"></div>
+
+  <div class="component-panel-header">
+    <div class="component-panel-header-title">
+      <button class="component-panel-action-btn" onclick="closeComponentPanel()" title="Close Component Panel" style="margin-right: 2px;">
+        <i class="material-icons" style="font-size: 20px;">close</i>
+      </button>
+      <span>Components</span>
+    </div>
+    <div style="display: flex; gap: 4px; align-items: center;">
+      <button class="component-panel-action-btn" onclick="toggleLayoutSwap()" title="Swap Layout (Swap Sidebar & Component Panel)">
+        <i class="material-icons" style="font-size: 20px;">swap_horiz</i>
+      </button>
+      <button class="component-panel-action-btn" id="btnTogglePanelWidth" onclick="toggleComponentPanelWidth()" title="Toggle Width Preset (290px Single Column / 629px Dual Columns)">
+        <i class="material-icons" id="componentPanelWidthIcon" style="font-size: 18px;">view_stream</i>
+      </button>
+      <button class="component-panel-action-btn" id="btnTogglePanelTheme" onclick="toggleComponentPanelTheme()" title="Toggle Component Panel Dark / Light Mode">
+        <i class="material-icons" id="componentPanelThemeIcon" style="font-size: 18px;">dark_mode</i>
+      </button>
+    </div>
+  </div>
+  <div class="component-panel-body">
+
+    <!-- 📅 Date Picker Widget (Loaded via include) -->
+    <div data-include="/demos/src/widgets/date-picker.html"></div>
+
+    <!-- ⏰ Time Picker Widget (Loaded via include) -->
+    <div data-include="/demos/src/widgets/time-picker.html"></div>
+
+  </div>
+</aside>

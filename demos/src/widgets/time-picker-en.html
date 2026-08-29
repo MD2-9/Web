@@ -1,0 +1,46 @@
+<!--
+  M2.9 Widget: TimePicker (English)
+  ═══════════════════════════════════════════════════
+  📦 Standard English widget module for TimePicker.
+-->
+<div class="component-panel-section">
+  <div class="component-panel-section-title">
+    <i class="material-icons" style="font-size: 16px; color: var(--mdc-theme-primary);">access_time</i>
+    Time Picker
+  </div>
+  <div class="mdc-time-picker" id="demoTimePicker">
+    <div class="mdc-time-picker__header">
+      <div class="mdc-time-picker__digital-display">
+        <div class="mdc-time-picker__digit-slot mdc-time-picker__digit-slot--hour"></div>
+        <div class="mdc-time-picker__digit-slot mdc-time-picker__digit-slot--min"></div>
+        <div class="mdc-time-picker__digital-content mdc-time-picker__digital-content--base">
+          <span class="mdc-time-picker__digit-box mdc-time-picker__digit-hour">09</span>
+          <span class="mdc-time-picker__colon">:</span>
+          <span class="mdc-time-picker__digit-box mdc-time-picker__digit-minute">30</span>
+        </div>
+        <div class="mdc-time-picker__digit-indicator">
+          <div class="mdc-time-picker__digital-content mdc-time-picker__digital-content--inverted">
+            <span class="mdc-time-picker__digit-box mdc-time-picker__digit-hour">09</span>
+            <span class="mdc-time-picker__colon">:</span>
+            <span class="mdc-time-picker__digit-box mdc-time-picker__digit-minute">30</span>
+          </div>
+        </div>
+      </div>
+      <div class="mdc-time-picker__ampm-toggle">
+        <button class="mdc-time-picker__ampm-btn mdc-time-picker__ampm-am is-active">AM</button>
+        <button class="mdc-time-picker__ampm-btn mdc-time-picker__ampm-pm">PM</button>
+      </div>
+    </div>
+    <div class="mdc-time-picker__dial-container">
+      <div class="mdc-time-picker__clock-face">
+        <div class="mdc-time-picker__center-pivot"></div>
+        <div class="mdc-time-picker__clock-hand" style="transform: rotate(270deg);"></div>
+        <!-- Dynamically generated dial digits -->
+      </div>
+    </div>
+    <div class="mdc-time-picker__actions">
+      <button class="mdc-button mdc-button--dense" onclick="showDemoToast('Time selection cancelled')">CANCEL</button>
+      <button class="mdc-button mdc-button--raised mdc-button--dense" style="background-color: var(--mdc-theme-primary);" onclick="confirmDemoTime()">OK</button>
+    </div>
+  </div>
+</div>
