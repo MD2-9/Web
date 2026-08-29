@@ -3871,6 +3871,8 @@ window.addEventListener('m29:loaded', function() {
         if (this.timer) clearTimeout(this.timer);
         this.activeTarget = null;
         this.el.classList.remove('is-active');
+        this.el.style.display = 'none';
+        this.el.textContent = '';
       }
     }
 

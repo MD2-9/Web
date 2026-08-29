@@ -316,3 +316,34 @@ body {
     color: var(--mdc-theme-primary, #6750a4) !important;
   }
 }
+
+/* 🌟 M2.9 纯直角 Material 悬浮 Tooltip 浮层 */
+.m29-tooltip-popover {
+  position: fixed !important;
+  z-index: 10005 !important;
+  padding: 6px 12px !important;
+  background-color: var(--mdc-theme-inverse-surface, #313033) !important;
+  color: var(--mdc-theme-inverse-on-surface, #f4eff4) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  border-radius: 0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  pointer-events: none !important;
+  opacity: 0;
+  display: none;
+  transform: translateY(6px);
+  transition: opacity 0.18s cubic-bezier(0, 0, 0.2, 1),
+              transform 0.18s cubic-bezier(0, 0, 0.2, 1);
+  white-space: nowrap !important;
+
+  &.is-active {
+    opacity: 1 !important;
+    display: block !important;
+    transform: translateY(0) !important;
+  }
+}
+
+.dark-theme .m29-tooltip-popover {
+  background-color: #e6e1e5 !important;
+  color: #1d1b20 !important;
+}
