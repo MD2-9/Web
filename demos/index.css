@@ -4140,7 +4140,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   pointer-events: auto;
 }
 
-/* ≥768px 桌面端：常驻显示 + main-container 让出右侧空间 */
+/* ≥768px 桌面端：常驻显示 + main-container 让出右侧空间 (支持关闭折叠) */
 @media (min-width: 768px) {
   .mdc-component-panel {
     transform: translateX(0);
@@ -4152,12 +4152,21 @@ body.is-resizing-component-panel .component-panel-resizer::after {
                 margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .component-panel-close-btn {
-    display: none !important;
+  /* 桌面端组件栏被用户关闭折叠时的样式 */
+  body.component-panel-closed .mdc-component-panel {
+    transform: translateX(100%) !important;
+    box-shadow: none !important;
   }
 
-  /* ≥768px 时隐藏左侧「组件」入口（组件栏已常驻） */
-  .component-panel-trigger {
+  body.component-panel-closed .main-container {
+    margin-right: 0 !important;
+  }
+
+  body.component-panel-closed .m29-overlay-scrollbar-track.is-window {
+    right: 2px !important;
+  }
+
+  .component-panel-close-btn {
     display: none !important;
   }
 
@@ -4277,3 +4286,39 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   opacity: 0.9;
   background-color: var(--mdc-theme-primary, #d0bcff);
 }
+
+
+/* =============================================================== */
+/* 🌟 M2.9 纯直角 Material 悬浮 Tooltip 系统                       */
+/* 0px 绝对直角 ✖ 莫奈暗调/反色表面 ✖ 严禁浏览器丑陋原生系统提示框  */
+/* =============================================================== */
+.m29-tooltip-popover {
+  position: fixed;
+  background-color: var(--mdc-theme-inverse-surface, #322f35);
+  color: var(--mdc-theme-inverse-on-surface, #f5eff7);
+  padding: 6px 12px;
+  font-size: 11.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: 0 !important;
+  pointer-events: none;
+  z-index: 999999;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.18s cubic-bezier(0, 0, 0.2, 1), transform 0.18s cubic-bezier(0, 0, 0.2, 1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+  letter-spacing: 0.2px;
+  line-height: 1.4;
+}
+
+.m29-tooltip-popover.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dark-theme .m29-tooltip-popover {
+  background-color: var(--mdc-theme-inverse-surface, #e6e1e5);
+  color: var(--mdc-theme-inverse-on-surface, #313033);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+

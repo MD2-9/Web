@@ -92,12 +92,6 @@
           <span class="rail-item-text">关于</span>
         </div>
 
-        <!-- 5. 组件 (打开右侧组件栏，仅 <768px 显示此入口) -->
-        <div class="rail-nav-item component-panel-trigger" onclick="openComponentPanel()" title="组件 (打开右侧组件栏)">
-          <i class="material-icons rail-item-icon">widgets</i>
-          <span class="rail-item-text">组件</span>
-        </div>
-
       </nav>
 
       <!-- 下部竖向动态标题 (默认 安秋，随页面当前 H2/次级模块动态更新) -->
@@ -105,14 +99,17 @@
         安秋
       </div>
 
-      <!-- 底部控制面板 (外部显示单个暗色模式，展开内部横排 3 个无文本纯图标按钮) -->
+      <!-- 底部控制面板 (外部显示单个暗色模式，展开内部横排 4 个无文本纯图标按钮) -->
       <div class="rail-footer">
         <!-- 72px 紧凑外部：单个居中暗色模式按钮 -->
         <div class="rail-footer-compact-btn" id="btn-toggle-dark-compact" onclick="toggleThemeMode(event)" title="切换亮/暗色模式">
           <i class="material-icons" id="rail-compact-dark-icon" style="font-size: 24px; color: var(--mdc-theme-primary);">brightness_4</i>
         </div>
-        <!-- 260px 展开内部：横排 3 个纯图标按钮 -->
+        <!-- 260px 展开内部：横排 4 个纯图标按钮 -->
         <div class="rail-footer-expanded-row">
+          <button class="rail-footer-icon-btn" id="btn-toggle-panel" onclick="toggleComponentPanelTrigger(event)" title="组件栏 (开关/调出组件栏)">
+            <i class="material-icons" id="rail-panel-icon">widgets</i>
+          </button>
           <button class="rail-footer-icon-btn" id="btn-toggle-lang" onclick="toggleLanguage(event)" title="切换语言 (Language)">
             <i class="material-icons">translate</i>
           </button>
@@ -347,16 +344,13 @@
           <i class="material-icons rail-item-icon">info</i>
           <span class="rail-item-text">关于</span>
         </div>
-
-        <!-- 5. 组件 (打开右侧组件栏，非跳转按钮，不收回) -->
-        <div class="mobile-drawer-nav-item" onclick="closeMobileDrawer(); openComponentPanel()" title="组件 (打开右侧组件栏)">
-          <i class="material-icons rail-item-icon">widgets</i>
-          <span class="rail-item-text">组件</span>
-        </div>
       </nav>
 
-      <!-- 底部控制面板 (横排 3 个纯图标按钮) -->
+      <!-- 底部控制面板 (横排 4 个纯图标按钮) -->
       <div class="mobile-drawer-footer">
+        <button class="rail-footer-icon-btn" id="btn-toggle-panel-mobile" onclick="toggleComponentPanelTrigger(event)" title="组件栏 (调出右侧组件栏)">
+          <i class="material-icons">widgets</i>
+        </button>
         <button class="rail-footer-icon-btn" id="btn-toggle-lang-mobile" onclick="toggleLanguage(event)" title="切换语言 (Language)">
           <i class="material-icons">translate</i>
         </button>
@@ -1385,9 +1379,30 @@
     }
     window.toggleCardColumns = toggleCardColumns;
 
-    // 页面载入初始化语言与卡片列数
+    // =========================================================================
+    // 🧩 侧边栏底部「组件栏」开关与唤出触发器 (电脑端开关 ✖ 手机端调出)
+    // =========================================================================
+    function toggleComponentPanelTrigger(event) {
+      if (event) event.stopPropagation();
+      const isDesktop = window.innerWidth >= 768;
+      if (isDesktop) {
+        const isClosed = document.body.classList.toggle('component-panel-closed');
+        localStorage.setItem('m29_component_panel_closed', isClosed ? 'true' : 'false');
+        window.dispatchEvent(new Event('resize'));
+        showDemoToast(isClosed ? (currentLang === 'en' ? 'Component panel closed' : '已关闭右侧组件栏') : (currentLang === 'en' ? 'Component panel opened' : '已展开右侧组件栏'));
+      } else {
+        closeMobileDrawer();
+        openComponentPanel();
+      }
+    }
+    window.toggleComponentPanelTrigger = toggleComponentPanelTrigger;
+
+    // 页面载入初始化语言与卡片列数及组件栏折叠状态
     applyLanguage(currentLang);
     applyCardColumns(currentCardColumns);
+    if (localStorage.getItem('m29_component_panel_closed') === 'true' && window.innerWidth >= 768) {
+      document.body.classList.add('component-panel-closed');
+    }
 
     // =========================================================================
     // 导航系统：桌面端 Navigation Rail (Hover展开/移开收起) ✖ 移动端独立抽屉 (0.39s跳转收起)
@@ -4089,6 +4104,96 @@
         }
       }
     }
+
+    // =========================================================================
+    // 🌟 M2.9 纯直角 Material 悬浮 Tooltip 引擎 (拦截原生 title ✖ 0px 极简悬浮浮层)
+    // =========================================================================
+    class M29TooltipEngine {
+      constructor() {
+        this.el = document.createElement('div');
+        this.el.className = 'm29-tooltip-popover';
+        document.body.appendChild(this.el);
+        this.timer = null;
+        this.activeTarget = null;
+        this.init();
+      }
+
+      init() {
+        document.addEventListener('pointerenter', (e) => {
+          const target = e.target.closest('[data-tooltip], [title], .rail-footer-btn, .rail-footer-icon-btn, .rail-footer-compact-btn, .rail-nav-item, .component-panel-close-btn, .component-panel-resizer, .mdc-fab');
+          if (!target) return;
+
+          // 提取 tooltip 内容并清空原生 title 避免浏览器弹出丑陋的原生黄色系统提示框
+          if (target.hasAttribute('title')) {
+            const rawTitle = target.getAttribute('title');
+            if (rawTitle && rawTitle.trim()) {
+              target.setAttribute('data-tooltip', rawTitle.trim());
+            }
+            target.removeAttribute('title');
+          }
+
+          const text = target.getAttribute('data-tooltip');
+          if (!text || !text.trim()) return;
+
+          this.show(target, text.trim());
+        }, { capture: true, passive: true });
+
+        document.addEventListener('pointerleave', (e) => {
+          const target = e.target.closest('[data-tooltip], .rail-footer-btn, .rail-footer-icon-btn, .rail-footer-compact-btn, .rail-nav-item, .component-panel-close-btn, .component-panel-resizer, .mdc-fab');
+          if (target && (target === this.activeTarget || target.contains(this.activeTarget))) {
+            this.hide();
+          }
+        }, { capture: true, passive: true });
+
+        window.addEventListener('scroll', () => this.hide(), { passive: true });
+        window.addEventListener('wheel', () => this.hide(), { passive: true });
+      }
+
+      show(target, text) {
+        if (this.timer) clearTimeout(this.timer);
+        this.activeTarget = target;
+        this.el.textContent = text;
+        this.el.style.display = 'block';
+
+        const rect = target.getBoundingClientRect();
+        const tipRect = this.el.getBoundingClientRect();
+
+        // 默认定位：优先放置于 target 上方居中
+        let top = rect.top - tipRect.height - 8;
+        let left = rect.left + (rect.width - tipRect.width) / 2;
+
+        // 如果上方超出视口，移到下方
+        if (top < 8) {
+          top = rect.bottom + 8;
+        }
+
+        // 如果左侧超出视口或靠近左侧边栏，向右定位
+        if (left < 10) {
+          left = rect.right + 10;
+          top = rect.top + (rect.height - tipRect.height) / 2;
+        } else if (left + tipRect.width > window.innerWidth - 10) {
+          left = window.innerWidth - tipRect.width - 10;
+        }
+
+        this.el.style.top = `${Math.round(top)}px`;
+        this.el.style.left = `${Math.round(left)}px`;
+
+        this.timer = setTimeout(() => {
+          if (this.activeTarget === target) {
+            this.el.classList.add('is-active');
+          }
+        }, 80);
+      }
+
+      hide() {
+        if (this.timer) clearTimeout(this.timer);
+        this.activeTarget = null;
+        this.el.classList.remove('is-active');
+      }
+    }
+
+    // 初始化全局 M2.9 纯直角 Tooltip 引擎
+    window.globalTooltipEngine = new M29TooltipEngine();
 
     // 初始化宽度调整手柄
     initComponentPanelResizer();

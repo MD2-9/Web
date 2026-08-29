@@ -12,6 +12,7 @@
 - [框架集成指南 (Framework Integration)](./integrating-into-frameworks.md)：在 React、Vue、Angular 等现代前端框架中使用 MDC-Web。
 
 ### 2. M2.9 核心扩展与定制组件指南
+- [页面布局与右侧组件栏 (Layout & Component Panel)](./layout-and-component-panel.md)：自由调宽组件栏、单双栏卡片排版、零宽度悬浮滚动条与直角 Tooltip 规范。
 - [侧边栏与移动端抽屉 (Navigation Rail & Mobile Drawer)](./navigation-rail-and-drawer.md)：桌面端悬浮导轨与移动端底端对齐抽屉架构与规范。
 - [日历与时钟选择器 (Date & Time Pickers)](./pickers.md)：0px 直角日历与 1:1 动态表盘时间选择器调用指南。
 - [扁平化边界动效 (Flat Arc EdgeEffect)](./overscroll-edge-effect.md)：1:1 复刻 Android 原生边界水波纹吸能与回弹规范。
