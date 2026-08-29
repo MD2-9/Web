@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Material Components Web - Monet Engine Bundle
+ * Copyright 2026 安秋 <github.com/unjal29>
+ * Includes @material/material-color-utilities (Apache-2.0, Copyright Google LLC)
+ * Licensed under the Apache License, Version 2.0
+ */
 var MdcMonet = (() => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;

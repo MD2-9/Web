@@ -1,3 +1,54 @@
+<a name="2.9.0"></a>
+# [2.9.0] "M2.9 Edition / Material Design 2.9" (2026-08-29)
+
+### 🌟 Features & New Packages
+* **@material/monet:** 引入 Android 12+ Monet 动态主题取色引擎，支持由种子色实时生成完整调色板与全局 CSS 变量矩阵。
+* **@material/navigation-rail:** 引入原生直角 Material Navigation Rail 侧边导航栏，支持双竖向标题（MD3.1 / 安秋）、二级抽屉菜单及点击空白自动回退。
+* **@material/picker:** 引入 MDC DatePicker & TimePicker 纯直角日历与时间选择器组件。
+* **@material/expansion-panel:** 引入支持平滑折叠展开的 Material 折叠面板组件。
+* **@material/badge:** 引入标准纯直角与圆形 Badge 徽标组件。
+* **@material/divider:** 引入标准分割线组件，统一边框色彩与间距变量。
+* **@material/segmented-button:** 引入分段按钮组件，支持单选/多选及紧凑网格视图。
+* **@material/tooltip:** 引入纯直角 Material Tooltip 提示框。
+* **mdc-ripple (M2.9 & Android Overscroll Glow):** 
+  * 引入 `mdui-ripple.js`，速率放缓 3/5，支持更自然的扩散与中心水波纹。
+  * 引入 `mdui-overscroll-glow.js`，100% 严格复刻 Android 5.0~11.0 经典扁平化边界弧形边缘泛光 (Flat Arc EdgeEffect)。
+* **mdc-tabs & md1-tabs:** 引入跟随滑块方向平滑切换的 Direction-aware Sliding Indicator 与内容水波纹联动。
+* **mdc-slider & md1-slider:** 引入 MD1 / MDUI 经典离散滑块控制器（水滴指示器 Teardrop Pin）。
+* **mdc-switch & md1-switch:** 纯正滑动开关规范，严格跟随动态主题色与 0px 胶囊几何。
+* **cloud & local server:** 引入 Cloudflare Workers 部署支持 (`worker.js` + `wrangler.toml`) 及全网段本地预览服务 (`server.js`)。
+* **local assets:** 集成本地高可用 `Google Sans Flex` (SIL OFL 1.1) 可变字体与 `Material Icons` (CC-BY 4.0)。
+
+---
+
+### 🛠 Detailed Commit Changelog (逐提交变更明细)
+
+* **`035230b`** `feat(overscroll):` 100% 严格复刻 Android 5-11 扁平化边界弧形水波纹 (Flat Arc EdgeEffect)
+* **`ac0daec`** `fix(rail):` 彻底移除一级菜单底部滑入与位移动画，实现二级菜单与一级菜单精准对称的原地水波纹扩散与反向收缩
+* **`f718db4`** `fix(overscroll-ripple):` 彻底去除多余光弧与发光渐变，统一为与 Material Ripple/Tab 完全一致的纯正圆形涟漪水波纹
+* **`2f79483`** `feat(rail,docs):` 恢复二级菜单与调色盘点击原点圆形水波纹扩散展开与收缩动效，并完善文档
+* **`5a62db8`** `feat(edge-effect):` 1:1 深度复刻 AOSP 原生 EdgeEffect 边缘弧线与触摸点位移半圆穹顶泛光状态机
+* **`6dca530`** `fix(ripple,tabs):` 彻底移除外部卡片水波纹，缩小初始半径并使 Tab 内部水波纹扩散方向与横条滑动方向完全一致
+* **`f6165ed`** `feat(global-packages,ripple,tabs):` 迁移所有组件特有样式至全局包，实现全容器安卓 5-11 触顶触底边缘泛光与 Tab 内容扩散水波纹
+* **`f7598b6`** `fix(outlined-textfield,icons):` 修复描边输入框缺口标签与居中排版，并修复分段按钮紧凑网格 `view_compact` 本地图标
+* **`518f86f`** `fix(textfield,select):` 修复前缀图标偏移对齐并替换为纯直角 MD Custom Select 下拉控件
+* **`c70d3a8`** `fix(demos):` 修复主内容区域标签闭合结构并开启全网段服务监听 (`0.0.0.0`)
+* **`0fb5e9f`** `fix(ripple,navigation-rail,icons):` 优化涟漪精确隔离目标、放缓速率 3/5、二级菜单进出统一同款动画并完善全量控件展厅
+* **`c979904`** `feat(packages):` 将展厅所有定制与新增组件同步下沉至组件库源码包并生成组件文档 (`COMPONENTS.md`)
+* **`141b322`** `feat(demos):` 优化调色盘无缝居中对齐、卡片水波纹、Tab 左右切换动画、离散滑块与图标库修复
+* **`1816a10`** `feat:` add navigation rail and Monet-inspired dynamic theme demo with zero-border styling
+* **`62b7f7e`** `feat(rail):` enlarge vertical titles to 72% width and implement balanced space-between vertical centering
+* **`2354ff7`** `fix(rail):` eliminate menu indentation shifts, fix 72px text overflow, and remove all emojis
+* **`e2d1cc8`** `feat(rail):` add dual dynamic vertical titles (MD3.1 / 安秋) and blank area click to return for secondary menus
+* **`2f6c5a6`** `feat(components):` restore capsule geometry for switch track & chips, and implement MDUI teardrop pin discrete slider
+* **`67243d8`** `feat(ui):` add bottom toast notification for non-functional/demo buttons
+* **`b00bad3`** `fix(components):` fix Extended FAB capsule, authentic MD1 slider and switch, robust MD1 indicator tabs, and 4 primary menu items with ripple secondary menus
+* **`0b4417c`** `feat(showcase):` complete 9-module showcase with gesture swipe, idle floating button, authentic Monet palette, and zero scrollbars
+* **`52e8a79`** `feat(palette):` integrate ripple overlay 3-step Monet palette picker into Navigation Rail and add local font fallbacks
+* **`d3fb401`** `feat(rail):` implement MDC Navigation Rail with vertical title, Monet theming, and local dev server
+
+---
+
 <a name="0.34.1"></a>
 ## [0.34.1](https://github.com/material-components/material-components-web/compare/v0.34.0...v0.34.1) (2018-04-03)
 
