@@ -1,5 +1,6 @@
 //
 // Copyright 2017 Google Inc. All Rights Reserved.
+// Copyright 2026 unjal <unjal29@outlook.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,35 +15,90 @@
 // limitations under the License.
 //
 
-@import "./mixins";
-
 :root {
-  @each $style in map-keys($mdc-theme-property-values) {
-    --mdc-theme-#{$style}: #{map-get($mdc-theme-property-values, $style)};
-  }
+  --mdc-theme-primary: #6750a4;
+  --mdc-theme-primary-container: #eaddff;
+  --mdc-theme-on-primary: #ffffff;
+  --mdc-theme-on-primary-container: #21005d;
+
+  --mdc-theme-secondary: #625b71;
+  --mdc-theme-secondary-container: #e8def8;
+  --mdc-theme-on-secondary: #ffffff;
+  --mdc-theme-on-secondary-container: #1d192b;
+
+  --mdc-theme-tertiary: #7d5260;
+  --mdc-theme-tertiary-container: #ffd8e4;
+  --mdc-theme-on-tertiary: #ffffff;
+  --mdc-theme-on-tertiary-container: #31111d;
+
+  --mdc-theme-background: #fdf8fd;
+  --mdc-theme-surface: #ffffff;
+  --mdc-theme-on-surface: #1d1b20;
+  --mdc-theme-surface-container: #ffffff;
+  --mdc-theme-surface-container-high: #f7f2fa;
 }
 
-// Special case, so that .mdc-theme--background changes background color, not text color.
-.mdc-theme--background {
-  @include mdc-theme-prop(background-color, background);
+body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, div, label, li {
+  font-family: 'Google Sans Flex', 'GoogleSansFlex', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-@each $style in map-keys($mdc-theme-property-values) {
-  @if $style != "background" {
-    .mdc-theme--#{$style} {
-      @include mdc-theme-prop(color, $style, true);
-    }
-  }
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--mdc-theme-background, #fdf8fd);
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-// CSS rules for using primary, secondary, and tertiary (plus container variants) as background colors.
-@each $style in ("primary", "secondary", "tertiary", "primary-container", "secondary-container", "tertiary-container") {
-  .mdc-theme--#{$style}-bg {
-    background-color: var(--mdc-theme-#{$style}) !important;
-  }
-  .mdc-theme--on-#{$style} {
-    color: var(--mdc-theme-on-#{$style}) !important;
-  }
+/* 桌面端：彻底删除所有横向标题栏 */
+.mdc-top-app-bar,
+.mdc-toolbar,
+header.app-bar {
+  display: none !important;
+}
+
+body {
+  padding-top: 0 !important;
+}
+
+* {
+  border-radius: 0 !important;
+  box-sizing: border-box;
+}
+
+/* 纯圆与胶囊几何例外 (50% 纯圆 FAB/头像/单选/水波纹，24px Extended FAB 胶囊，7px Switch Track，16px Chip) */
+.mdc-fab:not(.mdc-fab--extended),
+.mdc-fab--mini,
+.rail-header-avatar,
+.md1-slider-thumb,
+.md1-switch-thumb,
+.mobile-floating-menu-btn,
+.theme-tile.active::after,
+.mdc-radio__background,
+.mdc-radio__outer-circle,
+.mdc-radio__inner-circle,
+.mdui-ripple-wave,
+.badge-dot,
+.mdc-date-picker__nav-btn,
+.mdc-time-picker__clock-face,
+.mdc-time-picker__center-pivot,
+.mdc-time-picker__thumb-circle,
+.mdc-time-picker__number {
+  border-radius: 50% !important;
+}
+
+.md1-switch-track {
+  border-radius: 7px !important;
+}
+
+.surface-token-chip {
+  border-radius: 16px !important;
+}
+
+.badge-number {
+  border-radius: 10px !important;
 }
 
 /* 🌟 M3 官方原生暗色模式全局变量映射表 */
@@ -67,4 +123,23 @@
   --mdc-theme-tertiary-container: #633b48;
   --mdc-theme-on-tertiary: #000000;
   --mdc-theme-on-tertiary-container: #ffd8e4;
+}
+
+/* 🌟 暗色模式下所有被浅色主题主色填充的文字统统变黑色 (#000000) */
+.dark-theme .mdc-time-picker__ampm-btn.is-active,
+.dark-theme .mdc-time-picker__digit-indicator,
+.dark-theme .mdc-time-picker__digital-content--inverted,
+.dark-theme .mdc-time-picker__digital-content--inverted *,
+.dark-theme .mdc-time-picker__digit-box.is-active,
+.dark-theme .mdc-time-picker__inverted-mask .mdc-time-picker__number,
+.dark-theme .mdc-date-picker__header,
+.dark-theme .mdc-date-picker__header *,
+.dark-theme .mdc-date-picker__day.is-selected,
+.dark-theme .mdc-button--raised,
+.dark-theme .mdc-button--unelevated,
+.dark-theme .mdc-button--raised *,
+.dark-theme .mdc-button--unelevated *,
+.dark-theme .mdc-fab,
+.dark-theme .mdc-fab * {
+  color: #000000 !important;
 }

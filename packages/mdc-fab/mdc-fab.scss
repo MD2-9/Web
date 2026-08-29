@@ -1,4 +1,5 @@
 // Copyright 2016 Google Inc. All Rights Reserved.
+// Copyright 2026 unjal <unjal29@outlook.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,30 +13,60 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-@import "@material/ripple/common";
-@import "@material/ripple/mixins";
-@import "@material/ripple/variables";
-@import "./mixins";
-
-// postcss-bem-linter: define fab
-
 .mdc-fab {
-  @include mdc-fab-base_;
-  @include mdc-fab-container-color(secondary);
-  @include mdc-fab-ink-color(text-primary-on-secondary);
-  @include mdc-states(text-primary-on-secondary);
+  width: 56px !important;
+  height: 56px !important;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  color: var(--mdc-theme-on-primary, #ffffff);
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, .2), 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12);
+  border-radius: 50% !important;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  vertical-align: middle;
+  transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease, background-color 0.3s ease;
+}
+
+.mdc-fab:hover {
+  box-shadow: 0 5px 8px -2px rgba(0, 0, 0, .25), 0 8px 14px 1px rgba(0, 0, 0, .18), 0 3px 20px 1px rgba(0, 0, 0, .15);
 }
 
 .mdc-fab--mini {
-  @include mdc-fab--mini_;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+}
+
+.mdc-fab--extended {
+  width: auto !important;
+  height: 48px !important;
+  padding: 0 20px !important;
+  border-radius: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+}
+
+.mdc-fab--extended .mdc-fab__icon {
+  margin: 0 !important;
 }
 
 .mdc-fab__icon {
-  @include mdc-fab__icon_;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
 }
-
-.mdc-fab--exited {
-  @include mdc-fab--exited_;
-}
-
-// postcss-bem-linter: end

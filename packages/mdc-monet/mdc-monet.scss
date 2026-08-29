@@ -5,27 +5,6 @@
 // Material Components for Web - Monet Dynamic Color & Tonal Palette System
 //
 
-:root {
-  --mdc-theme-primary: #6750a4;
-  --mdc-theme-secondary: #625b71;
-  --mdc-theme-tertiary: #7d5260;
-  --mdc-theme-background: #fdf8fd;
-  --mdc-theme-surface: #ffffff;
-  --mdc-theme-on-primary: #ffffff;
-  --mdc-theme-on-secondary: #ffffff;
-  --mdc-theme-on-surface: #1d1b20;
-  --mdc-theme-surface-container: #ffffff;
-  --mdc-theme-surface-container-high: #f7f2fa;
-}
-
-.dark-theme {
-  --mdc-theme-background: #1f1e24;
-  --mdc-theme-surface: #19181e;
-  --mdc-theme-on-surface: #e6e1e5;
-  --mdc-theme-surface-container: #131217;
-  --mdc-theme-surface-container-high: #0d0c10;
-}
-
 /* 调色盘无缝拼接色块网格 (0 间距 ✖ 双行文本 ✖ 上下无间隙 ✖ 垂直居中) */
 .theme-grid {
   display: grid !important;
@@ -43,10 +22,10 @@
   overflow-y: auto !important;
   border: none !important;
   scrollbar-width: none;
+}
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
+.theme-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .theme-tile {
@@ -68,24 +47,24 @@
   transition: filter 0.15s ease;
   position: relative;
   box-sizing: border-box !important;
+}
 
-  &:hover {
-    filter: brightness(1.08);
-    z-index: 2;
-  }
+.theme-tile:hover {
+  filter: brightness(1.08);
+  z-index: 2;
+}
 
-  &.active::after {
-    content: '';
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 8px;
-    height: 8px;
-    border-radius: 50% !important;
-    background-color: currentColor;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-  }
+.theme-tile.active::after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50% !important;
+  background-color: currentColor;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 }
 
 .theme-tile-cn {
@@ -130,10 +109,40 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
   cursor: pointer;
   transition: transform 0.15s ease;
-
-  &:hover {
-    transform: scale(1.08);
-    z-index: 5;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  }
 }
+
+.palette-swatch:hover {
+  transform: scale(1.08);
+  z-index: 5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Surface Token Chip 容器胶囊标签 */
+.surface-token-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  margin: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 16px !important;
+  user-select: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.surface-token-chip.is-selected,
+.surface-token-chip.active {
+  background: var(--mdc-theme-secondary-container, #e8def8) !important;
+  color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+  border-color: transparent !important;
+  font-weight: 600;
+}
+
+.dark-theme .surface-token-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+

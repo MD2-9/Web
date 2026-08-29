@@ -1,0 +1,3020 @@
+/* =============================================================== *
+ * Material Components for Web (MDC-Web MD3.1 Global Bundle)       *
+ * Crafted by unjal <unjal29@outlook.com>                          *
+ * =============================================================== */
+
+
+/* --- Component: packages/mdc-theme/mdc-theme.scss --- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:root {
+  --mdc-theme-primary: #6750a4;
+  --mdc-theme-primary-container: #eaddff;
+  --mdc-theme-on-primary: #ffffff;
+  --mdc-theme-on-primary-container: #21005d;
+
+  --mdc-theme-secondary: #625b71;
+  --mdc-theme-secondary-container: #e8def8;
+  --mdc-theme-on-secondary: #ffffff;
+  --mdc-theme-on-secondary-container: #1d192b;
+
+  --mdc-theme-tertiary: #7d5260;
+  --mdc-theme-tertiary-container: #ffd8e4;
+  --mdc-theme-on-tertiary: #ffffff;
+  --mdc-theme-on-tertiary-container: #31111d;
+
+  --mdc-theme-background: #fdf8fd;
+  --mdc-theme-surface: #ffffff;
+  --mdc-theme-on-surface: #1d1b20;
+  --mdc-theme-surface-container: #ffffff;
+  --mdc-theme-surface-container-high: #f7f2fa;
+}
+
+/* =============================================================== */
+/* 全页面莫奈主题长按水波纹扩散揭示动效 (Ripple Theme Reveal)        */
+/* 严格遵循长按水波纹曲线，覆盖到的地方才变色，到达右下角刚好终止     */
+/* =============================================================== */
+::view-transition,
+::view-transition-group(root),
+::view-transition-image-pair(root),
+::view-transition-old(root),
+::view-transition-new(root) {
+  pointer-events: none !important;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  will-change: clip-path;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 999999;
+}
+
+body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, div, label, li {
+  font-family: 'Google Sans Flex', 'GoogleSansFlex', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--mdc-theme-background, #fdf8fd);
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* 桌面端：彻底删除所有横向标题栏 */
+.mdc-top-app-bar,
+.mdc-toolbar,
+header.app-bar {
+  display: none !important;
+}
+
+body {
+  padding-top: 0 !important;
+}
+
+* {
+  border-radius: 0 !important;
+  box-sizing: border-box;
+}
+
+/* 纯圆与胶囊几何例外 (50% 纯圆 FAB/头像/单选/水波纹，24px Extended FAB 胶囊，7px Switch Track，16px Chip) */
+.mdc-fab:not(.mdc-fab--extended),
+.mdc-fab--mini,
+.rail-header-avatar,
+.md1-slider-thumb,
+.md1-switch-thumb,
+.mobile-floating-menu-btn,
+.theme-tile.active::after,
+.mdc-radio__background,
+.mdc-radio__outer-circle,
+.mdc-radio__inner-circle,
+.mdui-ripple-wave,
+.badge-dot,
+.mdc-date-picker__nav-btn,
+.mdc-time-picker__clock-face,
+.mdc-time-picker__center-pivot,
+.mdc-time-picker__thumb-circle,
+.mdc-time-picker__number {
+  border-radius: 50% !important;
+}
+
+.md1-switch-track {
+  border-radius: 7px !important;
+}
+
+.surface-token-chip {
+  border-radius: 16px !important;
+}
+
+.badge-number {
+  border-radius: 10px !important;
+}
+
+/* 🌟 M3 官方原生暗色模式全局变量映射表 */
+.dark-theme {
+  --mdc-theme-background: #1f1e24;
+  --mdc-theme-surface: #19181e;
+  --mdc-theme-on-surface: #e6e1e5;
+  --mdc-theme-surface-container: #131217;
+  --mdc-theme-surface-container-high: #0d0c10;
+
+  --mdc-theme-primary: #d0bcff;
+  --mdc-theme-primary-container: #4f378b;
+  --mdc-theme-on-primary: #000000;
+  --mdc-theme-on-primary-container: #eaddff;
+
+  --mdc-theme-secondary: #ccc2dc;
+  --mdc-theme-secondary-container: #4a4458;
+  --mdc-theme-on-secondary: #000000;
+  --mdc-theme-on-secondary-container: #e8def8;
+
+  --mdc-theme-tertiary: #efb8c8;
+  --mdc-theme-tertiary-container: #633b48;
+  --mdc-theme-on-tertiary: #000000;
+  --mdc-theme-on-tertiary-container: #ffd8e4;
+}
+
+/* 🌟 暗色模式下所有被浅色主题主色填充的文字统统变黑色 (#000000) */
+.dark-theme .mdc-time-picker__ampm-btn.is-active,
+.dark-theme .mdc-time-picker__digit-indicator,
+.dark-theme .mdc-time-picker__digital-content--inverted,
+.dark-theme .mdc-time-picker__digital-content--inverted *,
+.dark-theme .mdc-time-picker__digit-box.is-active,
+.dark-theme .mdc-time-picker__inverted-mask .mdc-time-picker__number,
+.dark-theme .mdc-date-picker__header,
+.dark-theme .mdc-date-picker__header *,
+.dark-theme .mdc-date-picker__day.is-selected,
+.dark-theme .mdc-button--raised,
+.dark-theme .mdc-button--unelevated,
+.dark-theme .mdc-button--raised *,
+.dark-theme .mdc-button--unelevated *,
+.dark-theme .mdc-fab,
+.dark-theme .mdc-fab * {
+  color: #000000 !important;
+}
+
+
+/* --- Component: packages/mdc-typography/mdc-typography.scss --- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@font-face {
+  font-family: 'Google Sans Flex';
+  font-style: normal;
+  font-weight: 100 1000;
+  font-stretch: 100%;
+  font-display: swap;
+  src: local('Google Sans Flex'), local('GoogleSansFlex'),
+       url('../fonts/google-sans-flex/GoogleSansFlex.woff2') format('woff2'),
+       url('../fonts/google-sans-flex/GoogleSansFlex.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'), local('MaterialIcons-Regular'),
+       url('../icons/material-icons/MaterialIcons-Regular.woff2') format('woff2'),
+       url('../icons/material-icons/MaterialIcons-Regular.woff') format('woff'),
+       url('/icons/material-icons/MaterialIcons-Regular.woff2') format('woff2'),
+       url('/icons/material-icons/MaterialIcons-Regular.woff') format('woff');
+}
+
+.material-icons,
+i.material-icons,
+span.material-icons,
+.material-icons *,
+.mdc-button__icon,
+.mdc-fab__icon,
+.rail-item-icon,
+[class*="material-icons"] {
+  font-family: 'Material Icons' !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga' 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga' 1;
+  user-select: none;
+}
+
+/* 排版展示表格 */
+.type-scale-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.type-scale-table th,
+.type-scale-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  text-align: left;
+}
+
+.dark-theme .type-scale-table th,
+.dark-theme .type-scale-table td {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+
+/* --- Component: packages/mdc-button/mdc-button.scss --- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.mdc-button {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.0892857143em;
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 0 16px;
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 64px;
+  height: 36px;
+  border: none;
+  outline: none;
+  line-height: inherit;
+  user-select: none;
+  -webkit-appearance: none;
+  overflow: hidden;
+  vertical-align: middle;
+  border-radius: 0 !important;
+  background-color: transparent;
+  color: var(--mdc-theme-primary, #6750a4);
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+.mdc-button:hover {
+  background-color: rgba(103, 80, 164, 0.08);
+}
+
+.mdc-button__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
+
+.mdc-button--raised,
+.mdc-button--unelevated {
+  background-color: var(--mdc-theme-primary, #6750a4) !important;
+  color: var(--mdc-theme-on-primary, #ffffff) !important;
+}
+
+.mdc-button--raised {
+  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+  transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease;
+}
+
+.mdc-button--raised:hover {
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+}
+
+.mdc-button--outlined,
+.mdc-button--stroked {
+  border: 1px solid var(--mdc-theme-primary, #6750a4) !important;
+  color: var(--mdc-theme-primary, #6750a4) !important;
+  background-color: transparent !important;
+}
+
+.mdc-button--outlined:hover,
+.mdc-button--stroked:hover {
+  background-color: rgba(103, 80, 164, 0.08) !important;
+}
+
+.mdc-button--dense {
+  height: 32px;
+  font-size: 13px;
+  padding: 0 8px;
+}
+
+.dark-theme .mdc-button {
+  color: var(--mdc-theme-primary, #d0bcff);
+}
+
+.dark-theme .mdc-button--raised,
+.dark-theme .mdc-button--unelevated {
+  background-color: var(--mdc-theme-primary, #d0bcff) !important;
+  color: #000000 !important;
+}
+
+.dark-theme .mdc-button--outlined,
+.dark-theme .mdc-button--stroked {
+  border-color: var(--mdc-theme-primary, #d0bcff) !important;
+  color: var(--mdc-theme-primary, #d0bcff) !important;
+}
+
+
+/* --- Component: packages/mdc-fab/mdc-fab.scss --- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.mdc-fab {
+  width: 56px !important;
+  height: 56px !important;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  color: var(--mdc-theme-on-primary, #ffffff);
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, .2), 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12);
+  border-radius: 50% !important;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  vertical-align: middle;
+  transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease, background-color 0.3s ease;
+}
+
+.mdc-fab:hover {
+  box-shadow: 0 5px 8px -2px rgba(0, 0, 0, .25), 0 8px 14px 1px rgba(0, 0, 0, .18), 0 3px 20px 1px rgba(0, 0, 0, .15);
+}
+
+.mdc-fab--mini {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+}
+
+.mdc-fab--extended {
+  width: auto !important;
+  height: 48px !important;
+  padding: 0 20px !important;
+  border-radius: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+}
+
+.mdc-fab--extended .mdc-fab__icon {
+  margin: 0 !important;
+}
+
+.mdc-fab__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+}
+
+
+/* --- Component: packages/mdc-checkbox/mdc-checkbox.scss --- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.mdc-checkbox {
+  display: inline-block;
+  position: relative;
+  flex: 0 0 18px;
+  box-sizing: content-box;
+  width: 18px;
+  height: 18px;
+  padding: 11px;
+  line-height: 0;
+  white-space: nowrap;
+  cursor: pointer;
+  vertical-align: bottom;
+}
+
+.mdc-checkbox__native-control {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: inherit;
+  z-index: 1;
+}
+
+.mdc-checkbox__background {
+  display: inline-flex;
+  position: absolute;
+  top: 11px;
+  left: 11px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(0, 0, 0, 0.54);
+  border-radius: 0 !important;
+  background-color: transparent;
+  pointer-events: none;
+  transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark-theme .mdc-checkbox__background {
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.mdc-checkbox__native-control:checked ~ .mdc-checkbox__background {
+  background-color: var(--mdc-theme-primary, #6750a4);
+  border-color: var(--mdc-theme-primary, #6750a4);
+}
+
+.mdc-checkbox__checkmark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  fill: none;
+  stroke: var(--mdc-theme-on-primary, #ffffff);
+  stroke-width: 3.12px;
+  stroke-dasharray: 29.7833385;
+  stroke-dashoffset: 29.7833385;
+}
+
+.mdc-checkbox__native-control:checked ~ .mdc-checkbox__background .mdc-checkbox__checkmark {
+  opacity: 1;
+  stroke-dashoffset: 0;
+}
+
+.mdc-checkbox__checkmark-path {
+  stroke: var(--mdc-theme-on-primary, #ffffff) !important;
+  stroke-width: 3.12px;
+}
+
+.dark-theme .mdc-checkbox__checkmark-path {
+  stroke: #000000 !important;
+}
+
+.mdc-form-field {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+
+/* --- Component: packages/mdc-radio/mdc-radio.scss --- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.mdc-radio {
+  display: inline-block;
+  position: relative;
+  flex: 0 0 20px;
+  box-sizing: content-box;
+  width: 20px;
+  height: 20px;
+  padding: 10px;
+  cursor: pointer;
+  vertical-align: bottom;
+}
+
+.mdc-radio__native-control {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: inherit;
+  z-index: 1;
+}
+
+.mdc-radio__background {
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  border-radius: 50% !important;
+  pointer-events: none;
+}
+
+.mdc-radio__outer-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(0, 0, 0, 0.54);
+  border-radius: 50% !important;
+  transition: border-color 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark-theme .mdc-radio__outer-circle {
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.mdc-radio__inner-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 50% !important;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  transform: scale(0);
+  transition: transform 0.12s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.mdc-radio__native-control:checked ~ .mdc-radio__background .mdc-radio__outer-circle {
+  border-color: var(--mdc-theme-primary, #6750a4);
+}
+
+.mdc-radio__native-control:checked ~ .mdc-radio__background .mdc-radio__inner-circle {
+  transform: scale(0.5);
+}
+
+
+/* --- Component: packages/mdc-card/mdc-card.scss --- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.mdc-card {
+  background-color: var(--mdc-theme-surface-container, #ffffff);
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  border-radius: 0 !important;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.demo-card {
+  background-color: var(--mdc-theme-surface-container, #ffffff);
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  padding: 24px;
+  margin-bottom: 24px;
+  border-radius: 0 !important;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.demo-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .demo-card {
+  background-color: var(--mdc-theme-surface-container, #131217) !important;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65) !important;
+}
+
+.preview-img-box {
+  width: 100%;
+  height: 110px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 0 !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.preview-img-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.preview-img-box span {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+/* --- Component: packages/mdc-navigation-rail/mdc-navigation-rail.scss --- */
+
+
+
+
+
+
+
+.mdc-navigation-rail {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 72px;
+  height: 100vh;
+  background-color: var(--mdc-theme-surface, #ffffff);
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden !important;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.3s ease;
+}
+
+/* 悬浮展开至 260px */
+.mdc-navigation-rail:hover,
+.mdc-navigation-rail.is-expanded {
+  width: 260px;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+}
+
+.mdc-navigation-rail:hover .rail-header-text,
+.mdc-navigation-rail:hover .rail-footer-text,
+.mdc-navigation-rail.is-expanded .rail-header-text,
+.mdc-navigation-rail.is-expanded .rail-footer-text {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* 展开或二级菜单激活时彻底移除竖向标题占位，避免挤压导致项目折行 */
+.mdc-navigation-rail:hover .rail-vertical-title,
+.mdc-navigation-rail.is-expanded .rail-vertical-title,
+.mdc-navigation-rail.mobile-open .rail-vertical-title {
+  display: none !important;
+}
+
+/* 在 72px 紧凑态下文本彻底 display: none，从文档流中完全移除，杜绝宽度溢出与任何异常缩进折行 */
+.rail-item-text {
+  display: none !important;
+  margin-left: 16px !important;
+  white-space: nowrap !important;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 展开或二级菜单激活时展示文本 */
+.mdc-navigation-rail:hover .rail-item-text,
+.mdc-navigation-rail.is-expanded .rail-item-text,
+.mdc-navigation-rail.mobile-open .rail-item-text,
+.secondary-overlay-panel .rail-item-text {
+  display: inline-block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* 图标在任何状态下都保持固定 24x24 尺寸，零外边距 */
+.rail-item-icon {
+  width: 24px !important;
+  height: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  color: var(--mdc-theme-primary, #6750a4);
+  flex-shrink: 0;
+  font-size: 24px !important;
+}
+
+/* 一级导航项固定左右各 24px 内边距 (24+24+24=72px 绝对对称居中) */
+.rail-nav-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 48px !important;
+  padding: 0 24px !important;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+.rail-nav-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* 🌟 Google M3 官方规范：导航栏激活药丸/项强制使用 Secondary Container */
+.rail-nav-item.is-active {
+  background-color: var(--mdc-theme-secondary-container, #e8def8) !important;
+  color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+  font-weight: 700;
+}
+
+.rail-nav-item.is-active .rail-item-icon {
+  color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+}
+
+/* 抽屉导航常驻主容器 (纵向两端完全对齐均匀分布) */
+.drawer-nav-section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  overflow: hidden !important;
+  box-sizing: border-box;
+  padding: 0 0 8px 0;
+}
+
+/* 顶部 Brand Header (点击触发调色盘水波纹) */
+.rail-header {
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  width: 100%;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  color: var(--mdc-theme-on-primary, #ffffff);
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+.rail-header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.rail-header-text {
+  margin-left: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 核心：上/下双竖向动态文字标题 (宽度占侧边栏 72%，字号加大，纵向居中) */
+.rail-vertical-title {
+  width: 72% !important;
+  max-width: 52px;
+  min-height: 40px;
+  max-height: 140px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 4px;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: var(--mdc-theme-primary, #6750a4);
+  padding: 8px 0;
+  margin: 6px auto !important;
+  text-align: center;
+  user-select: none;
+  opacity: 0.95;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.25s ease, color 0.3s ease;
+}
+
+/* 一级导航菜单容器 (绝对居中，置于顶层，覆盖过长文本) */
+.drawer-nav-section .rail-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 0;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  overflow-x: hidden !important;
+  scrollbar-width: none;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: 10;
+  background-color: var(--mdc-theme-surface, #ffffff);
+}
+
+.drawer-nav-section .rail-nav-list::-webkit-scrollbar {
+  display: none;
+}
+
+#railVerticalTitleTop {
+  position: absolute;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0 !important;
+  z-index: 1;
+}
+
+/* 第二标题精准对齐在底部正方形控制栏上方 */
+#railVerticalTitleBottom {
+  position: absolute;
+  bottom: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0 !important;
+  z-index: 1;
+}
+
+/* 二级面板列表与内容区域上下居中 */
+.secondary-overlay-panel .rail-nav-list {
+  flex: 1;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 12px 0 !important;
+  width: 100% !important;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  margin: auto 0;
+}
+
+.secondary-overlay-content {
+  flex: 1;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  padding: 20px 16px !important;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* 二级面板内的导航项样式 (完全无缩进瑕疵) */
+.secondary-overlay-panel .rail-nav-item {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  height: 46px !important;
+  padding: 0 20px !important;
+  box-sizing: border-box !important;
+}
+
+.secondary-overlay-panel .rail-nav-item .rail-item-icon {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  flex-shrink: 0 !important;
+}
+
+.secondary-overlay-panel .rail-nav-item .rail-item-text {
+  margin-left: 14px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  white-space: nowrap !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+}
+
+/* 底部控制面板 */
+.rail-footer {
+  padding: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: inherit;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.rail-footer-text {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =========================================================================
+ * 二级覆层菜单体系 (水波纹扩散覆盖一级菜单 ✖ 提供返回按钮)
+ * ========================================================================= */
+.secondary-overlay-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--mdc-theme-surface, #ffffff);
+  z-index: 1005;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+  scrollbar-width: none;
+  will-change: clip-path, opacity;
+}
+
+.secondary-overlay-panel::-webkit-scrollbar {
+  display: none;
+}
+
+.secondary-overlay-panel.anim-in {
+  display: flex !important;
+  opacity: 1 !important;
+  animation: rippleExpandOverlay 0.35s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+}
+
+.secondary-overlay-panel.anim-out {
+  display: flex !important;
+  animation: rippleDismissOverlay 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes rippleExpandOverlay {
+  0% {
+    clip-path: circle(0% at var(--ripple-origin-x, 36px) var(--ripple-origin-y, 40px));
+    opacity: 0.5;
+  }
+  99% {
+    clip-path: circle(150% at var(--ripple-origin-x, 36px) var(--ripple-origin-y, 40px));
+    opacity: 1;
+  }
+  100% {
+    clip-path: none;
+    opacity: 1;
+  }
+}
+
+@keyframes rippleDismissOverlay {
+  0% {
+    clip-path: circle(150% at var(--ripple-origin-x, 36px) var(--ripple-origin-y, 40px));
+    opacity: 1;
+  }
+  100% {
+    clip-path: circle(0% at var(--ripple-origin-x, 36px) var(--ripple-origin-y, 40px));
+    opacity: 0;
+  }
+}
+
+.overlay-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 54px;
+  padding: 8px 12px;
+  background: var(--mdc-theme-primary, #6750a4);
+  color: var(--mdc-theme-on-primary, #ffffff);
+  flex-shrink: 0;
+}
+
+.overlay-header-title {
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.overlay-bottom-bar {
+  padding: 10px 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: inherit;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.dark-theme .mdc-navigation-rail {
+  background-color: var(--mdc-theme-surface, #19181e);
+  border-right-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.6);
+}
+
+.dark-theme .secondary-overlay-panel {
+  background-color: #19181e;
+}
+
+/* 移动端 (< 600px)：左边缘向右滑动 / 静止悬浮按钮呼出 */
+@media (max-width: 599.9px) {
+  .mdc-navigation-rail {
+    display: flex !important;
+    transform: translateX(-100%);
+    width: 260px !important;
+    box-shadow: none;
+    transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1), box-shadow 0.3s ease;
+    z-index: 99999;
+  }
+
+  .mdc-navigation-rail.mobile-open {
+    transform: translateX(0) !important;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .mdc-navigation-rail.mobile-open .rail-header-text,
+  .mdc-navigation-rail.mobile-open .rail-item-text,
+  .mdc-navigation-rail.mobile-open .rail-footer-text {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .mdc-navigation-rail.mobile-open .rail-vertical-title {
+    display: none !important;
+  }
+
+  .mdc-navigation-rail.mobile-open .rail-item-icon {
+    margin-left: 0 !important;
+    margin-right: 16px !important;
+  }
+
+  .mobile-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99990;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .mobile-drawer-backdrop.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-floating-menu-btn {
+    display: flex !important;
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 9000;
+    background-color: var(--mdc-theme-primary, #6750a4);
+    color: var(--mdc-theme-on-primary, #ffffff);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    border-radius: 50% !important;
+    width: 48px;
+    height: 48px;
+    opacity: 0;
+    transform: scale(0.8) translateY(16px);
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0, 0, 0.2, 1),
+                transform 0.35s cubic-bezier(0, 0, 0.2, 1),
+                background-color 0.3s ease;
+  }
+
+  body.page-is-idle .mobile-floating-menu-btn {
+    opacity: 0.95;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+  }
+}
+
+
+/* --- Component: packages/mdc-monet/mdc-monet.scss --- */
+
+
+
+
+
+
+
+/* 调色盘无缝拼接色块网格 (0 间距 ✖ 双行文本 ✖ 上下无间隙 ✖ 垂直居中) */
+.theme-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  grid-auto-rows: 48px !important;
+  gap: 0 !important;
+  row-gap: 0 !important;
+  column-gap: 0 !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: auto 0 !important;
+  align-content: center !important;
+  justify-content: center !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  border: none !important;
+  scrollbar-width: none;
+}
+
+.theme-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.theme-tile {
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  padding: 0 14px !important;
+  margin: 0 !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  cursor: pointer;
+  user-select: none;
+  transition: filter 0.15s ease;
+  position: relative;
+  box-sizing: border-box !important;
+}
+
+.theme-tile:hover {
+  filter: brightness(1.08);
+  z-index: 2;
+}
+
+.theme-tile.active::after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50% !important;
+  background-color: currentColor;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+.theme-tile-cn {
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  pointer-events: none;
+}
+
+.theme-tile-en {
+  font-size: 10px;
+  font-weight: 500;
+  opacity: 0.85;
+  line-height: 1.2;
+  margin-top: 2px;
+  pointer-events: none;
+}
+
+/* 色阶调色板展示行 */
+.palette-row {
+  margin-bottom: 12px;
+}
+
+.palette-swatches {
+  display: flex;
+  height: 44px;
+  width: 100%;
+  margin-top: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.palette-swatch {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.palette-swatch:hover {
+  transform: scale(1.08);
+  z-index: 5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Surface Token Chip 容器胶囊标签 */
+.surface-token-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  margin: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 16px !important;
+  user-select: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.surface-token-chip.is-selected,
+.surface-token-chip.active {
+  background: var(--mdc-theme-secondary-container, #e8def8) !important;
+  color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+  border-color: transparent !important;
+  font-weight: 600;
+}
+
+.dark-theme .surface-token-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+
+
+/* --- Component: packages/mdc-ripple/mdui-ripple.scss --- */
+
+
+
+
+
+.demo-card,
+.mdc-card,
+.preview-img-box,
+.secondary-overlay-panel .rail-nav-item,
+.rail-nav-item,
+.surface-token-chip,
+.expansion-panel,
+.theme-tile,
+.mdc-button,
+button {
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mdui-ripple-wave {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  font-size: 0;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  opacity: 0;
+  border-radius: 50% !important;
+  transform: translate3d(0, 0, 0) scale(0);
+  transition: transform 1.35s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.85s cubic-bezier(0.2, 0.8, 0.25, 1);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.mdui-ripple-wave.is-active {
+  transform: translate3d(0, 0, 0) scale(1);
+  opacity: 0.22;
+}
+
+/* 卡片水波纹增强对比度 (使用主色与清晰的 0.18 不透明度，轮廓分明) */
+.demo-card .mdui-ripple-wave.is-active,
+.mdc-card .mdui-ripple-wave.is-active,
+[data-mdui-ripple] .mdui-ripple-wave.is-active {
+  opacity: 0.18;
+}
+
+/* 当主色/暗色填充型按钮 (Primary Raised / FAB 等) 涟漪使用 on-primary 对比色 */
+.mdc-button--raised .mdui-ripple-wave,
+.mdc-button--unelevated .mdui-ripple-wave,
+.mdc-fab .mdui-ripple-wave,
+.rail-header .mdui-ripple-wave {
+  background-color: var(--mdc-theme-on-primary, #ffffff) !important;
+}
+
+.mdc-button--raised .mdui-ripple-wave.is-active,
+.mdc-button--unelevated .mdui-ripple-wave.is-active,
+.mdc-fab .mdui-ripple-wave.is-active,
+.rail-header .mdui-ripple-wave.is-active {
+  opacity: 0.32 !important;
+}
+
+/* 🌙 暗色模式水波纹高对比度跟随 */
+.dark-theme .mdui-ripple-wave {
+  background-color: var(--mdc-theme-primary, #d0bcff);
+}
+
+.dark-theme .mdui-ripple-wave.is-active {
+  opacity: 0.25;
+}
+
+.dark-theme .demo-card .mdui-ripple-wave.is-active,
+.dark-theme .mdc-card .mdui-ripple-wave.is-active {
+  opacity: 0.18;
+}
+
+.dark-theme .mdc-button--raised .mdui-ripple-wave,
+.dark-theme .mdc-button--unelevated .mdui-ripple-wave,
+.dark-theme .mdc-fab .mdui-ripple-wave {
+  background-color: #000000 !important;
+  opacity: 0.22 !important;
+}
+
+.mdui-ripple-wave.is-fading {
+  opacity: 0 !important;
+}
+
+
+/* --- Component: packages/mdc-ripple/mdui-overscroll-glow.scss --- */
+
+
+
+
+
+
+
+
+.md1-overscroll-edge-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 99998;
+}
+
+.md1-overscroll-edge-container--fixed {
+  position: fixed;
+  z-index: 99999;
+}
+
+.md1-overscroll-edge-arc {
+  position: absolute;
+  pointer-events: none;
+  display: block;
+  fill: var(--mdc-edge-effect-color, var(--mdc-theme-primary, #6750a4));
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.45s cubic-bezier(0.2, 0.8, 0.25, 1);
+}
+
+/* 顶部触顶弧形：从顶部向下突出的半椭圆弧 */
+.md1-overscroll-edge-arc--top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  transform: scaleY(0);
+  transform-origin: top center;
+}
+
+/* 底部触底弧形：从底部向上突出的半椭圆弧 */
+.md1-overscroll-edge-arc--bottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  transform: scaleY(0);
+  transform-origin: bottom center;
+}
+
+/* 左侧触界弧形 */
+.md1-overscroll-edge-arc--left {
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* 右侧触界弧形 */
+.md1-overscroll-edge-arc--right {
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: right center;
+}
+
+.md1-overscroll-edge-arc.is-receding {
+  opacity: 0 !important;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.45s cubic-bezier(0.2, 0.8, 0.25, 1) !important;
+}
+
+/* 暗色主题适配 (高透白弧) */
+.dark-theme .md1-overscroll-edge-arc,
+[data-theme="dark"] .md1-overscroll-edge-arc {
+  fill: var(--mdc-edge-effect-color, #ffffff);
+}
+
+
+/* --- Component: packages/mdc-slider/md1-slider.scss --- */
+
+
+
+
+
+
+
+.md1-slider-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  user-select: none;
+}
+
+.md1-slider {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 200px;
+  height: 36px;
+  cursor: pointer;
+}
+
+.md1-slider input[type="range"] {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  height: 24px;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 5;
+  margin: 0;
+}
+
+.md1-slider-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: rgba(0, 0, 0, 0.26);
+  pointer-events: none;
+  transition: background-color 0.3s ease;
+}
+
+.dark-theme .md1-slider-track {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.md1-slider-fill {
+  position: absolute;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  pointer-events: none;
+  transition: width 0.05s ease;
+}
+
+.md1-slider-thumb-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: left 0.05s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.md1-slider-thumb {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border-radius: 50% !important;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              height 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              border-radius 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-45deg) scale(0.65);
+  will-change: transform, border-radius;
+}
+
+.md1-slider-thumb span {
+  position: absolute;
+  color: var(--mdc-theme-on-primary, #ffffff);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* 拖动 / 聚焦 / 悬停时原来的点变成经典泪滴大头针 */
+.md1-slider.is-active .md1-slider-thumb,
+.md1-slider:hover .md1-slider-thumb {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px 15px 15px 0 !important;
+  transform: rotate(-45deg) scale(1) translate(14px, -14px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.md1-slider.is-active .md1-slider-thumb span,
+.md1-slider:hover .md1-slider-thumb span {
+  opacity: 1;
+}
+
+
+/* --- Component: packages/mdc-switch/md1-switch.scss --- */
+
+
+
+
+
+
+
+.md1-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.md1-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.md1-switch-track {
+  width: 36px;
+  height: 14px;
+  border-radius: 7px !important;
+  background-color: rgba(0, 0, 0, 0.26);
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  transition: background-color 0.25s ease;
+}
+
+.dark-theme .md1-switch-track {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.md1-switch-thumb {
+  position: absolute;
+  top: -3px;
+  left: -2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50% !important;
+  background-color: #fafafa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.28);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.25s ease;
+}
+
+.md1-switch input:checked + .md1-switch-track {
+  background-color: rgba(103, 80, 164, 0.5);
+}
+
+.md1-switch input:checked + .md1-switch-track .md1-switch-thumb {
+  transform: translateX(20px);
+  background-color: var(--mdc-theme-primary, #6750a4);
+}
+
+
+/* --- Component: packages/mdc-tabs/md1-tabs.scss --- */
+
+
+
+
+
+
+
+.md1-tabs-bar {
+  display: flex;
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  margin-top: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.md1-tabs-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.dark-theme .md1-tabs-bar {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+.md1-tab-item {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: inherit;
+  opacity: 0.7;
+  cursor: pointer;
+  transition: opacity 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+}
+
+.md1-tab-item:hover {
+  opacity: 1;
+}
+
+.md1-tab-item.is-active {
+  opacity: 1;
+  color: var(--mdc-theme-primary, #6750a4) !important;
+}
+
+.md1-tab-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: left, width;
+  z-index: 2;
+}
+
+.md1-tab-content-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.md1-tab-panel {
+  padding: 20px 0;
+  font-size: 13px;
+  line-height: 1.6;
+  display: none;
+  position: relative;
+  z-index: 2;
+}
+
+.md1-tab-panel.is-active {
+  display: block;
+}
+
+.md1-tab-panel.slide-right {
+  animation: tabSlideRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.md1-tab-panel.slide-left {
+  animation: tabSlideLeft 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* 目标 Tab 为起点向全内容扩散的水波纹 */
+.md1-tab-content-ripple {
+  position: absolute;
+  border-radius: 50% !important;
+  pointer-events: none;
+  z-index: 1;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  opacity: 0.2;
+  transform: translate(-50%, -50%) scale(0.01);
+  will-change: transform, opacity;
+}
+
+.md1-tab-content-ripple.slide-right {
+  animation: tabRippleSlideRight 0.6s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+}
+
+.md1-tab-content-ripple.slide-left {
+  animation: tabRippleSlideLeft 0.6s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+}
+
+@keyframes tabRippleSlideRight {
+  0% {
+    transform: translate(-50%, -50%) scale(0.01) translateX(-30px);
+    opacity: 0.22;
+  }
+  60% {
+    opacity: 0.16;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) translateX(40px);
+    opacity: 0;
+  }
+}
+
+@keyframes tabRippleSlideLeft {
+  0% {
+    transform: translate(-50%, -50%) scale(0.01) translateX(30px);
+    opacity: 0.22;
+  }
+  60% {
+    opacity: 0.16;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) translateX(-40px);
+    opacity: 0;
+  }
+}
+
+@keyframes tabSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes tabSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+/* --- Component: packages/mdc-linear-progress/mdui-linear-progress.scss --- */
+
+
+
+
+
+
+
+.mdui-progress {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 4px;
+  overflow: hidden;
+  background-color: rgba(103, 80, 164, 0.2);
+  border-radius: 0;
+}
+
+.dark-theme .mdui-progress {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.mdui-progress-determinate {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  transition: width 0.3s linear;
+}
+
+.mdui-progress-indeterminate {
+  background-color: var(--mdc-theme-primary, #6750a4);
+}
+
+.mdui-progress-indeterminate::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: inherit;
+  animation: mdui-progress-indeterminate 2s linear infinite;
+  content: ' ';
+  will-change: left, width;
+}
+
+.mdui-progress-indeterminate::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: inherit;
+  animation: mdui-progress-indeterminate-short 2s linear infinite;
+  content: ' ';
+  will-change: left, width;
+}
+
+@keyframes mdui-progress-indeterminate {
+  0% {
+    left: 0;
+    width: 0;
+  }
+  50% {
+    left: 30%;
+    width: 70%;
+  }
+  75% {
+    left: 100%;
+    width: 0;
+  }
+}
+
+@keyframes mdui-progress-indeterminate-short {
+  0% {
+    left: 0;
+    width: 0;
+  }
+  50% {
+    left: 0;
+    width: 0;
+  }
+  75% {
+    left: 0;
+    width: 25%;
+  }
+  100% {
+    left: 100%;
+    width: 0;
+  }
+}
+
+
+/* --- Component: packages/mdc-expansion-panel/mdc-expansion-panel.scss --- */
+
+
+
+
+
+
+
+.expansion-panel {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  margin-bottom: 8px;
+  border-radius: 0 !important;
+  background-color: var(--mdc-theme-surface, #ffffff);
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  transition: box-shadow 0.2s ease, margin 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.expansion-panel.is-open .expansion-body {
+  display: block;
+}
+
+.expansion-panel.is-open .expansion-arrow {
+  transform: rotate(180deg);
+}
+
+.dark-theme .expansion-panel {
+  background-color: var(--mdc-theme-surface-container, #131217);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.expansion-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  background: rgba(0, 0, 0, 0.02);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 0 !important;
+  transition: background-color 0.2s ease;
+}
+
+.expansion-header:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.dark-theme .expansion-header {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.dark-theme .expansion-header:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.expansion-body {
+  padding: 16px;
+  display: none;
+  font-size: 13px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  line-height: 1.6;
+}
+
+.dark-theme .expansion-body {
+  border-top-color: rgba(255, 255, 255, 0.06);
+}
+
+.expansion-arrow {
+  transition: transform 0.2s ease;
+  font-size: 20px;
+}
+
+
+/* --- Component: packages/mdc-segmented-button/mdc-segmented-button.scss --- */
+
+
+
+
+
+
+
+.segmented-button-group {
+  display: inline-flex;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  user-select: none;
+  border-radius: 0 !important;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.dark-theme .segmented-button-group {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.segmented-button {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  background-color: transparent;
+  color: inherit;
+  border: none;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 0 !important;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.segmented-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.segmented-button:last-child {
+  border-right: none;
+}
+
+.segmented-button.is-selected {
+  background-color: var(--mdc-theme-secondary-container, #e8def8) !important;
+  color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+}
+
+.dark-theme .segmented-button {
+  border-right-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark-theme .segmented-button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+
+/* --- Component: packages/mdc-badge/mdc-badge.scss --- */
+
+
+
+
+
+
+
+.badge-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--mdc-theme-tertiary, #7d5260);
+  border-radius: 50% !important;
+  pointer-events: none;
+}
+
+.badge-number {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  background-color: var(--mdc-theme-tertiary, #7d5260);
+  color: var(--mdc-theme-on-tertiary, #ffffff);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 10px !important;
+  line-height: 1.2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+
+/* --- Component: packages/mdc-tooltip/mdc-tooltip.scss --- */
+
+
+
+
+
+
+
+.tooltip-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.tooltip-wrapper:hover .tooltip-box {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.tooltip-box {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background-color: #323232;
+  color: #ffffff;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: 0 !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s cubic-bezier(0, 0, 0.2, 1), transform 0.2s cubic-bezier(0, 0, 0.2, 1);
+  z-index: 10000;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+}
+
+
+/* --- Component: packages/mdc-divider/mdc-divider.scss --- */
+
+
+
+
+
+
+
+.mdc-divider {
+  height: 1px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.08);
+  margin: 16px 0;
+  border: none;
+}
+
+.dark-theme .mdc-divider {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.mdc-divider--inset {
+  margin-left: 56px;
+  width: calc(100% - 56px);
+}
+
+
+/* --- Component: packages/mdc-select/mdc-select.scss --- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Material Design 0px 纯直角自定义 Select 组件 (MD Custom Select) */
+.mdc-select-custom {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  width: 240px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.mdc-select-custom__surface {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 14px;
+  background: rgba(0, 0, 0, 0.04);
+  border-bottom: 2px solid var(--mdc-theme-primary);
+  cursor: pointer;
+  user-select: none;
+  box-sizing: border-box;
+  position: relative;
+  border-radius: 0;
+}
+
+.dark-theme .mdc-select-custom__surface {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.mdc-select-custom__menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  min-width: 240px;
+  background: var(--mdc-theme-surface, #ffffff);
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  z-index: 10000;
+  flex-direction: column;
+  padding: 6px 0;
+  border-radius: 0;
+  font-family: inherit;
+}
+
+.dark-theme .mdc-select-custom__menu {
+  background: #25232a;
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+}
+
+.mdc-select-custom__item {
+  padding: 12px 16px;
+  font-size: 13.5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  font-family: inherit;
+}
+
+.mdc-select-custom__item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.dark-theme .mdc-select-custom__item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mdc-select-custom__item.is-selected {
+  background: rgba(103, 80, 164, 0.1);
+  color: var(--mdc-theme-primary);
+  font-weight: 600;
+}
+
+.dark-theme .mdc-select-custom__item.is-selected {
+  background: rgba(208, 188, 255, 0.12);
+}
+
+
+/* --- Component: packages/mdc-textfield/mdc-text-field.scss --- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================================
+ * 1. MDC 标准填充型输入框 (Filled Text Field)
+ * ========================================================================= */
+.mdc-text-field {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 56px;
+  background-color: rgba(0, 0, 0, 0.04);
+  border-bottom: 2px solid var(--mdc-theme-primary, #6750a4);
+  border-radius: 0 !important;
+  vertical-align: middle;
+}
+
+.dark-theme .mdc-text-field {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-bottom-color: var(--mdc-theme-primary, #d0bcff);
+}
+
+.mdc-text-field .mdc-text-field__icon,
+.mdc-text-field--with-leading-icon .mdc-text-field__icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--mdc-theme-primary, #6750a4);
+  font-size: 20px;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 2;
+  margin: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dark-theme .mdc-text-field .mdc-text-field__icon,
+.dark-theme .mdc-text-field--with-leading-icon .mdc-text-field__icon {
+  color: var(--mdc-theme-primary, #d0bcff);
+}
+
+.mdc-text-field--with-leading-icon .mdc-text-field__input {
+  padding-left: 44px !important;
+  padding-right: 14px !important;
+  padding-top: 18px !important;
+  padding-bottom: 6px !important;
+  width: 100%;
+  height: 100%;
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+  color: inherit;
+  box-sizing: border-box;
+}
+
+.mdc-text-field--with-leading-icon .mdc-floating-label {
+  position: absolute;
+  left: 44px;
+  top: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--mdc-theme-primary, #6750a4);
+  pointer-events: none;
+  line-height: 1;
+  transform: none !important;
+}
+
+.dark-theme .mdc-text-field--with-leading-icon .mdc-floating-label {
+  color: var(--mdc-theme-primary, #d0bcff);
+}
+
+/* =========================================================================
+ * 2. MDC 标准描边型输入框 (Outlined Text Field)
+ * ========================================================================= */
+.mdc-text-field--outlined {
+  background: transparent !important;
+  border: 1px solid var(--mdc-theme-primary, #6750a4) !important;
+  border-radius: 0 !important;
+  height: 56px;
+  position: relative;
+  box-sizing: border-box;
+  overflow: visible !important;
+  transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-width 0.1s ease;
+}
+
+.dark-theme .mdc-text-field--outlined {
+  border-color: var(--mdc-theme-primary, #d0bcff) !important;
+}
+
+.mdc-text-field--outlined:focus-within,
+.mdc-text-field--outlined.mdc-text-field--focused {
+  border-width: 2px !important;
+}
+
+.mdc-text-field--outlined .mdc-text-field__icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  line-height: 1;
+  color: var(--mdc-theme-primary, #6750a4);
+  pointer-events: none;
+  z-index: 2;
+  margin: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dark-theme .mdc-text-field--outlined .mdc-text-field__icon {
+  color: var(--mdc-theme-primary, #d0bcff);
+}
+
+.mdc-text-field--outlined .mdc-text-field__input {
+  height: 100% !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 54px !important;
+  padding-left: 44px !important;
+  padding-right: 14px !important;
+  font-size: 14px !important;
+  width: 100%;
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: inherit;
+  box-sizing: border-box;
+  display: block;
+}
+
+.mdc-text-field--outlined .mdc-floating-label {
+  position: absolute !important;
+  top: -8px !important;
+  left: 12px !important;
+  bottom: auto !important;
+  right: auto !important;
+  width: auto !important;
+  max-width: fit-content !important;
+  height: 16px !important;
+  line-height: 16px !important;
+  padding: 0 4px !important;
+  margin: 0 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--mdc-theme-primary, #6750a4) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  z-index: 5 !important;
+  transform: none !important;
+  pointer-events: none !important;
+  display: inline-block !important;
+  white-space: nowrap !important;
+}
+
+.dark-theme .mdc-text-field--outlined .mdc-floating-label {
+  color: var(--mdc-theme-primary, #d0bcff) !important;
+}
+
+.mdc-text-field--outlined .mdc-line-ripple,
+.mdc-text-field--outlined .mdc-notched-outline {
+  display: none !important;
+}
+
+
+/* --- Component: packages/mdc-picker/mdc-picker.scss --- */
+
+
+
+
+
+
+
+/* =========================================================================
+ * Material 纯直角日历选择器 (MDC DatePicker)
+ * ========================================================================= */
+.mdc-date-picker {
+  display: inline-flex;
+  flex-direction: column;
+  width: 328px;
+  background-color: var(--mdc-theme-surface, #ffffff);
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 0 !important;
+  user-select: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+.mdc-date-picker__header {
+  background-color: var(--mdc-theme-primary, #6750a4);
+  color: var(--mdc-theme-on-primary, #ffffff);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mdc-date-picker__header-year {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.85;
+  letter-spacing: 0.5px;
+}
+
+.mdc-date-picker__header-date {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+}
+
+.mdc-date-picker__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px 4px;
+}
+
+.mdc-date-picker__current-month {
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mdc-date-picker__nav-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: inherit;
+  border-radius: 50% !important;
+  transition: background-color 0.15s ease;
+}
+
+.mdc-date-picker__nav-btn:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.mdc-date-picker__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 8px 12px 4px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.6;
+}
+
+.mdc-date-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 4px 12px 14px;
+  gap: 4px 0;
+}
+
+.mdc-date-picker__cell {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+}
+
+.mdc-date-picker__cell > span {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50% !important;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mdc-date-picker__cell:hover:not(.is-empty):not(.is-selected) > span {
+  background-color: rgba(103, 80, 164, 0.08);
+  color: var(--mdc-theme-primary);
+}
+
+.mdc-date-picker__cell.is-today:not(.is-selected) > span {
+  border: 1px solid var(--mdc-theme-primary);
+  color: var(--mdc-theme-primary);
+  font-weight: 700;
+}
+
+.mdc-date-picker__cell.is-selected > span {
+  background-color: var(--mdc-theme-primary) !important;
+  color: var(--mdc-theme-on-primary) !important;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.mdc-date-picker__cell.is-empty {
+  cursor: default;
+  opacity: 0.25;
+}
+
+.mdc-date-picker__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* =========================================================================
+ * Material 纯正表盘时钟选择器 (MDC TimePicker)
+ * ========================================================================= */
+.mdc-time-picker {
+  display: inline-flex;
+  flex-direction: column;
+  width: 310px;
+  background-color: var(--mdc-theme-surface, #ffffff);
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 0 !important;
+  user-select: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+.mdc-time-picker__header {
+  background-color: var(--mdc-theme-surface-container-high, #f7f2fa);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.mdc-time-picker__digital-display {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  height: 52px;
+  user-select: none;
+}
+
+/* 底部浅灰静态槽位背景 */
+.mdc-time-picker__digit-slot {
+  position: absolute;
+  top: 0;
+  width: 62px;
+  height: 52px;
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 0 !important;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mdc-time-picker__digit-slot--hour {
+  left: 0;
+}
+
+.mdc-time-picker__digit-slot--min {
+  right: 0;
+}
+
+/* 文字内容行架构 (底层暗色 ✖ 顶层反色) */
+.mdc-time-picker__digital-content {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 52px;
+}
+
+.mdc-time-picker__digital-content--base {
+  position: relative;
+  z-index: 1;
+  color: var(--mdc-theme-on-surface, #1d1b20);
+}
+
+.mdc-time-picker__digital-content--inverted {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  color: var(--mdc-theme-on-primary, #ffffff);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.mdc-time-picker__digital-content--inverted .mdc-time-picker__colon {
+  color: var(--mdc-theme-on-primary, #ffffff);
+  opacity: 0.9;
+}
+
+/* 物理反色遮罩滑块（和指针完全一致的几何局部反色剪裁器） */
+.mdc-time-picker__digit-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 62px;
+  height: 52px;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  border-radius: 0 !important;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+  will-change: transform, width;
+}
+
+.mdc-time-picker__digit-box {
+  font-size: 40px;
+  font-weight: 700;
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0 !important;
+  cursor: pointer;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  overflow: hidden;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  min-width: 62px;
+  height: 52px;
+  box-sizing: border-box;
+}
+
+.mdc-time-picker__colon {
+  font-size: 36px;
+  font-weight: 700;
+  padding: 0 2px;
+  user-select: none;
+  line-height: 1;
+  opacity: 0.6;
+  width: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mdc-time-picker__ampm-toggle {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-left: 12px;
+}
+
+.mdc-time-picker__ampm-btn {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: inherit;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.mdc-time-picker__ampm-btn:first-child {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.mdc-time-picker__ampm-btn.is-active {
+  background-color: var(--mdc-theme-primary);
+  color: var(--mdc-theme-on-primary, #ffffff);
+}
+
+.mdc-time-picker__dial-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0;
+  touch-action: none !important;
+  overscroll-behavior: contain;
+}
+
+.mdc-time-picker__clock-face {
+  width: 230px;
+  height: 230px;
+  background-color: var(--mdc-theme-surface-container-high, #f7f2fa);
+  border-radius: 50% !important;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  touch-action: none !important;
+  overscroll-behavior: contain;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: grab;
+}
+
+.mdc-time-picker__clock-face:active {
+  cursor: grabbing;
+}
+
+.mdc-time-picker__numbers-base {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 230px;
+  height: 230px;
+  pointer-events: none;
+}
+
+.mdc-time-picker__center-pivot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  border-radius: 50% !important;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.mdc-time-picker__clock-hand {
+  position: absolute;
+  bottom: 50%;
+  left: calc(50% - 1px);
+  width: 2px;
+  height: 88px;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  transform-origin: bottom center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* 36px 纯圆滑块遮罩（接触位置局部反色剪裁器） */
+.mdc-time-picker__thumb-circle {
+  position: absolute;
+  top: -18px;
+  left: calc(50% - 18px);
+  width: 36px;
+  height: 36px;
+  border-radius: 50% !important;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 6;
+}
+
+/* 逆向旋转反色镜像层，物理光栅级精确剪裁局部重叠文字 */
+.mdc-time-picker__inverted-mask {
+  position: absolute;
+  top: -9px;
+  left: -97px;
+  width: 230px;
+  height: 230px;
+  transform-origin: 115px 115px;
+  pointer-events: none;
+}
+
+.mdc-time-picker__inverted-mask .mdc-time-picker__number {
+  color: var(--mdc-theme-on-primary, #ffffff) !important;
+  font-weight: 700;
+}
+
+.mdc-time-picker__number {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50% !important;
+  transform: translate(-50%, -50%);
+  color: var(--mdc-theme-on-surface, #1d1b20);
+  transition: left 0.22s cubic-bezier(0.4, 0, 0.2, 1), top 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  pointer-events: none;
+}
+
+.mdc-time-picker__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dark-theme .mdc-date-picker,
+.dark-theme .mdc-time-picker {
+  background-color: var(--mdc-theme-surface-container, #131217);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65);
+}
+
+.dark-theme .mdc-date-picker__actions,
+.dark-theme .mdc-time-picker__actions {
+  border-top-color: rgba(255, 255, 255, 0.06);
+}
+
+.dark-theme .mdc-date-picker__nav-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-theme .mdc-time-picker__header {
+  background-color: #19181e;
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+.dark-theme .mdc-time-picker__digit-box:not(.is-active) {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #e6e1e5;
+}
+
+.dark-theme .mdc-time-picker__ampm-toggle {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark-theme .mdc-time-picker__clock-face {
+  background-color: #1c1a22;
+}
+
+
+/* =============================================================== */
+/* Demo Catalog & Layout Helpers                                   */
+/* =============================================================== */
+.main-container {
+  margin-left: 72px;
+  padding: 28px 36px 80px 36px;
+  max-width: 1200px;
+  box-sizing: border-box;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 599.9px) {
+  .main-container {
+    margin-left: 0 !important;
+    padding: 16px !important;
+  }
+}
+
+.component-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 16px;
+}

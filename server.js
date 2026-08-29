@@ -21,7 +21,7 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 
-const PORT = 2929;
+const PORT = process.env.PORT || 2929;
 const HOST = '0.0.0.0';
 const ROOT_DIR = path.resolve();
 
@@ -47,7 +47,37 @@ const server = http.createServer((req, res) => {
 
   let filePath = path.join(ROOT_DIR, reqUrl);
 
-  if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
+  // Fallback aliases for assets and bundles
+  if (!fs.existsSync(filePath)) {
+    if (reqUrl.startsWith('/assets/')) {
+      const assetRel = reqUrl.replace('/assets/', '');
+      const tryPaths = [
+        path.join(ROOT_DIR, 'demos', assetRel),
+        path.join(ROOT_DIR, 'dist', assetRel),
+        path.join(ROOT_DIR, 'build', assetRel)
+      ];
+      for (const tp of tryPaths) {
+        if (fs.existsSync(tp)) {
+          filePath = tp;
+          break;
+        }
+      }
+    } else if (reqUrl.startsWith('/build/')) {
+      const buildRel = reqUrl.replace('/build/', '');
+      const tryPaths = [
+        path.join(ROOT_DIR, 'dist', buildRel),
+        path.join(ROOT_DIR, 'demos', buildRel)
+      ];
+      for (const tp of tryPaths) {
+        if (fs.existsSync(tp)) {
+          filePath = tp;
+          break;
+        }
+      }
+    }
+  }
+
+  if (!fs.existsSync(filePath) || (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory())) {
     const indexPath = path.join(filePath, 'index.html');
     if (fs.existsSync(indexPath)) {
       filePath = indexPath;
@@ -74,7 +104,10 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, HOST, () => {
   console.log(`=======================================================`);
-  console.log(`MDC-Web Live Server is running at http://${HOST}:${PORT}`);
+  console.log(`MDC-Web Live Server is running at:`);
+  console.log(`  > http://127.0.0.1:${PORT}`);
+  console.log(`  > http://localhost:${PORT}`);
+  console.log(`  > http://${HOST}:${PORT}`);
   console.log(`Deployed & Crafted by unjal <unjal29@outlook.com>`);
   console.log(`=======================================================`);
 });

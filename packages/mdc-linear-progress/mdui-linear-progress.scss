@@ -30,28 +30,28 @@
 
 .mdui-progress-indeterminate {
   background-color: var(--mdc-theme-primary, #6750a4);
+}
 
-  &::before {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    background-color: inherit;
-    animation: mdui-progress-indeterminate 2s linear infinite;
-    content: ' ';
-    will-change: left, width;
-  }
+.mdui-progress-indeterminate::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: inherit;
+  animation: mdui-progress-indeterminate 2s linear infinite;
+  content: ' ';
+  will-change: left, width;
+}
 
-  &::after {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    background-color: inherit;
-    animation: mdui-progress-indeterminate-short 2s linear infinite;
-    content: ' ';
-    will-change: left, width;
-  }
+.mdui-progress-indeterminate::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: inherit;
+  animation: mdui-progress-indeterminate-short 2s linear infinite;
+  content: ' ';
+  will-change: left, width;
 }
 
 @keyframes mdui-progress-indeterminate {

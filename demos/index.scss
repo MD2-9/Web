@@ -1,5 +1,6 @@
 //
 // Copyright 2017 Google Inc. All Rights Reserved.
+// Copyright 2026 unjal <unjal29@outlook.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +16,42 @@
 //
 
 @import "./common";
-@import "../packages/mdc-list/mdc-list";
+@import "../packages/material-components-web/material-components-web";
+
+/* 桌面端展厅：使用左侧 Navigation Rail，移除顶部横向标题栏 */
+.mdc-top-app-bar,
+.mdc-toolbar,
+header.app-bar {
+  display: none !important;
+}
+
+body {
+  padding-top: 0 !important;
+}
+
+/* 主内容视口容器 */
+.main-container {
+  margin-left: 72px;
+  padding: 28px 36px 80px 36px;
+  max-width: 1200px;
+  box-sizing: border-box;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 599.9px) {
+  .main-container {
+    margin-left: 0 !important;
+    padding: 16px !important;
+  }
+}
+
+/* 展厅辅助组件网格 */
+.component-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 16px;
+}
 
 .demo-catalog-list a {
   color: $material-color-grey-900;

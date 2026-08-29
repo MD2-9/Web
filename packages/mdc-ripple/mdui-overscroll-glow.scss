@@ -15,11 +15,11 @@
   pointer-events: none;
   overflow: hidden;
   z-index: 99998;
+}
 
-  &--fixed {
-    position: fixed;
-    z-index: 99999;
-  }
+.md1-overscroll-edge-container--fixed {
+  position: fixed;
+  z-index: 99999;
 }
 
 .md1-overscroll-edge-arc {
@@ -30,58 +30,54 @@
   opacity: 0;
   will-change: transform, opacity;
   transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.45s cubic-bezier(0.2, 0.8, 0.25, 1);
-
-  // 顶部触顶弧形：从顶部向下突出的半椭圆弧
-  &--top {
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    transform: scaleY(0);
-    transform-origin: top center;
-  }
-
-  // 底部触底弧形：从底部向上突出的半椭圆弧 (与 Android 5-11 扁平化截图完全一致)
-  &--bottom {
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    transform: scaleY(0);
-    transform-origin: bottom center;
-  }
-
-  // 左侧触界弧形
-  &--left {
-    top: 0;
-    left: 0;
-    width: 80px;
-    height: 100%;
-    transform: scaleX(0);
-    transform-origin: left center;
-  }
-
-  // 右侧触界弧形
-  &--right {
-    top: 0;
-    right: 0;
-    width: 80px;
-    height: 100%;
-    transform: scaleX(0);
-    transform-origin: right center;
-  }
-
-  &.is-active {
-    // 激活状态由 JS 动态计算 scale 与 opacity
-  }
-
-  &.is-receding {
-    opacity: 0 !important;
-    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.45s cubic-bezier(0.2, 0.8, 0.25, 1) !important;
-  }
 }
 
-// 暗色主题适配 (高透白弧)
+/* 顶部触顶弧形：从顶部向下突出的半椭圆弧 */
+.md1-overscroll-edge-arc--top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  transform: scaleY(0);
+  transform-origin: top center;
+}
+
+/* 底部触底弧形：从底部向上突出的半椭圆弧 */
+.md1-overscroll-edge-arc--bottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  transform: scaleY(0);
+  transform-origin: bottom center;
+}
+
+/* 左侧触界弧形 */
+.md1-overscroll-edge-arc--left {
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* 右侧触界弧形 */
+.md1-overscroll-edge-arc--right {
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: right center;
+}
+
+.md1-overscroll-edge-arc.is-receding {
+  opacity: 0 !important;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.45s cubic-bezier(0.2, 0.8, 0.25, 1) !important;
+}
+
+/* 暗色主题适配 (高透白弧) */
 .dark-theme .md1-overscroll-edge-arc,
 [data-theme="dark"] .md1-overscroll-edge-arc {
   fill: var(--mdc-edge-effect-color, #ffffff);

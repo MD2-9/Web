@@ -5,248 +5,343 @@
 // Material Components Web - Navigation Rail (72px 紧凑 / 260px 悬浮覆层 / 二级菜单水波纹扩展)
 //
 
-$mdc-rail-width-collapsed: 72px !default;
-$mdc-rail-width-expanded: 260px !default;
-
 .mdc-navigation-rail {
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
-  width: $mdc-rail-width-collapsed;
+  width: 72px;
   height: 100vh;
-  z-index: 1000;
-  box-sizing: border-box;
   background-color: var(--mdc-theme-surface, #ffffff);
-  color: var(--mdc-theme-on-surface, #1d1b20);
   border-right: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow: visible;
+  overflow: hidden !important;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               background-color 0.3s ease;
-
-  // 悬浮或手动展开态
-  &:hover:not(.has-overlay),
-  &.is-expanded {
-    width: $mdc-rail-width-expanded;
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18);
-
-    .rail-header-text {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transform: translateX(0);
-    }
-
-    .rail-item-text {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transform: translateX(0);
-    }
-
-    .rail-vertical-title {
-      opacity: 0;
-      pointer-events: none;
-      transform: scale(0.85);
-    }
-
-    .rail-footer-text {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transform: translateX(0);
-    }
-  }
 }
 
-.dark-theme .mdc-navigation-rail {
-  background-color: var(--mdc-theme-surface, #19181e);
-  border-right-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.6);
+/* 悬浮展开至 260px */
+.mdc-navigation-rail:hover,
+.mdc-navigation-rail.is-expanded {
+  width: 260px;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
 }
 
+.mdc-navigation-rail:hover .rail-header-text,
+.mdc-navigation-rail:hover .rail-footer-text,
+.mdc-navigation-rail.is-expanded .rail-header-text,
+.mdc-navigation-rail.is-expanded .rail-footer-text {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* 展开或二级菜单激活时彻底移除竖向标题占位，避免挤压导致项目折行 */
+.mdc-navigation-rail:hover .rail-vertical-title,
+.mdc-navigation-rail.is-expanded .rail-vertical-title,
+.mdc-navigation-rail.mobile-open .rail-vertical-title {
+  display: none !important;
+}
+
+/* 在 72px 紧凑态下文本彻底 display: none，从文档流中完全移除，杜绝宽度溢出与任何异常缩进折行 */
+.rail-item-text {
+  display: none !important;
+  margin-left: 16px !important;
+  white-space: nowrap !important;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 展开或二级菜单激活时展示文本 */
+.mdc-navigation-rail:hover .rail-item-text,
+.mdc-navigation-rail.is-expanded .rail-item-text,
+.mdc-navigation-rail.mobile-open .rail-item-text,
+.secondary-overlay-panel .rail-item-text {
+  display: inline-block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* 图标在任何状态下都保持固定 24x24 尺寸，零外边距 */
+.rail-item-icon {
+  width: 24px !important;
+  height: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  color: var(--mdc-theme-primary, #6750a4);
+  flex-shrink: 0;
+  font-size: 24px !important;
+}
+
+/* 一级导航项固定左右各 24px 内边距 (24+24+24=72px 绝对对称居中) */
+.rail-nav-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 48px !important;
+  padding: 0 24px !important;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+.rail-nav-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* 🌟 Google M3 官方规范：导航栏激活药丸/项强制使用 Secondary Container */
+.rail-nav-item.is-active {
+  background-color: var(--mdc-theme-secondary-container, #e8def8) !important;
+  color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+  font-weight: 700;
+}
+
+.rail-nav-item.is-active .rail-item-icon {
+  color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+}
+
+/* 抽屉导航常驻主容器 (纵向两端完全对齐均匀分布) */
 .drawer-nav-section {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   height: 100%;
   width: 100%;
+  justify-content: space-between;
+  align-items: center;
   position: relative;
+  z-index: 1;
+  overflow: hidden !important;
+  box-sizing: border-box;
+  padding: 0 0 8px 0;
 }
 
-// 顶部 Brand Header
+/* 顶部 Brand Header (点击触发调色盘水波纹) */
 .rail-header {
-  height: 72px;
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  min-height: 64px;
+  width: 100%;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  color: var(--mdc-theme-on-primary, #ffffff);
+  flex-shrink: 0;
   cursor: pointer;
   user-select: none;
-  background: inherit;
-  flex-shrink: 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease;
 }
 
 .rail-header-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50% !important;
-  background-color: var(--mdc-theme-primary, #6750a4);
-  color: var(--mdc-theme-on-primary, #ffffff);
+  background: rgba(255, 255, 255, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   font-size: 15px;
   flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .rail-header-text {
-  margin-left: 14px;
+  margin-left: 12px;
+  overflow: hidden;
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: translateX(-10px);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-// 竖排动态标题 (Writing Mode: vertical-rl)
+/* 核心：上/下双竖向动态文字标题 (宽度占侧边栏 72%，字号加大，纵向居中) */
 .rail-vertical-title {
+  width: 72% !important;
+  max-width: 52px;
+  min-height: 40px;
+  max-height: 140px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  letter-spacing: 5px;
-  font-size: 13.5px;
-  font-weight: 800;
+  letter-spacing: 4px;
+  font-size: 14px !important;
+  font-weight: 800 !important;
   color: var(--mdc-theme-primary, #6750a4);
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  width: $mdc-rail-width-collapsed;
+  padding: 8px 0;
+  margin: 6px auto !important;
   text-align: center;
   user-select: none;
-  pointer-events: none;
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  opacity: 0.95;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.25s ease, color 0.3s ease;
+}
+
+/* 一级导航菜单容器 (绝对居中，置于顶层，覆盖过长文本) */
+.drawer-nav-section .rail-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 0;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  overflow-x: hidden !important;
+  scrollbar-width: none;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
   z-index: 10;
+  background-color: var(--mdc-theme-surface, #ffffff);
+}
+
+.drawer-nav-section .rail-nav-list::-webkit-scrollbar {
+  display: none;
 }
 
 #railVerticalTitleTop {
-  top: 80px;
+  position: absolute;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0 !important;
+  z-index: 1;
 }
 
+/* 第二标题精准对齐在底部正方形控制栏上方 */
 #railVerticalTitleBottom {
-  bottom: 72px; // 精准悬浮在底部正方形上方
+  position: absolute;
+  bottom: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0 !important;
+  z-index: 1;
 }
 
-// 导航列表与条目
-.rail-nav-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px 0;
+/* 二级面板列表与内容区域上下居中 */
+.secondary-overlay-panel .rail-nav-list {
   flex: 1;
-  justify-content: center;
-  align-items: center;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 12px 0 !important;
+  width: 100% !important;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  margin: auto 0;
 }
 
-.rail-nav-item {
-  display: flex;
-  align-items: center;
-  height: 48px;
-  width: 100%;
-  padding: 0 24px;
-  color: inherit;
-  text-decoration: none;
-  cursor: pointer;
-  user-select: none;
-  border-radius: 0;
-  transition: background-color 0.2s ease;
-  position: relative;
-  overflow: hidden;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
+.secondary-overlay-content {
+  flex: 1;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  padding: 20px 16px !important;
+  min-height: 0;
+  overflow-y: auto;
 }
 
-.dark-theme .rail-nav-item:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+/* 二级面板内的导航项样式 (完全无缩进瑕疵) */
+.secondary-overlay-panel .rail-nav-item {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  height: 46px !important;
+  padding: 0 20px !important;
+  box-sizing: border-box !important;
 }
 
-.rail-item-icon {
-  font-size: 24px;
-  flex-shrink: 0;
-  width: 24px;
-  text-align: center;
+.secondary-overlay-panel .rail-nav-item .rail-item-icon {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  flex-shrink: 0 !important;
 }
 
-.rail-item-text {
-  margin-left: 20px;
-  white-space: nowrap;
-  font-size: 14px;
-  font-weight: 600;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateX(-10px);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+.secondary-overlay-panel .rail-nav-item .rail-item-text {
+  margin-left: 14px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  white-space: nowrap !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
 }
 
-// 底部控制栏 (正方形纯直角面板)
+/* 底部控制面板 */
 .rail-footer {
-  height: 72px;
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
+  padding: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
   background: inherit;
   flex-shrink: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
 }
 
 .rail-footer-text {
-  width: 100%;
-  white-space: nowrap;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: translateX(-10px);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-// 二级覆层抽屉面板 (水波纹展开覆盖)
+/* =========================================================================
+ * 二级覆层菜单体系 (水波纹扩散覆盖一级菜单 ✖ 提供返回按钮)
+ * ========================================================================= */
 .secondary-overlay-panel {
   position: absolute;
   top: 0;
   left: 0;
-  width: $mdc-rail-width-expanded;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background-color: var(--mdc-theme-surface, #ffffff);
-  color: var(--mdc-theme-on-surface, #1d1b20);
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
+  z-index: 1005;
   display: none;
   flex-direction: column;
   justify-content: space-between;
-  z-index: 1005;
-  &.anim-in {
-    display: flex !important;
-    animation: rippleExpandOverlay 0.35s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
-  }
-
-  &.anim-out {
-    display: flex !important;
-    animation: rippleDismissOverlay 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  }
+  overflow-y: auto;
+  scrollbar-width: none;
+  will-change: clip-path, opacity;
 }
 
-.dark-theme .secondary-overlay-panel {
-  background-color: #19181e;
+.secondary-overlay-panel::-webkit-scrollbar {
+  display: none;
+}
+
+.secondary-overlay-panel.anim-in {
+  display: flex !important;
+  opacity: 1 !important;
+  animation: rippleExpandOverlay 0.35s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+}
+
+.secondary-overlay-panel.anim-out {
+  display: flex !important;
+  animation: rippleDismissOverlay 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes rippleExpandOverlay {
@@ -254,8 +349,12 @@ $mdc-rail-width-expanded: 260px !default;
     clip-path: circle(0% at var(--ripple-origin-x, 36px) var(--ripple-origin-y, 40px));
     opacity: 0.5;
   }
-  100% {
+  99% {
     clip-path: circle(150% at var(--ripple-origin-x, 36px) var(--ripple-origin-y, 40px));
+    opacity: 1;
+  }
+  100% {
+    clip-path: none;
     opacity: 1;
   }
 }
@@ -271,19 +370,13 @@ $mdc-rail-width-expanded: 260px !default;
   }
 }
 
-.secondary-overlay-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: stretch;
-  padding: 16px;
-  overflow-y: auto;
-}
-
 .overlay-top-bar {
-  padding: 14px 16px;
-  background-color: var(--mdc-theme-primary, #6750a4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 54px;
+  padding: 8px 12px;
+  background: var(--mdc-theme-primary, #6750a4);
   color: var(--mdc-theme-on-primary, #ffffff);
   flex-shrink: 0;
 }
@@ -305,67 +398,87 @@ $mdc-rail-width-expanded: 260px !default;
   justify-content: center;
 }
 
-// 移动端适配
-.mobile-drawer-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 998;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
+.dark-theme .mdc-navigation-rail {
+  background-color: var(--mdc-theme-surface, #19181e);
+  border-right-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.6);
+}
 
-  &.is-active {
+.dark-theme .secondary-overlay-panel {
+  background-color: #19181e;
+}
+
+/* 移动端 (< 600px)：左边缘向右滑动 / 静止悬浮按钮呼出 */
+@media (max-width: 599.9px) {
+  .mdc-navigation-rail {
+    display: flex !important;
+    transform: translateX(-100%);
+    width: 260px !important;
+    box-shadow: none;
+    transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1), box-shadow 0.3s ease;
+    z-index: 99999;
+  }
+
+  .mdc-navigation-rail.mobile-open {
+    transform: translateX(0) !important;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .mdc-navigation-rail.mobile-open .rail-header-text,
+  .mdc-navigation-rail.mobile-open .rail-item-text,
+  .mdc-navigation-rail.mobile-open .rail-footer-text {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .mdc-navigation-rail.mobile-open .rail-vertical-title {
+    display: none !important;
+  }
+
+  .mdc-navigation-rail.mobile-open .rail-item-icon {
+    margin-left: 0 !important;
+    margin-right: 16px !important;
+  }
+
+  .mobile-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99990;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .mobile-drawer-backdrop.is-active {
     opacity: 1;
     pointer-events: auto;
   }
-}
-
-.mobile-floating-menu-btn {
-  position: fixed;
-  bottom: 24px;
-  left: 20px;
-  width: 48px;
-  height: 48px;
-  border-radius: 50% !important;
-  background-color: var(--mdc-theme-primary, #6750a4);
-  color: var(--mdc-theme-on-primary, #ffffff);
-  border: none;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 990;
-  cursor: pointer;
-  opacity: 0;
-  pointer-events: none;
-  transform: scale(0.8);
-  transition: opacity 0.3s cubic-bezier(0.2, 0.8, 0.25, 1),
-              transform 0.3s cubic-bezier(0.2, 0.8, 0.25, 1);
-}
-
-body.page-is-idle .mobile-floating-menu-btn {
-  opacity: 1;
-  pointer-events: auto;
-  transform: scale(1);
-}
-
-@media (max-width: 599.9px) {
-  .mdc-navigation-rail {
-    transform: translateX(-100%);
-    width: $mdc-rail-width-expanded !important;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-    &.mobile-open {
-      transform: translateX(0);
-      box-shadow: 6px 0 28px rgba(0, 0, 0, 0.4);
-    }
-  }
 
   .mobile-floating-menu-btn {
-    display: flex;
+    display: flex !important;
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 9000;
+    background-color: var(--mdc-theme-primary, #6750a4);
+    color: var(--mdc-theme-on-primary, #ffffff);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    border-radius: 50% !important;
+    width: 48px;
+    height: 48px;
+    opacity: 0;
+    transform: scale(0.8) translateY(16px);
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0, 0, 0.2, 1),
+                transform 0.35s cubic-bezier(0, 0, 0.2, 1),
+                background-color 0.3s ease;
+  }
+
+  body.page-is-idle .mobile-floating-menu-btn {
+    opacity: 0.95;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
   }
 }

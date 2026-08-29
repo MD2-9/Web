@@ -1,5 +1,6 @@
 //
 // Copyright 2016 Google Inc. All Rights Reserved.
+// Copyright 2026 unjal <unjal29@outlook.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,61 +15,94 @@
 // limitations under the License.
 //
 
-@import "@material/ripple/common";
-@import "@material/ripple/mixins";
-@import "./mixins";
-@import "./variables";
-
-// postcss-bem-linter: define button
 .mdc-button {
-  @include mdc-button-base_;
-  @include mdc-button-corner-radius(0px);
-  @include mdc-button-container-fill-color(transparent);
-  @include mdc-button-ink-color(primary);
-  @include mdc-states(primary);
-
-  // The icon CSS class overrides styles defined in the .material-icons CSS
-  // class, which is loaded separately so the order of CSS definitions is not
-  // guaranteed. Therefore, increase specifity by nesting this class to ensure
-  // overrides apply.
-  .mdc-button__icon {
-    @include mdc-button__icon_;
-  }
-
-  // stylelint-disable-next-line selector-no-qualifying-type
-  svg.mdc-button__icon {
-    @include mdc-button__icon-svg_;
-  }
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.0892857143em;
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 0 16px;
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 64px;
+  height: 36px;
+  border: none;
+  outline: none;
+  line-height: inherit;
+  user-select: none;
+  -webkit-appearance: none;
+  overflow: hidden;
+  vertical-align: middle;
+  border-radius: 0 !important;
+  background-color: transparent;
+  color: var(--mdc-theme-primary, #6750a4);
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
 }
 
-.mdc-button--raised,
-.mdc-button--unelevated,
-.mdc-button--stroked {
-  .mdc-button__icon {
-    // Icons inside contained buttons have different styles due to increased button padding
-    @include mdc-button__icon-contained_;
-  }
+.mdc-button:hover {
+  background-color: rgba(103, 80, 164, 0.08);
+}
+
+.mdc-button__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
 }
 
 .mdc-button--raised,
 .mdc-button--unelevated {
-  @include mdc-button--filled_;
-  @include mdc-button-container-fill-color(primary);
-  @include mdc-button-ink-color(text-primary-on-primary);
-  @include mdc-states(text-primary-on-primary);
+  background-color: var(--mdc-theme-primary, #6750a4) !important;
+  color: var(--mdc-theme-on-primary, #ffffff) !important;
 }
 
 .mdc-button--raised {
-  @include mdc-button--raised_;
+  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+  transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease;
 }
 
+.mdc-button--raised:hover {
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+}
+
+.mdc-button--outlined,
 .mdc-button--stroked {
-  @include mdc-button--stroked_;
-  @include mdc-button-stroke-width(2px);
-  @include mdc-button-stroke-color(primary);
+  border: 1px solid var(--mdc-theme-primary, #6750a4) !important;
+  color: var(--mdc-theme-primary, #6750a4) !important;
+  background-color: transparent !important;
+}
+
+.mdc-button--outlined:hover,
+.mdc-button--stroked:hover {
+  background-color: rgba(103, 80, 164, 0.08) !important;
 }
 
 .mdc-button--dense {
-  @include mdc-button--dense_;
+  height: 32px;
+  font-size: 13px;
+  padding: 0 8px;
 }
-// postcss-bem-linter: end
+
+.dark-theme .mdc-button {
+  color: var(--mdc-theme-primary, #d0bcff);
+}
+
+.dark-theme .mdc-button--raised,
+.dark-theme .mdc-button--unelevated {
+  background-color: var(--mdc-theme-primary, #d0bcff) !important;
+  color: #000000 !important;
+}
+
+.dark-theme .mdc-button--outlined,
+.dark-theme .mdc-button--stroked {
+  border-color: var(--mdc-theme-primary, #d0bcff) !important;
+  color: var(--mdc-theme-primary, #d0bcff) !important;
+}

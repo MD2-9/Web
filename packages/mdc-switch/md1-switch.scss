@@ -12,13 +12,13 @@
   cursor: pointer;
   position: relative;
   user-select: none;
+}
 
-  input {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
+.md1-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .md1-switch-track {
@@ -50,9 +50,9 @@
 
 .md1-switch input:checked + .md1-switch-track {
   background-color: rgba(103, 80, 164, 0.5);
+}
 
-  .md1-switch-thumb {
-    transform: translateX(20px);
-    background-color: var(--mdc-theme-primary, #6750a4);
-  }
+.md1-switch input:checked + .md1-switch-track .md1-switch-thumb {
+  transform: translateX(20px);
+  background-color: var(--mdc-theme-primary, #6750a4);
 }

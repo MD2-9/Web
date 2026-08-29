@@ -2,15 +2,14 @@
 // Copyright 2026 unjal <unjal29@outlook.com>
 // Licensed under the Apache License, Version 2.0
 //
-// Material Components Web - Badges (Dot and Count Badges)
+// Material Components Web - Badges (Dot and Count Badges - M3 Tertiary Edition)
 //
-
-@import "@material/theme/variables";
-@import "@material/theme/mixins";
 
 .badge-container {
   position: relative;
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .badge-dot {
@@ -19,26 +18,22 @@
   right: -2px;
   width: 8px;
   height: 8px;
-  background-color: var(--mdc-theme-error, #b3261e);
+  background-color: var(--mdc-theme-tertiary, #7d5260);
   border-radius: 50% !important;
-  border: 1.5px solid var(--mdc-theme-surface, #ffffff);
-  box-sizing: content-box;
+  pointer-events: none;
 }
 
 .badge-number {
   position: absolute;
-  top: -6px;
+  top: -4px;
   right: -6px;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
-  background-color: var(--mdc-theme-error, #b3261e);
-  color: #ffffff;
+  background-color: var(--mdc-theme-tertiary, #7d5260);
+  color: var(--mdc-theme-on-tertiary, #ffffff);
   font-size: 10px;
-  font-weight: bold;
-  line-height: 16px;
-  text-align: center;
-  border-radius: 8px !important;
-  border: 1.5px solid var(--mdc-theme-surface, #ffffff);
-  box-sizing: border-box;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 10px !important;
+  line-height: 1.2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
 }

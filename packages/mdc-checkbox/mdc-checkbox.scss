@@ -1,5 +1,6 @@
 //
 // Copyright 2016 Google Inc. All Rights Reserved.
+// Copyright 2026 unjal <unjal29@outlook.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,110 +15,91 @@
 // limitations under the License.
 //
 
-@import "@material/ripple/common";
-@import "@material/ripple/mixins";
-@import "./mixins";
-@import "./variables";
-
-// postcss-bem-linter: define checkbox
-
 .mdc-checkbox {
-  @include mdc-checkbox-base_;
-  @include mdc-ripple-surface;
-  @include mdc-states($mdc-checkbox-baseline-theme-color);
-  @include mdc-ripple-radius-unbounded;
-}
-
-@at-root {
-  @include mdc-checkbox-ink-color($mdc-checkbox-mark-color);
-  @include mdc-checkbox-focus-indicator-color($mdc-checkbox-baseline-theme-color);
-  @include mdc-checkbox-container-colors;
-  @include mdc-checkbox-disabled-container-color_;
-}
-
-// Needed to disable hover effects on CSS-only (non-JS) checkboxes
-.mdc-checkbox--disabled {
-  @include mdc-checkbox--disabled_;
-}
-
-.mdc-checkbox__background {
-  @include mdc-checkbox__background_;
-}
-
-.mdc-checkbox__checkmark {
-  @include mdc-checkbox__checkmark_;
-}
-
-.mdc-checkbox__checkmark-path {
-  @include mdc-checkbox__checkmark-path_;
-}
-
-.mdc-checkbox__mixedmark {
-  @include mdc-checkbox__mixedmark_;
-}
-
-// JS checkbox
-.mdc-checkbox--upgraded {
-  .mdc-checkbox__background,
-  .mdc-checkbox__checkmark,
-  .mdc-checkbox__checkmark-path,
-  .mdc-checkbox__mixedmark {
-    @include mdc-checkbox__child--upgraded_;
-  }
-}
-
-.mdc-checkbox--anim {
-  @include mdc-checkbox--anim_;
-}
-
-.mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
-.mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
-  @include mdc-checkbox__background--marked_;
-
-  .mdc-checkbox__checkmark-path {
-    @include mdc-checkbox__checkmark-path--marked_;
-  }
-}
-
-// The frame's ::before element is used as a focus indicator for the checkbox
-.mdc-checkbox__background::before {
-  @include mdc-checkbox__focus-indicator_;
-}
-
-.mdc-ripple-upgraded--unbounded .mdc-checkbox__background::before {
-  @include mdc-checkbox__focus-indicator--ripple-upgraded-unbounded_;
-}
-
-.mdc-checkbox__native-control:focus ~ .mdc-checkbox__background::before {
-  @include mdc-checkbox__focus-indicator--focused_;
+  display: inline-block;
+  position: relative;
+  flex: 0 0 18px;
+  box-sizing: content-box;
+  width: 18px;
+  height: 18px;
+  padding: 11px;
+  line-height: 0;
+  white-space: nowrap;
+  cursor: pointer;
+  vertical-align: bottom;
 }
 
 .mdc-checkbox__native-control {
-  @include mdc-checkbox__native-control_;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: inherit;
+  z-index: 1;
+}
 
-  &:disabled {
-    @include mdc-checkbox--disabled_;
-  }
+.mdc-checkbox__background {
+  display: inline-flex;
+  position: absolute;
+  top: 11px;
+  left: 11px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(0, 0, 0, 0.54);
+  border-radius: 0 !important;
+  background-color: transparent;
+  pointer-events: none;
+  transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark-theme .mdc-checkbox__background {
+  border-color: rgba(255, 255, 255, 0.7);
 }
 
 .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background {
-  .mdc-checkbox__checkmark {
-    @include mdc-checkbox__checkmark--checked_;
-  }
-
-  .mdc-checkbox__mixedmark {
-    @include mdc-checkbox__mixedmark--checked_;
-  }
+  background-color: var(--mdc-theme-primary, #6750a4);
+  border-color: var(--mdc-theme-primary, #6750a4);
 }
 
-.mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
-  .mdc-checkbox__checkmark {
-    @include mdc-checkbox__checkmark--indeterminate_;
-  }
-
-  .mdc-checkbox__mixedmark {
-    @include mdc-checkbox__mixedmark--indeterminate_;
-  }
+.mdc-checkbox__checkmark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  fill: none;
+  stroke: var(--mdc-theme-on-primary, #ffffff);
+  stroke-width: 3.12px;
+  stroke-dasharray: 29.7833385;
+  stroke-dashoffset: 29.7833385;
 }
 
-// postcss-bem-linter: end
+.mdc-checkbox__native-control:checked ~ .mdc-checkbox__background .mdc-checkbox__checkmark {
+  opacity: 1;
+  stroke-dashoffset: 0;
+}
+
+.mdc-checkbox__checkmark-path {
+  stroke: var(--mdc-theme-on-primary, #ffffff) !important;
+  stroke-width: 3.12px;
+}
+
+.dark-theme .mdc-checkbox__checkmark-path {
+  stroke: #000000 !important;
+}
+
+.mdc-form-field {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}

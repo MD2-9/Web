@@ -5,18 +5,15 @@
 // Material Components Web - Tooltips (0px Straight Angle Edition)
 //
 
-@import "@material/theme/variables";
-@import "@material/theme/mixins";
-
 .tooltip-wrapper {
   position: relative;
   display: inline-flex;
+}
 
-  &:hover .tooltip-box {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-  }
+.tooltip-wrapper:hover .tooltip-box {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }
 
 .tooltip-box {

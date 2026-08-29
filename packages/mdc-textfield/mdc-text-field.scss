@@ -1,5 +1,6 @@
 //
 // Copyright 2017 Google Inc. All Rights Reserved.
+// Copyright 2026 unjal <unjal29@outlook.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,344 +15,178 @@
 // limitations under the License.
 //
 
-@import "@material/animation/variables";
-@import "@material/floating-label/mdc-floating-label";
-@import "@material/line-ripple/mdc-line-ripple";
-@import "@material/notched-outline/mdc-notched-outline";
-@import "@material/ripple/common";
-@import "@material/ripple/mixins";
-@import "@material/rtl/mixins";
-@import "@material/theme/variables";
-@import "@material/typography/mixins";
-@import "@material/typography/variables";
-@import "./functions";
-@import "./helper-text/mdc-text-field-helper-text";
-@import "./icon/mdc-text-field-icon";
-@import "./mixins";
-@import "./variables";
-
-// postcss-bem-linter: define text-field
-
+/* =========================================================================
+ * 1. MDC 标准填充型输入框 (Filled Text Field)
+ * ========================================================================= */
 .mdc-text-field {
-  @include mdc-text-field-bottom-line-color($mdc-text-field-underline-idle);
-  @include mdc-text-field-hover-bottom-line-color($mdc-text-field-underline-hover);
-  @include mdc-text-field-line-ripple-color_(primary);
-  @include mdc-text-field-ink-color(text-primary-on-background);
-  @include mdc-text-field-label-color($mdc-text-field-label);
-  @include mdc-text-field-helper-text-color(text-hint-on-background);
-  @include mdc-text-field-fullwidth-bottom-line-color($mdc-text-field-divider);
-  @include mdc-text-field-icon-color($mdc-text-field-underline-hover);
-
-  display: inline-block;
   position: relative;
-  margin-bottom: 8px;
-  will-change: opacity, transform, color;
-}
-
-.mdc-text-field__input {
-  @include mdc-typography-base;
-  // We use only a subset of the MDC typography values here as changing things such as line-height
-  // affects how the labels are transformed.
-  // TODO: Re-add setting the font-size from mdc-typography-styles (currently
-  // setting it here has no effect because it is overriden by the font-size
-  // given below).
-  @each $prop in (letter-spacing) {
-    #{$prop}: map-get(map-get($mdc-typography-styles, subheading2), $prop);
-  }
-
-  width: 100%;
-  padding: 20px 0 8px;
-  transition: mdc-text-field-transition(opacity);
-  border: none;
-  border-bottom: 1px solid;
-  border-radius: 0;
-  background: none;
-  font-size: inherit;
-  appearance: none;
-
-  &::placeholder {
-    transition: mdc-text-field-transition(color);
-    opacity: 1;
-  }
-
-  &:focus {
-    outline: none;
-  }
-
-  // Remove red outline on firefox
-  &:invalid {
-    box-shadow: none;
-  }
-
-  // Move label when text-field gets autofilled in Chrome
-  // stylelint-disable plugin/selector-bem-pattern
-  &:-webkit-autofill + .mdc-floating-label {
-    transform: translateY(-100%) scale(.75);
-    cursor: auto;
-  }
-  // stylelint-enable plugin/selector-bem-pattern
-}
-
-.mdc-text-field--outlined {
-  @include mdc-text-field-outlined_;
-}
-
-.mdc-text-field--outlined.mdc-text-field--focused {
-  @include mdc-text-field-outlined-focused_;
-}
-
-.mdc-text-field--outlined.mdc-text-field--disabled {
-  @include mdc-text-field-outlined-disabled_;
-}
-
-.mdc-text-field--outlined.mdc-text-field--dense {
-  @include mdc-text-field-outlined-dense_;
-}
-
-.mdc-text-field--box {
-  @include mdc-text-field-box_;
-}
-
-.mdc-text-field--box.mdc-text-field--disabled {
-  @include mdc-text-field-box-disabled_;
-}
-
-.mdc-text-field--box.mdc-text-field--dense {
-  @include mdc-text-field-box-dense_;
-}
-
-.mdc-text-field--with-leading-icon {
-  @include mdc-text-field-with-leading-icon_;
-}
-
-.mdc-text-field--with-leading-icon.mdc-text-field--outlined {
-  @include mdc-text-field-outlined-with-leading-icon_;
-}
-
-.mdc-text-field--with-leading-icon.mdc-text-field--outlined.mdc-text-field--dense {
-  @include mdc-text-field-outlined-dense-with-leading-icon_;
-}
-
-.mdc-text-field--with-trailing-icon {
-  @include mdc-text-field-with-trailing-icon_;
-}
-
-// stylelint-disable plugin/selector-bem-pattern
-.mdc-text-field--with-leading-icon.mdc-text-field--dense .mdc-text-field__icon,
-.mdc-text-field--with-trailing-icon.mdc-text-field--dense .mdc-text-field__icon {
-  bottom: 16px;
-  transform: scale(.8);
-}
-// stylelint-enable plugin/selector-bem-pattern
-
-.mdc-text-field--with-leading-icon.mdc-text-field--dense {
-  @include mdc-text-field-dense-with-leading-icon_;
-}
-
-.mdc-text-field--with-trailing-icon.mdc-text-field--dense {
-  @include mdc-text-field-dense-with-trailing-icon_;
-}
-
-.mdc-text-field--upgraded:not(.mdc-text-field--fullwidth):not(.mdc-text-field--box) {
   display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 56px;
+  background-color: rgba(0, 0, 0, 0.04);
+  border-bottom: 2px solid var(--mdc-theme-primary, #6750a4);
+  border-radius: 0 !important;
+  vertical-align: middle;
+}
+
+.dark-theme .mdc-text-field {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-bottom-color: var(--mdc-theme-primary, #d0bcff);
+}
+
+.mdc-text-field .mdc-text-field__icon,
+.mdc-text-field--with-leading-icon .mdc-text-field__icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--mdc-theme-primary, #6750a4);
+  font-size: 20px;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 2;
+  margin: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dark-theme .mdc-text-field .mdc-text-field__icon,
+.dark-theme .mdc-text-field--with-leading-icon .mdc-text-field__icon {
+  color: var(--mdc-theme-primary, #d0bcff);
+}
+
+.mdc-text-field--with-leading-icon .mdc-text-field__input {
+  padding-left: 44px !important;
+  padding-right: 14px !important;
+  padding-top: 18px !important;
+  padding-bottom: 6px !important;
+  width: 100%;
+  height: 100%;
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+  color: inherit;
+  box-sizing: border-box;
+}
+
+.mdc-text-field--with-leading-icon .mdc-floating-label {
+  position: absolute;
+  left: 44px;
+  top: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--mdc-theme-primary, #6750a4);
+  pointer-events: none;
+  line-height: 1;
+  transform: none !important;
+}
+
+.dark-theme .mdc-text-field--with-leading-icon .mdc-floating-label {
+  color: var(--mdc-theme-primary, #d0bcff);
+}
+
+/* =========================================================================
+ * 2. MDC 标准描边型输入框 (Outlined Text Field)
+ * ========================================================================= */
+.mdc-text-field--outlined {
+  background: transparent !important;
+  border: 1px solid var(--mdc-theme-primary, #6750a4) !important;
+  border-radius: 0 !important;
+  height: 56px;
   position: relative;
-  align-items: flex-end;
   box-sizing: border-box;
-  margin-top: 16px;
-
-  // stylelint-disable-next-line selector-max-specificity
-  &:not(.mdc-text-field--textarea):not(.mdc-text-field--outlined) {
-    height: 48px;
-  }
+  overflow: visible !important;
+  transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-width 0.1s ease;
 }
 
-.mdc-text-field--dense {
-  @include mdc-text-field-dense_;
+.dark-theme .mdc-text-field--outlined {
+  border-color: var(--mdc-theme-primary, #d0bcff) !important;
 }
 
-@include mdc-required-text-field-label-asterisk_ {
-  margin-left: 1px;
-  content: "*";
+.mdc-text-field--outlined:focus-within,
+.mdc-text-field--outlined.mdc-text-field--focused {
+  border-width: 2px !important;
 }
 
-.mdc-text-field--textarea {
-  @include mdc-text-field-textarea_;
+.mdc-text-field--outlined .mdc-text-field__icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  line-height: 1;
+  color: var(--mdc-theme-primary, #6750a4);
+  pointer-events: none;
+  z-index: 2;
+  margin: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.mdc-text-field--fullwidth {
-  @include mdc-text-field-fullwidth_;
+.dark-theme .mdc-text-field--outlined .mdc-text-field__icon {
+  color: var(--mdc-theme-primary, #d0bcff);
 }
 
-.mdc-text-field--fullwidth.mdc-text-field--invalid {
-  @include mdc-text-field-fullwidth-invalid_;
-}
-
-// postcss-bem-linter: define text-field-helper-text
-
-.mdc-text-field-helper-text {
-  // stylelint-disable plugin/selector-bem-pattern
-  .mdc-text-field--dense + & {
-    margin-bottom: 4px;
-  }
-
-  .mdc-text-field--box + &,
-  .mdc-text-field--outlined + & {
-    margin-right: 16px;
-    margin-left: 16px;
-  }
-
-  // stylelint-enable plugin/selector-bem-pattern
-}
-
-// postcss-bem-linter: end
-
-// mdc-form-field tweaks to align text field label correctly
-// stylelint-disable selector-max-type
-.mdc-form-field > .mdc-text-field + label {
-  align-self: flex-start;
-}
-// stylelint-enable selector-max-type
-
-.mdc-text-field--focused {
-  @include mdc-text-field-focused_;
-}
-
-.mdc-text-field--textarea.mdc-text-field--focused {
-  @include mdc-text-field-textarea-stroke-color(primary);
-}
-
-.mdc-text-field--invalid {
-  @include mdc-text-field-invalid_;
-}
-
-.mdc-text-field--textarea.mdc-text-field--invalid {
-  @include mdc-text-field-textarea-invalid_;
-}
-
-.mdc-text-field--outlined.mdc-text-field--invalid {
-  @include mdc-text-field-outlined-invalid_;
-}
-
-.mdc-text-field--disabled {
-  @include mdc-text-field-disabled_;
-}
-
-.mdc-text-field--textarea.mdc-text-field--disabled {
-  @include mdc-text-field-textarea-disabled_;
-}
-
-@include mdc-floating-label-shake-keyframes(text-field-box, $mdc-text-field-box-label-position-y);
-@include mdc-floating-label-shake-keyframes(text-field-box-dense, $mdc-text-field-box-dense-label-position-y, 0%, $mdc-text-field-dense-label-scale);
-@include mdc-floating-label-shake-keyframes(text-field-outlined, $mdc-text-field-outlined-label-position-y);
-@include mdc-floating-label-shake-keyframes(text-field-outlined-dense, $mdc-text-field-outlined-dense-label-position-y, 0%, $mdc-text-field-dense-label-scale);
-@include mdc-floating-label-shake-keyframes(text-field-outlined-leading-icon, $mdc-text-field-outlined-label-position-y, $mdc-text-field-outlined-with-leading-icon-label-position-x);
-@include mdc-floating-label-shake-keyframes(text-field-outlined-leading-icon-dense, $mdc-text-field-outlined-dense-label-position-y, $mdc-text-field-outlined-dense-with-leading-icon-label-position-x, $mdc-text-field-dense-label-scale);
-@include mdc-floating-label-shake-keyframes(textarea, $mdc-text-field-textarea-label-position-y, 0%, $mdc-text-field-textarea-label-scale);
-
-// Outlined Text Field with Leading Icon enhancements (0px Straight Angle)
-.mdc-text-field--outlined.mdc-text-field--with-leading-icon {
-  border-radius: 0;
-  height: 56px;
+.mdc-text-field--outlined .mdc-text-field__input {
+  height: 100% !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 54px !important;
+  padding-left: 44px !important;
+  padding-right: 14px !important;
+  font-size: 14px !important;
+  width: 100%;
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: inherit;
   box-sizing: border-box;
-
-  .mdc-text-field__icon {
-    position: absolute;
-    left: 14px;
-    top: 51%;
-    transform: translateY(-50%);
-    font-size: 20px;
-    pointer-events: none;
-    z-index: 2;
-    margin: 0;
-  }
-
-  .mdc-text-field__input {
-    height: 100%;
-    padding-top: 0;
-    padding-bottom: 0;
-    line-height: 54px;
-    padding-left: 44px;
-    padding-right: 14px;
-    font-size: 14px;
-    font-family: inherit;
-    box-sizing: border-box;
-  }
-
-  .mdc-floating-label {
-    position: absolute;
-    top: -8px;
-    left: 12px;
-    width: auto;
-    max-width: fit-content;
-    height: auto;
-    display: inline-block;
-    background-color: var(--mdc-theme-surface, #ffffff);
-    padding: 0 4px;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--mdc-theme-primary);
-    z-index: 5;
-    transform: none;
-    line-height: 1;
-    pointer-events: none;
-  }
+  display: block;
 }
 
-// Filled Text Field with Leading Icon enhancements (0px Straight Angle & 56px standard height)
-.mdc-text-field:not(.mdc-text-field--outlined).mdc-text-field--with-leading-icon {
-  border-radius: 0;
-  height: 56px;
-  background: rgba(0, 0, 0, 0.04);
-  box-sizing: border-box;
-
-  .mdc-text-field__icon {
-    position: absolute;
-    left: 14px;
-    top: 48%;
-    transform: translateY(-50%);
-    font-size: 20px;
-    pointer-events: none;
-    z-index: 2;
-    margin: 0;
-  }
-
-  .mdc-text-field__input {
-    height: 100%;
-    padding-top: 18px;
-    padding-bottom: 4px;
-    padding-left: 44px;
-    padding-right: 14px;
-    font-size: 14px;
-    font-family: inherit;
-    box-sizing: border-box;
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
-    background: transparent;
-  }
-
-  .mdc-floating-label {
-    position: absolute;
-    top: 6px;
-    left: 44px;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--mdc-theme-primary);
-    transform: none;
-    line-height: 1.2;
-    pointer-events: none;
-  }
+.mdc-text-field--outlined .mdc-floating-label {
+  position: absolute !important;
+  top: -8px !important;
+  left: 12px !important;
+  bottom: auto !important;
+  right: auto !important;
+  width: auto !important;
+  max-width: fit-content !important;
+  height: 16px !important;
+  line-height: 16px !important;
+  padding: 0 4px !important;
+  margin: 0 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--mdc-theme-primary, #6750a4) !important;
+  background-color: var(--mdc-theme-surface, #ffffff) !important;
+  z-index: 5 !important;
+  transform: none !important;
+  pointer-events: none !important;
+  display: inline-block !important;
+  white-space: nowrap !important;
 }
 
-.dark-theme .mdc-text-field:not(.mdc-text-field--outlined).mdc-text-field--with-leading-icon {
-  background: rgba(255, 255, 255, 0.06);
-
-  .mdc-text-field__input {
-    border-bottom-color: rgba(255, 255, 255, 0.42);
-    color: #e6e1e5;
-  }
+.demo-card .mdc-text-field--outlined .mdc-floating-label {
+  background-color: var(--mdc-theme-surface, #ffffff) !important;
 }
 
-.dark-theme .mdc-text-field--outlined.mdc-text-field--with-leading-icon .mdc-floating-label {
-  background-color: #19181e;
-  color: var(--mdc-theme-primary);
+.dark-theme .mdc-text-field--outlined .mdc-floating-label {
+  background-color: var(--mdc-theme-surface, #19181e) !important;
+  color: var(--mdc-theme-primary, #d0bcff) !important;
+}
+
+.dark-theme .demo-card .mdc-text-field--outlined .mdc-floating-label {
+  background-color: var(--mdc-theme-surface-container, #131217) !important;
+}
+
+.mdc-text-field--outlined .mdc-line-ripple,
+.mdc-text-field--outlined .mdc-notched-outline {
+  display: none !important;
 }

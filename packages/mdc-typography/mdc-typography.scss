@@ -1,5 +1,6 @@
 //
 // Copyright 2017 Google Inc. All Rights Reserved.
+// Copyright 2026 unjal <unjal29@outlook.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,15 +15,69 @@
 // limitations under the License.
 //
 
-@import "./variables";
-@import "./mixins";
-
-.mdc-typography {
-  @include mdc-typography-base;
+@font-face {
+  font-family: 'Google Sans Flex';
+  font-style: normal;
+  font-weight: 100 1000;
+  font-stretch: 100%;
+  font-display: swap;
+  src: local('Google Sans Flex'), local('GoogleSansFlex'),
+       url('../fonts/google-sans-flex/GoogleSansFlex.woff2') format('woff2'),
+       url('../fonts/google-sans-flex/GoogleSansFlex.ttf') format('truetype');
 }
 
-@each $style in map-keys($mdc-typography-styles) {
-  .mdc-typography--#{$style} {
-    @include mdc-typography($style);
-  }
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'), local('MaterialIcons-Regular'),
+       url('../icons/material-icons/MaterialIcons-Regular.woff2') format('woff2'),
+       url('../icons/material-icons/MaterialIcons-Regular.woff') format('woff'),
+       url('/icons/material-icons/MaterialIcons-Regular.woff2') format('woff2'),
+       url('/icons/material-icons/MaterialIcons-Regular.woff') format('woff');
+}
+
+.material-icons,
+i.material-icons,
+span.material-icons,
+.material-icons *,
+.mdc-button__icon,
+.mdc-fab__icon,
+.rail-item-icon,
+[class*="material-icons"] {
+  font-family: 'Material Icons' !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga' 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga' 1;
+  user-select: none;
+}
+
+/* 排版展示表格 */
+.type-scale-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.type-scale-table th,
+.type-scale-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  text-align: left;
+}
+
+.dark-theme .type-scale-table th,
+.dark-theme .type-scale-table td {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
 }
