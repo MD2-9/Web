@@ -146,17 +146,48 @@ export class MdcNavigationRail {
     }
 
     initOverlayEvents() {
-      if (this.navSection) {
-        this.navSection.addEventListener('click', (e) => {
-          if (!e.target || typeof e.target.closest !== 'function' || !e.target.closest('.rail-nav-item, .rail-header, button, a, input, .mdc-button')) {
-            if (this.activeOverlayId) {
-              this.closeOverlay(this.activeOverlayId);
-            } else if (window.innerWidth < 600) {
-              this.closeMobileDrawer();
-            }
+      const isTextOrInteractive = (target) => {
+        if (!target || typeof target.closest !== 'function') return false;
+        const sel = typeof window.getSelection === 'function' ? window.getSelection().toString().trim() : '';
+        if (sel.length > 0) return true;
+        if (target.closest('a, button, input, select, textarea, .mdc-button, .segmented-button, .theme-tile, .theme-swatch, .rail-nav-item, .rail-header, .mobile-drawer-header, .rail-footer-icon-btn, .rail-footer-compact-btn, .mobile-drawer-footer-btn')) return true;
+        if (target.closest('p, h1, h2, h3, h4, h5, h6, label, span, strong, em, b, i, code, pre, small, .overlay-header-title, .rail-vertical-title, #pickerStepTitle, #pickerStepSub')) return true;
+        if (target.childNodes && target.childNodes.length > 0) {
+          for (let i = 0; i < target.childNodes.length; i++) {
+            const node = target.childNodes[i];
+            if (node.nodeType === Node.TEXT_NODE && node.nodeValue && node.nodeValue.trim().length > 0) return true;
           }
-        });
-      }
+        }
+        if (target.closest('.secondary-overlay-content > div, .secondary-overlay-content > p, .secondary-overlay-content > h4')) return true;
+        return false;
+      };
+
+      // 🌟 单点空白区域返回上一级或收起 (文本区域除外)
+      this.root.addEventListener('click', (e) => {
+        if (!e.target) return;
+        if (!isTextOrInteractive(e.target)) {
+          if (this.activeOverlayId) {
+            this.closeOverlay(this.activeOverlayId);
+          } else if (window.innerWidth < 600 || this.root.classList.contains('mobile-open')) {
+            this.closeMobileDrawer();
+          } else {
+            this.root.classList.remove('is-expanded');
+          }
+        }
+      });
+
+      // 🌟 右键返回机制 (Right Click Return)
+      this.root.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.activeOverlayId) {
+          this.closeOverlay(this.activeOverlayId);
+        } else if (window.innerWidth < 600 || this.root.classList.contains('mobile-open')) {
+          this.closeMobileDrawer();
+        } else if (this.root.classList.contains('is-expanded')) {
+          this.root.classList.remove('is-expanded');
+        }
+      });
     }
 
   static attachTo(root, options) {

@@ -1,6 +1,6 @@
 # MDC-Web · M2.9 全组件架构与调用规范文档 (Component Catalog & API Reference)
 
-> **署名作者**：安秋 ([github.com/unjal29](https://github.com/unjal29))  
+> **开发者**：安秋 ([github.com/unjal29](https://github.com/unjal29))  
 > **开源协议**：全部组件统一遵循 **Apache License 2.0**  
 > **上游官方基准库**：[Google MDC-Web (github.com/material-components/material-components-web)](https://github.com/material-components/material-components-web)  
 > **参考说明**：部分 UI 借用与参考自 [MDUI (github.com/zdhxiong/mdui)](https://github.com/zdhxiong/mdui)  

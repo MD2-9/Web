@@ -22,59 +22,94 @@
   z-index: 99999;
 }
 
+/* 🌟 内容水波纹：绑定主内容区域宽度与位置 (避开侧边栏 72px 与右侧组件栏) */
+.m29-overscroll-edge-container--main {
+  position: fixed !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 72px !important;
+  right: var(--component-panel-width, 290px) !important;
+  width: auto !important;
+  height: 100vh !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  z-index: 998 !important;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.component-panel-closed .m29-overscroll-edge-container--main {
+  right: 0 !important;
+}
+
+@media (max-width: 767px) {
+  .m29-overscroll-edge-container--main {
+    left: 0 !important;
+    right: 0 !important;
+  }
+}
+
+/* 🌟 组件水波纹：绑定右侧常驻组件栏内部宽度与位置 */
+.m29-overscroll-edge-container--panel {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  z-index: 1000 !important;
+}
+
 .m29-overscroll-edge-arc {
   position: absolute;
   pointer-events: none;
   display: block;
   fill: var(--mdc-edge-effect-color, var(--mdc-theme-primary, #6750a4));
   opacity: 0;
-  will-change: transform, opacity;
-  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.45s cubic-bezier(0.2, 0.8, 0.25, 1);
+  will-change: height, width, opacity;
+  transition: height 0.45s cubic-bezier(0.2, 0.8, 0.25, 1),
+              width 0.45s cubic-bezier(0.2, 0.8, 0.25, 1),
+              opacity 0.45s cubic-bezier(0.2, 0.8, 0.25, 1);
 }
 
-/* 顶部触顶弧形：从顶部向下突出的半椭圆弧 */
+/* 顶部触顶弧形：高度按容器宽度动态计算 (最高 29% 宽度) */
 .m29-overscroll-edge-arc--top {
   top: 0;
   left: 0;
   width: 100%;
-  height: 80px;
-  transform: scaleY(0);
-  transform-origin: top center;
+  height: 0;
 }
 
-/* 底部触底弧形：从底部向上突出的半椭圆弧 */
+/* 底部触底弧形：高度按容器宽度动态计算 (最高 29% 宽度) */
 .m29-overscroll-edge-arc--bottom {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 80px;
-  transform: scaleY(0);
-  transform-origin: bottom center;
+  height: 0;
 }
 
 /* 左侧触界弧形 */
 .m29-overscroll-edge-arc--left {
   top: 0;
   left: 0;
-  width: 80px;
+  width: 0;
   height: 100%;
-  transform: scaleX(0);
-  transform-origin: left center;
 }
 
 /* 右侧触界弧形 */
 .m29-overscroll-edge-arc--right {
   top: 0;
   right: 0;
-  width: 80px;
+  width: 0;
   height: 100%;
-  transform: scaleX(0);
-  transform-origin: right center;
 }
 
 .m29-overscroll-edge-arc.is-receding {
   opacity: 0 !important;
-  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.45s cubic-bezier(0.2, 0.8, 0.25, 1) !important;
+  transition: height 0.45s cubic-bezier(0.2, 0.8, 0.25, 1),
+              width 0.45s cubic-bezier(0.2, 0.8, 0.25, 1),
+              opacity 0.45s cubic-bezier(0.2, 0.8, 0.25, 1) !important;
 }
 
 /* 暗色主题适配 (高透白弧) */

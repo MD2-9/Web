@@ -50,8 +50,17 @@ export class M29FlatEdgeEffect {
   }
 
   initDOM() {
+    this.isMain = this.container && (this.container.classList.contains('main-container') || this.container.id === 'main-container');
+    this.isPanel = this.container && (this.container.classList.contains('mdc-component-panel') || this.container.id === 'app-component-panel');
+
     this.wrapper = document.createElement('div');
-    this.wrapper.className = `m29-overscroll-edge-container ${this.isWindow ? 'm29-overscroll-edge-container--fixed' : ''}`;
+    if (this.isMain) {
+      this.wrapper.className = 'm29-overscroll-edge-container m29-overscroll-edge-container--main';
+    } else if (this.isPanel) {
+      this.wrapper.className = 'm29-overscroll-edge-container m29-overscroll-edge-container--panel';
+    } else {
+      this.wrapper.className = `m29-overscroll-edge-container ${this.isWindow ? 'm29-overscroll-edge-container--fixed' : ''}`;
+    }
 
     // 创建四向 SVG 弧线穹顶
     ['top', 'bottom', 'left', 'right'].forEach((dir) => {
@@ -59,15 +68,20 @@ export class M29FlatEdgeEffect {
       svg.setAttribute('class', `m29-overscroll-edge-arc m29-overscroll-edge-arc--${dir}`);
       svg.setAttribute('preserveAspectRatio', 'none');
       
+      const isVertical = dir === 'top' || dir === 'bottom';
+      svg.setAttribute('viewBox', isVertical ? '0 0 1000 100' : '0 0 100 1000');
+
       const path = document.createElementNS(SVG_NS, 'path');
+      this.updatePathD(path, dir, 0.5);
+
       svg.appendChild(path);
+      this.wrapper.appendChild(svg);
 
       this.arcs[dir] = svg;
       this.paths[dir] = path;
-      this.wrapper.appendChild(svg);
     });
 
-    if (this.isWindow) {
+    if (this.isWindow || this.isMain) {
       document.body.appendChild(this.wrapper);
     } else {
       if (getComputedStyle(this.container).position === 'static') {
@@ -75,54 +89,51 @@ export class M29FlatEdgeEffect {
       }
       this.container.appendChild(this.wrapper);
     }
-
-    this.updateSVGPaths();
-    window.addEventListener('resize', () => this.updateSVGPaths());
   }
 
-  /**
-   * 根据当前容器宽高，绘制 100% 贴合的半椭圆/二次贝塞尔扁平实心弧
-   * 模拟 Android 原生 Drawable: 半径大、弧度扁平、极具张力
-   */
-  updateSVGPaths() {
-    const rect = this.container.getBoundingClientRect();
-    const w = this.isWindow ? window.innerWidth : (rect.width || this.container.clientWidth);
-    const h = this.isWindow ? window.innerHeight : (rect.height || this.container.clientHeight);
-
-    // 1. Top Arc (向下凸出的贝塞尔弧顶)
-    if (this.arcs.top) {
-      this.arcs.top.setAttribute('viewBox', `0 0 ${w} 80`);
-      this.paths.top.setAttribute('d', `M 0,0 L ${w},0 L ${w},20 Q ${w / 2},80 0,20 Z`);
+  updatePathD(pathEl, dir, displacement = 0.5) {
+    const dClamped = Math.max(0.05, Math.min(0.95, displacement));
+    
+    if (dir === 'bottom') {
+      const ctrlX = 1000 * (0.5 + (dClamped - 0.5) * 0.45);
+      const ctrl1X = Math.max(80, Math.min(920, ctrlX - 250));
+      const ctrl2X = Math.max(80, Math.min(920, ctrlX + 250));
+      pathEl.setAttribute('d', `M 0 100 C ${ctrl1X} -20, ${ctrl2X} -20, 1000 100 Z`);
+    } else if (dir === 'top') {
+      const ctrlX = 1000 * (0.5 + (dClamped - 0.5) * 0.45);
+      const ctrl1X = Math.max(80, Math.min(920, ctrlX - 250));
+      const ctrl2X = Math.max(80, Math.min(920, ctrlX + 250));
+      pathEl.setAttribute('d', `M 0 0 C ${ctrl1X} 120, ${ctrl2X} 120, 1000 0 Z`);
+    } else if (dir === 'left') {
+      const ctrlY = 1000 * (0.5 + (dClamped - 0.5) * 0.45);
+      const ctrl1Y = Math.max(80, Math.min(920, ctrlY - 250));
+      const ctrl2Y = Math.max(80, Math.min(920, ctrlY + 250));
+      pathEl.setAttribute('d', `M 0 0 C 120 ${ctrl1Y}, 120 ${ctrl2Y}, 0 1000 Z`);
+    } else if (dir === 'right') {
+      const ctrlY = 1000 * (0.5 + (dClamped - 0.5) * 0.45);
+      const ctrl1Y = Math.max(80, Math.min(920, ctrlY - 250));
+      const ctrl2Y = Math.max(80, Math.min(920, ctrlY + 250));
+      pathEl.setAttribute('d', `M 100 0 C -20 ${ctrl1Y}, -20 ${ctrl2Y}, 100 1000 Z`);
     }
+  }
 
-    // 2. Bottom Arc (向上凸出的贝塞尔弧顶)
-    if (this.arcs.bottom) {
-      this.arcs.bottom.setAttribute('viewBox', `0 0 ${w} 80`);
-      this.paths.bottom.setAttribute('d', `M 0,80 L ${w},80 L ${w},60 Q ${w / 2},0 0,60 Z`);
-    }
-
-    // 3. Left Arc (向右凸出的贝塞尔弧顶)
-    if (this.arcs.left) {
-      this.arcs.left.setAttribute('viewBox', `0 0 80 ${h}`);
-      this.paths.left.setAttribute('d', `M 0,0 L 0,${h} L 20,${h} Q 80,${h / 2} 20,0 Z`);
-    }
-
-    // 4. Right Arc (向左凸出的贝塞尔弧顶)
-    if (this.arcs.right) {
-      this.arcs.right.setAttribute('viewBox', `0 0 80 ${h}`);
-      this.paths.right.setAttribute('d', `M 80,0 L 80,${h} L 60,${h} Q 0,${h / 2} 60,0 Z`);
-    }
+  getDimensions() {
+    const rect = this.container ? this.container.getBoundingClientRect() : { width: window.innerWidth, height: window.innerHeight };
+    const w = this.isMain ? rect.width : (this.container && this.container.clientWidth ? this.container.clientWidth : (rect.width || window.innerWidth));
+    const h = this.isMain ? window.innerHeight : (this.container && this.container.clientHeight ? this.container.clientHeight : (rect.height || window.innerHeight));
+    return { w, h, rect };
   }
 
   /**
    * 物理状态机: onPull
    * @param {string} dir 'top' | 'bottom' | 'left' | 'right'
-   * @param {number} delta 拉动距离比例 (0.0 ~ 1.0)
+   * @param {number} delta 拉动距离 (像素或比例)
    * @param {number} displacement 触摸偏置 (0.0 ~ 1.0)
    */
   onPull(dir, delta, displacement = 0.5) {
     const arc = this.arcs[dir];
-    if (!arc) return;
+    const path = this.paths[dir];
+    if (!arc || !path) return;
 
     if (this.recedeTimers[dir]) {
       clearTimeout(this.recedeTimers[dir]);
@@ -130,28 +141,40 @@ export class M29FlatEdgeEffect {
     }
     arc.classList.remove('is-receding');
 
+    this.updatePathD(path, dir, displacement);
+
+    const { w, h } = this.getDimensions();
     const isVertical = dir === 'top' || dir === 'bottom';
-    // 🌟 缩小左右两侧临界数值为原来的 10%，上下为 20%，需更大阻尼力度触发
-    const scaleFactor = isVertical ? 0.20 : 0.10;
+    const containerDim = isVertical ? w : h;
 
-    // 阻尼非线性曲线：AOSP 经典 log 级阻尼递增
-    const pullDistance = Math.min(1.0, Math.max(0, delta)) * scaleFactor;
-    const scale = Math.min(scaleFactor, pullDistance * 2.2);
-    // Android 原生默认纯色不透明度 0.35 (微透，绝不突兀)
-    const alpha = Math.min(0.38, pullDistance * 0.45 / scaleFactor);
+    // 🌟 核心规范：
+    // 上下垂直临界：21% 宽度 ~ 29% 宽度曲线，倍率为 距离 x 12%
+    // 左右水平临界：8% 高度 ~ 12% 高度曲线，倍率为 距离 x 3%
+    const minDim = isVertical ? 280 : 300;
+    const maxDim = isVertical ? 1200 : 1000;
+    const t = Math.max(0, Math.min(1, (containerDim - minDim) / (maxDim - minDim)));
+    const smoothT = t * t * (3 - 2 * t);
 
+    const MAX_SCALE = isVertical ? (0.29 - 0.08 * smoothT) : (0.12 - 0.04 * smoothT);
+    const MID_RATE = isVertical ? 0.12 : 0.03;
+
+    const pull = Math.abs(delta);
+    const normalizedPull = pull / 300; // 🌟 触摸移动距离增加到 3 倍
+    const scale = Math.min(MAX_SCALE, MAX_SCALE * Math.tanh((normalizedPull * MID_RATE) / MAX_SCALE));
+    const opacity = Math.min(0.28, Math.max(0.06, 0.06 + (scale / MAX_SCALE) * 0.18));
+
+    arc.style.transition = 'none';
     if (isVertical) {
-      arc.style.transform = `scaleY(${scale})`;
-      // 偏置微调：依据触摸 X 位置微调弧形倾角
-      const skew = (displacement - 0.5) * 8; 
-      arc.style.transform += ` skewX(${skew}deg)`;
+      // 🌟 上下水波纹高度按宽度计算
+      const currentHeight = Math.round(w * scale);
+      arc.style.height = `${currentHeight}px`;
     } else {
-      arc.style.transform = `scaleX(${scale})`;
-      const skew = (displacement - 0.5) * 8;
-      arc.style.transform += ` skewY(${skew}deg)`;
+      // 🌟 左右水波纹宽度按高度计算 (8% ~ 12% 高度)
+      const currentWidth = Math.round(h * scale);
+      arc.style.width = `${currentWidth}px`;
     }
 
-    arc.style.opacity = alpha.toString();
+    arc.style.opacity = opacity.toString();
     this.isPulling[dir] = true;
   }
 
@@ -164,55 +187,89 @@ export class M29FlatEdgeEffect {
     if (!arc || !this.isPulling[dir]) return;
 
     this.isPulling[dir] = false;
+    clearTimeout(this.recedeTimers[dir]);
     arc.classList.add('is-receding');
 
-    if (dir === 'top' || dir === 'bottom') {
-      arc.style.transform = 'scaleY(0)';
+    const isVertical = dir === 'top' || dir === 'bottom';
+    arc.style.transition = isVertical
+      ? 'height 0.48s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.48s cubic-bezier(0.2, 0.8, 0.25, 1)'
+      : 'width 0.48s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.48s cubic-bezier(0.2, 0.8, 0.25, 1)';
+    
+    if (isVertical) {
+      arc.style.height = '0px';
     } else {
-      arc.style.transform = 'scaleX(0)';
+      arc.style.width = '0px';
     }
     arc.style.opacity = '0';
 
     this.recedeTimers[dir] = setTimeout(() => {
       arc.classList.remove('is-receding');
-    }, 450);
+    }, 480);
   }
 
   /**
-   * 物理状态机: onAbsorb (惯性飞射撞击边缘)
+   * 物理状态机: onAbsorb (惯性飞射与鼠标滚轮撞击边缘)
    * @param {string} dir
    * @param {number} velocity
+   * @param {number} displacement
    */
-  onAbsorb(dir, velocity = 1.0) {
+  onAbsorb(dir, velocity = 80, displacement = 0.5) {
     const arc = this.arcs[dir];
-    if (!arc) return;
+    const path = this.paths[dir];
+    if (!arc || !path) return;
 
     if (this.recedeTimers[dir]) {
       clearTimeout(this.recedeTimers[dir]);
     }
     arc.classList.remove('is-receding');
 
+    this.updatePathD(path, dir, displacement);
+
+    const { w, h } = this.getDimensions();
     const isVertical = dir === 'top' || dir === 'bottom';
-    // 🌟 缩小左右两侧临界数值为原来的 10%，上下为 20%
-    const scaleFactor = isVertical ? 0.20 : 0.10;
+    const containerDim = isVertical ? w : h;
 
-    const intensity = Math.min(1.0, Math.max(0.3, velocity / 1000));
-    const targetScale = Math.min(scaleFactor, (0.4 + intensity * 0.6) * scaleFactor);
-    const targetAlpha = Math.min(0.38, 0.2 + intensity * 0.18);
+    // 🌟 鼠标滚轮/惯性冲击：
+    // 上下：12% 宽度 ~ 16% 宽度曲线 (倍率 12%)
+    // 左右：6% 高度 ~ 8% 高度曲线 (倍率 3%)
+    const minDim = isVertical ? 280 : 300;
+    const maxDim = isVertical ? 1200 : 1000;
+    const t = Math.max(0, Math.min(1, (containerDim - minDim) / (maxDim - minDim)));
+    const smoothT = t * t * (3 - 2 * t);
 
-    arc.style.transition = 'transform 0.12s cubic-bezier(0.0, 0.0, 0.2, 1), opacity 0.12s cubic-bezier(0.0, 0.0, 0.2, 1)';
+    const WHEEL_MAX_SCALE = isVertical ? (0.16 - 0.04 * smoothT) : (0.08 - 0.02 * smoothT);
+    const MID_RATE = isVertical ? 0.12 : 0.03;
+
+    const v = Math.abs(velocity);
+    const normalizedV = v / 80;
+    const peakScale = Math.min(WHEEL_MAX_SCALE, Math.max(0.03, WHEEL_MAX_SCALE * Math.tanh((normalizedV * MID_RATE * 1.5) / WHEEL_MAX_SCALE)));
+    const peakOpacity = Math.min(0.24, Math.max(0.06, 0.06 + (peakScale / WHEEL_MAX_SCALE) * 0.16));
+
+    arc.style.transition = isVertical
+      ? 'height 0.14s cubic-bezier(0, 0, 0.2, 1), opacity 0.14s ease-out'
+      : 'width 0.14s cubic-bezier(0, 0, 0.2, 1), opacity 0.14s ease-out';
+    
     if (isVertical) {
-      arc.style.transform = `scaleY(${targetScale})`;
+      const peakHeight = Math.round(w * peakScale);
+      arc.style.height = `${peakHeight}px`;
     } else {
-      arc.style.transform = `scaleX(${targetScale})`;
+      const peakWidth = Math.round(h * peakScale);
+      arc.style.width = `${peakWidth}px`;
     }
-    arc.style.opacity = targetAlpha.toString();
+    arc.style.opacity = peakOpacity.toString();
 
-    // 撞击保持 80ms 后迅速释放
-    setTimeout(() => {
-      this.isPulling[dir] = true;
-      this.onRelease(dir);
-    }, 120);
+    // 撞击保持 140ms 后平滑释放回弹
+    this.recedeTimers[dir] = setTimeout(() => {
+      arc.style.transition = isVertical
+        ? 'height 0.5s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.5s cubic-bezier(0.2, 0.8, 0.25, 1)'
+        : 'width 0.5s cubic-bezier(0.2, 0.8, 0.25, 1), opacity 0.5s cubic-bezier(0.2, 0.8, 0.25, 1)';
+      if (isVertical) {
+        arc.style.height = '0px';
+      } else {
+        arc.style.width = '0px';
+      }
+      arc.style.opacity = '0';
+    }, 150);
   }
 
   bindEvents() {
