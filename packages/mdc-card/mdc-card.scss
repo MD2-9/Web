@@ -84,13 +84,13 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* 🌟 M2.9 无背景仅边框卡片 (Outlined / Border-only Card · 100 色阶描边，Hover 响应 300 色阶) */
+/* 🌟 M2.9 无背景仅边框卡片 (Outlined / Border-only Card · 50 色阶描边，Hover 响应 200 色阶) */
 .mdc-card--outlined,
 .demo-card--outlined,
 #section-footer {
   background-color: transparent !important;
   background: transparent !important;
-  border: 1px solid var(--mdc-theme-primary-100, #ffddb3) !important;
+  border: 1px solid var(--mdc-theme-primary-50, #fff8f4) !important;
   box-shadow: none !important;
   color: var(--mdc-theme-on-surface, #1d1b20);
   transition: border-color 0.28s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.28s ease;
@@ -99,7 +99,7 @@
 .mdc-card--outlined:hover,
 .demo-card--outlined:hover,
 #section-footer:hover {
-  border-color: var(--mdc-theme-primary-300, #e09b1f) !important;
+  border-color: var(--mdc-theme-primary-200, #ffb951) !important;
   box-shadow: none !important;
 }
 
@@ -114,7 +114,7 @@
 .dark-theme #section-footer {
   background-color: transparent !important;
   background: transparent !important;
-  border-color: var(--mdc-theme-primary-900, rgba(255, 221, 179, 0.25)) !important;
+  border-color: var(--mdc-theme-primary-900, rgba(255, 221, 179, 0.15)) !important;
   box-shadow: none !important;
   color: var(--mdc-theme-on-surface, #e6e1e5) !important;
 }
@@ -122,7 +122,7 @@
 .dark-theme .mdc-card--outlined:hover,
 .dark-theme .demo-card--outlined:hover,
 .dark-theme #section-footer:hover {
-  border-color: var(--mdc-theme-primary-700, #ffb951) !important;
+  border-color: var(--mdc-theme-primary-700, #5f3e00) !important;
 }
 
 .preview-img-box {
