@@ -4284,6 +4284,7 @@ body.component-panel-closed .m29-overscroll-edge-container--main {
   display: flex;
   flex-direction: column;
   overflow: visible;
+  overscroll-behavior: contain !important;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.3s ease,
               background-color 0.28s cubic-bezier(0.2, 0, 0, 1),
@@ -4426,6 +4427,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
+  overscroll-behavior: contain !important;
   padding: 16px 16px 24px 16px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -4633,7 +4635,19 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   }
 }
 
-/* 🌟 核心融合：整页滚动条与组件栏调整线完全合并为一条线 (两者绝不同时显示) */
+/* 🌟 浮动悬浮滚动条 (Zero-Width Overlay Scrollbar) */
+.m29-overlay-scrollbar-track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 1px;
+  width: 10px;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.2, 0, 0, 1);
+}
+
 .m29-overlay-scrollbar-track.is-window {
   position: fixed;
   top: 0;
@@ -4644,7 +4658,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   transform: translateX(50%);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1), right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.35s cubic-bezier(0.2, 0, 0, 1), right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (max-width: 767.9px) {
@@ -4665,13 +4679,11 @@ body.component-panel-closed .m29-overlay-scrollbar-track.is-window {
 .m29-overlay-scrollbar-track:hover,
 .m29-overlay-scrollbar-track.is-dragging {
   opacity: 1;
-  pointer-events: auto;
+  pointer-events: none !important;
 }
 
-/* 🌟 当调整线被 hover 或拖拽时，滚动条彻底淡出隐藏，两者绝不同时显示 */
-body:has(.component-panel-resizer:hover) .m29-overlay-scrollbar-track.is-window,
+/* 仅在正在拖拽调整组件栏宽度时临时隐退窗口滚动条 */
 body.is-resizing-component-panel .m29-overlay-scrollbar-track.is-window,
-body:has(.component-panel-resizer:hover) .m29-overlay-scrollbar-thumb,
 body.is-resizing-component-panel .m29-overlay-scrollbar-thumb {
   opacity: 0 !important;
   pointer-events: none !important;
@@ -4685,32 +4697,71 @@ body.is-resizing-component-panel .m29-overlay-scrollbar-thumb {
   width: 2px;
   min-height: 28px;
   border-radius: 0 !important;
-  background-color: var(--mdc-theme-primary, #6750a4);
-  opacity: 0.75;
+  opacity: 0;
+  pointer-events: none;
   cursor: pointer;
-  pointer-events: auto;
-  transition: opacity 0.2s ease, background-color 0.2s ease, width 0.15s ease, left 0.15s ease, transform 0.06s linear;
+  box-sizing: border-box;
+  transition: opacity 0.35s cubic-bezier(0.2, 0, 0, 1), background-color 0.25s ease, width 0.15s ease, left 0.15s ease, transform 0.06s linear, box-shadow 0.2s ease;
 }
 
-.m29-overlay-scrollbar-track:hover .m29-overlay-scrollbar-thumb,
-.m29-overlay-scrollbar-thumb:hover,
-.m29-overlay-scrollbar-track.is-dragging .m29-overlay-scrollbar-thumb {
-  opacity: 1;
+/* 🌟 第一阶段 (0 ~ 2.9s 活跃滚动期)：宽度调节条处于静默锁定态，必须等到第二阶段(2.9s变暗)或完全淡出后才可触发 */
+body.is-scrollbar-phase-active .component-panel-resizer {
+  pointer-events: none !important;
+}
+
+.m29-overlay-scrollbar-thumb.is-visible {
+  opacity: 0.55; /* 基础半透明度，便于多图层共存时清晰透视底层 */
+  pointer-events: auto;
+  box-shadow: none !important;
+}
+
+/* 🌟 2.9s 时自动变暗降亮 (第二阶段 Dimmed state: 29% 不透明度，解除调节条锁定) */
+.m29-overlay-scrollbar-thumb.is-dimmed {
+  opacity: 0.29 !important;
+  box-shadow: none !important;
+}
+
+/* 🌟 第一阶段正在滚动的滑块图层上移 (z-index: 10)，纯靠不透明度区分，不添加阴影 */
+.m29-overlay-scrollbar-thumb.is-active-scrolling,
+.m29-overlay-scrollbar-thumb.is-dragging {
+  opacity: 1 !important;
+  z-index: 10 !important;
+  box-shadow: none !important;
+}
+
+/* 🌟 整页面主滚动条滑块：使用全局主色 */
+.m29-overlay-scrollbar-thumb.is-window-thumb {
+  background-color: var(--mdc-theme-primary, #6750a4);
+  z-index: 2;
+  box-shadow: none !important;
+}
+
+/* 🌟 组件栏专属滚动条滑块：共享同一根左侧分割线轨道，使用组件栏专属配色 */
+.m29-overlay-scrollbar-thumb.is-panel-thumb {
+  background-color: var(--component-panel-primary, var(--mdc-theme-primary, #6750a4));
+  z-index: 3;
+  box-shadow: none !important;
+}
+
+.m29-overlay-scrollbar-thumb:hover {
   width: 4px;
   left: calc(50% - 2px);
-  background-color: var(--mdc-theme-primary, #6750a4);
+  opacity: 1 !important;
+  z-index: 12 !important;
+  box-shadow: none !important;
 }
 
-.dark-theme .m29-overlay-scrollbar-thumb {
-  background-color: var(--mdc-theme-primary, #d0bcff);
-  opacity: 0.8;
+.dark-theme .m29-overlay-scrollbar-thumb.is-active-scrolling,
+.dark-theme .m29-overlay-scrollbar-thumb.is-dragging {
+  box-shadow: none !important;
 }
 
-.dark-theme .m29-overlay-scrollbar-track:hover .m29-overlay-scrollbar-thumb,
-.dark-theme .m29-overlay-scrollbar-thumb:hover,
-.dark-theme .m29-overlay-scrollbar-track.is-dragging .m29-overlay-scrollbar-thumb {
-  opacity: 1;
+.dark-theme .m29-overlay-scrollbar-thumb.is-window-thumb {
   background-color: var(--mdc-theme-primary, #d0bcff);
+}
+
+.dark-theme .m29-overlay-scrollbar-thumb.is-panel-thumb {
+  background-color: var(--component-panel-primary, var(--mdc-theme-primary, #d0bcff));
 }
 
 /* 🔀 布局左右互换 (Layout Swap: 侧边栏与组件栏对调位置) */

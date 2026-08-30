@@ -1273,65 +1273,135 @@ window.addEventListener('m29:loaded', function() {
       if (!panel) return;
       const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
 
+      const allPanelProps = [
+        '--mdc-theme-primary',
+        '--mdc-theme-on-primary',
+        '--mdc-theme-primary-container',
+        '--mdc-theme-on-primary-container',
+        '--mdc-theme-secondary',
+        '--mdc-theme-on-secondary',
+        '--mdc-theme-secondary-container',
+        '--mdc-theme-on-secondary-container',
+        '--mdc-theme-tertiary',
+        '--mdc-theme-on-tertiary',
+        '--mdc-theme-tertiary-container',
+        '--mdc-theme-on-tertiary-container',
+        '--mdc-theme-surface-container-lowest',
+        '--mdc-theme-surface-container-low',
+        '--mdc-theme-surface-container',
+        '--mdc-theme-surface-container-high',
+        '--mdc-theme-surface-container-highest',
+        '--mdc-theme-surface',
+        '--mdc-theme-surface-dim',
+        '--mdc-theme-surface-bright',
+        '--mdc-theme-surface-variant',
+        '--mdc-theme-on-surface',
+        '--mdc-theme-on-surface-variant',
+        '--mdc-theme-background',
+        '--mdc-theme-outline',
+        '--mdc-theme-outline-variant',
+        '--mdc-theme-text-primary-on-background',
+        '--mdc-theme-text-secondary-on-background',
+        '--mdc-theme-text-hint-on-background',
+        '--mdc-theme-text-disabled-on-background',
+        '--mdc-theme-primary-50',
+        '--mdc-theme-primary-100',
+        '--mdc-theme-primary-200',
+        '--mdc-theme-primary-700',
+        '--mdc-theme-primary-900'
+      ];
+
       if (!hex || hex === 'auto') {
         localStorage.removeItem('m29_component_panel_color');
-        panel.style.removeProperty('--mdc-theme-primary');
-        panel.style.removeProperty('--mdc-theme-on-primary');
-        panel.style.removeProperty('--mdc-theme-primary-container');
-        panel.style.removeProperty('--mdc-theme-on-primary-container');
-        panel.style.removeProperty('--mdc-theme-surface-container-low');
-        panel.style.removeProperty('--mdc-theme-surface-container');
-        panel.style.removeProperty('--mdc-theme-surface-container-high');
-        panel.style.removeProperty('--mdc-theme-surface-container-highest');
-        panel.style.removeProperty('--mdc-theme-on-surface');
-        panel.style.removeProperty('--mdc-theme-on-surface-variant');
+        allPanelProps.forEach(p => panel.style.removeProperty(p));
         if (typeof refreshDatePickerThumb === 'function') refreshDatePickerThumb(true);
         showDemoToast(isEn ? 'Component panel is following global theme' : '组件栏已恢复跟随全局主题');
         return;
       }
 
       localStorage.setItem('m29_component_panel_color', hex);
-      const [h, s, l] = hexToHsl(hex);
       const isDark = panel.classList.contains('dark-theme') || (!panel.classList.contains('light-theme') && document.body.classList.contains('dark-theme'));
 
-      let primary, onPrimary, pCont, onPCont;
-      let surfLow, surfCont, surfHigh, surfHighest;
-      let onSurf, onSurfVar;
-
-      if (isDark) {
-        primary = hslToHex(h, Math.min(100, Math.max(25, s * 0.85)), 78);
-        onPrimary = '#000000';
-        pCont = hslToHex(h, Math.min(100, s * 0.5), 32);
-        onPCont = hslToHex(h, Math.min(100, s * 0.5), 90);
-        surfLow = hslToHex(h, Math.min(100, s * 0.15), 11);
-        surfCont = hslToHex(h, Math.min(100, s * 0.16), 13);
-        surfHigh = hslToHex(h, Math.min(100, s * 0.18), 17);
-        surfHighest = hslToHex(h, Math.min(100, s * 0.2), 22);
-        onSurf = '#e6e1e5';
-        onSurfVar = '#cac4d0';
-      } else {
-        primary = hex;
-        onPrimary = '#ffffff';
-        pCont = hslToHex(h, Math.min(100, s * 0.45), 90);
-        onPCont = hslToHex(h, Math.min(100, s * 0.6), 15);
-        surfLow = hslToHex(h, Math.min(100, s * 0.25), 97);
-        surfCont = hslToHex(h, Math.min(100, s * 0.28), 94);
-        surfHigh = hslToHex(h, Math.min(100, s * 0.3), 91);
-        surfHighest = hslToHex(h, Math.min(100, s * 0.32), 88);
-        onSurf = '#1d1b20';
-        onSurfVar = '#49454f';
+      let theme;
+      if (window.MdcMonet && MdcMonet.MdcMonetEngine) {
+        theme = MdcMonet.MdcMonetEngine.generateTheme({
+          primary: hex
+        }, {
+          dark: isDark,
+          variant: 'tonal_spot'
+        });
       }
 
-      panel.style.setProperty('--mdc-theme-primary', primary);
-      panel.style.setProperty('--mdc-theme-on-primary', onPrimary);
-      panel.style.setProperty('--mdc-theme-primary-container', pCont);
-      panel.style.setProperty('--mdc-theme-on-primary-container', onPCont);
-      panel.style.setProperty('--mdc-theme-surface-container-low', surfLow);
-      panel.style.setProperty('--mdc-theme-surface-container', surfCont);
-      panel.style.setProperty('--mdc-theme-surface-container-high', surfHigh);
-      panel.style.setProperty('--mdc-theme-surface-container-highest', surfHighest);
-      panel.style.setProperty('--mdc-theme-on-surface', onSurf);
-      panel.style.setProperty('--mdc-theme-on-surface-variant', onSurfVar);
+      const [hp, sp, lp] = hexToHsl(hex);
+      let finalPrimary, onPrimary, pCont, onPCont;
+      let surfLowest, surfLow, surfCont, surfHigh, surfHighest, surf, bg, onSurf, onSurfVar, outline;
+
+      if (theme && theme.variables) {
+        for (const [key, value] of Object.entries(theme.variables)) {
+          panel.style.setProperty(key, value);
+        }
+      } else {
+        // Fallback 与全局 applyMonetTheme 保持 100% 相同算法
+        if (isDark) {
+          finalPrimary = hslToHex(hp, Math.min(100, Math.max(25, sp * 0.85)), 78);
+          onPrimary = '#000000';
+          pCont = hslToHex(hp, Math.min(100, sp * 0.5), 32);
+          onPCont = hslToHex(hp, Math.min(100, sp * 0.5), 90);
+
+          surfLowest = hslToHex(hp, Math.min(100, sp * 0.15), 6);
+          surfLow = hslToHex(hp, Math.min(100, sp * 0.15), 10);
+          surfCont = hslToHex(hp, Math.min(100, sp * 0.16), 12);
+          surfHigh = hslToHex(hp, Math.min(100, sp * 0.18), 16);
+          surfHighest = hslToHex(hp, Math.min(100, sp * 0.2), 20);
+          surf = hslToHex(hp, Math.min(100, sp * 0.14), 12);
+          bg = hslToHex(hp, Math.min(100, sp * 0.12), 10);
+          onSurf = '#e6e1e5';
+          onSurfVar = '#cac4d0';
+          outline = hslToHex(hp, Math.min(100, sp * 0.15), 45);
+        } else {
+          finalPrimary = hex;
+          onPrimary = '#ffffff';
+          pCont = hslToHex(hp, Math.min(100, sp * 0.45), 90);
+          onPCont = hslToHex(hp, Math.min(100, sp * 0.6), 15);
+
+          surfLowest = '#ffffff';
+          surfLow = hslToHex(hp, Math.min(100, sp * 0.22), 97);
+          surfCont = hslToHex(hp, Math.min(100, sp * 0.25), 94);
+          surfHigh = hslToHex(hp, Math.min(100, sp * 0.28), 91);
+          surfHighest = hslToHex(hp, Math.min(100, sp * 0.3), 88);
+          surf = hslToHex(hp, Math.min(100, sp * 0.22), 98);
+          bg = hslToHex(hp, Math.min(100, sp * 0.2), 98);
+          onSurf = '#1d1b20';
+          onSurfVar = '#49454f';
+          outline = hslToHex(hp, Math.min(100, sp * 0.2), 60);
+        }
+
+        panel.style.setProperty('--mdc-theme-primary', finalPrimary);
+        panel.style.setProperty('--mdc-theme-on-primary', onPrimary);
+        panel.style.setProperty('--mdc-theme-primary-container', pCont);
+        panel.style.setProperty('--mdc-theme-on-primary-container', onPCont);
+
+        panel.style.setProperty('--mdc-theme-secondary', finalPrimary);
+        panel.style.setProperty('--mdc-theme-on-secondary', onPrimary);
+        panel.style.setProperty('--mdc-theme-secondary-container', pCont);
+        panel.style.setProperty('--mdc-theme-on-secondary-container', onPCont);
+
+        panel.style.setProperty('--mdc-theme-tertiary', finalPrimary);
+        panel.style.setProperty('--mdc-theme-on-tertiary', onPrimary);
+        panel.style.setProperty('--mdc-theme-tertiary-container', pCont);
+        panel.style.setProperty('--mdc-theme-on-tertiary-container', onPCont);
+
+        panel.style.setProperty('--mdc-theme-surface-container-lowest', surfLowest);
+        panel.style.setProperty('--mdc-theme-surface-container-low', surfLow);
+        panel.style.setProperty('--mdc-theme-surface-container', surfCont);
+        panel.style.setProperty('--mdc-theme-surface-container-high', surfHigh);
+        panel.style.setProperty('--mdc-theme-surface-container-highest', surfHighest);
+        panel.style.setProperty('--mdc-theme-surface', surf);
+        panel.style.setProperty('--mdc-theme-background', bg);
+        panel.style.setProperty('--mdc-theme-on-surface', onSurf);
+        panel.style.setProperty('--mdc-theme-on-surface-variant', onSurfVar);
+        panel.style.setProperty('--mdc-theme-outline', outline);
+      }
 
       if (typeof refreshDatePickerThumb === 'function') refreshDatePickerThumb(true);
       showDemoToast(isEn ? `Component panel theme updated: ${hex}` : `组件栏已更新专属 MD3 莫奈配色: ${hex}`);
@@ -2272,23 +2342,34 @@ window.addEventListener('m29:loaded', function() {
 
     // 🌟 全局鼠标滚轮分发：组件栏在组件栏内部触发，内容区域在内容区域内部触发
     window.addEventListener('wheel', (e) => {
-      // 1. 判断是否在右侧组件栏内部滚动
+      // 1. 判断是否在右侧组件栏内部滚动 (包括组件栏头部、卡片、DatePicker、空白背景等任意子元素)
       const isInsidePanel = compPanelEl && (compPanelEl === e.target || compPanelEl.contains(e.target));
-      if (isInsidePanel && window.componentPanelEdgeEffect) {
+      if (isInsidePanel) {
         const panelBody = compPanelEl.querySelector('.component-panel-body') || compPanelEl;
-        const scrollTop = panelBody.scrollTop;
-        const maxScrollY = panelBody.scrollHeight - panelBody.clientHeight;
-        const rect = compPanelEl.getBoundingClientRect();
-        const displacementX = (e.clientX - rect.left) / (rect.width || 1);
+        if (panelBody) {
+          panelBody.scrollTop += e.deltaY;
+          if (window.sharedOverlayScrollbar) {
+            window.sharedOverlayScrollbar.showPanel();
+          }
 
-        const isTop = scrollTop <= 1 && e.deltaY < 0;
-        const isBottom = scrollTop >= maxScrollY - 2 && e.deltaY > 0;
+          if (window.componentPanelEdgeEffect) {
+            const scrollTop = panelBody.scrollTop;
+            const maxScrollY = panelBody.scrollHeight - panelBody.clientHeight;
+            const rect = compPanelEl.getBoundingClientRect();
+            const displacementX = (e.clientX - rect.left) / (rect.width || 1);
 
-        if (isTop) {
-          window.componentPanelEdgeEffect.onAbsorb('top', Math.abs(e.deltaY), displacementX);
-        } else if (isBottom) {
-          window.componentPanelEdgeEffect.onAbsorb('bottom', Math.abs(e.deltaY), displacementX);
+            const isTop = scrollTop <= 1 && e.deltaY < 0;
+            const isBottom = scrollTop >= maxScrollY - 2 && e.deltaY > 0;
+
+            if (isTop) {
+              window.componentPanelEdgeEffect.onAbsorb('top', Math.abs(e.deltaY), displacementX);
+            } else if (isBottom) {
+              window.componentPanelEdgeEffect.onAbsorb('bottom', Math.abs(e.deltaY), displacementX);
+            }
+          }
         }
+        // 彻底阻止任何向外冒泡导致的页面主体内容滚动
+        e.preventDefault();
         return;
       }
 
@@ -2353,7 +2434,7 @@ window.addEventListener('m29:loaded', function() {
           window.mainContentEdgeEffect.onAbsorb('right', Math.abs(e.deltaX), displacementY);
         }
       }
-    }, { passive: true, capture: true });
+    }, { passive: false, capture: true });
 
     // 🌟 全局触控手势分发
     let globalTouchStartX = 0;
@@ -3816,160 +3897,324 @@ window.addEventListener('m29:loaded', function() {
     }
 
     // =========================================================================
-    // 🌟 M2.9 自研浮动悬浮滚动条 (Zero-Width Overlay Scrollbar)
-    // 零占用宽度，支持整页 (Window) 与组件栏内部容器，平滑淡入淡出与手势拖拽
+    // 🌟 M2.9 自研浮动悬浮滚动条 (Zero-Width Shared Overlay Scrollbar)
+    // 零占用宽度：内容区域与组件栏在左侧分割线上共享一根轨道
+    // 两侧滚动条均可根据各自独立配色独立淡入并在 6 秒内优雅共存
     // =========================================================================
-    class M29OverlayScrollbar {
-      constructor(target = window) {
-        this.isWindow = (target === window || target === document || target === document.body || target === document.documentElement);
-        this.target = this.isWindow ? window : target;
-        this.container = this.isWindow ? document.body : target;
+    class M29SharedOverlayScrollbar {
+      constructor() {
+        this.panelContainer = null;
         this.track = null;
-        this.thumb = null;
-        this.isDragging = false;
+        this.windowThumb = null;
+        this.panelThumb = null;
+        this.windowHideTimer = null;
+        this.panelHideTimer = null;
+        this.isDraggingWindow = false;
+        this.isDraggingPanel = false;
         this.dragStartY = 0;
         this.dragStartScrollTop = 0;
-        this.hideTimer = null;
         this.init();
       }
 
       init() {
-        this.track = document.createElement('div');
-        this.track.className = `m29-overlay-scrollbar-track ${this.isWindow ? 'is-window' : ''}`;
-        this.thumb = document.createElement('div');
-        this.thumb.className = 'm29-overlay-scrollbar-thumb';
-        this.track.appendChild(this.thumb);
+        this.panelContainer = document.querySelector('#app-component-panel .component-panel-body');
 
-        if (this.isWindow) {
-          document.body.appendChild(this.track);
-        } else {
-          if (window.getComputedStyle(this.container).position === 'static') {
-            this.container.style.position = 'relative';
-          }
-          this.container.appendChild(this.track);
-        }
+        this.track = document.createElement('div');
+        this.track.className = 'm29-overlay-scrollbar-track is-window';
+
+        this.windowThumb = document.createElement('div');
+        this.windowThumb.className = 'm29-overlay-scrollbar-thumb is-window-thumb';
+        this.windowThumb.title = '整页面滚动条 (Page Scroll)';
+
+        this.panelThumb = document.createElement('div');
+        this.panelThumb.className = 'm29-overlay-scrollbar-thumb is-panel-thumb';
+        this.panelThumb.title = '组件栏滚动条 (Component Panel Scroll)';
+
+        this.track.appendChild(this.windowThumb);
+        this.track.appendChild(this.panelThumb);
+        document.body.appendChild(this.track);
 
         this.bindEvents();
-        this.update();
+        this.updateWindow();
+        this.updatePanel();
       }
 
-      getScrollInfo() {
-        if (this.isWindow) {
-          const doc = document.documentElement;
-          const scrollHeight = Math.max(doc.scrollHeight, document.body.scrollHeight);
-          const clientHeight = window.innerHeight;
-          const scrollTop = window.scrollY || doc.scrollTop || document.body.scrollTop || 0;
-          return { scrollHeight, clientHeight, scrollTop };
-        } else {
-          return {
-            scrollHeight: this.container.scrollHeight,
-            clientHeight: this.container.clientHeight,
-            scrollTop: this.container.scrollTop
-          };
+      updateColors() {
+        const globalPrimary = document.documentElement.style.getPropertyValue('--mdc-theme-primary') || getComputedStyle(document.documentElement).getPropertyValue('--mdc-theme-primary');
+        if (globalPrimary && this.windowThumb) {
+          this.windowThumb.style.backgroundColor = globalPrimary.trim();
+        }
+        const panel = document.getElementById('app-component-panel');
+        if (panel && this.panelThumb) {
+          const panelPrimary = panel.style.getPropertyValue('--mdc-theme-primary') || getComputedStyle(panel).getPropertyValue('--mdc-theme-primary');
+          if (panelPrimary) {
+            this.panelThumb.style.backgroundColor = panelPrimary.trim();
+          }
         }
       }
 
-      setScrollTop(val) {
-        if (this.isWindow) {
-          window.scrollTo({ top: val, behavior: 'instant' });
-        } else {
-          this.container.scrollTop = val;
+      updatePanelColor(color) {
+        if (this.panelThumb) {
+          if (color) {
+            this.panelThumb.style.backgroundColor = color.trim();
+          } else {
+            this.updateColors();
+          }
         }
       }
 
-      update() {
-        const { scrollHeight, clientHeight, scrollTop } = this.getScrollInfo();
+      getWindowScrollInfo() {
+        const doc = document.documentElement;
+        const scrollHeight = Math.max(doc.scrollHeight, document.body.scrollHeight);
+        const clientHeight = window.innerHeight;
+        const scrollTop = window.scrollY || doc.scrollTop || document.body.scrollTop || 0;
+        return { scrollHeight, clientHeight, scrollTop };
+      }
+
+      getPanelScrollInfo() {
+        if (!this.panelContainer) {
+          this.panelContainer = document.querySelector('#app-component-panel .component-panel-body');
+        }
+        if (!this.panelContainer) return { scrollHeight: 0, clientHeight: 0, scrollTop: 0 };
+        return {
+          scrollHeight: this.panelContainer.scrollHeight,
+          clientHeight: this.panelContainer.clientHeight,
+          scrollTop: this.panelContainer.scrollTop
+        };
+      }
+
+      updateWindow() {
+        if (!this.track || !this.windowThumb) return;
+        const { scrollHeight, clientHeight, scrollTop } = this.getWindowScrollInfo();
         const trackHeight = this.track.clientHeight;
-        
         if (scrollHeight <= clientHeight + 4 || trackHeight <= 0) {
-          this.track.style.display = 'none';
+          this.windowThumb.style.display = 'none';
           return;
         }
-        this.track.style.display = 'block';
-
+        this.windowThumb.style.display = 'block';
         const thumbHeight = Math.max(28, (clientHeight / scrollHeight) * trackHeight);
         const maxTop = trackHeight - thumbHeight;
         const maxScroll = scrollHeight - clientHeight;
         const thumbTop = maxScroll > 0 ? (scrollTop / maxScroll) * maxTop : 0;
-
-        this.thumb.style.height = `${Math.round(thumbHeight)}px`;
-        this.thumb.style.transform = `translateY(${Math.round(thumbTop)}px)`;
+        this.windowThumb.style.height = `${Math.round(thumbHeight)}px`;
+        this.windowThumb.style.transform = `translateY(${Math.round(thumbTop)}px)`;
       }
 
-      show() {
-        this.update();
-        this.track.classList.add('is-visible');
-        if (this.hideTimer) clearTimeout(this.hideTimer);
-        if (!this.isDragging) {
-          this.hideTimer = setTimeout(() => {
-            this.track.classList.remove('is-visible');
-          }, 1100);
+      updatePanel() {
+        if (!this.track || !this.panelThumb) return;
+        const { scrollHeight, clientHeight, scrollTop } = this.getPanelScrollInfo();
+        const trackHeight = this.track.clientHeight;
+        if (scrollHeight <= clientHeight + 4 || trackHeight <= 0) {
+          this.panelThumb.style.display = 'none';
+          return;
+        }
+        this.panelThumb.style.display = 'block';
+        const thumbHeight = Math.max(28, (clientHeight / scrollHeight) * trackHeight);
+        const maxTop = trackHeight - thumbHeight;
+        const maxScroll = scrollHeight - clientHeight;
+        const thumbTop = maxScroll > 0 ? (scrollTop / maxScroll) * maxTop : 0;
+        this.panelThumb.style.height = `${Math.round(thumbHeight)}px`;
+        this.panelThumb.style.transform = `translateY(${Math.round(thumbTop)}px)`;
+      }
+
+      showWindow() {
+        this.updateWindow();
+        this.updateColors();
+        this.windowThumb.classList.remove('is-dimmed');
+        this.windowThumb.classList.add('is-visible', 'is-active-scrolling');
+        this.panelThumb.classList.remove('is-active-scrolling');
+        this.windowThumb.style.zIndex = '10';
+        this.panelThumb.style.zIndex = '5';
+        this.updateTrackState();
+        this.updateActivePhase();
+
+        if (this.windowDimTimer) clearTimeout(this.windowDimTimer);
+        if (this.windowHideTimer) clearTimeout(this.windowHideTimer);
+
+        if (!this.isDraggingWindow) {
+          // 2.9s 自动变暗 (进入第二阶段，解除调节条锁定)
+          this.windowDimTimer = setTimeout(() => {
+            this.windowThumb.classList.remove('is-active-scrolling');
+            this.windowThumb.classList.add('is-dimmed');
+            this.updateActivePhase();
+          }, 2900);
+
+          // 5s 完全淡出
+          this.windowHideTimer = setTimeout(() => {
+            this.windowThumb.classList.remove('is-visible', 'is-active-scrolling', 'is-dimmed');
+            this.updateTrackState();
+            this.updateActivePhase();
+          }, 5000);
+        }
+      }
+
+      showPanel() {
+        this.updatePanel();
+        this.updateColors();
+        this.panelThumb.classList.remove('is-dimmed');
+        this.panelThumb.classList.add('is-visible', 'is-active-scrolling');
+        this.windowThumb.classList.remove('is-active-scrolling');
+        this.panelThumb.style.zIndex = '10';
+        this.windowThumb.style.zIndex = '5';
+        this.updateTrackState();
+        this.updateActivePhase();
+
+        if (this.panelDimTimer) clearTimeout(this.panelDimTimer);
+        if (this.panelHideTimer) clearTimeout(this.panelHideTimer);
+
+        if (!this.isDraggingPanel) {
+          // 2.9s 自动变暗 (进入第二阶段，解除调节条锁定)
+          this.panelDimTimer = setTimeout(() => {
+            this.panelThumb.classList.remove('is-active-scrolling');
+            this.panelThumb.classList.add('is-dimmed');
+            this.updateActivePhase();
+          }, 2900);
+
+          // 5s 完全淡出
+          this.panelHideTimer = setTimeout(() => {
+            this.panelThumb.classList.remove('is-visible', 'is-active-scrolling', 'is-dimmed');
+            this.updateTrackState();
+            this.updateActivePhase();
+          }, 5000);
+        }
+      }
+
+      updateTrackState() {
+        if (!this.track) return;
+        const isAnyVisible = this.windowThumb.classList.contains('is-visible') || 
+                             this.panelThumb.classList.contains('is-visible') ||
+                             this.isDraggingWindow || 
+                             this.isDraggingPanel;
+        if (isAnyVisible) {
+          this.track.classList.add('is-visible');
+        } else {
+          this.track.classList.remove('is-visible');
+        }
+      }
+
+      updateActivePhase() {
+        const isAnyPhase1 = (this.windowThumb && this.windowThumb.classList.contains('is-active-scrolling')) ||
+                            (this.panelThumb && this.panelThumb.classList.contains('is-active-scrolling')) ||
+                            this.isDraggingWindow ||
+                            this.isDraggingPanel;
+        if (isAnyPhase1) {
+          document.body.classList.add('is-scrollbar-phase-active');
+        } else {
+          document.body.classList.remove('is-scrollbar-phase-active');
         }
       }
 
       bindEvents() {
-        const scrollTarget = this.isWindow ? window : this.container;
-        scrollTarget.addEventListener('scroll', () => {
-          this.show();
+        window.addEventListener('scroll', () => {
+          this.showWindow();
         }, { passive: true });
 
-        // 拖拽 Thumb 滚动
-        this.thumb.addEventListener('pointerdown', (e) => {
+        if (this.panelContainer) {
+          this.panelContainer.addEventListener('scroll', () => {
+            this.showPanel();
+          }, { passive: true });
+        }
+
+        // Window Thumb Dragging
+        this.windowThumb.addEventListener('pointerdown', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          this.isDragging = true;
+          this.isDraggingWindow = true;
+          this.windowThumb.classList.add('is-dragging', 'is-active-scrolling');
+          this.panelThumb.classList.remove('is-active-scrolling');
+          this.windowThumb.style.zIndex = '10';
+          this.panelThumb.style.zIndex = '5';
           this.track.classList.add('is-dragging');
+          this.updateActivePhase();
           this.dragStartY = e.clientY;
-          const { scrollTop } = this.getScrollInfo();
+          const { scrollTop } = this.getWindowScrollInfo();
           this.dragStartScrollTop = scrollTop;
-          try { this.thumb.setPointerCapture(e.pointerId); } catch (_) {}
+          try { this.windowThumb.setPointerCapture(e.pointerId); } catch (_) {}
         });
 
-        this.thumb.addEventListener('pointermove', (e) => {
-          if (!this.isDragging) return;
+        this.windowThumb.addEventListener('pointermove', (e) => {
+          if (!this.isDraggingWindow) return;
           e.preventDefault();
           e.stopPropagation();
           const deltaY = e.clientY - this.dragStartY;
-          const { scrollHeight, clientHeight } = this.getScrollInfo();
+          const { scrollHeight, clientHeight } = this.getWindowScrollInfo();
           const trackHeight = this.track.clientHeight;
-          const thumbHeight = this.thumb.offsetHeight;
+          const thumbHeight = this.windowThumb.offsetHeight;
           const maxTop = trackHeight - thumbHeight;
           const maxScroll = scrollHeight - clientHeight;
           if (maxTop > 0) {
             const scrollDelta = (deltaY / maxTop) * maxScroll;
-            this.setScrollTop(this.dragStartScrollTop + scrollDelta);
+            window.scrollTo({ top: this.dragStartScrollTop + scrollDelta, behavior: 'instant' });
           }
         });
 
-        const endDrag = (e) => {
-          if (!this.isDragging) return;
-          this.isDragging = false;
+        const endWindowDrag = (e) => {
+          if (!this.isDraggingWindow) return;
+          this.isDraggingWindow = false;
+          this.windowThumb.classList.remove('is-dragging');
           this.track.classList.remove('is-dragging');
-          try { this.thumb.releasePointerCapture(e.pointerId); } catch (_) {}
-          this.show();
+          try { this.windowThumb.releasePointerCapture(e.pointerId); } catch (_) {}
+          this.showWindow();
         };
+        this.windowThumb.addEventListener('pointerup', endWindowDrag);
+        this.windowThumb.addEventListener('pointercancel', endWindowDrag);
 
-        this.thumb.addEventListener('pointerup', endDrag);
-        this.thumb.addEventListener('pointercancel', endDrag);
-
-        // 点击轨道跳转
-        this.track.addEventListener('click', (e) => {
-          if (e.target === this.thumb) return;
-          const rect = this.track.getBoundingClientRect();
-          const clickY = e.clientY - rect.top;
-          const { scrollHeight, clientHeight } = this.getScrollInfo();
-          const trackHeight = this.track.clientHeight;
-          const targetScroll = (clickY / trackHeight) * (scrollHeight - clientHeight);
-          this.setScrollTop(targetScroll);
-          this.show();
+        // Panel Thumb Dragging
+        this.panelThumb.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.isDraggingPanel = true;
+          this.panelThumb.classList.add('is-dragging', 'is-active-scrolling');
+          this.windowThumb.classList.remove('is-active-scrolling');
+          this.panelThumb.style.zIndex = '10';
+          this.windowThumb.style.zIndex = '5';
+          this.track.classList.add('is-dragging');
+          this.updateActivePhase();
+          this.dragStartY = e.clientY;
+          const { scrollTop } = this.getPanelScrollInfo();
+          this.dragStartScrollTop = scrollTop;
+          try { this.panelThumb.setPointerCapture(e.pointerId); } catch (_) {}
         });
 
+        this.panelThumb.addEventListener('pointermove', (e) => {
+          if (!this.isDraggingPanel) return;
+          if (!this.panelContainer) this.panelContainer = document.querySelector('#app-component-panel .component-panel-body');
+          if (!this.panelContainer) return;
+          e.preventDefault();
+          e.stopPropagation();
+          const deltaY = e.clientY - this.dragStartY;
+          const { scrollHeight, clientHeight } = this.getPanelScrollInfo();
+          const trackHeight = this.track.clientHeight;
+          const thumbHeight = this.panelThumb.offsetHeight;
+          const maxTop = trackHeight - thumbHeight;
+          const maxScroll = scrollHeight - clientHeight;
+          if (maxTop > 0) {
+            const scrollDelta = (deltaY / maxTop) * maxScroll;
+            this.panelContainer.scrollTop = this.dragStartScrollTop + scrollDelta;
+          }
+        });
+
+        const endPanelDrag = (e) => {
+          if (!this.isDraggingPanel) return;
+          this.isDraggingPanel = false;
+          this.panelThumb.classList.remove('is-dragging');
+          this.track.classList.remove('is-dragging');
+          try { this.panelThumb.releasePointerCapture(e.pointerId); } catch (_) {}
+          this.showPanel();
+        };
+        this.panelThumb.addEventListener('pointerup', endPanelDrag);
+        this.panelThumb.addEventListener('pointercancel', endPanelDrag);
+
         window.addEventListener('resize', () => {
-          this.update();
+          this.updateWindow();
+          this.updatePanel();
+          this.updateColors();
         }, { passive: true });
 
-        if (window.ResizeObserver && !this.isWindow) {
-          new ResizeObserver(() => this.update()).observe(this.container);
+        if (window.ResizeObserver && this.panelContainer) {
+          new ResizeObserver(() => {
+            this.updatePanel();
+          }).observe(this.panelContainer);
         }
       }
     }
@@ -4082,12 +4327,8 @@ window.addEventListener('m29:loaded', function() {
     // 初始化宽度调整手柄
     initComponentPanelResizer();
 
-    // 初始化全局页面与组件栏浮动滚动条
-    window.pageOverlayScrollbar = new M29OverlayScrollbar(window);
-    const panelBodyEl = document.querySelector('#app-component-panel .component-panel-body');
-    if (panelBodyEl) {
-      window.panelOverlayScrollbar = new M29OverlayScrollbar(panelBodyEl);
-    }
+    // 初始化全局页面与组件栏共享浮动滚动条 (共享同一根左侧轨道)
+    window.sharedOverlayScrollbar = new M29SharedOverlayScrollbar();
 
     // =========================================================================
     // 🌐 全局暴露所有组件交互方法 (供 HTML 模块内部 inline onclick 正常调用)
