@@ -168,7 +168,7 @@ export class MdcNavigationRail {
         if (!isTextOrInteractive(e.target)) {
           if (this.activeOverlayId) {
             this.closeOverlay(this.activeOverlayId);
-          } else if (window.innerWidth < 600 || this.root.classList.contains('mobile-open')) {
+          } else if (window.innerWidth < 640 || this.root.classList.contains('mobile-open')) {
             this.closeMobileDrawer();
           } else {
             this.root.classList.remove('is-expanded');
@@ -182,7 +182,7 @@ export class MdcNavigationRail {
         e.stopPropagation();
         if (this.activeOverlayId) {
           this.closeOverlay(this.activeOverlayId);
-        } else if (window.innerWidth < 600 || this.root.classList.contains('mobile-open')) {
+        } else if (window.innerWidth < 640 || this.root.classList.contains('mobile-open')) {
           this.closeMobileDrawer();
         } else if (this.root.classList.contains('is-expanded')) {
           this.root.classList.remove('is-expanded');

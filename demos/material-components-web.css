@@ -1090,7 +1090,7 @@ body.downgrade-1col .main-container {
   }
 }
 
-@media (max-width: 599.9px) {
+@media (max-width: 639.9px) {
   .main-container {
     margin-left: 0 !important;
     padding: 16px 16px 80px 16px !important;
@@ -1639,8 +1639,8 @@ body.downgrade-1col .main-container {
   background-color: #19181e;
 }
 
-/* 移动端 (< 600px)：左边缘向右滑动 / 静止 2.9 秒悬浮按钮呼出 (全量 260px 抽屉模式) */
-@media (max-width: 599.9px) {
+/* 移动端 (< 640px)：左边缘向右滑动 / 静止 2.9 秒悬浮按钮呼出 (全量 260px 抽屉模式) */
+@media (max-width: 639.9px) {
   .mdc-navigation-rail {
     display: flex !important;
     transform: translateX(-100%);
@@ -1730,7 +1730,7 @@ body.downgrade-1col .main-container {
 
 
 /* 桌面端默认彻底隐藏移动端抽屉组件与悬浮按钮 */
-@media (min-width: 768px) {
+@media (min-width: 640px) {
   .mdc-mobile-drawer,
   .mobile-drawer-backdrop,
   .mobile-floating-menu-btn {
@@ -1738,8 +1738,8 @@ body.downgrade-1col .main-container {
   }
 }
 
-/* 移动端 (< 768px)：独立抽屉组件 */
-@media (max-width: 767.9px) {
+/* 移动端 (< 640px)：独立抽屉组件 */
+@media (max-width: 639.9px) {
   /* 移动端隐藏桌面端 Navigation Rail */
   .mdc-navigation-rail {
     display: none !important;
@@ -2017,6 +2017,167 @@ body.downgrade-1col .main-container {
 .dark-theme .mobile-drawer-nav-list {
   background-color: var(--mdc-theme-surface, #19181e);
 }
+
+/* 🌟 Android 10-12 全面屏手势滑动引导 (Line -> Arrow Edge Gesture Hint) */
+.m29-gesture-hint {
+  position: fixed;
+  top: 50%;
+  z-index: 99995;
+  pointer-events: auto;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 60px;
+  background-color: var(--mdc-theme-primary, #6750a4);
+  color: var(--mdc-theme-on-primary, #ffffff);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.m29-gesture-hint--left {
+  left: 0;
+  border-radius: 0 30px 30px 0 !important;
+  transform: translateY(-50%) translateX(-100%);
+}
+
+.m29-gesture-hint--right {
+  right: 0;
+  border-radius: 30px 0 0 30px !important;
+  transform: translateY(-50%) translateX(100%);
+}
+
+.m29-gesture-hint svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  transition: transform 0.2s ease;
+}
+
+/* 激活左侧滑动引导动画 (2.9s 完整手势生命周期 · 直线弯曲为右箭头) */
+.m29-gesture-hint--left.is-animating {
+  display: flex !important;
+  animation: m29-gesture-left-swipe 2.9s cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
+.m29-gesture-hint--left.is-animating svg path {
+  animation: m29-morph-arrow-right 2.9s cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
+/* 激活右侧滑动引导动画 (2.9s 完整手势生命周期 · 直线弯曲为左箭头) */
+.m29-gesture-hint--right.is-animating {
+  display: flex !important;
+  animation: m29-gesture-right-swipe 2.9s cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
+.m29-gesture-hint--right.is-animating svg path {
+  animation: m29-morph-arrow-left 2.9s cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
+@keyframes m29-gesture-left-swipe {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-100%);
+  }
+  12% {
+    opacity: 0.95;
+    transform: translateY(-50%) translateX(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(12px);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(18px);
+  }
+  75% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(8px);
+  }
+  88% {
+    opacity: 0.9;
+    transform: translateY(-50%) translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-100%);
+  }
+}
+
+@keyframes m29-morph-arrow-right {
+  0%, 10% {
+    d: path("M 8,4 L 8,12 L 8,20");
+  }
+  30%, 75% {
+    d: path("M 6,5 L 16,12 L 6,19");
+  }
+  90%, 100% {
+    d: path("M 8,4 L 8,12 L 8,20");
+  }
+}
+
+@keyframes m29-gesture-right-swipe {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(100%);
+  }
+  12% {
+    opacity: 0.95;
+    transform: translateY(-50%) translateX(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-12px);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-18px);
+  }
+  75% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-8px);
+  }
+  88% {
+    opacity: 0.9;
+    transform: translateY(-50%) translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(100%);
+  }
+}
+
+@keyframes m29-morph-arrow-left {
+  0%, 10% {
+    d: path("M 16,4 L 16,12 L 16,20");
+  }
+  30%, 75% {
+    d: path("M 18,5 L 8,12 L 18,19");
+  }
+  90%, 100% {
+    d: path("M 16,4 L 16,12 L 16,20");
+  }
+}
+
+@media (min-width: 640px) {
+  .m29-gesture-hint--left {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) {
+  .m29-gesture-hint--right {
+    display: none !important;
+  }
+}
+
 
 
 /* --- Component: packages/mdc-monet/mdc-monet.scss --- */
@@ -4873,7 +5034,7 @@ body.layout-swap {
   box-sizing: border-box !important;
 }
 
-@media (max-width: 599.9px) {
+@media (max-width: 639.9px) {
   .main-container {
     margin-left: 0 !important;
     padding: 16px 16px 80px 16px !important;

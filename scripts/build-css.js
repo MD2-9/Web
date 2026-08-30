@@ -98,7 +98,7 @@ function build() {
   box-sizing: border-box !important;
 }
 
-@media (max-width: 599.9px) {
+@media (max-width: 639.9px) {
   .main-container {
     margin-left: 0 !important;
     padding: 16px 16px 80px 16px !important;

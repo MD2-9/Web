@@ -530,8 +530,8 @@
   background-color: #19181e;
 }
 
-/* 移动端 (< 600px)：左边缘向右滑动 / 静止 2.9 秒悬浮按钮呼出 (全量 260px 抽屉模式) */
-@media (max-width: 599.9px) {
+/* 移动端 (< 640px)：左边缘向右滑动 / 静止 2.9 秒悬浮按钮呼出 (全量 260px 抽屉模式) */
+@media (max-width: 639.9px) {
   .mdc-navigation-rail {
     display: flex !important;
     transform: translateX(-100%);

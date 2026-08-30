@@ -198,8 +198,8 @@ $mdc-rail-drawer-expanded-width: 260px !default;
   }
 }
 
-// 移动端 (< 600px) 响应式转换为底部导航栏 (Bottom Navigation Bar)
-@media (max-width: 599.9px) {
+// 移动端 (< 640px) 响应式转换为底部导航栏 (Bottom Navigation Bar)
+@media (max-width: 639.9px) {
   .mdc-drawer-rail-layout {
     padding-left: 0 !important;
     padding-bottom: 56px !important;

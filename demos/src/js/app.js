@@ -592,7 +592,7 @@ window.addEventListener('m29:loaded', function() {
         const rawWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--component-panel-width'), 10);
         panelWidth = (!isNaN(rawWidth) && rawWidth > 0) ? rawWidth : 290;
       }
-      const railWidth = isDesktop ? 72 : 0;
+      const railWidth = window.innerWidth >= 640 ? 72 : 0;
       
       // 主内容区域净可用宽度
       const availableWidth = window.innerWidth - railWidth - panelWidth;
@@ -906,7 +906,7 @@ window.addEventListener('m29:loaded', function() {
         event.stopPropagation();
       }
 
-      const isMobile = window.innerWidth < 600;
+      const isMobile = window.innerWidth < 640;
       const targetContainer = isMobile ? document.getElementById('app-mobile-drawer') : document.getElementById('app-rail');
       const panel = document.getElementById(panelId);
       if (!targetContainer || !panel) return;
@@ -979,7 +979,7 @@ window.addEventListener('m29:loaded', function() {
       if (!id) return;
 
       const panel = document.getElementById(id);
-      const isMobile = window.innerWidth < 600;
+      const isMobile = window.innerWidth < 640;
       const targetContainer = isMobile ? document.getElementById('app-mobile-drawer') : document.getElementById('app-rail');
       if (!panel) return;
 
@@ -1061,20 +1061,20 @@ window.addEventListener('m29:loaded', function() {
     const desktopRail = document.getElementById('app-rail');
     if (desktopRail) {
       desktopRail.addEventListener('mouseenter', () => {
-        if (window.innerWidth >= 600) {
+        if (window.innerWidth >= 640) {
           desktopRail.classList.add('is-expanded');
         }
       });
 
       desktopRail.addEventListener('mouseleave', () => {
-        if (window.innerWidth >= 600 && !activeOverlayId) {
+        if (window.innerWidth >= 640 && !activeOverlayId) {
           desktopRail.classList.remove('is-expanded');
         }
       });
 
       // 🌟 桌面端点击侧边栏空白区域返回 (单点空白返回上一级/收起，文本区域除外)
       desktopRail.addEventListener('click', (e) => {
-        if (window.innerWidth >= 600) {
+        if (window.innerWidth >= 640) {
           if (!e || !e.target) return;
           if (!isSidebarTextOrInteractive(e.target)) {
             if (activeOverlayId) {
@@ -1089,7 +1089,7 @@ window.addEventListener('m29:loaded', function() {
 
     // 点击页面主体空白处时，收回桌面端二级覆层
     document.addEventListener('click', (e) => {
-      if (window.innerWidth >= 600 && activeOverlayId) {
+      if (window.innerWidth >= 640 && activeOverlayId) {
         if (!e || !e.target || typeof e.target.closest !== 'function') return;
         if (!e.target.closest('#app-rail, .secondary-overlay-panel, #themePickerPanel, [onclick*="openOverlay"], [onclick*="themePickerPanel"]')) {
           closeOverlay(activeOverlayId, e);
@@ -1151,6 +1151,109 @@ window.addEventListener('m29:loaded', function() {
     // 3. 点击【跳转页面内容】的导航链接时，保持 0.39s (390ms) 延迟后平滑收回
     // 4. 点击【非跳转按钮】(如二级目录展开、设置、关于、调色盘、暗色切换) 不收回侧边栏
     // =========================================================================
+    // =========================================================================
+    // 📱 移动端边缘滑动引导系统 (Android 10-12 全面屏手势动画 · 直线变箭头)
+    // 页面静止 2.9s 出现，持续 2.9s，每次刷新最多出现 2 次；成功打开对应面板 2 次后写入 localStorage 永久静默
+    // =========================================================================
+    let leftGestureHintCount = 0;
+    let rightGestureHintCount = 0;
+    let leftHintTimer = null;
+    let rightHintTimer = null;
+
+    function getDrawerOpenSuccessCount() {
+      return parseInt(localStorage.getItem('m29_drawer_open_count') || '0', 10);
+    }
+    function recordDrawerOpenSuccess() {
+      const count = getDrawerOpenSuccessCount() + 1;
+      localStorage.setItem('m29_drawer_open_count', count.toString());
+      if (count >= 2) {
+        localStorage.setItem('m29_drawer_hint_disabled', 'true');
+      }
+      hideGestureHints();
+    }
+
+    function getPanelOpenSuccessCount() {
+      return parseInt(localStorage.getItem('m29_panel_open_count') || '0', 10);
+    }
+    function recordPanelOpenSuccess() {
+      const count = getPanelOpenSuccessCount() + 1;
+      localStorage.setItem('m29_panel_open_count', count.toString());
+      if (count >= 2) {
+        localStorage.setItem('m29_panel_hint_disabled', 'true');
+      }
+      hideGestureHints();
+    }
+
+    function isLeftGestureHintDisabled() {
+      return localStorage.getItem('m29_drawer_hint_disabled') === 'true' || getDrawerOpenSuccessCount() >= 2;
+    }
+
+    function isRightGestureHintDisabled() {
+      return localStorage.getItem('m29_panel_hint_disabled') === 'true' || getPanelOpenSuccessCount() >= 2;
+    }
+
+    function triggerGestureHints() {
+      // 1. 左侧抽屉引导 (< 640px 移动端且未超额)
+      if (window.innerWidth < 640 && !isLeftGestureHintDisabled() && leftGestureHintCount < 2) {
+        const mobileDrawer = document.getElementById('app-mobile-drawer');
+        const isDrawerOpen = mobileDrawer && (mobileDrawer.classList.contains('mobile-open') || mobileDrawer.classList.contains('is-open'));
+        if (!isDrawerOpen) {
+          const hintLeft = document.getElementById('m29GestureHintLeft');
+          if (hintLeft) {
+            hintLeft.classList.remove('is-animating');
+            void hintLeft.offsetWidth; // 触发重绘重播动画
+            hintLeft.classList.add('is-animating');
+            leftGestureHintCount++;
+            if (leftHintTimer) clearTimeout(leftHintTimer);
+            leftHintTimer = setTimeout(() => {
+              hintLeft.classList.remove('is-animating');
+              leftHintTimer = null;
+            }, 2900);
+          }
+        }
+      }
+
+      // 2. 右侧组件栏引导 (< 768px 移动/折叠期且未超额)
+      if (window.innerWidth < 768 && !isRightGestureHintDisabled() && rightGestureHintCount < 2) {
+        const compPanel = document.getElementById('app-component-panel');
+        const isPanelOpen = compPanel && compPanel.classList.contains('is-open');
+        if (!isPanelOpen) {
+          const hintRight = document.getElementById('m29GestureHintRight');
+          if (hintRight) {
+            hintRight.classList.remove('is-animating');
+            void hintRight.offsetWidth; // 触发重绘重播动画
+            hintRight.classList.add('is-animating');
+            rightGestureHintCount++;
+            if (rightHintTimer) clearTimeout(rightHintTimer);
+            rightHintTimer = setTimeout(() => {
+              hintRight.classList.remove('is-animating');
+              rightHintTimer = null;
+            }, 2900);
+          }
+        }
+      }
+    }
+
+    function hideGestureHints() {
+      const hintLeft = document.getElementById('m29GestureHintLeft');
+      if (hintLeft) {
+        hintLeft.classList.remove('is-animating');
+      }
+      if (leftHintTimer) {
+        clearTimeout(leftHintTimer);
+        leftHintTimer = null;
+      }
+
+      const hintRight = document.getElementById('m29GestureHintRight');
+      if (hintRight) {
+        hintRight.classList.remove('is-animating');
+      }
+      if (rightHintTimer) {
+        clearTimeout(rightHintTimer);
+        rightHintTimer = null;
+      }
+    }
+
     let idleTimeoutSeconds = 2.9;
     let idleTimer = null;
 
@@ -1159,15 +1262,20 @@ window.addEventListener('m29:loaded', function() {
         if (e.target.closest('#btnMobileFloatingMenu') || 
             e.target.closest('#app-mobile-drawer') || 
             e.target.closest('#mobileDrawerBackdrop') ||
-            e.target.closest('.mobile-drawer-backdrop')) {
+            e.target.closest('.mobile-drawer-backdrop') ||
+            e.target.closest('#app-component-panel') ||
+            e.target.closest('#componentPanelBackdrop') ||
+            e.target.closest('.m29-gesture-hint')) {
           return;
         }
       }
       document.body.classList.remove('page-is-idle');
+      hideGestureHints();
       if (idleTimer) clearTimeout(idleTimer);
 
       idleTimer = setTimeout(() => {
         document.body.classList.add('page-is-idle');
+        triggerGestureHints();
       }, idleTimeoutSeconds * 1000);
     }
 
@@ -1177,6 +1285,7 @@ window.addEventListener('m29:loaded', function() {
     resetIdleTimer();
 
     function openMobileDrawer() {
+      recordDrawerOpenSuccess();
       const mobileDrawer = document.getElementById('app-mobile-drawer');
       const backdrop = document.getElementById('mobileDrawerBackdrop');
       if (mobileDrawer) {
@@ -1205,6 +1314,7 @@ window.addEventListener('m29:loaded', function() {
     // 🧩 右侧组件栏交互 (Component Panel)
     // =========================================================================
     function openComponentPanel() {
+      recordPanelOpenSuccess();
       const panel = document.getElementById('app-component-panel');
       const backdrop = document.getElementById('componentPanelBackdrop');
       if (window.innerWidth >= 768) {
