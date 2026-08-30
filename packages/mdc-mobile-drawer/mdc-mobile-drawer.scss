@@ -6,7 +6,7 @@
 //
 
 /* 桌面端默认彻底隐藏移动端抽屉组件与悬浮按钮 */
-@media (min-width: 600px) {
+@media (min-width: 768px) {
   .mdc-mobile-drawer,
   .mobile-drawer-backdrop,
   .mobile-floating-menu-btn {
@@ -14,8 +14,8 @@
   }
 }
 
-/* 移动端 (< 600px)：独立抽屉组件 */
-@media (max-width: 599.9px) {
+/* 移动端 (< 768px)：独立抽屉组件 */
+@media (max-width: 767.9px) {
   /* 移动端隐藏桌面端 Navigation Rail */
   .mdc-navigation-rail {
     display: none !important;
@@ -205,9 +205,11 @@
     pointer-events: auto;
   }
 
-  /* 悬浮唤出按钮 (页面静止 2.9 秒唤出) */
+  /* 悬浮唤出按钮 (移动端默认常驻显示，点击展开侧边栏) */
   .mobile-floating-menu-btn {
     display: flex !important;
+    align-items: center;
+    justify-content: center;
     position: fixed;
     bottom: 24px;
     left: 24px;
@@ -218,18 +220,19 @@
     border-radius: 50% !important;
     width: 48px;
     height: 48px;
-    opacity: 0;
-    transform: scale(0.8) translateY(16px);
-    pointer-events: none;
+    opacity: 0.95 !important;
+    transform: scale(1) translateY(0) !important;
+    pointer-events: auto !important;
+    cursor: pointer;
+    border: none;
     transition: opacity 0.35s cubic-bezier(0, 0, 0.2, 1),
                 transform 0.35s cubic-bezier(0, 0, 0.2, 1),
-                background-color 0.3s ease;
-  }
+                background-color 0.3s ease,
+                box-shadow 0.3s ease;
 
-  body.page-is-idle .mobile-floating-menu-btn {
-    opacity: 0.95;
-    transform: scale(1) translateY(0);
-    pointer-events: auto;
+    &:active {
+      transform: scale(0.92) !important;
+    }
   }
 
   /* 🌟 移动端二级面板：内容与菜单向下对齐（Bottom-to-Top / 贴底排列） */

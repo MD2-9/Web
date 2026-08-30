@@ -168,6 +168,7 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch;
   padding: 16px 16px 24px 16px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

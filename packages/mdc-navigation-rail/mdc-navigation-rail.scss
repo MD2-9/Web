@@ -580,8 +580,11 @@
     pointer-events: auto;
   }
 
+  /* 悬浮唤出按钮 (移动端默认常驻显示，点击展开侧边栏) */
   .mobile-floating-menu-btn {
     display: flex !important;
+    align-items: center;
+    justify-content: center;
     position: fixed;
     bottom: 24px;
     left: 24px;
@@ -592,17 +595,18 @@
     border-radius: 50% !important;
     width: 48px;
     height: 48px;
-    opacity: 0;
-    transform: scale(0.8) translateY(16px);
-    pointer-events: none;
+    opacity: 0.95 !important;
+    transform: scale(1) translateY(0) !important;
+    pointer-events: auto !important;
+    cursor: pointer;
+    border: none;
     transition: opacity 0.35s cubic-bezier(0, 0, 0.2, 1),
                 transform 0.35s cubic-bezier(0, 0, 0.2, 1),
-                background-color 0.3s ease;
-  }
+                background-color 0.3s ease,
+                box-shadow 0.3s ease;
 
-  body.page-is-idle .mobile-floating-menu-btn {
-    opacity: 0.95;
-    transform: scale(1) translateY(0);
-    pointer-events: auto;
+    &:active {
+      transform: scale(0.92) !important;
+    }
   }
 }

@@ -934,16 +934,18 @@ window.addEventListener('m29:loaded', function() {
       }, { passive: true });
     }
 
-    // 移动端边缘手势滑动唤出 (边缘右滑呼出 ✖ 反向左滑收起)
+    // 移动端边缘手势滑动唤出 (12% 边缘区域滑动手势 ✖ 反向滑动收起)
     let touchStartX = 0;
     let touchStartY = 0;
     let touchStartedInDrawer = false;
+    let touchStartedInPanel = false;
 
     window.addEventListener('touchstart', (e) => {
       if (!e.touches || !e.touches[0]) return;
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
       touchStartedInDrawer = !!(e.target && typeof e.target.closest === 'function' && e.target.closest('#app-mobile-drawer'));
+      touchStartedInPanel = !!(e.target && typeof e.target.closest === 'function' && e.target.closest('#app-component-panel'));
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
@@ -952,27 +954,32 @@ window.addEventListener('m29:loaded', function() {
       const touchEndY = e.changedTouches[0].clientY;
       const deltaX = touchEndX - touchStartX;
       const deltaY = Math.abs(touchEndY - touchStartY);
+      const screenWidth = window.innerWidth;
+      const edgeThreshold = Math.max(48, screenWidth * 0.12); // 12% 屏幕边缘有效滑动触发区
 
       const mobileDrawer = document.getElementById('app-mobile-drawer');
       const isDrawerOpen = mobileDrawer && (mobileDrawer.classList.contains('mobile-open') || mobileDrawer.classList.contains('is-open'));
 
-      // 边缘右滑呼出左侧抽屉
-      if (!isDrawerOpen && touchStartX < 35 && deltaX > 45 && deltaY < 80) {
+      const componentPanel = document.getElementById('app-component-panel');
+      const isComponentPanelOpen = componentPanel && componentPanel.classList.contains('is-open');
+
+      // 🌟 1. 左侧抽屉 (Left Drawer):
+      // 屏幕左侧 12% 区域内向右滑动打开 (避开系统自带最边缘手势，在 12% 区域即可舒适呼出)
+      if (!isDrawerOpen && touchStartX <= edgeThreshold && deltaX > 35 && deltaY < Math.abs(deltaX) * 1.5) {
         openMobileDrawer();
       }
-      // 反向左滑收起左侧抽屉
-      else if (isDrawerOpen && deltaX < -50 && deltaY < 80) {
+      // 抽屉开启状态下向左滑动收起
+      else if (isDrawerOpen && deltaX < -40 && deltaY < Math.abs(deltaX) * 1.5) {
         closeMobileDrawer();
       }
 
-      // 🧩 右侧边缘左滑呼出组件栏
-      const componentPanel = document.getElementById('app-component-panel');
-      const isComponentPanelOpen = componentPanel && componentPanel.classList.contains('is-open');
-      if (!isComponentPanelOpen && touchStartX > window.innerWidth - 35 && deltaX < -45 && deltaY < 80) {
+      // 🌟 2. 右侧组件栏 (Right Component Panel):
+      // 屏幕右侧 12% 区域内向左滑动打开
+      if (!isComponentPanelOpen && touchStartX >= screenWidth - edgeThreshold && deltaX < -35 && deltaY < Math.abs(deltaX) * 1.5) {
         openComponentPanel();
       }
-      // 右滑收起组件栏
-      else if (isComponentPanelOpen && deltaX > 50 && deltaY < 80) {
+      // 组件栏开启状态下向右滑动收起
+      else if (isComponentPanelOpen && deltaX > 40 && deltaY < Math.abs(deltaX) * 1.5) {
         closeComponentPanel();
       }
     }, { passive: true });
@@ -2342,34 +2349,33 @@ window.addEventListener('m29:loaded', function() {
 
     // 🌟 全局鼠标滚轮分发：组件栏在组件栏内部触发，内容区域在内容区域内部触发
     window.addEventListener('wheel', (e) => {
-      // 1. 判断是否在右侧组件栏内部滚动 (包括组件栏头部、卡片、DatePicker、空白背景等任意子元素)
+      // 1. 判断是否在右侧组件栏内部滚动
       const isInsidePanel = compPanelEl && (compPanelEl === e.target || compPanelEl.contains(e.target));
       if (isInsidePanel) {
         const panelBody = compPanelEl.querySelector('.component-panel-body') || compPanelEl;
-        if (panelBody) {
-          panelBody.scrollTop += e.deltaY;
-          if (window.sharedOverlayScrollbar) {
-            window.sharedOverlayScrollbar.showPanel();
-          }
+        const isInsideBody = panelBody && (panelBody === e.target || panelBody.contains(e.target));
 
-          if (window.componentPanelEdgeEffect) {
-            const scrollTop = panelBody.scrollTop;
-            const maxScrollY = panelBody.scrollHeight - panelBody.clientHeight;
-            const rect = compPanelEl.getBoundingClientRect();
-            const displacementX = (e.clientX - rect.left) / (rect.width || 1);
+        // 若光标处于组件栏头部或外框非滚动子元素上，将滚轮量平滑转发给 panelBody
+        if (!isInsideBody && panelBody) {
+          panelBody.scrollBy({ top: e.deltaY, behavior: 'auto' });
+          e.preventDefault();
+        }
 
-            const isTop = scrollTop <= 1 && e.deltaY < 0;
-            const isBottom = scrollTop >= maxScrollY - 2 && e.deltaY > 0;
+        if (panelBody && window.componentPanelEdgeEffect) {
+          const scrollTop = panelBody.scrollTop;
+          const maxScrollY = panelBody.scrollHeight - panelBody.clientHeight;
+          const rect = compPanelEl.getBoundingClientRect();
+          const displacementX = (e.clientX - rect.left) / (rect.width || 1);
 
-            if (isTop) {
-              window.componentPanelEdgeEffect.onAbsorb('top', Math.abs(e.deltaY), displacementX);
-            } else if (isBottom) {
-              window.componentPanelEdgeEffect.onAbsorb('bottom', Math.abs(e.deltaY), displacementX);
-            }
+          const isTop = scrollTop <= 1 && e.deltaY < 0;
+          const isBottom = scrollTop >= maxScrollY - 2 && e.deltaY > 0;
+
+          if (isTop) {
+            window.componentPanelEdgeEffect.onAbsorb('top', Math.abs(e.deltaY), displacementX);
+          } else if (isBottom) {
+            window.componentPanelEdgeEffect.onAbsorb('bottom', Math.abs(e.deltaY), displacementX);
           }
         }
-        // 彻底阻止任何向外冒泡导致的页面主体内容滚动
-        e.preventDefault();
         return;
       }
 
