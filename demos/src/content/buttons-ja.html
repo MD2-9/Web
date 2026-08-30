@@ -1,0 +1,94 @@
+<!--
+  M2.9 Content Card: ボタン、FAB、セグメントボタン、アイコンボタン (Japanese)
+  ═══════════════════════════════════════════════════
+-->
+<div class="demo-card" id="section-buttons">
+  <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+    <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">touch_app</i>
+    1. ボタン・フローティングアクションボタン・セグメント制御 (Buttons &amp; Actions)
+  </h3>
+  
+  <!-- 基本ボタン -->
+  <div style="font-size: 12px; font-weight: 600; margin-top: 12px; opacity: 0.85;">基本スタイルとエレベーション:</div>
+  <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
+    <button class="mdc-button mdc-button--raised">
+      <i class="material-icons mdc-button__icon">star</i>
+      Primary Raised
+    </button>
+    <button class="mdc-button mdc-button--unelevated" style="background-color: var(--mdc-theme-secondary); color: var(--mdc-theme-on-secondary);">
+      <i class="material-icons mdc-button__icon">favorite</i>
+      Secondary Tonal
+    </button>
+    <button class="mdc-button mdc-button--outlined">
+      <i class="material-icons mdc-button__icon">bookmark</i>
+      Outlined
+    </button>
+    <button class="mdc-button">
+      Flat Text
+    </button>
+    <button class="mdc-button mdc-button--dense mdc-button--raised">
+      Dense Button
+    </button>
+    <button class="mdc-button mdc-button--raised" disabled>
+      Disabled
+    </button>
+  </div>
+
+  <!-- アイコンボタンとバッジ -->
+  <div style="font-size: 12px; font-weight: 600; margin-top: 16px; opacity: 0.85;">アイコンボタンとダイナミックバッジ (Icon Buttons &amp; Badges):</div>
+  <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
+    <button class="mdc-button mdc-button--outlined" style="min-width: 44px; padding: 0 10px;" title="お気に入り">
+      <i class="material-icons">favorite_border</i>
+    </button>
+    <button class="mdc-button mdc-button--outlined" style="min-width: 44px; padding: 0 10px;" title="共有">
+      <i class="material-icons">share</i>
+    </button>
+    
+    <!-- 未読バッジ付きメッセージボタン -->
+    <div class="badge-container">
+      <button class="mdc-button mdc-button--raised" style="min-width: 44px; padding: 0 10px;" title="未読メッセージ">
+        <i class="material-icons">email</i>
+      </button>
+      <span class="badge-number">3</span>
+    </div>
+
+    <!-- 赤点バッジ付き通知ボタン -->
+    <div class="badge-container">
+      <button class="mdc-button mdc-button--outlined" style="min-width: 44px; padding: 0 10px;" title="システム通知">
+        <i class="material-icons">notifications</i>
+      </button>
+      <span class="badge-dot"></span>
+    </div>
+  </div>
+
+  <!-- セグメントボタン -->
+  <div style="font-size: 12px; font-weight: 600; margin-top: 16px; opacity: 0.85;">セグメントボタングループ (Segmented Buttons):</div>
+  <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
+    <div class="segmented-button-group" id="demoSegmentedGroup">
+      <button class="segmented-button is-selected" onclick="toggleSegmented(this)">
+        <i class="material-icons" style="font-size: 16px;">view_module</i> パノラマ
+      </button>
+      <button class="segmented-button" onclick="toggleSegmented(this)">
+        <i class="material-icons" style="font-size: 16px;">view_compact</i> コンパクト
+      </button>
+      <button class="segmented-button" onclick="toggleSegmented(this)">
+        <i class="material-icons" style="font-size: 16px;">view_list</i> リスト
+      </button>
+    </div>
+  </div>
+
+  <!-- FAB -->
+  <div style="font-size: 12px; font-weight: 600; margin-top: 16px; opacity: 0.85;">円形フローティングアクションボタン (FABs):</div>
+  <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
+    <button class="mdc-fab" style="border-radius: 50% !important;" title="Standard FAB">
+      <i class="material-icons mdc-fab__icon">add</i>
+    </button>
+    <button class="mdc-fab mdc-fab--mini" style="border-radius: 50% !important;" title="Mini FAB">
+      <i class="material-icons mdc-fab__icon">edit</i>
+    </button>
+    <button class="mdc-fab mdc-fab--extended" style="border-radius: 28px !important; padding: 0 20px;" title="Extended FAB">
+      <i class="material-icons mdc-fab__icon">send</i>
+      <span class="mdc-fab__label">Extended FAB</span>
+    </button>
+  </div>
+</div>

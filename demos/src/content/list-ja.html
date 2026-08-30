@@ -1,0 +1,61 @@
+<!--
+  M2.9 Content Card: リスト、アコーディオン、区切り線 (Japanese)
+  ═══════════════════════════════════════════════════
+-->
+<div class="demo-card" id="section-list">
+  <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+    <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">format_list_bulleted</i>
+    5. リスト・アコーディオン展開パネル・区切り線 (List, Accordion &amp; Dividers)
+  </h3>
+  <div class="component-grid">
+    
+    <!-- 2行リスト -->
+    <div class="demo-card" style="margin: 0; padding: 12px;">
+      <h4 style="margin: 0 0 8px 0; font-size: 14px;">2行リスト項目 (Two-line List)</h4>
+      <ul class="mdc-list mdc-list--two-line" style="padding: 0;">
+        <li class="mdc-list-item" style="height: 56px;">
+          <span class="mdc-list-item__graphic material-icons" style="color: var(--mdc-theme-primary);">folder</span>
+          <span class="mdc-list-item__text">
+            コアカラーモジュール
+            <span class="mdc-list-item__secondary-text">CAM16 / HCT 色空間エンジン</span>
+          </span>
+        </li>
+        <div class="mdc-divider mdc-divider--inset" style="margin: 0;"></div>
+        <li class="mdc-list-item" style="height: 56px;">
+          <span class="mdc-list-item__graphic material-icons" style="color: var(--mdc-theme-secondary);">dashboard</span>
+          <span class="mdc-list-item__text">
+            Navigation Rail アーキテクチャ
+            <span class="mdc-list-item__secondary-text">72px コンパクト / 260px ホバー展開</span>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- アコーディオン -->
+    <div>
+      <div class="expansion-panel is-open" onclick="toggleExpansion(this)">
+        <div class="expansion-header">
+          <span>項目 1: 完全直角デザイン原則</span>
+          <i class="material-icons expansion-arrow">keyboard_arrow_down</i>
+        </div>
+        <div class="expansion-body">
+          <div class="expansion-body__content">
+            純粋な MD1 骨格を維持し、角丸半径を厳格に 0px とし、切れ味鋭いエッジと豊かなシャドウで表現。
+          </div>
+        </div>
+      </div>
+
+      <div class="expansion-panel" onclick="toggleExpansion(this)">
+        <div class="expansion-header">
+          <span>項目 2: モネダークモード階調基準</span>
+          <i class="material-icons expansion-arrow">keyboard_arrow_down</i>
+        </div>
+        <div class="expansion-body">
+          <div class="expansion-body__content">
+            ダークモードでは Tone 20 の落ち着いた背景と Tone 12 の深いカードを採用し、純黒を廃した快適な視読性を確保。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

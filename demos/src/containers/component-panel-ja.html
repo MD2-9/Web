@@ -1,0 +1,42 @@
+<!--
+  M2.9 Container: 右側常駐コンポーネントパネル (Japanese)
+  ═══════════════════════════════════════════════════
+  📦 日本語版 Component Panel コンテナモジュール
+-->
+<aside class="mdc-component-panel" id="app-component-panel">
+  <!-- 左端リサイズハンドル (ダブルクリックで 290px に復帰) -->
+  <div class="component-panel-resizer" id="componentPanelResizer" title="左右ドラッグで幅を調節（ダブルクリックで 290px にリセット）"></div>
+
+  <div class="component-panel-header">
+    <div class="component-panel-header-title">
+      <button class="component-panel-action-btn" onclick="closeComponentPanel()" title="パネルを閉じる" style="margin-right: 2px;">
+        <i class="material-icons" style="font-size: 20px;">close</i>
+      </button>
+      <span>コンポーネント</span>
+    </div>
+    <div style="display: flex; gap: 4px; align-items: center;">
+      <button class="component-panel-action-btn" onclick="toggleLayoutSwap()" title="左右配置反転 (サイドバーとコンポーネントパネルの位置を交換)">
+        <i class="material-icons" style="font-size: 20px;">swap_horiz</i>
+      </button>
+      <button class="component-panel-action-btn" id="btnTogglePanelPalette" onclick="handleComponentPanelPaletteClick(event)" title="パネル専用パレット (長押し/右クリックでグローバル追従に戻す)">
+        <i class="material-icons" style="font-size: 18px;">palette</i>
+      </button>
+      <button class="component-panel-action-btn" id="btnTogglePanelWidth" onclick="toggleComponentPanelWidth()" title="パネル幅プリセット切替 (290px 単列 / 629px 2列)">
+        <i class="material-icons" id="componentPanelWidthIcon" style="font-size: 18px;">view_agenda</i>
+      </button>
+      <button class="component-panel-action-btn" id="btnTogglePanelTheme" onclick="toggleComponentPanelTheme()" title="パネル独立テーマ切替 (ダーク/ライト)">
+        <i class="material-icons" id="componentPanelThemeIcon" style="font-size: 18px;">brightness_4</i>
+      </button>
+    </div>
+  </div>
+
+  <div class="component-panel-body">
+
+    <!-- 📅 カレンダーピッカー (include) -->
+    <div data-include="/demos/src/widgets/date-picker.html"></div>
+
+    <!-- ⏰ 時計ピッカー (include) -->
+    <div data-include="/demos/src/widgets/time-picker.html"></div>
+
+  </div>
+</aside>

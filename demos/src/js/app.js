@@ -87,13 +87,13 @@ window.addEventListener('m29:loaded', function() {
 
       executeThemeRippleTransition(evt, () => {
         applyGlobalThemeMode(nextMode);
-        const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+        const lang = currentLang;
         if (nextMode === 'auto') {
-          showDemoToast(isEn ? 'Theme set to Auto (Following System Theme)' : '全局主题已切换为自动模式（跟随系统设置）');
+          showDemoToast(lang === 'en' ? 'Theme set to Auto (Following System Theme)' : (lang === 'ja' ? 'テーマを自動モード（システム準拠）に設定しました' : '全局主题已切换为自动模式（跟随系统设置）'));
         } else if (nextMode === 'light') {
-          showDemoToast(isEn ? 'Theme set to Light Mode' : '全局主题已切换为浅色模式');
+          showDemoToast(lang === 'en' ? 'Theme set to Light Mode' : (lang === 'ja' ? 'ライトテーマに設定しました' : '全局主题已切换为浅色模式'));
         } else {
-          showDemoToast(isEn ? 'Theme set to Dark Mode' : '全局主题已切换为暗色模式');
+          showDemoToast(lang === 'en' ? 'Theme set to Dark Mode' : (lang === 'ja' ? 'ダークテーマに設定しました' : '全局主题已切换为暗色模式'));
         }
       });
     }
@@ -115,14 +115,14 @@ window.addEventListener('m29:loaded', function() {
       if (railCompactDarkIcon) railCompactDarkIcon.textContent = icon;
       if (mobileDarkIcon) mobileDarkIcon.textContent = icon;
 
-      const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+      const lang = currentLang;
       let tip = '';
       if (currentGlobalThemeMode === 'auto') {
-        tip = isEn ? 'Current: Auto (Following System Theme) · Click for Light Mode' : '当前: 自动模式 (跟随系统设置) · 点击切换为浅色';
+        tip = lang === 'en' ? 'Current: Auto (Following System Theme) · Click for Light Mode' : (lang === 'ja' ? '現在: 自動モード（システム準拠） · クリックでライトへ' : '当前: 自动模式 (跟随系统设置) · 点击切换为浅色');
       } else if (currentGlobalThemeMode === 'light') {
-        tip = isEn ? 'Current: Light Mode · Click for Dark Mode' : '当前: 浅色模式 · 点击切换为暗色';
+        tip = lang === 'en' ? 'Current: Light Mode · Click for Dark Mode' : (lang === 'ja' ? '現在: ライトモード · クリックでダークへ' : '当前: 浅色模式 · 点击切换为暗色');
       } else {
-        tip = isEn ? 'Current: Dark Mode · Click for Auto Mode' : '当前: 暗色模式 · 点击切换为自动跟随系统';
+        tip = lang === 'en' ? 'Current: Dark Mode · Click for Auto Mode' : (lang === 'ja' ? '現在: ダークモード · クリックで自動へ' : '当前: 暗色模式 · 点击切换为自动跟随系统');
       }
 
       const btnDark = document.getElementById('btn-toggle-dark');
@@ -143,31 +143,400 @@ window.addEventListener('m29:loaded', function() {
     }
 
     // =========================================================================
-    // 🌐 语言切换系统 (Language / i18n)
+    // 🌐 多语言平滑热切换系统 (i18n System: zh-CN / en-US / ja-JP)
     // =========================================================================
     let currentLang = localStorage.getItem('m29_lang') || 'zh';
+    if (currentLang === 'jp') currentLang = 'ja';
 
-    function applyLanguage(lang) {
-      currentLang = lang;
-      localStorage.setItem('m29_lang', lang);
-      document.documentElement.lang = lang === 'en' ? 'en-US' : 'zh-CN';
+    const I18N_SIDEBAR_TEXTS = {
+      zh: {
+        brandSubtitle: '点击取色',
+        brandHeaderTitle: '点击打开莫奈动态调色盘',
+        navHome: '主页',
+        navCatalog: '目录',
+        navSettings: '设置',
+        navAbout: '关于',
+        navHomeTitle: '主页 (Overview)',
+        navCatalogTitle: '目录 (点击展开二级全景组件)',
+        navSettingsTitle: '设置 (暗色与主题配置)',
+        navAboutTitle: '关于项目',
+        catalogHeader: '组件全景目录',
+        catalogBack: '返回一级菜单',
+        catalogItems: [
+          '1. 按钮与 FAB', '2. 直角卡片', '3. 标签与徽标', '4. 表单与开关',
+          '5. 列表与手风琴', '6. 直角对话框与菜单', '7. 选项卡', '8. 进度条',
+          '9. 莫奈色彩全景实验室', '10. 排版与字体', '11. 日历与时钟选择器'
+        ],
+        settingsHeader: '外观与偏好设置',
+        settingsDimTitle: '色彩方案维度 (1 / 2 / 3 色)',
+        settingsDimSub: '支持 1色（单色）、2色（主次）与 3色（三色对比）无缝切换',
+        btnDim1: '1色·单色',
+        btnDim2: '2色·主次',
+        btnDim3: '3色·三色',
+        settingsMonetTitle: '莫奈动态调色盘',
+        btnOpenMonet: '打开水波纹 3 步调色盘',
+        settingsThemeTitle: '主题模式',
+        btnToggleTheme: '切换亮/暗色模式',
+        settingsSysTitle: '系统偏好设置',
+        btnClearSettings: '清除所有记忆配置',
+        aboutHeader: '关于 M2.9 项目',
+        btnPanelTitle: '组件栏 (开关/调出组件栏)',
+        btnLangTitle: '当前: 简体中文 · 点击切换为 English',
+        btnLayoutTitle: '切换单/双/三栏布局 (Columns)',
+        panelTitle: '组件',
+        panelCloseTitle: '关闭组件栏',
+        panelSwapTitle: '切换左右布局 (对调侧边栏与组件栏)',
+        panelPaletteTitle: '组件栏专属调色盘 (长按或右键恢复跟随全局)',
+        panelResizerTitle: '左右拖动调整组件栏宽度（双击重置为 290px）',
+        toastLangSwitched: '已平滑切换为简体中文',
+        docTitle: 'M2.9 · MDC-Web · 纯直角 & 莫奈动态色 Navigation Rail 全景展厅'
+      },
+      en: {
+        brandSubtitle: 'Theme Palette',
+        brandHeaderTitle: 'Click to open Monet Color Palette',
+        navHome: 'Home',
+        navCatalog: 'Catalog',
+        navSettings: 'Settings',
+        navAbout: 'About',
+        navHomeTitle: 'Home (Overview)',
+        navCatalogTitle: 'Catalog (All Components)',
+        navSettingsTitle: 'Settings (Themes & Dark Mode)',
+        navAboutTitle: 'About Project',
+        catalogHeader: 'Component Catalog',
+        catalogBack: 'Back to Main Menu',
+        catalogItems: [
+          '1. Buttons & FAB', '2. Sharp Cards', '3. Chips & Badges', '4. Forms & Controls',
+          '5. Lists & Accordions', '6. Dialogs & Menus', '7. Tabs', '8. Progress Indicators',
+          '9. Monet Color Lab', '10. Typography & Fonts', '11. Date & Time Pickers'
+        ],
+        settingsHeader: 'Global Settings',
+        settingsDimTitle: 'Color Palette Dimensions (1 / 2 / 3 Colors)',
+        settingsDimSub: 'Configure layout color expressiveness: 1-Tone, 2-Tone, or 3-Tone:',
+        btnDim1: '1-Tone',
+        btnDim2: '2-Tone',
+        btnDim3: '3-Tone',
+        settingsMonetTitle: 'Monet Dynamic Color Palette',
+        btnOpenMonet: 'Open 3-Step Palette Picker',
+        settingsThemeTitle: 'Theme Mode',
+        btnToggleTheme: 'Toggle Light / Dark Mode',
+        settingsSysTitle: 'System Configuration',
+        btnClearSettings: 'Reset All Stored Settings',
+        aboutHeader: 'About M2.9',
+        btnPanelTitle: 'Component Panel (Toggle Side Panel)',
+        btnLangTitle: 'Current: English · Click for 日本語',
+        btnLayoutTitle: 'Switch Column Layout (1 / 2 / 3 Columns)',
+        panelTitle: 'Components',
+        panelCloseTitle: 'Close Panel',
+        panelSwapTitle: 'Swap Sidebars (Left / Right positions)',
+        panelPaletteTitle: 'Component Panel Palette (Long-press to follow global)',
+        panelResizerTitle: 'Drag left edge to resize panel width (Double-click to reset)',
+        toastLangSwitched: 'Language switched to English',
+        docTitle: 'M2.9 · MDC-Web · Sharp 0px & Monet Dynamic Color Navigation Rail Showroom'
+      },
+      ja: {
+        brandSubtitle: 'パレットを開く',
+        brandHeaderTitle: 'クリックしてモネカラーパレットを開く',
+        navHome: 'ホーム',
+        navCatalog: 'カタログ',
+        navSettings: '設定',
+        navAbout: '情報',
+        navHomeTitle: 'ホーム (Overview)',
+        navCatalogTitle: 'カタログ (コンポーネント一覧)',
+        navSettingsTitle: '設定 (テーマとダークモード)',
+        navAboutTitle: 'プロジェクト情報',
+        catalogHeader: 'コンポーネントカタログ',
+        catalogBack: 'メインメニューに戻る',
+        catalogItems: [
+          '1. ボタンと FAB', '2. 直角カード', '3. チップとバッジ', '4. フォームとスイッチ',
+          '5. リストとアコーディオン', '6. ダイアログとメニュー', '7. タブ', '8. プログレスバー',
+          '9. モネカラー実験室', '10. タイポグラフィ', '11. ピッカー (日時)'
+        ],
+        settingsHeader: 'グローバル設定',
+        settingsDimTitle: 'カラースキーム次元 (1 / 2 / 3 色)',
+        settingsDimSub: '色彩の豊かさを調整: 単色統一、2色バランス、または3色フル階調:',
+        btnDim1: '1色・単色',
+        btnDim2: '2色・主従',
+        btnDim3: '3色・対比',
+        settingsMonetTitle: 'モネ ダイナミックカラー パレット',
+        btnOpenMonet: '3ステップ カラーピッカーを開く',
+        settingsThemeTitle: 'テーマモード',
+        btnToggleTheme: 'ライト / ダーク / 自動 切替',
+        settingsSysTitle: 'システム設定リセット',
+        btnClearSettings: 'すべての保存設定を初期化',
+        aboutHeader: 'M2.9 について',
+        btnPanelTitle: 'コンポーネントパネル (展開/収納)',
+        btnLangTitle: '現在: 日本語 · クリックして中文へ',
+        btnLayoutTitle: '段組みレイアウト切替 (1 / 2 / 3 列)',
+        panelTitle: 'コンポーネント',
+        panelCloseTitle: 'パネルを閉じる',
+        panelSwapTitle: '左右配置反転 (サイドバーとコンポーネントパネルの位置を交換)',
+        panelPaletteTitle: 'パネル専用パレット (長押し/右クリックでグローバル追従に戻す)',
+        panelResizerTitle: '左右ドラッグで幅を調節（ダブルクリックで 290px にリセット）',
+        toastLangSwitched: '言語を日本語に切り替えました',
+        docTitle: 'M2.9 · MDC-Web · 完全直角＆モネダイナミックカラー Navigation Rail パノラマ展覧ホール'
+      }
+    };
 
-      const isEn = lang === 'en';
-      const langTip = isEn ? 'Switch to Chinese / 切换为中文' : '切换为英文 / Switch to English';
+    function updateSidebarI18nTexts(lang) {
+      const dict = I18N_SIDEBAR_TEXTS[lang] || I18N_SIDEBAR_TEXTS.zh;
+      
+      // Rail & Drawer Brand Headers
+      document.querySelectorAll('.rail-header-text div:last-child, .mobile-drawer-header .rail-header-text div:last-child').forEach(el => {
+        el.textContent = dict.brandSubtitle;
+      });
+      document.querySelectorAll('.rail-header, .mobile-drawer-header').forEach(el => {
+        el.title = dict.brandHeaderTitle;
+      });
+
+      // 1st level nav items (Home, Catalog, Settings, About)
+      const updateNavList = (container) => {
+        if (!container) return;
+        const items = container.querySelectorAll('.rail-nav-item, .mobile-drawer-nav-item');
+        if (items.length >= 4) {
+          const homeSpan = items[0].querySelector('.rail-item-text');
+          if (homeSpan) homeSpan.textContent = dict.navHome;
+          items[0].title = dict.navHomeTitle;
+
+          const catSpan = items[1].querySelector('.rail-item-text');
+          if (catSpan) catSpan.textContent = dict.navCatalog;
+          items[1].title = dict.navCatalogTitle;
+
+          const setSpan = items[2].querySelector('.rail-item-text');
+          if (setSpan) setSpan.textContent = dict.navSettings;
+          items[2].title = dict.navSettingsTitle;
+
+          const aboutSpan = items[3].querySelector('.rail-item-text');
+          if (aboutSpan) aboutSpan.textContent = dict.navAbout;
+          items[3].title = dict.navAboutTitle;
+        }
+      };
+      updateNavList(document.querySelector('.drawer-nav-section .rail-nav-list'));
+      updateNavList(document.querySelector('.mobile-drawer-nav-list'));
+
+      // Catalog Submenu Panel
+      const catalogPanel = document.getElementById('catalogSubmenuPanel');
+      if (catalogPanel) {
+        const catTitle = catalogPanel.querySelector('.overlay-header-title span');
+        if (catTitle) catTitle.textContent = dict.catalogHeader;
+        const catBackBtn = catalogPanel.querySelector('.overlay-header-title button');
+        if (catBackBtn) catBackBtn.title = dict.catalogBack;
+        const catBottomBtn = catalogPanel.querySelector('.overlay-bottom-bar button');
+        if (catBottomBtn) {
+          catBottomBtn.innerHTML = `<i class="material-icons mdc-button__icon">arrow_back</i>${dict.catalogBack}`;
+        }
+        const catLinks = catalogPanel.querySelectorAll('.rail-nav-list a.rail-nav-item');
+        catLinks.forEach((link, idx) => {
+          if (dict.catalogItems[idx]) {
+            link.title = dict.catalogItems[idx];
+            const textSpan = link.querySelector('.rail-item-text');
+            if (textSpan) textSpan.textContent = dict.catalogItems[idx];
+          }
+        });
+      }
+
+      // Settings Submenu Panel
+      const settingsPanel = document.getElementById('settingsSubmenuPanel');
+      if (settingsPanel) {
+        const setTitle = settingsPanel.querySelector('.overlay-header-title span');
+        if (setTitle) setTitle.textContent = dict.settingsHeader;
+        const setBackBtn = settingsPanel.querySelector('.overlay-header-title button');
+        if (setBackBtn) setBackBtn.title = dict.catalogBack;
+        const setBottomBtn = settingsPanel.querySelector('.overlay-bottom-bar button');
+        if (setBottomBtn) {
+          setBottomBtn.innerHTML = `<i class="material-icons mdc-button__icon">arrow_back</i>${dict.catalogBack}`;
+        }
+      }
+
+      // About Submenu Panel
+      const aboutPanel = document.getElementById('aboutSubmenuPanel');
+      if (aboutPanel) {
+        const aboutTitle = aboutPanel.querySelector('.overlay-header-title span');
+        if (aboutTitle) aboutTitle.textContent = dict.aboutHeader;
+        const aboutBackBtn = aboutPanel.querySelector('.overlay-header-title button');
+        if (aboutBackBtn) aboutBackBtn.title = dict.catalogBack;
+        const aboutBottomBtn = aboutPanel.querySelector('.overlay-bottom-bar button');
+        if (aboutBottomBtn) {
+          aboutBottomBtn.innerHTML = `<i class="material-icons mdc-button__icon">arrow_back</i>${dict.catalogBack}`;
+        }
+      }
+
+      // Footer Buttons Tooltips
+      const btnPanel = document.getElementById('btn-toggle-panel');
+      const btnPanelMobile = document.getElementById('btn-toggle-panel-mobile');
+      if (btnPanel) btnPanel.title = dict.btnPanelTitle;
+      if (btnPanelMobile) btnPanelMobile.title = dict.btnPanelTitle;
+
       const btnLang = document.getElementById('btn-toggle-lang');
       const btnMobileLang = document.getElementById('btn-toggle-lang-mobile');
-      if (btnLang) btnLang.title = langTip;
-      if (btnMobileLang) btnMobileLang.title = langTip;
+      if (btnLang) btnLang.title = dict.btnLangTitle;
+      if (btnMobileLang) btnMobileLang.title = dict.btnLangTitle;
 
-      updateLayoutTexts();
-      updateThemeModeTexts();
+      const btnLayout = document.getElementById('btn-toggle-layout');
+      const btnLayoutMobile = document.getElementById('btn-toggle-layout-mobile');
+      if (btnLayout) btnLayout.title = dict.btnLayoutTitle;
+      if (btnLayoutMobile) btnLayoutMobile.title = dict.btnLayoutTitle;
+
+      // Component Panel Header & Actions
+      const compPanel = document.getElementById('app-component-panel');
+      if (compPanel) {
+        const cpTitle = compPanel.querySelector('.component-panel-header-title span');
+        if (cpTitle) cpTitle.textContent = dict.panelTitle;
+        const cpClose = compPanel.querySelector('.component-panel-header-title button');
+        if (cpClose) cpClose.title = dict.panelCloseTitle;
+        const cpResizer = document.getElementById('componentPanelResizer');
+        if (cpResizer) cpResizer.title = dict.panelResizerTitle;
+      }
     }
+
+    const SECTION_TEMPLATES = [
+      { id: 'section-overview', base: '/demos/src/content/overview.html' },
+      { id: 'section-buttons', base: '/demos/src/content/buttons.html' },
+      { id: 'section-cards', base: '/demos/src/content/cards.html' },
+      { id: 'section-chips', base: '/demos/src/content/chips.html' },
+      { id: 'section-form', base: '/demos/src/content/form.html' },
+      { id: 'section-list', base: '/demos/src/content/list.html' },
+      { id: 'section-dialogs', base: '/demos/src/content/dialogs.html' },
+      { id: 'section-tabs', base: '/demos/src/content/tabs.html' },
+      { id: 'section-progress', base: '/demos/src/content/progress.html' },
+      { id: 'section-monet-lab', base: '/demos/src/content/monet-lab.html' },
+      { id: 'section-typography', base: '/demos/src/content/typography.html' },
+      { id: 'section-pickers', base: '/demos/src/content/pickers.html' },
+      { id: 'section-footer', base: '/demos/src/content/footer.html' }
+    ];
+
+    async function reloadMainContentForLanguage(targetLang) {
+      const container = document.getElementById('mainContainer');
+      if (!container) return;
+
+      container.style.transition = 'opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1)';
+      container.style.opacity = '0.35';
+
+      const fetchPromises = SECTION_TEMPLATES.map(async item => {
+        let targetUrl = item.base;
+        if (targetLang === 'en') {
+          targetUrl = item.base.replace(/\.html$/, '-en.html');
+        } else if (targetLang === 'ja' || targetLang === 'jp') {
+          targetUrl = item.base.replace(/\.html$/, '-ja.html');
+        }
+
+        try {
+          let resp = await fetch(targetUrl);
+          if (!resp.ok && targetUrl !== item.base) {
+            resp = await fetch(item.base);
+          }
+          if (resp && resp.ok) {
+            const text = await resp.text();
+            return { id: item.id, html: text };
+          }
+        } catch (e) {
+          console.warn('[M29 i18n] Failed to load card:', targetUrl, e);
+        }
+        return null;
+      });
+
+      const results = await Promise.all(fetchPromises);
+
+      results.forEach(res => {
+        if (!res) return;
+        const cardEl = document.getElementById(res.id);
+        if (!cardEl) return;
+
+        const temp = document.createElement('div');
+        temp.innerHTML = res.html.trim();
+        const newCard = temp.querySelector(`#${res.id}`) || temp.firstElementChild;
+        if (newCard) {
+          cardEl.innerHTML = newCard.innerHTML;
+        }
+      });
+
+      // 重新实例化 MDC 组件与交互绑定
+      if (window.mdc && mdc.autoInit) mdc.autoInit();
+      initM29TabIndicator();
+      rebindSliderEvents();
+      rebindUnusedButtonToasts();
+
+      if (typeof renderDemoDatePicker === 'function') renderDemoDatePicker();
+      if (typeof renderDemoTimePicker === 'function') renderDemoTimePicker();
+
+      // 重新渲染莫奈全景实验室内色阶
+      const currentTheme = window._lastCalculatedTheme || null;
+      if (currentTheme && typeof renderTonalSwatches === 'function') {
+        renderTonalSwatches(currentTheme);
+      }
+
+      requestAnimationFrame(() => {
+        container.style.opacity = '1';
+      });
+    }
+
+    function rebindSliderEvents() {
+      const sInput = document.getElementById('slider-tone');
+      const sFill = document.getElementById('m29SliderFill');
+      const sThumbWrapper = document.getElementById('m29SliderThumbWrapper');
+      const sVal = document.getElementById('slider-val');
+      const sPinText = document.getElementById('m29SliderPinText');
+      const sBox = document.getElementById('m29SliderBox');
+
+      if (sInput) {
+        const updateSl = (val) => {
+          const min = parseInt(sInput.min, 10);
+          const max = parseInt(sInput.max, 10);
+          const percent = ((val - min) / (max - min)) * 100;
+          if (sFill) sFill.style.width = `${percent}%`;
+          if (sThumbWrapper) sThumbWrapper.style.left = `${percent}%`;
+          if (sVal) sVal.textContent = `Tone ${val}`;
+          if (sPinText) sPinText.textContent = val;
+        };
+
+        sInput.addEventListener('input', (e) => updateSl(e.target.value));
+        sInput.addEventListener('focus', () => { if (sBox) sBox.classList.add('is-active'); });
+        sInput.addEventListener('blur', () => { if (sBox) sBox.classList.remove('is-active'); });
+        updateSl(sInput.value);
+      }
+    }
+
+    function rebindUnusedButtonToasts() {
+      document.querySelectorAll('#mainContainer button:not([onclick]), #mainContainer .surface-token-chip:not([onclick])').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const text = btn.textContent.trim();
+          const lang = currentLang;
+          const msg = lang === 'en' ? (text ? `Button demo clicked: (${text})` : 'Button demo clicked') : (lang === 'ja' ? (text ? `デモボタンをクリックしました (${text})` : 'デモボタンをクリックしました') : (text ? `这是一个演示按钮 (${text})` : '这是一个演示按钮'));
+          showDemoToast(msg);
+        });
+      });
+    }
+
+    function applyLanguage(lang, isInteractive = false) {
+      if (lang === 'jp') lang = 'ja';
+      currentLang = lang;
+      localStorage.setItem('m29_lang', lang);
+      document.documentElement.lang = lang === 'en' ? 'en-US' : (lang === 'ja' ? 'ja-JP' : 'zh-CN');
+
+      const dict = I18N_SIDEBAR_TEXTS[lang] || I18N_SIDEBAR_TEXTS.zh;
+      document.title = dict.docTitle;
+
+      updateSidebarI18nTexts(lang);
+      updateThemeModeTexts();
+      if (typeof updateComponentPanelWidthIcon === 'function') updateComponentPanelWidthIcon();
+
+      if (isInteractive) {
+        reloadMainContentForLanguage(lang);
+        showDemoToast(dict.toastLangSwitched);
+      }
+    }
+    window.applyLanguage = applyLanguage;
 
     function toggleLanguage(event) {
       if (event) event.stopPropagation();
-      const nextLang = currentLang === 'zh' ? 'en' : 'zh';
-      localStorage.setItem('m29_lang', nextLang);
-      window.location.reload();
+      let nextLang = 'en';
+      if (currentLang === 'zh') {
+        nextLang = 'en';
+      } else if (currentLang === 'en') {
+        nextLang = 'ja';
+      } else {
+        nextLang = 'zh';
+      }
+      applyLanguage(nextLang, true);
     }
     window.toggleLanguage = toggleLanguage;
 
@@ -1158,19 +1527,25 @@ window.addEventListener('m29:loaded', function() {
       grid.innerHTML = '';
       grid.scrollTop = 0;
 
-      const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+      const lang = currentLang;
+      const isEn = lang === 'en';
+      const isJa = lang === 'ja' || lang === 'jp';
       if (window._isComponentPanelThemePicking) {
-        if (stepTitle) stepTitle.textContent = isEn ? 'Component Panel Palette' : '组件栏专属配色';
-        if (stepSub) stepSub.textContent = isEn ? 'Select Monet Theme for Component Panel' : '为右侧组件栏选择独立莫奈配色';
+        if (stepTitle) stepTitle.textContent = isEn ? 'Component Panel Palette' : (isJa ? 'パネル専用パレット' : '组件栏专属配色');
+        if (stepSub) stepSub.textContent = isEn ? 'Select Monet Theme for Component Panel' : (isJa ? '右側パネルの独立モネ配色を選択' : '为右侧组件栏选择独立莫奈配色');
       } else {
-        const modeText = colorPaletteMode === 1 ? (isEn ? '1-Color Pure Mode' : '单色模式') : (colorPaletteMode === 2 ? (isEn ? '2-Color Balanced Mode' : '双色模式') : (isEn ? '3-Color Contrast Mode' : '三色模式'));
+        const modeText = colorPaletteMode === 1 
+          ? (isEn ? '1-Color Pure Mode' : (isJa ? '単色モード' : '单色模式')) 
+          : (colorPaletteMode === 2 
+            ? (isEn ? '2-Color Balanced Mode' : (isJa ? '2色バランス' : '双色模式')) 
+            : (isEn ? '3-Color Contrast Mode' : (isJa ? '3色対比モード' : '三色模式')));
         if (stepTitle) stepTitle.textContent = modeText;
 
-        let subText = isEn ? 'Select Primary Color' : '选择主色';
+        let subText = isEn ? 'Select Primary Color' : (isJa ? 'プライマリカラーを選択' : '选择主色');
         if (currentStep === 2) {
-          subText = isEn ? 'Select Secondary Color' : '选择次色';
+          subText = isEn ? 'Select Secondary Color' : (isJa ? 'セカンダリカラーを選択' : '选择次色');
         } else if (currentStep === 3) {
-          subText = isEn ? 'Select Tertiary Color' : '选择第三色';
+          subText = isEn ? 'Select Tertiary Color' : (isJa ? 'ターシャリカラーを選択' : '选择第三色');
         }
         if (stepSub) stepSub.textContent = subText;
       }
@@ -1445,7 +1820,7 @@ window.addEventListener('m29:loaded', function() {
       if (!container || !theme || !theme.tones) return;
       container.innerHTML = '';
 
-      const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+      const lang = currentLang;
 
       function buildRow(title, toneMap) {
         const row = document.createElement('div');
@@ -1465,9 +1840,13 @@ window.addEventListener('m29:loaded', function() {
         return row;
       }
 
-      container.appendChild(buildRow(isEn ? 'Primary 50~900 Tonal Swatches (CAM16):' : 'Primary 主色 50~900 全色阶 (CAM16):', theme.tones.primary));
-      container.appendChild(buildRow(isEn ? 'Secondary 50~900 Tonal Swatches:' : 'Secondary 次色 50~900 全色阶:', theme.tones.secondary));
-      container.appendChild(buildRow(isEn ? 'Tertiary 50~900 Tonal Swatches:' : 'Tertiary 第三色 50~900 全色阶:', theme.tones.tertiary));
+      const pTitle = lang === 'en' ? 'Primary 50~900 Tonal Swatches (CAM16):' : (lang === 'ja' ? 'Primary プライマリ 50~900 全階調 (CAM16):' : 'Primary 主色 50~900 全色阶 (CAM16):');
+      const sTitle = lang === 'en' ? 'Secondary 50~900 Tonal Swatches:' : (lang === 'ja' ? 'Secondary セカンダリ 50~900 全階調:' : 'Secondary 次色 50~900 全色阶:');
+      const tTitle = lang === 'en' ? 'Tertiary 50~900 Tonal Swatches:' : (lang === 'ja' ? 'Tertiary ターシャリ 50~900 全階調:' : 'Tertiary 第三色 50~900 全色阶:');
+
+      container.appendChild(buildRow(pTitle, theme.tones.primary));
+      container.appendChild(buildRow(sTitle, theme.tones.secondary));
+      container.appendChild(buildRow(tTitle, theme.tones.tertiary));
     }
 
     function hexToHsl(hex) {
@@ -2045,51 +2424,75 @@ window.addEventListener('m29:loaded', function() {
       }
     }
 
-    const isEnglish = (localStorage.getItem('m29_lang') || 'zh') === 'en';
-    const SECTION_TITLE_MAP = isEnglish ? [
-      { id: 'section-overview', top: 'M2.9', bottom: 'Unjal' },
-      { id: 'section-buttons', top: 'M2.9 · Buttons', bottom: '1. Buttons & FAB' },
-      { id: 'section-cards', top: 'M2.9 · Cards', bottom: '2. Sharp Cards' },
-      { id: 'section-chips', top: 'M2.9 · Chips', bottom: '3. Chips & Badges' },
-      { id: 'section-form', top: 'M2.9 · Form', bottom: '4. Form Controls' },
-      { id: 'section-list', top: 'M2.9 · List', bottom: '5. Lists & Panels' },
-      { id: 'section-dialogs', top: 'M2.9 · Dialogs', bottom: '6. Dialogs & Menus' },
-      { id: 'section-tabs', top: 'M2.9 · Tabs', bottom: '7. Tabs Bar' },
-      { id: 'section-progress', top: 'M2.9 · Progress', bottom: '8. Progress Indicators' },
-      { id: 'section-monet-lab', top: 'M2.9 · Monet', bottom: '9. Monet Color Lab' },
-      { id: 'section-typography', top: 'M2.9 · Type', bottom: '10. Typography' },
-      { id: 'section-pickers', top: 'M2.9 · Pickers', bottom: '11. Date & Time' }
-    ] : [
-      { id: 'section-overview', top: 'M2.9', bottom: '安秋' },
-      { id: 'section-buttons', top: 'M2.9 · 按钮', bottom: '1. 按钮与 FAB' },
-      { id: 'section-cards', top: 'M2.9 · 卡片', bottom: '2. 直角卡片' },
-      { id: 'section-chips', top: 'M2.9 · 标签', bottom: '3. 标签与徽标' },
-      { id: 'section-form', top: 'M2.9 · 表单', bottom: '4. 表单与开关' },
-      { id: 'section-list', top: 'M2.9 · 列表', bottom: '5. 列表与手风琴' },
-      { id: 'section-dialogs', top: 'M2.9 · 弹窗', bottom: '6. 对话框与菜单' },
-      { id: 'section-tabs', top: 'M2.9 · 选项卡', bottom: '7. 选项卡 Tab' },
-      { id: 'section-progress', top: 'M2.9 · 进度', bottom: '8. 进度指示器' },
-      { id: 'section-monet-lab', top: 'M2.9 · 色彩', bottom: '9. 莫奈实验室' },
-      { id: 'section-typography', top: 'M2.9 · 排版', bottom: '10. 排版与变量字体' },
-      { id: 'section-pickers', top: 'M2.9 · 选择器', bottom: '11. 日历与时钟' }
-    ];
-
-    function updateDynamicTitles(topText, bottomText) {
-      if (titleTopEl && topText) titleTopEl.textContent = topText;
-      if (titleBottomEl && bottomText) titleBottomEl.textContent = bottomText;
+    function getSectionTitleMap() {
+      const lang = currentLang;
+      if (lang === 'en') {
+        return [
+          { id: 'section-overview', top: 'M2.9', bottom: 'Unjal' },
+          { id: 'section-buttons', top: 'M2.9 · Buttons', bottom: '1. Buttons & FAB' },
+          { id: 'section-cards', top: 'M2.9 · Cards', bottom: '2. Sharp Cards' },
+          { id: 'section-chips', top: 'M2.9 · Chips', bottom: '3. Chips & Badges' },
+          { id: 'section-form', top: 'M2.9 · Form', bottom: '4. Form Controls' },
+          { id: 'section-list', top: 'M2.9 · List', bottom: '5. Lists & Panels' },
+          { id: 'section-dialogs', top: 'M2.9 · Dialogs', bottom: '6. Dialogs & Menus' },
+          { id: 'section-tabs', top: 'M2.9 · Tabs', bottom: '7. Tabs Bar' },
+          { id: 'section-progress', top: 'M2.9 · Progress', bottom: '8. Progress Indicators' },
+          { id: 'section-monet-lab', top: 'M2.9 · Monet', bottom: '9. Monet Color Lab' },
+          { id: 'section-typography', top: 'M2.9 · Type', bottom: '10. Typography' },
+          { id: 'section-pickers', top: 'M2.9 · Pickers', bottom: '11. Date & Time' }
+        ];
+      } else if (lang === 'ja' || lang === 'jp') {
+        return [
+          { id: 'section-overview', top: 'M2.9', bottom: '安秋' },
+          { id: 'section-buttons', top: 'M2.9 · ボタン', bottom: '1. ボタンと FAB' },
+          { id: 'section-cards', top: 'M2.9 · カード', bottom: '2. 直角カード' },
+          { id: 'section-chips', top: 'M2.9 · チップ', bottom: '3. チップとバッジ' },
+          { id: 'section-form', top: 'M2.9 · フォーム', bottom: '4. フォームとスイッチ' },
+          { id: 'section-list', top: 'M2.9 · リスト', bottom: '5. リストとアコーディオン' },
+          { id: 'section-dialogs', top: 'M2.9 · ダイアログ', bottom: '6. ダイアログとメニュー' },
+          { id: 'section-tabs', top: 'M2.9 · タブ', bottom: '7. タブ' },
+          { id: 'section-progress', top: 'M2.9 · プログレス', bottom: '8. プログレスバー' },
+          { id: 'section-monet-lab', top: 'M2.9 · モネ', bottom: '9. モネカラー実験室' },
+          { id: 'section-typography', top: 'M2.9 · タイポ', bottom: '10. タイポグラフィ' },
+          { id: 'section-pickers', top: 'M2.9 · ピッカー', bottom: '11. 日時ピッカー' }
+        ];
+      }
+      return [
+        { id: 'section-overview', top: 'M2.9', bottom: '安秋' },
+        { id: 'section-buttons', top: 'M2.9 · 按钮', bottom: '1. 按钮与 FAB' },
+        { id: 'section-cards', top: 'M2.9 · 卡片', bottom: '2. 直角卡片' },
+        { id: 'section-chips', top: 'M2.9 · 标签', bottom: '3. 标签与徽标' },
+        { id: 'section-form', top: 'M2.9 · 表单', bottom: '4. 表单与开关' },
+        { id: 'section-list', top: 'M2.9 · 列表', bottom: '5. 列表与手风琴' },
+        { id: 'section-dialogs', top: 'M2.9 · 弹窗', bottom: '6. 对话框与菜单' },
+        { id: 'section-tabs', top: 'M2.9 · 选项卡', bottom: '7. 选项卡 Tab' },
+        { id: 'section-progress', top: 'M2.9 · 进度', bottom: '8. 进度指示器' },
+        { id: 'section-monet-lab', top: 'M2.9 · 色彩', bottom: '9. 莫奈实验室' },
+        { id: 'section-typography', top: 'M2.9 · 排版', bottom: '10. 排版与变量字体' },
+        { id: 'section-pickers', top: 'M2.9 · 选择器', bottom: '11. 日历与时钟' }
+      ];
     }
 
-    window.addEventListener('scroll', () => {
+    function updateActiveSectionVerticalTitles() {
       const scrollPos = window.scrollY + 180;
-      for (let i = SECTION_TITLE_MAP.length - 1; i >= 0; i--) {
-        const item = SECTION_TITLE_MAP[i];
+      const titleMap = getSectionTitleMap();
+      for (let i = titleMap.length - 1; i >= 0; i--) {
+        const item = titleMap[i];
         const el = document.getElementById(item.id);
         if (el && el.offsetTop <= scrollPos) {
           updateDynamicTitles(item.top, item.bottom);
           break;
         }
       }
-    }, { passive: true });
+    }
+    window.updateActiveSectionVerticalTitles = updateActiveSectionVerticalTitles;
+
+    function updateDynamicTitles(topText, bottomText) {
+      if (titleTopEl && topText) titleTopEl.textContent = topText;
+      if (titleBottomEl && bottomText) titleBottomEl.textContent = bottomText;
+    }
+
+    window.addEventListener('scroll', updateActiveSectionVerticalTitles, { passive: true });
 
     // 初始化色彩方案维度与莫奈主题
     setColorPaletteMode(colorPaletteMode);
@@ -2627,35 +3030,37 @@ window.addEventListener('m29:loaded', function() {
       const prevBtn = document.querySelector('#demoDatePicker .mdc-date-picker__prev-btn');
       const nextBtn = document.querySelector('#demoDatePicker .mdc-date-picker__next-btn');
 
-      const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+      const lang = currentLang;
+      const isEn = lang === 'en';
+      const isJa = lang === 'ja' || lang === 'jp';
       const weekdaysZh = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
       const weekdaysEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const weekdaysJa = ['日', '月', '火', '水', '木', '金', '土'];
       const monthsEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
       const monthsShortEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-      // 🌟 1. 顶部 Header 与副标题文案联动 (双语自适应)
+      // 🌟 1. 顶部 Header 与副标题文案联动 (双语与日语自适应)
       if (pickerMode === 'day') {
         if (yearEl) yearEl.textContent = isEn ? `${year}` : `${year} 年`;
         if (dateEl) {
           const sMonth = pickerSelectedDate.getMonth();
           const sDay = pickerSelectedDate.getDate();
-          const sW = isEn ? weekdaysEn[pickerSelectedDate.getDay()] : weekdaysZh[pickerSelectedDate.getDay()];
+          const sW = isEn ? weekdaysEn[pickerSelectedDate.getDay()] : (isJa ? weekdaysJa[pickerSelectedDate.getDay()] + '曜日' : weekdaysZh[pickerSelectedDate.getDay()]);
           dateEl.textContent = isEn ? `${sW}, ${monthsShortEn[sMonth]} ${sDay}` : `${sMonth + 1}月${sDay}日 ${sW}`;
         }
         if (monthLabel) {
           monthLabel.textContent = isEn ? `${monthsEn[month]} ${year}` : `${year} 年 ${month + 1} 月`;
           triggerDemoAnim(monthLabel, yearAnimClass);
         }
-        if (prevBtn) prevBtn.title = isEn ? 'Previous Month' : '上个月';
-        if (nextBtn) nextBtn.title = isEn ? 'Next Month' : '下个月';
+        if (prevBtn) prevBtn.title = isEn ? 'Previous Month' : (isJa ? '前月' : '上个月');
+        if (nextBtn) nextBtn.title = isEn ? 'Next Month' : (isJa ? '翌月' : '下个月');
         if (weekdaysEl) {
           weekdaysEl.style.display = 'grid';
-          weekdaysEl.innerHTML = isEn 
-            ? '<span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>'
-            : '<span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>';
+          const arr = isEn ? ['S', 'M', 'T', 'W', 'T', 'F', 'S'] : (isJa ? weekdaysJa : ['日', '一', '二', '三', '四', '五', '六']);
+          weekdaysEl.innerHTML = arr.map(w => `<span>${w}</span>`).join('');
         }
       } else {
-        if (yearEl) yearEl.textContent = isEn ? 'Select Month' : '选择月份';
+        if (yearEl) yearEl.textContent = isEn ? 'Select Month' : (isJa ? '月を選択' : '选择月份');
         if (dateEl) {
           dateEl.textContent = isEn ? `${year}` : `${year} 年`;
           triggerDemoAnim(dateEl, yearAnimClass);
@@ -2664,8 +3069,8 @@ window.addEventListener('m29:loaded', function() {
           monthLabel.textContent = isEn ? `${year}` : `${year} 年`;
           triggerDemoAnim(monthLabel, yearAnimClass);
         }
-        if (prevBtn) prevBtn.title = isEn ? 'Previous Year' : '上一年';
-        if (nextBtn) nextBtn.title = isEn ? 'Next Year' : '下一年';
+        if (prevBtn) prevBtn.title = isEn ? 'Previous Year' : (isJa ? '前年' : '上一年');
+        if (nextBtn) nextBtn.title = isEn ? 'Next Year' : (isJa ? '翌年' : '下一年');
         if (weekdaysEl) weekdaysEl.style.display = 'none';
       }
 
@@ -3758,8 +4163,12 @@ window.addEventListener('m29:loaded', function() {
           iconEl.textContent = is2Col ? 'view_column' : 'view_agenda';
         }
         if (btnEl) {
-          const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
-          btnEl.title = is2Col ? (isEn ? 'Current: Dual Columns 629px (Click for 290px Single Column)' : '当前: 双列 629px (点击切换为 290px 单列)') : (isEn ? 'Current: Single Column 290px (Click for 629px Dual Columns)' : '当前: 单列 290px (点击切换为 629px 双列)');
+          const lang = currentLang;
+          const isEn = lang === 'en';
+          const isJa = lang === 'ja' || lang === 'jp';
+          btnEl.title = is2Col 
+            ? (isEn ? 'Current: Dual Columns 629px (Click for 290px Single Column)' : (isJa ? '現在: 2列 629px (クリックで 290px 単列)' : '当前: 双列 629px (点击切换为 290px 单列)')) 
+            : (isEn ? 'Current: Single Column 290px (Click for 629px Dual Columns)' : (isJa ? '現在: 単列 290px (クリックで 629px 2列)' : '当前: 单列 290px (点击切换为 629px 双列)'));
         }
       }
 
@@ -3777,19 +4186,21 @@ window.addEventListener('m29:loaded', function() {
           panel.classList.add('light-theme');
         }
 
-        const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+        const lang = currentLang;
+        const isEn = lang === 'en';
+        const isJa = lang === 'ja' || lang === 'jp';
         let icon = 'brightness_auto';
         let tip = '';
 
         if (effectiveTheme === 'auto') {
           icon = 'brightness_auto';
-          tip = isEn ? 'Current: Auto (Follows Global Theme) · Click for Light Mode' : '当前: 自动模式 (跟随全局主题) · 点击切换为浅色';
+          tip = isEn ? 'Current: Auto (Follows Global Theme) · Click for Light Mode' : (isJa ? '現在: 自動モード（グローバル追従） · クリックでライトへ' : '当前: 自动模式 (跟随全局主题) · 点击切换为浅色');
         } else if (effectiveTheme === 'light') {
           icon = 'brightness_5';
-          tip = isEn ? 'Current: Light Mode · Click for Dark Mode' : '当前: 浅色模式 · 点击切换为暗色';
+          tip = isEn ? 'Current: Light Mode · Click for Dark Mode' : (isJa ? '現在: ライトモード · クリックでダークへ' : '当前: 浅色模式 · 点击切换为暗色');
         } else {
           icon = 'brightness_4';
-          tip = isEn ? 'Current: Dark Mode · Click for Auto Mode' : '当前: 暗色模式 · 点击切换为自动跟随全局';
+          tip = isEn ? 'Current: Dark Mode · Click for Auto Mode' : (isJa ? '現在: ダークモード · クリックで自動へ' : '当前: 暗色模式 · 点击切换为自动跟随全局');
         }
 
         if (iconEl) {
@@ -3822,13 +4233,15 @@ window.addEventListener('m29:loaded', function() {
 
         localStorage.setItem('m29_component_panel_theme', nextTheme);
         applyComponentPanelTheme(nextTheme);
-        const isEn = (localStorage.getItem('m29_lang') || 'zh') === 'en';
+        const lang = currentLang;
+        const isEn = lang === 'en';
+        const isJa = lang === 'ja' || lang === 'jp';
         if (nextTheme === 'auto') {
-          showDemoToast(isEn ? 'Component panel set to Auto (Follows Global Theme)' : '组件栏已切换为自动模式（跟随全局主题）');
+          showDemoToast(isEn ? 'Component panel set to Auto (Follows Global Theme)' : (isJa ? 'パネルテーマを自動モード（グローバル追従）に設定しました' : '组件栏已切换为自动模式（跟随全局主题）'));
         } else if (nextTheme === 'light') {
-          showDemoToast(isEn ? 'Component panel set to Light Mode' : '组件栏已切换为独立浅色模式');
+          showDemoToast(isEn ? 'Component panel set to Light Mode' : (isJa ? 'パネルテーマを独立ライトモードに設定しました' : '组件栏已切换为独立浅色模式'));
         } else {
-          showDemoToast(isEn ? 'Component panel set to Dark Mode' : '组件栏已切换为独立暗色模式');
+          showDemoToast(isEn ? 'Component panel set to Dark Mode' : (isJa ? 'パネルテーマを独立ダークモードに設定しました' : '组件栏已切换为独立暗色模式'));
         }
       }
 
@@ -4332,6 +4745,9 @@ window.addEventListener('m29:loaded', function() {
 
     // 初始化宽度调整手柄
     initComponentPanelResizer();
+
+    // 初始化多语言文字与状态同步
+    applyLanguage(currentLang, false);
 
     // 初始化全局页面与组件栏共享浮动滚动条 (共享同一根左侧轨道)
     window.sharedOverlayScrollbar = new M29SharedOverlayScrollbar();

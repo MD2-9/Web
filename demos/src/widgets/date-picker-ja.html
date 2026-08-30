@@ -1,0 +1,43 @@
+<!--
+  M2.9 Widget: カレンダーピッカー (DatePicker - Japanese)
+  ═══════════════════════════════════════════════════
+-->
+<div class="component-panel-section">
+  <div class="component-panel-section-title">
+    <i class="material-icons" style="font-size: 16px; color: var(--mdc-theme-primary);">date_range</i>
+    カレンダー選択 (DatePicker)
+  </div>
+  <div class="mdc-date-picker" id="demoDatePicker">
+    <div class="mdc-date-picker__header">
+      <span class="mdc-date-picker__header-year">2026 年</span>
+      <span class="mdc-date-picker__header-date">8月29日 土曜日</span>
+    </div>
+    <div class="mdc-date-picker__controls">
+      <span class="mdc-date-picker__current-month">
+        <i class="material-icons" style="font-size: 18px; color: var(--mdc-theme-primary);">event</i>
+        <span class="mdc-date-picker__month-label">2026 年 8 月</span>
+      </span>
+      <div style="display: flex; gap: 4px;">
+        <button class="mdc-date-picker__nav-btn mdc-date-picker__prev-btn" title="前月">
+          <i class="material-icons" style="font-size: 20px;">chevron_left</i>
+        </button>
+        <button class="mdc-date-picker__nav-btn mdc-date-picker__next-btn" title="翌月">
+          <i class="material-icons" style="font-size: 20px;">chevron_right</i>
+        </button>
+      </div>
+    </div>
+    <div class="mdc-date-picker__body-container">
+      <div class="mdc-date-picker__selection-thumb"></div>
+      <div class="mdc-date-picker__weekdays">
+        <span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span>
+      </div>
+      <div class="mdc-date-picker__grid">
+        <!-- JS により日付グリッドを動的生成 -->
+      </div>
+    </div>
+    <div class="mdc-date-picker__actions">
+      <button class="mdc-button mdc-button--dense" onclick="showDemoToast('日付選択をキャンセルしました')">キャンセル</button>
+      <button class="mdc-button mdc-button--raised mdc-button--dense" style="background-color: var(--mdc-theme-primary);" onclick="confirmDemoDate()">確定</button>
+    </div>
+  </div>
+</div>

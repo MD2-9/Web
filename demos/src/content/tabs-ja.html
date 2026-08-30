@@ -1,0 +1,45 @@
+<!--
+  M2.9 Content Card: タブ連動システム (Japanese)
+  ═══════════════════════════════════════════════════
+-->
+<div class="demo-card" id="section-tabs">
+  <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+    <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">tab</i>
+    7. タブ連動システム (M2.9 Tabs &amp; Sliding Indicator)
+  </h3>
+  
+  <!-- タブバー -->
+  <div class="m29-tabs-bar" id="demoTabsBar">
+    <div class="m29-tab-item is-active" onclick="switchM29Tab(0, this)" data-full-title="1. コンポーネント一覧" data-tooltip="1. コンポーネント一覧">
+      <i class="material-icons" style="font-size: 18px;">widgets</i>
+      <span>1. コンポーネント一覧</span>
+    </div>
+    <div class="m29-tab-item" onclick="switchM29Tab(1, this)" data-full-title="2. CAM16 色彩アルゴリズム" data-tooltip="2. CAM16 色彩アルゴリズム">
+      <i class="material-icons" style="font-size: 18px;">palette</i>
+      <span>2. CAM16 色彩アルゴリズム</span>
+    </div>
+    <div class="m29-tab-item" onclick="switchM29Tab(2, this)" data-full-title="3. Navigation Rail 設計" data-tooltip="3. Navigation Rail 設計">
+      <i class="material-icons" style="font-size: 18px;">navigation</i>
+      <span>3. Navigation Rail 設計</span>
+    </div>
+    <div class="m29-tab-indicator" id="m29TabIndicator"></div>
+  </div>
+
+  <!-- タブコンテンツパネル -->
+  <div class="m29-tab-content-container" id="tabContentContainer">
+    <div class="m29-tab-panel is-active" id="tab-panel-0">
+      <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【パネル 1】MDC-Web v0.34.1 完全直角機能マトリクス</h4>
+      <p>すべてのパーツが 0px 直角を徹底し、クラシックな MD1 のインダストリアル美学と Google Sans Flex 可変フォントを継承。</p>
+    </div>
+
+    <div class="m29-tab-panel" id="tab-panel-1">
+      <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【パネル 2】Google Material Color Utilities (CAM16 / HCT)</h4>
+      <p>真の知覚色空間モデルに基づき、単色・2色・3色および壁紙シード抽出に対応。ライト/ダークモード下で調和の取れた階調を自動生成。</p>
+    </div>
+
+    <div class="m29-tab-panel" id="tab-panel-2">
+      <h4 style="margin: 0 0 8px 0; color: var(--mdc-theme-primary);">【パネル 3】Navigation Rail コンパクト＆波紋サブメニュー</h4>
+      <p>左側 72px 常駐アイコン、260px ホバー展開。第1階層はホーム/カタログ/設定/情報で構成され、波紋アニメーションで第2階層へスムーズ展開！</p>
+    </div>
+  </div>
+</div>

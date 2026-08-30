@@ -1,0 +1,18 @@
+<!--
+  M2.9 Container: グローバルフローティング要素 (Backdrop, FAB, Snackbar - Japanese)
+  ═══════════════════════════════════════════════════
+-->
+<!-- 🧩 コンポーネントパネル用バックドロップ -->
+<div id="componentPanelBackdrop" class="component-panel-backdrop" onclick="closeComponentPanel()"></div>
+
+<!-- モバイルドロワー用バックドロップと左下フローティングFAB -->
+<div id="mobileDrawerBackdrop" class="mobile-drawer-backdrop" onclick="closeMobileDrawer()"></div>
+<button id="btnMobileFloatingMenu" class="mobile-floating-menu-btn mdc-fab" onclick="openMobileDrawer()" title="メニューを開く">
+  <i class="material-icons mdc-fab__icon">menu</i>
+</button>
+
+<!-- 軽量 Snackbar 通知 -->
+<div id="demoSnackbar" class="m29-demo-toast">
+  <span>MDC-Web 完全直角＆モネダイナミックカラーの準備が整いました！</span>
+  <button class="mdc-button mdc-button--dense" onclick="hideDemoToast()" style="color: var(--mdc-theme-primary); font-weight: bold; min-width: auto; padding: 0;">了解</button>
+</div>

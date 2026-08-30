@@ -1,0 +1,132 @@
+<!--
+  M2.9 Content Card: フォーム入力、セレクト、スライダー、スイッチ (Japanese)
+  ═══════════════════════════════════════════════════
+-->
+<div class="demo-card" id="section-form">
+  <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+    <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); flex-shrink: 0;">tune</i>
+    <span>4. フォーム入力・セレクト・スライダー・スイッチ (Form Controls)</span>
+  </h3>
+  <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-top: 16px;">
+    
+    <!-- MDC Filled Input -->
+    <div class="mdc-text-field mdc-text-field--with-leading-icon" style="width: 240px;">
+      <i class="material-icons mdc-text-field__icon">edit</i>
+      <input type="text" id="input-filled" class="mdc-text-field__input" value="Google Sans Flex">
+      <label class="mdc-floating-label mdc-floating-label--float-above" for="input-filled">Filled 入力欄</label>
+      <div class="mdc-line-ripple"></div>
+    </div>
+
+    <!-- MDC Outlined Input -->
+    <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon" style="width: 240px;">
+      <i class="material-icons mdc-text-field__icon">tune</i>
+      <input type="text" id="input-outlined" class="mdc-text-field__input" value="Outlined Style">
+      <label class="mdc-floating-label mdc-floating-label--float-above" for="input-outlined">Outlined 枠</label>
+    </div>
+
+    <!-- MD 0px 完全直角カスタム Select -->
+    <div class="mdc-select-custom" id="demoMdcSelect">
+      <div class="mdc-select-custom__surface" onclick="toggleMdcSelect(event)">
+        <div style="display: flex; flex-direction: column; overflow: hidden; text-align: left;">
+          <span style="font-size: 11px; color: var(--mdc-theme-primary); font-weight: 600; line-height: 1.2;">テーマアルゴリズム選択</span>
+          <span id="mdcSelectValue" style="font-size: 14px; font-weight: 500; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; margin-top: 2px;">オプション 2: Google 可変フォント</span>
+        </div>
+        <i class="material-icons" id="mdcSelectArrow" style="font-size: 22px; color: var(--mdc-theme-primary); transition: transform 0.25s ease;">arrow_drop_down</i>
+      </div>
+      <div class="mdc-select-custom__menu" id="mdcSelectMenu">
+        <div class="mdc-select-custom__item" onclick="selectMdcOption('オプション 1: モネ色彩アルゴリズム', this)">
+          <span>オプション 1: モネ色彩アルゴリズム</span>
+          <i class="material-icons item-check" style="font-size: 18px; color: var(--mdc-theme-primary); visibility: hidden;">check</i>
+        </div>
+        <div class="mdc-select-custom__item is-selected" onclick="selectMdcOption('オプション 2: Google 可変フォント', this)">
+          <span>オプション 2: Google 可変フォント</span>
+          <i class="material-icons item-check" style="font-size: 18px; color: var(--mdc-theme-primary); visibility: visible;">check</i>
+        </div>
+        <div class="mdc-select-custom__item" onclick="selectMdcOption('オプション 3: 完全直角幾何学体系', this)">
+          <span>オプション 3: 完全直角幾何学体系</span>
+          <i class="material-icons item-check" style="font-size: 18px; color: var(--mdc-theme-primary); visibility: hidden;">check</i>
+        </div>
+      </div>
+    </div>
+
+    <!-- 直角チェックボックス -->
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <div class="mdc-form-field">
+        <div class="mdc-checkbox">
+          <input type="checkbox" class="mdc-checkbox__native-control" id="cb-demo-1" checked/>
+          <div class="mdc-checkbox__background">
+            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+              <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+            </svg>
+            <div class="mdc-checkbox__mixedmark"></div>
+          </div>
+        </div>
+        <label for="cb-demo-1" style="font-size: 13px;">選択済み</label>
+      </div>
+
+      <div class="mdc-form-field">
+        <div class="mdc-checkbox">
+          <input type="checkbox" class="mdc-checkbox__native-control" id="cb-demo-2"/>
+          <div class="mdc-checkbox__background">
+            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+              <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+            </svg>
+            <div class="mdc-checkbox__mixedmark"></div>
+          </div>
+        </div>
+        <label for="cb-demo-2" style="font-size: 13px;">未選択</label>
+      </div>
+    </div>
+
+    <!-- 円形ラジオボタン -->
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <div class="mdc-form-field">
+        <div class="mdc-radio">
+          <input class="mdc-radio__native-control" type="radio" id="radio-opt-1" name="radios-demo" checked>
+          <div class="mdc-radio__background">
+            <div class="mdc-radio__outer-circle"></div>
+            <div class="mdc-radio__inner-circle"></div>
+          </div>
+        </div>
+        <label for="radio-opt-1" style="font-size: 13px;">ラジオ A</label>
+      </div>
+
+      <div class="mdc-form-field">
+        <div class="mdc-radio">
+          <input class="mdc-radio__native-control" type="radio" id="radio-opt-2" name="radios-demo">
+          <div class="mdc-radio__background">
+            <div class="mdc-radio__outer-circle"></div>
+            <div class="mdc-radio__inner-circle"></div>
+          </div>
+        </div>
+        <label for="radio-opt-2" style="font-size: 13px;">ラジオ B</label>
+      </div>
+    </div>
+
+    <!-- M2.9 スイッチ -->
+    <label class="m29-switch">
+      <input type="checkbox" id="switch-demo" checked>
+      <span class="m29-switch-track">
+        <span class="m29-switch-thumb"></span>
+      </span>
+      <span style="font-size: 13px; font-weight: 500;">M2.9 ダイナミックスイッチ</span>
+    </label>
+
+    <!-- MD1 / MDUI ピン付きスライダー -->
+    <div class="m29-slider-container">
+      <span style="font-size: 13px; font-weight: 600;">トーンスライダー:</span>
+      <div class="m29-slider" id="m29SliderBox">
+        <input type="range" id="slider-tone" min="10" max="90" value="40">
+        <div class="m29-slider-track"></div>
+        <div class="m29-slider-fill" id="m29SliderFill" style="width: 37.5%;"></div>
+        <div class="m29-slider-thumb-wrapper" id="m29SliderThumbWrapper" style="left: 37.5%;">
+          <div class="m29-slider-thumb">
+            <span id="m29SliderPinText">40</span>
+          </div>
+        </div>
+      </div>
+      <span id="slider-val" style="font-size: 12px; font-family: monospace; font-weight: bold; width: 60px;">Tone 40</span>
+    </div>
+
+  </div>
+</div>

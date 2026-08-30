@@ -1,0 +1,69 @@
+<!--
+  M2.9 Content Card: 直角カード全形態マトリクス (Japanese)
+  ═══════════════════════════════════════════════════
+-->
+<div class="demo-card" id="section-cards">
+  <h3 style="margin-top: 0; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 8px; display: flex; align-items: center;">
+    <i class="material-icons" style="font-size: 20px; color: var(--mdc-theme-primary); margin-right: 8px;">view_agenda</i>
+    2. MD1 完全直角カード全形態マトリクス (Card Grid)
+  </h3>
+  <div class="component-grid">
+    <div class="demo-card" style="margin: 0;">
+      <h4 style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;">
+        <i class="material-icons" style="font-size: 18px; color: var(--mdc-theme-primary);">dashboard</i>
+        完全直角 Elevated Card
+      </h4>
+      <p style="font-size: 13px; opacity: 0.8;">角丸を完全排除した 0px 直角と、クラシックな Material エレベーションシャドウを採用。</p>
+      <div style="display: flex; gap: 8px; margin-top: 12px;">
+        <button class="mdc-button mdc-button--dense mdc-button--raised">アクション A</button>
+        <button class="mdc-button mdc-button--dense">アクション B</button>
+      </div>
+    </div>
+
+    <div class="demo-card" style="margin: 0; border: 1px solid var(--mdc-theme-primary);">
+      <h4 style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;">
+        <i class="material-icons" style="font-size: 18px; color: var(--mdc-theme-primary);">crop_square</i>
+        Outlined Card (枠線型)
+      </h4>
+      <p style="font-size: 13px; opacity: 0.8;">プライマリカラーの枠線とフラットな構造で、ミニマルで硬質なインダストリアル感を表現。</p>
+      <button class="mdc-button mdc-button--dense mdc-button--outlined" style="margin-top: 12px;">詳細を見る</button>
+    </div>
+
+    <div class="demo-card" style="margin: 0; background: var(--mdc-theme-surface-container-high);">
+      <h4 style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;">
+        <i class="material-icons" style="font-size: 18px; color: var(--mdc-theme-secondary);">layers</i>
+        Surface Container High
+      </h4>
+      <p style="font-size: 13px; opacity: 0.8;">ダークモード下で背景より一段深い心地よいトーンを提供し、目に優しい階層構造を実現。</p>
+      <button class="mdc-button mdc-button--dense" style="padding: 0; margin-top: 12px;">パラメータ展開</button>
+    </div>
+
+    <!-- 🌟 新型凹型カード (Sunken / Inset Card with Internal Shadow) -->
+    <div class="demo-card--sunken" style="margin: 0;">
+      <h4 style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;">
+        <i class="material-icons" style="font-size: 18px; color: var(--mdc-theme-primary);">inbox</i>
+        凹型カード (Sunken / Inset)
+      </h4>
+      <p style="font-size: 13px; opacity: 0.85; line-height: 1.5;">内向きシャドウ（<code>box-shadow: inset</code>）と沈み込みトーンにより、彫り込みスロットのような工業質感を演出。右側常駐コンポーネントパネル等に採用。</p>
+      <div style="display: flex; gap: 8px; margin-top: 12px; align-items: center;">
+        <button class="mdc-button mdc-button--dense mdc-button--raised" style="background-color: var(--mdc-theme-primary);">埋め込みスロット</button>
+        <span style="font-size: 11px; opacity: 0.7; padding: 2px 6px; border: 1px dashed currentColor;">内部シャドウ Inset</span>
+      </div>
+    </div>
+
+    <!-- 横長メディアカード (Horizontal Media Card) -->
+    <div class="demo-card" style="margin: 0; grid-column: 1 / -1; display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+      <div style="width: 120px; height: 80px; background-color: var(--mdc-theme-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold;">
+        <i class="material-icons" style="font-size: 32px;">image</i>
+      </div>
+      <div style="flex: 1; min-width: 220px;">
+        <h4 style="margin: 0 0 4px 0;">メディア複合カード (Horizontal Media Card)</h4>
+        <p style="font-size: 12px; margin: 0; opacity: 0.85;">左側の固定メディア領域、テキスト説明文、右側のアクションスロットを統合。</p>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="mdc-button mdc-button--dense mdc-button--raised">主アクション</button>
+        <button class="mdc-button mdc-button--dense mdc-button--outlined">補助</button>
+      </div>
+    </div>
+  </div>
+</div>

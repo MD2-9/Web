@@ -1,0 +1,61 @@
+<!--
+  M2.9 Container: モバイル独立ドロワーナビゲーション (Japanese)
+  ═══════════════════════════════════════════════════
+  📦 日本語版 Mobile Drawer コンテナモジュール
+-->
+<aside class="mdc-mobile-drawer" id="app-mobile-drawer">
+  <div class="mobile-drawer-nav-section" id="mobileDrawerNavSection">
+    
+    <!-- ヘッダー -->
+    <div class="mobile-drawer-header" onclick="openOverlay('themePickerPanel', event)" title="クリックしてモネカラーパレットを開く">
+      <div class="rail-header-avatar">M2.9</div>
+      <div class="rail-header-text">
+        <div style="font-weight: bold; font-size: 15px;">M2.9 · MDC-Web</div>
+        <div style="font-size: 11px; opacity: 0.85;">パレットを開く</div>
+      </div>
+    </div>
+
+    <!-- モバイルメニュー (下から上へ配置) -->
+    <nav class="mobile-drawer-nav-list">
+      <!-- 1. ホーム -->
+      <a href="#section-overview" class="mobile-drawer-nav-item" title="ホーム (Overview)">
+        <i class="material-icons rail-item-icon">home</i>
+        <span class="rail-item-text">ホーム</span>
+      </a>
+
+      <!-- 2. カタログ -->
+      <div class="mobile-drawer-nav-item" onclick="openOverlay('catalogSubmenuPanel', event)" title="カタログ (コンポーネント一覧)">
+        <i class="material-icons rail-item-icon" style="color: var(--mdc-theme-primary);">toc</i>
+        <span class="rail-item-text">カタログ</span>
+      </div>
+
+      <!-- 3. 設定 -->
+      <div class="mobile-drawer-nav-item" onclick="openOverlay('settingsSubmenuPanel', event)" title="設定 (テーマとダークモード)">
+        <i class="material-icons rail-item-icon">settings</i>
+        <span class="rail-item-text">設定</span>
+      </div>
+
+      <!-- 4. 情報 -->
+      <div class="mobile-drawer-nav-item" onclick="openOverlay('aboutSubmenuPanel', event)" title="プロジェクト情報">
+        <i class="material-icons rail-item-icon">info</i>
+        <span class="rail-item-text">情報</span>
+      </div>
+    </nav>
+
+    <!-- フッターコントロールバー -->
+    <div class="mobile-drawer-footer">
+      <button class="rail-footer-icon-btn" id="btn-toggle-panel-mobile" onclick="toggleComponentPanelTrigger(event)" title="コンポーネントパネル (展開)">
+        <i class="material-icons">widgets</i>
+      </button>
+      <button class="rail-footer-icon-btn" id="btn-toggle-lang-mobile" onclick="toggleLanguage(event)" title="言語切替 (Language)">
+        <i class="material-icons">translate</i>
+      </button>
+      <button class="rail-footer-icon-btn" id="btn-toggle-layout-mobile" onclick="toggleCardColumns(event)" title="段組みレイアウト切替 (Columns)">
+        <i class="material-icons" id="mobile-layout-icon">view_column</i>
+      </button>
+      <button class="rail-footer-icon-btn" id="btn-toggle-dark-mobile" onclick="toggleThemeMode(event)" title="テーマ切替 (Dark Mode)">
+        <i class="material-icons" id="mobile-dark-icon">brightness_4</i>
+      </button>
+    </div>
+  </div>
+</aside>
