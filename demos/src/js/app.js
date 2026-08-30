@@ -1405,18 +1405,6 @@ window.addEventListener('m29:loaded', function() {
       });
     }
 
-    // 绑定移动端悬浮按钮独立事件
-    const btnMobileFab = document.getElementById('btnMobileFloatingMenu');
-    if (btnMobileFab) {
-      btnMobileFab.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openMobileDrawer();
-      });
-      btnMobileFab.addEventListener('touchstart', (e) => {
-        e.stopPropagation();
-      }, { passive: true });
-    }
-
     // =========================================================================
     // 移动端边缘 29% 手势滑动唤出 (Android 10-12 同款动画 · 直线->变箭头->停留0.15s变图标即可开启)
     // 采用手势状态机预判：只有完全横向滑动判定通过后才激活并显示动画，绝不在非横向滑动时误触
