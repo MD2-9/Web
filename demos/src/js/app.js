@@ -2364,16 +2364,24 @@ window.addEventListener('m29:loaded', function() {
         target.style.setProperty('--mdc-theme-on-surface-variant', onSurfVar);
         target.style.setProperty('--mdc-theme-outline', outline);
 
-        // 选中文本色阶注入
+        // 选中文本与轮廓色阶注入 (50 ~ 900)
+        const p50  = (theme && theme.tones && theme.tones.primary && theme.tones.primary[50])  ? theme.tones.primary[50]  : hslToHex(hp, Math.min(100, sp * 0.3), 96);
+        const p100 = (theme && theme.tones && theme.tones.primary && theme.tones.primary[100]) ? theme.tones.primary[100] : hslToHex(hp, Math.min(100, sp * 0.4), 90);
         const p200 = (theme && theme.tones && theme.tones.primary && theme.tones.primary[200]) ? theme.tones.primary[200] : hslToHex(hp, Math.min(100, sp * 0.45), 85);
+        const p300 = (theme && theme.tones && theme.tones.primary && theme.tones.primary[300]) ? theme.tones.primary[300] : hslToHex(hp, Math.min(100, sp * 0.5), 70);
+        const p400 = (theme && theme.tones && theme.tones.primary && theme.tones.primary[400]) ? theme.tones.primary[400] : hslToHex(hp, Math.min(100, sp * 0.5), 55);
+        const p500 = (theme && theme.tones && theme.tones.primary && theme.tones.primary[500]) ? theme.tones.primary[500] : hslToHex(hp, Math.min(100, sp * 0.5), 45);
         const p700 = (theme && theme.tones && theme.tones.primary && theme.tones.primary[700]) ? theme.tones.primary[700] : hslToHex(hp, Math.min(100, sp * 0.5), 32);
         const p900 = (theme && theme.tones && theme.tones.primary && theme.tones.primary[900]) ? theme.tones.primary[900] : hslToHex(hp, Math.min(100, sp * 0.6), 15);
-        const p50  = (theme && theme.tones && theme.tones.primary && theme.tones.primary[50])  ? theme.tones.primary[50]  : hslToHex(hp, Math.min(100, sp * 0.3), 96);
 
+        target.style.setProperty('--mdc-theme-primary-50', p50);
+        target.style.setProperty('--mdc-theme-primary-100', p100);
         target.style.setProperty('--mdc-theme-primary-200', p200);
+        target.style.setProperty('--mdc-theme-primary-300', p300);
+        target.style.setProperty('--mdc-theme-primary-400', p400);
+        target.style.setProperty('--mdc-theme-primary-500', p500);
         target.style.setProperty('--mdc-theme-primary-700', p700);
         target.style.setProperty('--mdc-theme-primary-900', p900);
-        target.style.setProperty('--mdc-theme-primary-50', p50);
       });
 
       // 同步更新组件栏（未锁定专属调色盘时跟随全局）
