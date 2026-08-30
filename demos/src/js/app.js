@@ -1417,28 +1417,29 @@ window.addEventListener('m29:loaded', function() {
       }, { passive: true });
     }
 
-    // 移动端边缘手势滑动唤出 (12% 边缘区域滑动手势 ✖ 反向滑动收起)
+    // =========================================================================
+    // 移动端边缘 29% 手势滑动唤出 (Android 10-12 同款动画 · 直线->变箭头->停留0.15s变图标即可开启)
+    // =========================================================================
     let touchStartX = 0;
     let touchStartY = 0;
-    let touchStartedInDrawer = false;
-    let touchStartedInPanel = false;
+    let activeGestureSide = null; // 'left' | 'right' | null
+    let gestureReadyToOpen = false;
+    let gestureHoldTimer = null;
+    const SWIPE_REQUIRED_DIST = 48; // 滑动距离要求 (48px 完成直线变箭头)
 
     window.addEventListener('touchstart', (e) => {
       if (!e.touches || !e.touches[0]) return;
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
-      touchStartedInDrawer = !!(e.target && typeof e.target.closest === 'function' && e.target.closest('#app-mobile-drawer'));
-      touchStartedInPanel = !!(e.target && typeof e.target.closest === 'function' && e.target.closest('#app-component-panel'));
-    }, { passive: true });
+      activeGestureSide = null;
+      gestureReadyToOpen = false;
+      if (gestureHoldTimer) {
+        clearTimeout(gestureHoldTimer);
+        gestureHoldTimer = null;
+      }
 
-    window.addEventListener('touchend', (e) => {
-      if (!e.changedTouches || !e.changedTouches[0]) return;
-      const touchEndX = e.changedTouches[0].clientX;
-      const touchEndY = e.changedTouches[0].clientY;
-      const deltaX = touchEndX - touchStartX;
-      const deltaY = Math.abs(touchEndY - touchStartY);
       const screenWidth = window.innerWidth;
-      const edgeThreshold = Math.max(48, screenWidth * 0.12); // 12% 屏幕边缘有效滑动触发区
+      const edgeThreshold = screenWidth * 0.29; // 🌟 29% 边缘滑动有效触发区
 
       const mobileDrawer = document.getElementById('app-mobile-drawer');
       const isDrawerOpen = mobileDrawer && (mobileDrawer.classList.contains('mobile-open') || mobileDrawer.classList.contains('is-open'));
@@ -1446,25 +1447,144 @@ window.addEventListener('m29:loaded', function() {
       const componentPanel = document.getElementById('app-component-panel');
       const isComponentPanelOpen = componentPanel && componentPanel.classList.contains('is-open');
 
-      // 🌟 1. 左侧抽屉 (Left Drawer):
-      // 屏幕左侧 12% 区域内向右滑动打开 (避开系统自带最边缘手势，在 12% 区域即可舒适呼出)
-      if (!isDrawerOpen && touchStartX <= edgeThreshold && deltaX > 35 && deltaY < Math.abs(deltaX) * 1.5) {
-        openMobileDrawer();
+      // 仅在对应面板未开启状态下，且触摸起点在 29% 边缘区域内时激活手势
+      if (screenWidth < 640 && !isDrawerOpen && touchStartX <= edgeThreshold) {
+        activeGestureSide = 'left';
+      } else if (screenWidth < 768 && !isComponentPanelOpen && touchStartX >= screenWidth - edgeThreshold) {
+        activeGestureSide = 'right';
       }
-      // 抽屉开启状态下向左滑动收起
-      else if (isDrawerOpen && deltaX < -40 && deltaY < Math.abs(deltaX) * 1.5) {
-        closeMobileDrawer();
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!activeGestureSide || !e.touches || !e.touches[0]) return;
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
+      const deltaX = currentX - touchStartX;
+      const deltaY = Math.abs(currentY - touchStartY);
+
+      // 如果纵向滑动幅度过大，判定为垂直滚动，取消手势动效
+      if (deltaY > 60 && deltaY > Math.abs(deltaX) * 1.5) {
+        cleanupInteractiveGesture();
+        activeGestureSide = null;
+        return;
       }
 
-      // 🌟 2. 右侧组件栏 (Right Component Panel):
-      // 屏幕右侧 12% 区域内向左滑动打开
-      if (!isComponentPanelOpen && touchStartX >= screenWidth - edgeThreshold && deltaX < -35 && deltaY < Math.abs(deltaX) * 1.5) {
-        openComponentPanel();
+      let dragDist = 0;
+      let hintEl = null;
+
+      if (activeGestureSide === 'left' && deltaX > 0) {
+        dragDist = deltaX;
+        hintEl = document.getElementById('m29GestureHintLeft');
+      } else if (activeGestureSide === 'right' && deltaX < 0) {
+        dragDist = Math.abs(deltaX);
+        hintEl = document.getElementById('m29GestureHintRight');
       }
-      // 组件栏开启状态下向右滑动收起
-      else if (isComponentPanelOpen && deltaX > 40 && deltaY < Math.abs(deltaX) * 1.5) {
+
+      if (!hintEl) return;
+
+      const progress = Math.min(1, Math.max(0, dragDist / SWIPE_REQUIRED_DIST));
+
+      // 激活实时交互态
+      hintEl.classList.add('is-touch-tracking');
+      hintEl.style.top = `${touchStartY}px`;
+
+      // 动态形态插值 (直线 -> 变箭头)
+      const svgPath = hintEl.querySelector('svg path');
+      if (svgPath) {
+        if (activeGestureSide === 'left') {
+          // 直线 M 6,10 L 6,24 L 6,38 -> 箭头 M 8,11 L 22,24 L 8,37
+          const pTopX = 6 + 2 * progress;
+          const pTopY = 10 + 1 * progress;
+          const pMidX = 6 + 16 * progress;
+          const pBotY = 38 - 1 * progress;
+          svgPath.setAttribute('d', `M ${pTopX},${pTopY} L ${pMidX},24 L ${pTopX},${pBotY}`);
+          hintEl.style.transform = `translateY(-50%) translateX(${Math.min(22, dragDist * 0.45) - (1 - progress) * 16}px)`;
+        } else {
+          // 直线 M 26,10 L 26,24 L 26,38 -> 箭头 M 24,11 L 10,24 L 24,37
+          const pTopX = 26 - 2 * progress;
+          const pTopY = 10 + 1 * progress;
+          const pMidX = 26 - 16 * progress;
+          const pBotY = 38 - 1 * progress;
+          svgPath.setAttribute('d', `M ${pTopX},${pTopY} L ${pMidX},24 L ${pTopX},${pBotY}`);
+          hintEl.style.transform = `translateY(-50%) translateX(${-Math.min(22, dragDist * 0.45) + (1 - progress) * 16}px)`;
+        }
+      }
+
+      // 当滑动距离满足要求（完成变为箭头）后，停留 0.15s 变为图标即可开启
+      if (progress >= 1.0) {
+        if (!gestureHoldTimer && !gestureReadyToOpen) {
+          gestureHoldTimer = setTimeout(() => {
+            gestureReadyToOpen = true;
+            hintEl.classList.add('is-ready');
+          }, 150); // 🌟 停留 0.15s 变为图标
+        }
+      } else {
+        if (gestureHoldTimer) {
+          clearTimeout(gestureHoldTimer);
+          gestureHoldTimer = null;
+        }
+        gestureReadyToOpen = false;
+        hintEl.classList.remove('is-ready');
+      }
+    }, { passive: true });
+
+    function cleanupInteractiveGesture() {
+      if (gestureHoldTimer) {
+        clearTimeout(gestureHoldTimer);
+        gestureHoldTimer = null;
+      }
+      gestureReadyToOpen = false;
+      const hintLeft = document.getElementById('m29GestureHintLeft');
+      const hintRight = document.getElementById('m29GestureHintRight');
+      [hintLeft, hintRight].forEach(h => {
+        if (h) {
+          h.classList.remove('is-touch-tracking', 'is-ready');
+          h.style.top = '';
+          h.style.transform = '';
+          const path = h.querySelector('svg path');
+          if (path) {
+            if (h.id === 'm29GestureHintLeft') path.setAttribute('d', 'M 6,10 L 6,24 L 6,38');
+            else path.setAttribute('d', 'M 26,10 L 26,24 L 26,38');
+          }
+        }
+      });
+    }
+
+    window.addEventListener('touchend', (e) => {
+      if (!e.changedTouches || !e.changedTouches[0]) return;
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = Math.abs(touchEndY - touchStartY);
+
+      const mobileDrawer = document.getElementById('app-mobile-drawer');
+      const isDrawerOpen = mobileDrawer && (mobileDrawer.classList.contains('mobile-open') || mobileDrawer.classList.contains('is-open'));
+
+      const componentPanel = document.getElementById('app-component-panel');
+      const isComponentPanelOpen = componentPanel && componentPanel.classList.contains('is-open');
+
+      // 1. 手势满足距离并在停留 0.15s 变为图标后释放：开启
+      if (gestureReadyToOpen) {
+        if (activeGestureSide === 'left') {
+          openMobileDrawer();
+        } else if (activeGestureSide === 'right') {
+          openComponentPanel();
+        }
+      } 
+      // 2. 反向滑动收回 (已打开状态下向内滑回收起)
+      else if (isDrawerOpen && deltaX < -40 && deltaY < Math.abs(deltaX) * 1.5) {
+        closeMobileDrawer();
+      } else if (isComponentPanelOpen && deltaX > 40 && deltaY < Math.abs(deltaX) * 1.5) {
         closeComponentPanel();
       }
+
+      cleanupInteractiveGesture();
+      activeGestureSide = null;
+    }, { passive: true });
+
+    window.addEventListener('touchcancel', () => {
+      cleanupInteractiveGesture();
+      activeGestureSide = null;
     }, { passive: true });
 
     // =========================================================================

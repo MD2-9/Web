@@ -201,8 +201,9 @@ export class MdcMobileDrawer {
       const deltaX = touchEndX - touchStartX;
       const deltaY = Math.abs(touchEndY - touchStartY);
 
-      // 1. 边缘右滑打开 (左边缘 < 35px 向右滑动 > 45px)
-      if (!this.isOpen() && touchStartX < 35 && deltaX > 45 && deltaY < 80) {
+      const edgeThreshold = window.innerWidth * 0.29; // 29% 边缘判定
+      // 1. 边缘右滑打开 (左边缘 < 29% 向右滑动 > 45px)
+      if (!this.isOpen() && touchStartX <= edgeThreshold && deltaX > 45 && deltaY < 80) {
         this.open();
       }
       // 2. 反向左滑收回 (已打开状态下向左滑动 > 50px)

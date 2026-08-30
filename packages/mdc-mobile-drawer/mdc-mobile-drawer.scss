@@ -401,6 +401,31 @@
   animation: m29-hint-icon-spot 1.9s cubic-bezier(0.2, 0, 0, 1) forwards;
 }
 
+/* 🌟 手势交互实时跟踪态 (Direct Drag Interactive State) */
+.m29-gesture-hint.is-touch-tracking {
+  display: flex !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+.m29-gesture-hint.is-touch-tracking svg,
+.m29-gesture-hint.is-touch-tracking svg path,
+.m29-gesture-hint.is-touch-tracking .m29-gesture-hint-icon {
+  animation: none !important;
+  transition: opacity 0.15s ease, transform 0.15s ease !important;
+}
+
+.m29-gesture-hint.is-touch-tracking.is-ready .m29-gesture-hint-icon {
+  opacity: 1 !important;
+  transform: translate(-50%, -50%) scale(1.15) !important;
+}
+
+.m29-gesture-hint.is-touch-tracking.is-ready svg {
+  opacity: 0 !important;
+}
+
 /* 0-0.3s 直线出现 -> 0.3-0.65s 变箭头 -> 0.65-0.8s 箭头固定 -> 0.8-1.0s 箭头淡出让位于图标 */
 @keyframes m29-arrow-fade {
   0% {
