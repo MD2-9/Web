@@ -294,7 +294,7 @@
   background-color: var(--mdc-theme-surface, #19181e);
 }
 
-/* 🌟 Android 10-12 全面屏手势滑动引导 (Line -> Arrow Edge Gesture Hint) */
+/* 🌟 Android 10-12 全面屏手势滑动引导 (无背景 ✖ 主色着色 ✖ 在 0.3s 期间箭头暂时变为对应图标) */
 .m29-gesture-hint {
   position: fixed;
   top: 50%;
@@ -305,141 +305,196 @@
   align-items: center;
   justify-content: center;
   width: 36px;
-  height: 60px;
-  background-color: var(--mdc-theme-primary, #6750a4);
-  color: var(--mdc-theme-on-primary, #ffffff);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  height: 48px;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  color: var(--mdc-theme-primary, #6750a4);
   opacity: 0;
   will-change: transform, opacity;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: color 0.3s ease;
 }
 
 .m29-gesture-hint--left {
   left: 0;
-  border-radius: 0 30px 30px 0 !important;
-  transform: translateY(-50%) translateX(-100%);
+  transform: translateY(-50%) translateX(-24px);
 }
 
 .m29-gesture-hint--right {
   right: 0;
-  border-radius: 30px 0 0 30px !important;
-  transform: translateY(-50%) translateX(100%);
+  transform: translateY(-50%) translateX(24px);
 }
 
 .m29-gesture-hint svg {
-  width: 22px;
-  height: 22px;
-  stroke: currentColor;
-  stroke-width: 2.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 48px;
+  stroke: var(--mdc-theme-primary, #6750a4);
+  stroke-width: 3.5;
   stroke-linecap: round;
   stroke-linejoin: round;
   fill: none;
-  transition: transform 0.2s ease;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.28));
+  transition: stroke 0.3s ease;
 }
 
-/* 激活左侧滑动引导动画 (2.9s 完整手势生命周期 · 直线弯曲为右箭头) */
+.dark-theme .m29-gesture-hint svg {
+  stroke: var(--mdc-theme-primary, #d0bcff);
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.65));
+}
+
+/* 🌟 在 0.3s 停留期间，箭头原地暂时变为对应功能图标 */
+.m29-gesture-hint-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.4);
+  font-size: 22px !important;
+  line-height: 1 !important;
+  width: 22px;
+  height: 22px;
+  color: var(--mdc-theme-primary, #6750a4);
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.28));
+  transition: color 0.3s ease;
+}
+
+.dark-theme .m29-gesture-hint-icon {
+  color: var(--mdc-theme-primary, #d0bcff);
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.65));
+}
+
+/* 激活左侧滑动引导动画 (1.9s: 0-0.3s直线出现 + 0.3-0.65s变箭头 + 0.65-0.8s箭头固定 + 0.8-1.0s淡入图标 + 1.0-1.5s固定图标 + 1.5-1.9s直接图标淡出) */
 .m29-gesture-hint--left.is-animating {
   display: flex !important;
-  animation: m29-gesture-left-swipe 2.9s cubic-bezier(0.2, 0, 0, 1) forwards;
+  animation: m29-gesture-left-swipe 1.9s cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
+.m29-gesture-hint--left.is-animating svg {
+  animation: m29-arrow-fade 1.9s cubic-bezier(0.2, 0, 0, 1) forwards;
 }
 
 .m29-gesture-hint--left.is-animating svg path {
-  animation: m29-morph-arrow-right 2.9s cubic-bezier(0.2, 0, 0, 1) forwards;
+  animation: m29-morph-arrow-right 1.9s cubic-bezier(0.2, 0, 0, 1) forwards;
 }
 
-/* 激活右侧滑动引导动画 (2.9s 完整手势生命周期 · 直线弯曲为左箭头) */
+/* 激活右侧滑动引导动画 (1.9s: 0-0.3s直线出现 + 0.3-0.65s变箭头 + 0.65-0.8s箭头固定 + 0.8-1.0s淡入图标 + 1.0-1.5s固定图标 + 1.5-1.9s直接图标淡出) */
 .m29-gesture-hint--right.is-animating {
   display: flex !important;
-  animation: m29-gesture-right-swipe 2.9s cubic-bezier(0.2, 0, 0, 1) forwards;
+  animation: m29-gesture-right-swipe 1.9s cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
+.m29-gesture-hint--right.is-animating svg {
+  animation: m29-arrow-fade 1.9s cubic-bezier(0.2, 0, 0, 1) forwards;
 }
 
 .m29-gesture-hint--right.is-animating svg path {
-  animation: m29-morph-arrow-left 2.9s cubic-bezier(0.2, 0, 0, 1) forwards;
+  animation: m29-morph-arrow-left 1.9s cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
+.m29-gesture-hint.is-animating .m29-gesture-hint-icon {
+  animation: m29-hint-icon-spot 1.9s cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
+/* 0-0.3s 直线出现 -> 0.3-0.65s 变箭头 -> 0.65-0.8s 箭头固定 -> 0.8-1.0s 箭头淡出让位于图标 */
+@keyframes m29-arrow-fade {
+  0% {
+    opacity: 0;
+  }
+  10%, 42.1% {
+    opacity: 1;
+  }
+  52.6%, 100% {
+    opacity: 0;
+  }
+}
+
+/* 0.8-1.0s 淡入图标 -> 1.0-1.5s 固定图标 -> 1.5-1.9s 直接图标淡出 */
+@keyframes m29-hint-icon-spot {
+  0%, 42.1% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  52.6% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  78.9% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
 }
 
 @keyframes m29-gesture-left-swipe {
   0% {
     opacity: 0;
-    transform: translateY(-50%) translateX(-100%);
+    transform: translateY(-50%) translateX(-24px);
   }
-  12% {
-    opacity: 0.95;
+  15.8% {
+    opacity: 1;
     transform: translateY(-50%) translateX(0);
   }
-  30% {
+  34.2% {
     opacity: 1;
-    transform: translateY(-50%) translateX(12px);
+    transform: translateY(-50%) translateX(20px);
   }
-  55% {
+  78.9% {
     opacity: 1;
-    transform: translateY(-50%) translateX(18px);
-  }
-  75% {
-    opacity: 1;
-    transform: translateY(-50%) translateX(8px);
-  }
-  88% {
-    opacity: 0.9;
-    transform: translateY(-50%) translateX(0);
+    transform: translateY(-50%) translateX(20px);
   }
   100% {
     opacity: 0;
-    transform: translateY(-50%) translateX(-100%);
+    transform: translateY(-50%) translateX(0);
   }
 }
 
 @keyframes m29-morph-arrow-right {
-  0%, 10% {
-    d: path("M 8,4 L 8,12 L 8,20");
+  0%, 15.8% {
+    d: path("M 6,10 L 6,24 L 6,38");
   }
-  30%, 75% {
-    d: path("M 6,5 L 16,12 L 6,19");
-  }
-  90%, 100% {
-    d: path("M 8,4 L 8,12 L 8,20");
+  34.2%, 100% {
+    d: path("M 8,11 L 22,24 L 8,37");
   }
 }
 
 @keyframes m29-gesture-right-swipe {
   0% {
     opacity: 0;
-    transform: translateY(-50%) translateX(100%);
+    transform: translateY(-50%) translateX(24px);
   }
-  12% {
-    opacity: 0.95;
+  15.8% {
+    opacity: 1;
     transform: translateY(-50%) translateX(0);
   }
-  30% {
+  34.2% {
     opacity: 1;
-    transform: translateY(-50%) translateX(-12px);
+    transform: translateY(-50%) translateX(-20px);
   }
-  55% {
+  78.9% {
     opacity: 1;
-    transform: translateY(-50%) translateX(-18px);
-  }
-  75% {
-    opacity: 1;
-    transform: translateY(-50%) translateX(-8px);
-  }
-  88% {
-    opacity: 0.9;
-    transform: translateY(-50%) translateX(0);
+    transform: translateY(-50%) translateX(-20px);
   }
   100% {
     opacity: 0;
-    transform: translateY(-50%) translateX(100%);
+    transform: translateY(-50%) translateX(0);
   }
 }
 
 @keyframes m29-morph-arrow-left {
-  0%, 10% {
-    d: path("M 16,4 L 16,12 L 16,20");
+  0%, 15.8% {
+    d: path("M 26,10 L 26,24 L 26,38");
   }
-  30%, 75% {
-    d: path("M 18,5 L 8,12 L 18,19");
-  }
-  90%, 100% {
-    d: path("M 16,4 L 16,12 L 16,20");
+  34.2%, 100% {
+    d: path("M 24,11 L 10,24 L 24,37");
   }
 }
 

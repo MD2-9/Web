@@ -1192,65 +1192,86 @@ window.addEventListener('m29:loaded', function() {
       return localStorage.getItem('m29_panel_hint_disabled') === 'true' || getPanelOpenSuccessCount() >= 2;
     }
 
-    function triggerGestureHints() {
-      // 1. 左侧抽屉引导 (< 640px 移动端且未超额)
-      if (window.innerWidth < 640 && !isLeftGestureHintDisabled() && leftGestureHintCount < 2) {
-        const mobileDrawer = document.getElementById('app-mobile-drawer');
-        const isDrawerOpen = mobileDrawer && (mobileDrawer.classList.contains('mobile-open') || mobileDrawer.classList.contains('is-open'));
-        if (!isDrawerOpen) {
-          const hintLeft = document.getElementById('m29GestureHintLeft');
-          if (hintLeft) {
-            hintLeft.classList.remove('is-animating');
-            void hintLeft.offsetWidth; // 触发重绘重播动画
-            hintLeft.classList.add('is-animating');
-            leftGestureHintCount++;
-            if (leftHintTimer) clearTimeout(leftHintTimer);
-            leftHintTimer = setTimeout(() => {
-              hintLeft.classList.remove('is-animating');
-              leftHintTimer = null;
-            }, 2900);
-          }
-        }
-      }
+    let hintSequenceTimeouts = [];
 
-      // 2. 右侧组件栏引导 (< 768px 移动/折叠期且未超额)
-      if (window.innerWidth < 768 && !isRightGestureHintDisabled() && rightGestureHintCount < 2) {
-        const compPanel = document.getElementById('app-component-panel');
-        const isPanelOpen = compPanel && compPanel.classList.contains('is-open');
-        if (!isPanelOpen) {
-          const hintRight = document.getElementById('m29GestureHintRight');
-          if (hintRight) {
-            hintRight.classList.remove('is-animating');
-            void hintRight.offsetWidth; // 触发重绘重播动画
-            hintRight.classList.add('is-animating');
-            rightGestureHintCount++;
-            if (rightHintTimer) clearTimeout(rightHintTimer);
-            rightHintTimer = setTimeout(() => {
-              hintRight.classList.remove('is-animating');
-              rightHintTimer = null;
-            }, 2900);
+    function clearHintSequenceTimeouts() {
+      hintSequenceTimeouts.forEach(t => clearTimeout(t));
+      hintSequenceTimeouts = [];
+    }
+
+    function triggerGestureHints() {
+      clearHintSequenceTimeouts();
+
+      // 🌟 时序链定义:
+      // 2.9s静止 -> 1.9s播放侧边栏 -> 1.3s静止 -> 1.9s播放组件栏 -> 1.3s静止 -> 1.9s播放侧边栏 -> 1.3s静止 -> 1.9s播放组件栏
+      const steps = [
+        { type: 'left', playTime: 1900, gapTime: 1300 },
+        { type: 'right', playTime: 1900, gapTime: 1300 },
+        { type: 'left', playTime: 1900, gapTime: 1300 },
+        { type: 'right', playTime: 1900, gapTime: 0 }
+      ];
+
+      let accumulatedDelay = 0;
+
+      steps.forEach((step) => {
+        const timerId = setTimeout(() => {
+          if (step.type === 'left') {
+            const mobileDrawer = document.getElementById('app-mobile-drawer');
+            const isDrawerOpen = mobileDrawer && (mobileDrawer.classList.contains('mobile-open') || mobileDrawer.classList.contains('is-open'));
+            if (window.innerWidth < 640 && !isLeftGestureHintDisabled() && leftGestureHintCount < 2 && !isDrawerOpen) {
+              playLeftGestureHint();
+            }
+          } else if (step.type === 'right') {
+            const compPanel = document.getElementById('app-component-panel');
+            const isPanelOpen = compPanel && compPanel.classList.contains('is-open');
+            if (window.innerWidth < 768 && !isRightGestureHintDisabled() && rightGestureHintCount < 2 && !isPanelOpen) {
+              playRightGestureHint();
+            }
           }
-        }
+        }, accumulatedDelay);
+
+        hintSequenceTimeouts.push(timerId);
+        accumulatedDelay += step.playTime + step.gapTime;
+      });
+    }
+
+    function playLeftGestureHint() {
+      const hintLeft = document.getElementById('m29GestureHintLeft');
+      if (hintLeft) {
+        hintLeft.classList.remove('is-animating');
+        void hintLeft.offsetWidth; // 触发重绘重播 1.9s 动画
+        hintLeft.classList.add('is-animating');
+        leftGestureHintCount++;
+        const t = setTimeout(() => {
+          hintLeft.classList.remove('is-animating');
+        }, 1900);
+        hintSequenceTimeouts.push(t);
+      }
+    }
+
+    function playRightGestureHint() {
+      const hintRight = document.getElementById('m29GestureHintRight');
+      if (hintRight) {
+        hintRight.classList.remove('is-animating');
+        void hintRight.offsetWidth; // 触发重绘重播 1.9s 动画
+        hintRight.classList.add('is-animating');
+        rightGestureHintCount++;
+        const t = setTimeout(() => {
+          hintRight.classList.remove('is-animating');
+        }, 1900);
+        hintSequenceTimeouts.push(t);
       }
     }
 
     function hideGestureHints() {
+      clearHintSequenceTimeouts();
       const hintLeft = document.getElementById('m29GestureHintLeft');
       if (hintLeft) {
         hintLeft.classList.remove('is-animating');
       }
-      if (leftHintTimer) {
-        clearTimeout(leftHintTimer);
-        leftHintTimer = null;
-      }
-
       const hintRight = document.getElementById('m29GestureHintRight');
       if (hintRight) {
         hintRight.classList.remove('is-animating');
-      }
-      if (rightHintTimer) {
-        clearTimeout(rightHintTimer);
-        rightHintTimer = null;
       }
     }
 
