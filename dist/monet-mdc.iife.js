@@ -5992,6 +5992,17 @@ var MdcMonet = (() => {
         "--mdc-theme-tertiary": hexFromArgb(tertiaryPalette.tone(isDark ? 80 : 40)),
         "--mdc-theme-background": surfaces.background,
         "--mdc-theme-surface": surfaces.surface,
+        "--mdc-theme-surface-dim": surfaces.surfaceDim,
+        "--mdc-theme-surface-bright": surfaces.surfaceBright,
+        "--mdc-theme-surface-container-lowest": surfaces.surfaceContainerLowest,
+        "--mdc-theme-surface-container-low": surfaces.surfaceContainerLow,
+        "--mdc-theme-surface-container": surfaces.surfaceContainer,
+        "--mdc-theme-surface-container-high": surfaces.surfaceContainerHigh,
+        "--mdc-theme-surface-container-highest": surfaces.surfaceContainerHighest,
+        "--mdc-theme-surface-variant": surfaces.surfaceVariant,
+        "--mdc-theme-on-surface-variant": surfaces.onSurfaceVariant,
+        "--mdc-theme-outline": surfaces.outline,
+        "--mdc-theme-outline-variant": surfaces.outlineVariant,
         "--mdc-theme-on-primary": hexFromArgb(primaryPalette.tone(isDark ? 20 : 100)),
         "--mdc-theme-on-secondary": hexFromArgb(secondaryPalette.tone(isDark ? 20 : 100)),
         "--mdc-theme-on-surface": surfaces.onSurface,
@@ -5999,9 +6010,7 @@ var MdcMonet = (() => {
         "--mdc-theme-text-secondary-on-background": surfaces.onSurfaceVariant,
         "--mdc-theme-text-hint-on-background": hexFromArgb(neutralVariantPalette.tone(isDark ? 60 : 40)),
         "--mdc-theme-text-disabled-on-background": hexFromArgb(neutralVariantPalette.tone(isDark ? 50 : 70)),
-        "--mdc-theme-text-icon-on-background": hexFromArgb(neutralVariantPalette.tone(isDark ? 70 : 50)),
-        "--mdc-theme-surface-container": surfaces.surfaceContainer,
-        "--mdc-theme-surface-container-high": surfaces.surfaceContainerHigh
+        "--mdc-theme-text-icon-on-background": hexFromArgb(neutralVariantPalette.tone(isDark ? 70 : 50))
       };
       function createToneMap(palette) {
         return {

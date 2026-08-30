@@ -99,6 +99,13 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   color: var(--mdc-theme-on-surface, #1d1b20);
 }
 
+.component-panel-section {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .component-panel-section-title {
   display: flex;
   align-items: center;
@@ -106,7 +113,8 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   font-size: 13.5px;
   font-weight: 700;
   color: var(--mdc-theme-on-surface-variant, #49454f);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  padding: 0 2px;
 }
 
 .component-panel-section-title i.material-icons {
@@ -174,18 +182,11 @@ body.is-resizing-component-panel .component-panel-resizer::after {
   height: 0 !important;
 }
 
-/* 组件栏独立暗色/浅色模式 (Google MD3 纯正色阶) */
+/* 组件栏跟随动态主题与色阶 */
 .mdc-component-panel.dark-theme,
 .dark-theme .mdc-component-panel:not(.light-theme) {
-  --mdc-theme-surface: #141218;
-  --mdc-theme-surface-container-low: #1d1b20;
-  --mdc-theme-surface-container: #211f26;
-  --mdc-theme-surface-container-high: #2b2930;
-  --mdc-theme-surface-container-highest: #36343b;
-  --mdc-theme-on-surface: #e6e1e5;
-  --mdc-theme-on-surface-variant: #cac4d0;
-  background-color: var(--mdc-theme-surface-container-low, #1d1b20) !important;
-  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+  background-color: var(--mdc-theme-surface-container-low) !important;
+  color: var(--mdc-theme-on-surface) !important;
   border-left-color: rgba(255, 255, 255, 0.08) !important;
   border-right-color: rgba(255, 255, 255, 0.08) !important;
   box-shadow: -1px 0 8px rgba(0, 0, 0, 0.6) !important;
@@ -193,93 +194,93 @@ body.is-resizing-component-panel .component-panel-resizer::after {
 
 .mdc-component-panel.dark-theme .component-panel-header,
 .dark-theme .mdc-component-panel:not(.light-theme) .component-panel-header {
-  background-color: var(--mdc-theme-surface-container, #211f26) !important;
-  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+  background-color: var(--mdc-theme-surface-container) !important;
+  color: var(--mdc-theme-on-surface) !important;
   border-bottom-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 .mdc-component-panel.dark-theme .component-panel-action-btn,
 .dark-theme .mdc-component-panel:not(.light-theme) .component-panel-action-btn {
-  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+  color: var(--mdc-theme-on-surface) !important;
 }
 
 .mdc-component-panel.dark-theme .component-panel-section-title,
 .dark-theme .mdc-component-panel:not(.light-theme) .component-panel-section-title {
-  color: var(--mdc-theme-on-surface-variant, #cac4d0) !important;
+  color: var(--mdc-theme-on-surface-variant) !important;
 }
 
+/* 🌟 组件栏主体暗色凹陷卡片样式 (Sunken / Inset Recessed Component Body) */
 .mdc-component-panel.dark-theme .mdc-date-picker,
 .mdc-component-panel.dark-theme .mdc-time-picker,
 .dark-theme .mdc-component-panel:not(.light-theme) .mdc-date-picker,
 .dark-theme .mdc-component-panel:not(.light-theme) .mdc-time-picker {
-  background-color: var(--mdc-theme-surface-container-high, #2b2930) !important;
-  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+  background-color: var(--mdc-theme-surface-container-lowest, var(--mdc-theme-surface)) !important;
+  color: var(--mdc-theme-on-surface) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.65), inset 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  border-radius: 0 !important;
 }
 
 .mdc-component-panel.dark-theme .mdc-date-picker__cell,
 .dark-theme .mdc-component-panel:not(.light-theme) .mdc-date-picker__cell {
-  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+  color: var(--mdc-theme-on-surface) !important;
 }
 
 .mdc-component-panel.dark-theme .mdc-time-picker__clock-face,
 .dark-theme .mdc-component-panel:not(.light-theme) .mdc-time-picker__clock-face {
-  background-color: var(--mdc-theme-surface-container-highest, #36343b) !important;
+  background-color: var(--mdc-theme-surface-container-highest) !important;
 }
 
 .mdc-component-panel.light-theme {
-  --mdc-theme-surface: #fef7ff;
-  --mdc-theme-surface-container-low: #f7f2fa;
-  --mdc-theme-surface-container: #f3edf7;
-  --mdc-theme-surface-container-high: #ece6f0;
-  --mdc-theme-surface-container-highest: #e6e0e9;
-  --mdc-theme-on-surface: #1d1b20;
-  --mdc-theme-on-surface-variant: #49454f;
-  background-color: var(--mdc-theme-surface-container-low, #f7f2fa) !important;
-  color: #1d1b20 !important;
+  background-color: var(--mdc-theme-surface-container-low) !important;
+  color: var(--mdc-theme-on-surface) !important;
   border-left-color: rgba(0, 0, 0, 0.08) !important;
   border-right-color: rgba(0, 0, 0, 0.08) !important;
   box-shadow: -1px 0 3px rgba(0, 0, 0, 0.05) !important;
 }
 
 .mdc-component-panel.light-theme .component-panel-header {
-  background-color: var(--mdc-theme-surface-container, #f3edf7) !important;
-  color: var(--mdc-theme-on-surface, #1d1b20) !important;
+  background-color: var(--mdc-theme-surface-container) !important;
+  color: var(--mdc-theme-on-surface) !important;
   border-bottom-color: rgba(0, 0, 0, 0.08) !important;
 }
 
 .mdc-component-panel.light-theme .component-panel-action-btn {
-  color: var(--mdc-theme-on-surface, #1d1b20) !important;
+  color: var(--mdc-theme-on-surface) !important;
 }
 
 .mdc-component-panel.light-theme .component-panel-section-title {
-  color: var(--mdc-theme-on-surface-variant, #49454f) !important;
+  color: var(--mdc-theme-on-surface-variant) !important;
 }
 
+/* 🌟 组件栏主体浅色凹陷卡片样式 (Sunken / Inset Recessed Component Body) */
 .mdc-component-panel.light-theme .mdc-date-picker,
 .mdc-component-panel.light-theme .mdc-time-picker {
-  background-color: var(--mdc-theme-surface-container-high, #ece6f0) !important;
-  color: #1d1b20 !important;
-  border-color: rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+  background-color: var(--mdc-theme-surface-container) !important;
+  color: var(--mdc-theme-on-surface) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 0 rgba(255, 255, 255, 0.7) !important;
+  border-radius: 0 !important;
 }
 
 .mdc-component-panel.light-theme .mdc-date-picker__cell {
-  color: #1d1b20 !important;
+  color: var(--mdc-theme-on-surface) !important;
 }
 
 .mdc-component-panel.light-theme .mdc-time-picker__clock-face {
-  background-color: var(--mdc-theme-surface-container-highest, #e6e0e9) !important;
+  background-color: var(--mdc-theme-surface-container-highest) !important;
 }
 
-/* 组件栏内的 Picker 自适应宽度与纯正 MD3 统一配色 */
+/* 组件栏内的 Picker 自适应宽度与纯正 MD3 统一配色与凹陷主体 */
 .mdc-component-panel .mdc-date-picker,
 .mdc-component-panel .mdc-time-picker {
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
-  background-color: var(--mdc-theme-surface-container-high, #ece6f0);
+  background-color: var(--mdc-theme-surface-container, #f3edf7);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 0 rgba(255, 255, 255, 0.7);
+  border-radius: 0 !important;
 }
 
 .mdc-component-panel .mdc-time-picker__clock-face {

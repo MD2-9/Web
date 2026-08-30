@@ -45,7 +45,6 @@
 }
 
 .mdc-select-custom__menu {
-  display: none;
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
@@ -56,10 +55,38 @@
   border: 1px solid rgba(0, 0, 0, 0.12);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
   z-index: 10000;
+  display: flex;
   flex-direction: column;
   padding: 6px 0;
   border-radius: 0;
   font-family: inherit;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scaleY(0.92);
+  transform-origin: top center;
+  pointer-events: none;
+  transition: opacity 0.24s cubic-bezier(0.2, 0, 0, 1),
+              transform 0.24s cubic-bezier(0.2, 0, 0, 1),
+              visibility 0.24s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.mdc-select-custom.is-open .mdc-select-custom__menu,
+.mdc-select-custom__menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scaleY(1);
+  pointer-events: auto;
+}
+
+.mdc-select-custom .mdc-select-custom__icon,
+.mdc-select-custom #mdcSelectArrow,
+.mdc-select-custom i.material-icons {
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.mdc-select-custom.is-open .mdc-select-custom__icon,
+.mdc-select-custom.is-open #mdcSelectArrow {
+  transform: rotate(180deg);
 }
 
 .dark-theme .mdc-select-custom__menu {

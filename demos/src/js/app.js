@@ -1571,6 +1571,43 @@ window.addEventListener('m29:loaded', function() {
         }
       }
 
+      // 🌟 计算完整的 MD3 动态表面容器色彩层级
+      let surfLowest, surfLow, surfCont, surfHigh, surfHighest, surf, bg, onSurf, onSurfVar, outline;
+      if (theme && theme.surfaces) {
+        surfLowest = theme.surfaces.surfaceContainerLowest;
+        surfLow = theme.surfaces.surfaceContainerLow;
+        surfCont = theme.surfaces.surfaceContainer;
+        surfHigh = theme.surfaces.surfaceContainerHigh;
+        surfHighest = theme.surfaces.surfaceContainerHighest;
+        surf = theme.surfaces.surface;
+        bg = theme.surfaces.background;
+        onSurf = theme.surfaces.onSurface;
+        onSurfVar = theme.surfaces.onSurfaceVariant;
+        outline = theme.surfaces.outline;
+      } else if (isDarkMode) {
+        surfLowest = hslToHex(hp, Math.min(100, sp * 0.15), 6);
+        surfLow = hslToHex(hp, Math.min(100, sp * 0.15), 10);
+        surfCont = hslToHex(hp, Math.min(100, sp * 0.16), 12);
+        surfHigh = hslToHex(hp, Math.min(100, sp * 0.18), 16);
+        surfHighest = hslToHex(hp, Math.min(100, sp * 0.2), 20);
+        surf = hslToHex(hp, Math.min(100, sp * 0.14), 12);
+        bg = hslToHex(hp, Math.min(100, sp * 0.12), 10);
+        onSurf = '#e6e1e5';
+        onSurfVar = '#cac4d0';
+        outline = hslToHex(hp, Math.min(100, sp * 0.15), 45);
+      } else {
+        surfLowest = '#ffffff';
+        surfLow = hslToHex(hp, Math.min(100, sp * 0.22), 97);
+        surfCont = hslToHex(hp, Math.min(100, sp * 0.25), 94);
+        surfHigh = hslToHex(hp, Math.min(100, sp * 0.28), 91);
+        surfHighest = hslToHex(hp, Math.min(100, sp * 0.3), 88);
+        surf = hslToHex(hp, Math.min(100, sp * 0.22), 98);
+        bg = hslToHex(hp, Math.min(100, sp * 0.2), 98);
+        onSurf = '#1d1b20';
+        onSurfVar = '#49454f';
+        outline = hslToHex(hp, Math.min(100, sp * 0.2), 60);
+      }
+
       // 🌟 3. 同步注入至 documentElement 与 body，彻底消除暗色模式失效问题
       [document.documentElement, document.body].forEach(target => {
         if (!target) return;
@@ -1590,6 +1627,17 @@ window.addEventListener('m29:loaded', function() {
         target.style.setProperty('--mdc-theme-on-tertiary', onTertiary);
         target.style.setProperty('--mdc-theme-on-tertiary-container', onTCont);
 
+        target.style.setProperty('--mdc-theme-surface-container-lowest', surfLowest);
+        target.style.setProperty('--mdc-theme-surface-container-low', surfLow);
+        target.style.setProperty('--mdc-theme-surface-container', surfCont);
+        target.style.setProperty('--mdc-theme-surface-container-high', surfHigh);
+        target.style.setProperty('--mdc-theme-surface-container-highest', surfHighest);
+        target.style.setProperty('--mdc-theme-surface', surf);
+        target.style.setProperty('--mdc-theme-background', bg);
+        target.style.setProperty('--mdc-theme-on-surface', onSurf);
+        target.style.setProperty('--mdc-theme-on-surface-variant', onSurfVar);
+        target.style.setProperty('--mdc-theme-outline', outline);
+
         // 选中文本色阶注入
         const p200 = (theme && theme.tones && theme.tones.primary && theme.tones.primary[200]) ? theme.tones.primary[200] : hslToHex(hp, Math.min(100, sp * 0.45), 85);
         const p700 = (theme && theme.tones && theme.tones.primary && theme.tones.primary[700]) ? theme.tones.primary[700] : hslToHex(hp, Math.min(100, sp * 0.5), 32);
@@ -1601,6 +1649,22 @@ window.addEventListener('m29:loaded', function() {
         target.style.setProperty('--mdc-theme-primary-900', p900);
         target.style.setProperty('--mdc-theme-primary-50', p50);
       });
+
+      // 同步更新组件栏（未锁定专属调色盘时跟随全局）
+      const panel = document.getElementById('app-component-panel');
+      if (panel && !localStorage.getItem('m29_component_panel_color')) {
+        panel.style.removeProperty('--mdc-theme-primary');
+        panel.style.removeProperty('--mdc-theme-on-primary');
+        panel.style.removeProperty('--mdc-theme-primary-container');
+        panel.style.removeProperty('--mdc-theme-on-primary-container');
+        panel.style.removeProperty('--mdc-theme-surface-container-low');
+        panel.style.removeProperty('--mdc-theme-surface-container');
+        panel.style.removeProperty('--mdc-theme-surface-container-high');
+        panel.style.removeProperty('--mdc-theme-surface-container-highest');
+        panel.style.removeProperty('--mdc-theme-on-surface');
+        panel.style.removeProperty('--mdc-theme-on-surface-variant');
+        if (typeof refreshDatePickerThumb === 'function') refreshDatePickerThumb(true);
+      }
 
       const pLabel = document.getElementById('label-cur-p');
       const sLabel = document.getElementById('label-cur-s');
@@ -1802,15 +1866,34 @@ window.addEventListener('m29:loaded', function() {
       const menu = document.getElementById('mdcSelectMenu');
       const arrow = document.getElementById('mdcSelectArrow');
       const parentCard = document.getElementById('section-form');
-      if (!menu) return;
-      const isOpen = menu.style.display === 'flex';
-      menu.style.display = isOpen ? 'none' : 'flex';
-      if (selectBox) selectBox.style.zIndex = isOpen ? '50' : '99999';
-      if (parentCard) {
-        parentCard.style.zIndex = isOpen ? '10' : '9999';
-        parentCard.style.overflow = isOpen ? 'hidden' : 'visible';
+      if (!menu || !selectBox) return;
+
+      const isOpen = selectBox.classList.contains('is-open') || menu.classList.contains('is-open');
+      if (isOpen) {
+        selectBox.classList.remove('is-open');
+        menu.classList.remove('is-open');
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+        setTimeout(() => {
+          if (!selectBox.classList.contains('is-open')) {
+            selectBox.style.zIndex = '50';
+            if (parentCard) {
+              parentCard.style.zIndex = '10';
+              parentCard.style.overflow = 'hidden';
+            }
+          }
+        }, 240);
+      } else {
+        selectBox.style.zIndex = '99999';
+        if (parentCard) {
+          parentCard.style.zIndex = '9999';
+          parentCard.style.overflow = 'visible';
+        }
+        // Force reflow
+        void selectBox.offsetWidth;
+        selectBox.classList.add('is-open');
+        menu.classList.add('is-open');
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
       }
-      if (arrow) arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
     }
 
     function selectMdcOption(val, el) {
@@ -1819,6 +1902,8 @@ window.addEventListener('m29:loaded', function() {
       const selectBox = document.getElementById('demoMdcSelect');
       const parentCard = document.getElementById('section-form');
       const menu = document.getElementById('mdcSelectMenu');
+      const arrow = document.getElementById('mdcSelectArrow');
+
       if (menu) {
         menu.querySelectorAll('.mdc-select-custom__item').forEach(item => {
           item.classList.remove('is-selected');
@@ -1828,29 +1913,42 @@ window.addEventListener('m29:loaded', function() {
         el.classList.add('is-selected');
         const activeCheck = el.querySelector('.item-check');
         if (activeCheck) activeCheck.style.visibility = 'visible';
-        menu.style.display = 'none';
       }
-      if (selectBox) selectBox.style.zIndex = '50';
-      if (parentCard) {
-        parentCard.style.zIndex = '10';
-        parentCard.style.overflow = 'hidden';
-      }
-      const arrow = document.getElementById('mdcSelectArrow');
+
+      if (selectBox) selectBox.classList.remove('is-open');
+      if (menu) menu.classList.remove('is-open');
       if (arrow) arrow.style.transform = 'rotate(0deg)';
+
+      setTimeout(() => {
+        if (selectBox && !selectBox.classList.contains('is-open')) {
+          selectBox.style.zIndex = '50';
+          if (parentCard) {
+            parentCard.style.zIndex = '10';
+            parentCard.style.overflow = 'hidden';
+          }
+        }
+      }, 240);
     }
 
     document.addEventListener('click', (e) => {
       const selectBox = document.getElementById('demoMdcSelect');
       const parentCard = document.getElementById('section-form');
       if (selectBox && !selectBox.contains(e.target)) {
-        const menu = document.getElementById('mdcSelectMenu');
-        const arrow = document.getElementById('mdcSelectArrow');
-        if (menu) menu.style.display = 'none';
-        if (arrow) arrow.style.transform = 'rotate(0deg)';
-        selectBox.style.zIndex = '50';
-        if (parentCard) {
-          parentCard.style.zIndex = '10';
-          parentCard.style.overflow = 'hidden';
+        if (selectBox.classList.contains('is-open')) {
+          const menu = document.getElementById('mdcSelectMenu');
+          const arrow = document.getElementById('mdcSelectArrow');
+          selectBox.classList.remove('is-open');
+          if (menu) menu.classList.remove('is-open');
+          if (arrow) arrow.style.transform = 'rotate(0deg)';
+          setTimeout(() => {
+            if (!selectBox.classList.contains('is-open')) {
+              selectBox.style.zIndex = '50';
+              if (parentCard) {
+                parentCard.style.zIndex = '10';
+                parentCard.style.overflow = 'hidden';
+              }
+            }
+          }, 240);
         }
       }
     });

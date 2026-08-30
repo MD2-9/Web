@@ -123,16 +123,32 @@
 .surface-token-chip {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 4px 10px;
-  font-size: 12px;
+  height: 32px;
+  line-height: 1;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 500;
   margin: 3px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   background: rgba(0, 0, 0, 0.03);
   border-radius: 16px !important;
   user-select: none;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  box-sizing: border-box;
+  vertical-align: middle;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.surface-token-chip i.material-icons,
+.surface-token-chip span.material-icons {
+  font-size: 16px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
 }
 
 .surface-token-chip.is-selected,

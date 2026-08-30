@@ -482,6 +482,7 @@ const tabs = new M29Tabs(
 
 ### 2. 🃏 卡片系列 (`@material/card`)
 
+#### 标准卡片 (0px 纯直角 Elevated)
 ```html
 <div class="mdc-card" style="border-radius: 0; padding: 16px;">
   <div class="mdc-card__primary-action" style="border-radius: 0;">
@@ -491,6 +492,15 @@ const tabs = new M29Tabs(
   <div class="mdc-card__actions" style="margin-top: 16px;">
     <button class="mdc-button mdc-card__action mdc-card__action--button">阅读更多</button>
   </div>
+</div>
+```
+
+#### 🌟 新型凹陷式卡片 (Sunken / Inset Recessed Card)
+* **功能定位**：采用内部内嵌阴影（`box-shadow: inset ...`）与下沉式层阶背景，呈现内凹刻蚀与嵌入式槽位的工业质感，专为常驻右侧组件栏（Component Panel）与仪表盘控件槽位量身定制。
+```html
+<div class="mdc-card mdc-card--sunken" style="padding: 16px;">
+  <h4 style="margin: 0 0 8px;">凹陷式卡片 (Sunken Card)</h4>
+  <p style="margin: 0; font-size: 13px; opacity: 0.85;">内置内嵌阴影与低层阶背景，营造克制而立体的空间沉浸感。</p>
 </div>
 ```
 
