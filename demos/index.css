@@ -951,7 +951,7 @@ span.material-icons,
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* 🌟 M2.9 无背景仅边框卡片 (Outlined / Border-only Card · 50 色阶描边，Hover 响应 200 色阶) */
+/* 🌟 M2.9 无背景仅边框卡片 (Outlined / Border-only Card · 50 色阶描边，Hover 响应 300 色阶) */
 .mdc-card--outlined,
 .demo-card--outlined,
 #section-footer {
@@ -966,7 +966,7 @@ span.material-icons,
 .mdc-card--outlined:hover,
 .demo-card--outlined:hover,
 #section-footer:hover {
-  border-color: var(--mdc-theme-primary-200, #ffb951) !important;
+  border-color: var(--mdc-theme-primary-300, #e09b1f) !important;
   box-shadow: none !important;
 }
 
@@ -989,7 +989,7 @@ span.material-icons,
 .dark-theme .mdc-card--outlined:hover,
 .dark-theme .demo-card--outlined:hover,
 .dark-theme #section-footer:hover {
-  border-color: var(--mdc-theme-primary-700, #5f3e00) !important;
+  border-color: var(--mdc-theme-primary-700, #ffb951) !important;
 }
 
 .preview-img-box {
