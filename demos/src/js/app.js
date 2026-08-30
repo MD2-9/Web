@@ -1419,19 +1419,25 @@ window.addEventListener('m29:loaded', function() {
 
     // =========================================================================
     // 移动端边缘 29% 手势滑动唤出 (Android 10-12 同款动画 · 直线->变箭头->停留0.15s变图标即可开启)
+    // 采用手势状态机预判：只有完全横向滑动判定通过后才激活并显示动画，绝不在非横向滑动时误触
     // =========================================================================
     let touchStartX = 0;
     let touchStartY = 0;
-    let activeGestureSide = null; // 'left' | 'right' | null
+    let gestureCandidateSide = null; // 'left' | 'right' | null
+    let gestureStatus = 'idle'; // 'idle' | 'pending' | 'active' | 'rejected'
+    let activeGestureSide = null;
     let gestureReadyToOpen = false;
     let gestureHoldTimer = null;
     const SWIPE_REQUIRED_DIST = 48; // 滑动距离要求 (48px 完成直线变箭头)
+    const MAX_GESTURE_ANGLE = 25;   // 🌟 严格横向限制：夹角 <= 25°
+    const GESTURE_SLOP = 8;         // 预判位移阈值 (8px)
 
     window.addEventListener('touchstart', (e) => {
       if (!e.touches || !e.touches[0]) return;
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
       activeGestureSide = null;
+      gestureCandidateSide = null;
       gestureReadyToOpen = false;
       if (gestureHoldTimer) {
         clearTimeout(gestureHoldTimer);
@@ -1439,7 +1445,7 @@ window.addEventListener('m29:loaded', function() {
       }
 
       const screenWidth = window.innerWidth;
-      const edgeThreshold = screenWidth * 0.29; // 🌟 29% 边缘滑动有效触发区
+      const edgeThreshold = screenWidth * 0.35; // 🌟 35% 边缘有效区域
 
       const mobileDrawer = document.getElementById('app-mobile-drawer');
       const isDrawerOpen = mobileDrawer && (mobileDrawer.classList.contains('mobile-open') || mobileDrawer.classList.contains('is-open'));
@@ -1447,84 +1453,116 @@ window.addEventListener('m29:loaded', function() {
       const componentPanel = document.getElementById('app-component-panel');
       const isComponentPanelOpen = componentPanel && componentPanel.classList.contains('is-open');
 
-      // 仅在对应面板未开启状态下，且触摸起点在 29% 边缘区域内时激活手势
+      // 仅在对应面板未开启状态下，且触摸起点在 35% 边缘区域内时将手势标记为 pending 候选
       if (screenWidth < 640 && !isDrawerOpen && touchStartX <= edgeThreshold) {
-        activeGestureSide = 'left';
+        gestureCandidateSide = 'left';
+        gestureStatus = 'pending';
       } else if (screenWidth < 768 && !isComponentPanelOpen && touchStartX >= screenWidth - edgeThreshold) {
-        activeGestureSide = 'right';
+        gestureCandidateSide = 'right';
+        gestureStatus = 'pending';
+      } else {
+        gestureStatus = 'idle';
       }
     }, { passive: true });
 
     window.addEventListener('touchmove', (e) => {
-      if (!activeGestureSide || !e.touches || !e.touches[0]) return;
+      if (gestureStatus === 'rejected' || gestureStatus === 'idle') return;
+      if (!e.touches || !e.touches[0]) return;
+
       const currentX = e.touches[0].clientX;
       const currentY = e.touches[0].clientY;
       const deltaX = currentX - touchStartX;
       const deltaY = Math.abs(currentY - touchStartY);
+      const absDeltaX = Math.abs(deltaX);
 
-      // 如果纵向滑动幅度过大，判定为垂直滚动，取消手势动效
-      if (deltaY > 60 && deltaY > Math.abs(deltaX) * 1.5) {
-        cleanupInteractiveGesture();
-        activeGestureSide = null;
-        return;
+      // 1. 预判阶段 (pending)：在位移小于阈值 (8px) 前不显示任何指示器
+      if (gestureStatus === 'pending') {
+        const totalDist = Math.hypot(absDeltaX, deltaY);
+        if (totalDist < GESTURE_SLOP) {
+          return; // 尚在微小位移区，不触发任何动效
+        }
+
+        // 计算当前滑动的水平夹角
+        const gestureAngle = Math.atan2(deltaY, absDeltaX || 0.001) * (180 / Math.PI);
+        const isDirectionValid = (gestureCandidateSide === 'left' && deltaX > 0) ||
+                                 (gestureCandidateSide === 'right' && deltaX < 0);
+
+        // 如果偏角超过限制（例如斜滑、上下滚动）或滑动方向相反，直接拒绝该手势，全程不再触发
+        if (!isDirectionValid || gestureAngle > MAX_GESTURE_ANGLE) {
+          gestureStatus = 'rejected';
+          gestureCandidateSide = null;
+          return;
+        }
+
+        // 判定为纯横向手势，正式进入 active 激活态
+        gestureStatus = 'active';
+        activeGestureSide = gestureCandidateSide;
       }
 
-      let dragDist = 0;
-      let hintEl = null;
+      // 2. 激活态 (active)：如果后续滑动突然转为纵向或反向，立即中止
+      if (gestureStatus === 'active') {
+        const gestureAngle = Math.atan2(deltaY, absDeltaX || 0.001) * (180 / Math.PI);
+        const isDirectionValid = (activeGestureSide === 'left' && deltaX > 0) ||
+                                 (activeGestureSide === 'right' && deltaX < 0);
 
-      if (activeGestureSide === 'left' && deltaX > 0) {
-        dragDist = deltaX;
-        hintEl = document.getElementById('m29GestureHintLeft');
-      } else if (activeGestureSide === 'right' && deltaX < 0) {
-        dragDist = Math.abs(deltaX);
-        hintEl = document.getElementById('m29GestureHintRight');
-      }
+        if (!isDirectionValid || gestureAngle > MAX_GESTURE_ANGLE) {
+          cleanupInteractiveGesture();
+          gestureStatus = 'rejected';
+          activeGestureSide = null;
+          return;
+        }
 
-      if (!hintEl) return;
+        let dragDist = (activeGestureSide === 'left') ? deltaX : absDeltaX;
+        let hintEl = (activeGestureSide === 'left')
+          ? document.getElementById('m29GestureHintLeft')
+          : document.getElementById('m29GestureHintRight');
 
-      const progress = Math.min(1, Math.max(0, dragDist / SWIPE_REQUIRED_DIST));
+        if (!hintEl) return;
 
-      // 激活实时交互态
-      hintEl.classList.add('is-touch-tracking');
-      hintEl.style.top = `${touchStartY}px`;
+        const progress = Math.min(1, Math.max(0, dragDist / SWIPE_REQUIRED_DIST));
 
-      // 动态形态插值 (直线 -> 变箭头)
-      const svgPath = hintEl.querySelector('svg path');
-      if (svgPath) {
-        if (activeGestureSide === 'left') {
-          // 直线 M 6,10 L 6,24 L 6,38 -> 箭头 M 8,11 L 22,24 L 8,37
-          const pTopX = 6 + 2 * progress;
-          const pTopY = 10 + 1 * progress;
-          const pMidX = 6 + 16 * progress;
-          const pBotY = 38 - 1 * progress;
-          svgPath.setAttribute('d', `M ${pTopX},${pTopY} L ${pMidX},24 L ${pTopX},${pBotY}`);
-          hintEl.style.transform = `translateY(-50%) translateX(${Math.min(22, dragDist * 0.45) - (1 - progress) * 16}px)`;
+        // 激活实时交互态
+        hintEl.classList.add('is-touch-tracking');
+        hintEl.style.top = `${touchStartY}px`;
+
+        // 动态形态插值 (直线 -> 变箭头)
+        const svgPath = hintEl.querySelector('svg path');
+        if (svgPath) {
+          if (activeGestureSide === 'left') {
+            // 直线 M 6,10 L 6,24 L 6,38 -> 箭头 M 8,11 L 22,24 L 8,37
+            const pTopX = 6 + 2 * progress;
+            const pTopY = 10 + 1 * progress;
+            const pMidX = 6 + 16 * progress;
+            const pBotY = 38 - 1 * progress;
+            svgPath.setAttribute('d', `M ${pTopX},${pTopY} L ${pMidX},24 L ${pTopX},${pBotY}`);
+            hintEl.style.transform = `translateY(-50%) translateX(${Math.min(22, dragDist * 0.45) - (1 - progress) * 16}px)`;
+          } else {
+            // 直线 M 26,10 L 26,24 L 26,38 -> 箭头 M 24,11 L 10,24 L 24,37
+            const pTopX = 26 - 2 * progress;
+            const pTopY = 10 + 1 * progress;
+            const pMidX = 26 - 16 * progress;
+            const pBotY = 38 - 1 * progress;
+            svgPath.setAttribute('d', `M ${pTopX},${pTopY} L ${pMidX},24 L ${pTopX},${pBotY}`);
+            hintEl.style.transform = `translateY(-50%) translateX(${-Math.min(22, dragDist * 0.45) + (1 - progress) * 16}px)`;
+          }
+        }
+
+        // 当滑动距离满足要求（完成变为箭头）后，停留 0.15s 变为图标即可开启
+        if (progress >= 1.0) {
+          if (!gestureHoldTimer && !gestureReadyToOpen) {
+            gestureHoldTimer = setTimeout(() => {
+              gestureReadyToOpen = true;
+              hintEl.classList.add('is-ready');
+            }, 150); // 🌟 停留 0.15s 变为图标
+          }
         } else {
-          // 直线 M 26,10 L 26,24 L 26,38 -> 箭头 M 24,11 L 10,24 L 24,37
-          const pTopX = 26 - 2 * progress;
-          const pTopY = 10 + 1 * progress;
-          const pMidX = 26 - 16 * progress;
-          const pBotY = 38 - 1 * progress;
-          svgPath.setAttribute('d', `M ${pTopX},${pTopY} L ${pMidX},24 L ${pTopX},${pBotY}`);
-          hintEl.style.transform = `translateY(-50%) translateX(${-Math.min(22, dragDist * 0.45) + (1 - progress) * 16}px)`;
+          if (gestureHoldTimer) {
+            clearTimeout(gestureHoldTimer);
+            gestureHoldTimer = null;
+          }
+          gestureReadyToOpen = false;
+          hintEl.classList.remove('is-ready');
         }
-      }
-
-      // 当滑动距离满足要求（完成变为箭头）后，停留 0.15s 变为图标即可开启
-      if (progress >= 1.0) {
-        if (!gestureHoldTimer && !gestureReadyToOpen) {
-          gestureHoldTimer = setTimeout(() => {
-            gestureReadyToOpen = true;
-            hintEl.classList.add('is-ready');
-          }, 150); // 🌟 停留 0.15s 变为图标
-        }
-      } else {
-        if (gestureHoldTimer) {
-          clearTimeout(gestureHoldTimer);
-          gestureHoldTimer = null;
-        }
-        gestureReadyToOpen = false;
-        hintEl.classList.remove('is-ready');
       }
     }, { passive: true });
 
@@ -1556,6 +1594,11 @@ window.addEventListener('m29:loaded', function() {
       const touchEndY = e.changedTouches[0].clientY;
       const deltaX = touchEndX - touchStartX;
       const deltaY = Math.abs(touchEndY - touchStartY);
+      const absDeltaX = Math.abs(deltaX);
+
+      // 🌟 角度限制判断
+      const gestureAngle = Math.atan2(deltaY, absDeltaX || 0.001) * (180 / Math.PI);
+      const isStrictlyHorizontal = gestureAngle <= MAX_GESTURE_ANGLE;
 
       const mobileDrawer = document.getElementById('app-mobile-drawer');
       const isDrawerOpen = mobileDrawer && (mobileDrawer.classList.contains('mobile-open') || mobileDrawer.classList.contains('is-open'));
@@ -1563,27 +1606,31 @@ window.addEventListener('m29:loaded', function() {
       const componentPanel = document.getElementById('app-component-panel');
       const isComponentPanelOpen = componentPanel && componentPanel.classList.contains('is-open');
 
-      // 1. 手势满足距离并在停留 0.15s 变为图标后释放：开启
-      if (gestureReadyToOpen) {
+      // 1. 手势满足距离并在停留 0.15s 变为图标后释放：开启 (仅在 active 状态且保持纯横向时)
+      if (gestureStatus === 'active' && gestureReadyToOpen && isStrictlyHorizontal) {
         if (activeGestureSide === 'left') {
           openMobileDrawer();
         } else if (activeGestureSide === 'right') {
           openComponentPanel();
         }
       } 
-      // 2. 反向滑动收回 (已打开状态下向内滑回收起)
-      else if (isDrawerOpen && deltaX < -40 && deltaY < Math.abs(deltaX) * 1.5) {
+      // 2. 反向完全横向滑动收回 (已打开状态下向内纯水平滑动收起)
+      else if (isDrawerOpen && deltaX < -40 && isStrictlyHorizontal) {
         closeMobileDrawer();
-      } else if (isComponentPanelOpen && deltaX > 40 && deltaY < Math.abs(deltaX) * 1.5) {
+      } else if (isComponentPanelOpen && deltaX > 40 && isStrictlyHorizontal) {
         closeComponentPanel();
       }
 
       cleanupInteractiveGesture();
+      gestureStatus = 'idle';
+      gestureCandidateSide = null;
       activeGestureSide = null;
     }, { passive: true });
 
     window.addEventListener('touchcancel', () => {
       cleanupInteractiveGesture();
+      gestureStatus = 'idle';
+      gestureCandidateSide = null;
       activeGestureSide = null;
     }, { passive: true });
 

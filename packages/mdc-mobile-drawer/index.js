@@ -186,6 +186,7 @@ export class MdcMobileDrawer {
     let touchStartX = 0;
     let touchStartY = 0;
     let touchStartedInDrawer = false;
+    const MAX_GESTURE_ANGLE = 25; // 🌟 角度限制：只有完全横向滑动 (<= 25°) 才能触发手势
 
     window.addEventListener('touchstart', (e) => {
       if (!e.touches || !e.touches[0]) return;
@@ -200,14 +201,19 @@ export class MdcMobileDrawer {
       const touchEndY = e.changedTouches[0].clientY;
       const deltaX = touchEndX - touchStartX;
       const deltaY = Math.abs(touchEndY - touchStartY);
+      const absDeltaX = Math.abs(deltaX);
 
-      const edgeThreshold = window.innerWidth * 0.29; // 29% 边缘判定
-      // 1. 边缘右滑打开 (左边缘 < 29% 向右滑动 > 45px)
-      if (!this.isOpen() && touchStartX <= edgeThreshold && deltaX > 45 && deltaY < 80) {
+      // 计算手势相对水平方向偏角
+      const gestureAngle = Math.atan2(deltaY, absDeltaX || 0.001) * (180 / Math.PI);
+      const isStrictlyHorizontal = gestureAngle <= MAX_GESTURE_ANGLE;
+
+      const edgeThreshold = window.innerWidth * 0.35; // 35% 边缘判定
+      // 1. 边缘右滑打开 (左边缘 < 35% 纯横向向右滑动 > 45px)
+      if (!this.isOpen() && touchStartX <= edgeThreshold && deltaX > 45 && isStrictlyHorizontal) {
         this.open();
       }
-      // 2. 反向左滑收回 (已打开状态下向左滑动 > 50px)
-      else if (this.isOpen() && deltaX < -50 && deltaY < 80) {
+      // 2. 反向左滑收回 (已打开状态下纯横向向左滑动 > 50px)
+      else if (this.isOpen() && deltaX < -50 && isStrictlyHorizontal) {
         this.close();
       }
     }, { passive: true });

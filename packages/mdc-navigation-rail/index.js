@@ -118,6 +118,7 @@ export class MdcNavigationRail {
     // 边缘手势滑动唤出
     let touchStartX = 0;
     let touchStartY = 0;
+    const MAX_GESTURE_ANGLE = 25; // 🌟 纯横向滑动角度限制 (<= 25°)
 
       let touchStartedInRail = false;
       window.addEventListener('touchstart', (e) => {
@@ -134,10 +135,16 @@ export class MdcNavigationRail {
         const touchEndY = e.changedTouches[0].clientY;
         const deltaX = touchEndX - touchStartX;
         const deltaY = Math.abs(touchEndY - touchStartY);
+        const absDeltaX = Math.abs(deltaX);
 
-        if (touchStartX < 35 && deltaX > 45 && deltaY < 80) {
+        // 计算手势相对水平方向偏角
+        const gestureAngle = Math.atan2(deltaY, absDeltaX || 0.001) * (180 / Math.PI);
+        const isStrictlyHorizontal = gestureAngle <= MAX_GESTURE_ANGLE;
+        const edgeThreshold = window.innerWidth * 0.35; // 35% 边缘判定
+
+        if (touchStartX <= edgeThreshold && deltaX > 45 && isStrictlyHorizontal) {
           this.openMobileDrawer();
-        } else if (touchStartX > 40 && deltaX < -50 && deltaY < 80) {
+        } else if (touchStartX > 40 && deltaX < -50 && isStrictlyHorizontal) {
           if (this.root.classList.contains('mobile-open')) {
             this.closeMobileDrawer();
           }
