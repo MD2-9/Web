@@ -1216,15 +1216,15 @@ body.downgrade-1col .main-container {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-/* 🌟 Google M3 官方规范：导航栏激活药丸/项强制使用 Secondary Container */
+/* 🌟 导航栏激活药丸/项使用 Primary Container */
 .rail-nav-item.is-active {
-  background-color: var(--mdc-theme-secondary-container, #e8def8) !important;
-  color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+  background-color: var(--mdc-theme-primary-container, #eaddff) !important;
+  color: var(--mdc-theme-on-primary-container, #21005d) !important;
   font-weight: 700;
 }
 
 .rail-nav-item.is-active .rail-item-icon {
-  color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+  color: var(--mdc-theme-on-primary-container, #21005d) !important;
 }
 
 /* 抽屉导航常驻主容器 (纵向两端完全对齐均匀分布) */
@@ -1872,8 +1872,8 @@ body.downgrade-1col .main-container {
   }
 
   .mobile-drawer-nav-item.is-active {
-    background-color: var(--mdc-theme-secondary-container, #e8def8) !important;
-    color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+    background-color: var(--mdc-theme-primary-container, #eaddff) !important;
+    color: var(--mdc-theme-on-primary-container, #21005d) !important;
     font-weight: 700;
   }
 
@@ -1891,7 +1891,7 @@ body.downgrade-1col .main-container {
   }
 
   .mobile-drawer-nav-item.is-active .rail-item-icon {
-    color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+    color: var(--mdc-theme-on-primary-container, #21005d) !important;
   }
 
   .mobile-drawer-nav-item .rail-item-text {
@@ -2175,8 +2175,8 @@ body.downgrade-1col .main-container {
 
 .surface-token-chip.is-selected,
 .surface-token-chip.active {
-  background: var(--mdc-theme-secondary-container, #e8def8) !important;
-  color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+  background: var(--mdc-theme-primary-container, #eaddff) !important;
+  color: var(--mdc-theme-on-primary-container, #21005d) !important;
   border-color: transparent !important;
   font-weight: 600;
 }
@@ -3083,8 +3083,8 @@ body.component-panel-closed .m29-overscroll-edge-container--main {
 
 .m29-segmented-button.is-selected,
 .segmented-button.is-selected {
-  background-color: var(--mdc-theme-secondary-container, #e8def8) !important;
-  color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+  background-color: var(--mdc-theme-primary-container, #eaddff) !important;
+  color: var(--mdc-theme-on-primary-container, #21005d) !important;
 }
 
 .dark-theme .m29-segmented-button,
@@ -3121,7 +3121,7 @@ body.component-panel-closed .m29-overscroll-edge-container--main {
   right: -2px;
   width: 8px;
   height: 8px;
-  background-color: var(--mdc-theme-tertiary, #7d5260);
+  background-color: var(--mdc-theme-primary, #6750a4);
   border-radius: 50% !important;
   pointer-events: none;
 }
@@ -3131,8 +3131,8 @@ body.component-panel-closed .m29-overscroll-edge-container--main {
   position: absolute;
   top: -4px;
   right: -6px;
-  background-color: var(--mdc-theme-tertiary, #7d5260);
-  color: var(--mdc-theme-on-tertiary, #ffffff);
+  background-color: var(--mdc-theme-primary, #6750a4);
+  color: var(--mdc-theme-on-primary, #ffffff);
   font-size: 10px;
   font-weight: 700;
   padding: 1px 5px;

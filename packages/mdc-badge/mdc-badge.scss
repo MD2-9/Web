@@ -20,7 +20,7 @@
   right: -2px;
   width: 8px;
   height: 8px;
-  background-color: var(--mdc-theme-tertiary, #7d5260);
+  background-color: var(--mdc-theme-primary, #6750a4);
   border-radius: 50% !important;
   pointer-events: none;
 }
@@ -30,8 +30,8 @@
   position: absolute;
   top: -4px;
   right: -6px;
-  background-color: var(--mdc-theme-tertiary, #7d5260);
-  color: var(--mdc-theme-on-tertiary, #ffffff);
+  background-color: var(--mdc-theme-primary, #6750a4);
+  color: var(--mdc-theme-on-primary, #ffffff);
   font-size: 10px;
   font-weight: 700;
   padding: 1px 5px;

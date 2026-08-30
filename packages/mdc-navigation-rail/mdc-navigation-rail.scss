@@ -107,15 +107,15 @@
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-/* 🌟 Google M3 官方规范：导航栏激活药丸/项强制使用 Secondary Container */
+/* 🌟 导航栏激活药丸/项使用 Primary Container */
 .rail-nav-item.is-active {
-  background-color: var(--mdc-theme-secondary-container, #e8def8) !important;
-  color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+  background-color: var(--mdc-theme-primary-container, #eaddff) !important;
+  color: var(--mdc-theme-on-primary-container, #21005d) !important;
   font-weight: 700;
 }
 
 .rail-nav-item.is-active .rail-item-icon {
-  color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+  color: var(--mdc-theme-on-primary-container, #21005d) !important;
 }
 
 /* 抽屉导航常驻主容器 (纵向两端完全对齐均匀分布) */

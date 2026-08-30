@@ -153,8 +153,8 @@
 
 .surface-token-chip.is-selected,
 .surface-token-chip.active {
-  background: var(--mdc-theme-secondary-container, #e8def8) !important;
-  color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+  background: var(--mdc-theme-primary-container, #eaddff) !important;
+  color: var(--mdc-theme-on-primary-container, #21005d) !important;
   border-color: transparent !important;
   font-weight: 600;
 }

@@ -148,8 +148,8 @@
   }
 
   .mobile-drawer-nav-item.is-active {
-    background-color: var(--mdc-theme-secondary-container, #e8def8) !important;
-    color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+    background-color: var(--mdc-theme-primary-container, #eaddff) !important;
+    color: var(--mdc-theme-on-primary-container, #21005d) !important;
     font-weight: 700;
   }
 
@@ -167,7 +167,7 @@
   }
 
   .mobile-drawer-nav-item.is-active .rail-item-icon {
-    color: var(--mdc-theme-on-secondary-container, #1d192b) !important;
+    color: var(--mdc-theme-on-primary-container, #21005d) !important;
   }
 
   .mobile-drawer-nav-item .rail-item-text {

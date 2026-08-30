@@ -781,7 +781,7 @@ window.addEventListener('m29:loaded', function() {
     }
     window.renderMasonryLayout = renderMasonryLayout;
 
-    // 🌟 莫奈三色列着色系统 (第 1 列主色，第 2 列次色，第 3 列与组件栏第三色)
+    // 🌟 卡片着色系统 (统一使用主色对应色阶)
     function applyColumnColorTones() {
       const overviewCard = document.getElementById('section-overview');
       if (overviewCard) {
@@ -791,26 +791,9 @@ window.addEventListener('m29:loaded', function() {
       const allCards = Array.from(document.querySelectorAll('.main-container [id^="section-"]'));
       if (!allCards.length) return;
 
-      const cols = Array.from(document.querySelectorAll('.masonry-col'));
-
-      if (cols.length > 0) {
-        // 多栏模式：根据所属列容器进行精准着色 (Col 0: 主色, Col 1: 次色, Col 2: 第三色)
-        cols.forEach((col, colIndex) => {
-          let colorVar = 'var(--mdc-theme-primary)';
-          if (colIndex === 1) colorVar = 'var(--mdc-theme-secondary)';
-          if (colIndex === 2) colorVar = 'var(--mdc-theme-tertiary)';
-
-          const cardsInCol = col.querySelectorAll('[id^="section-"]');
-          cardsInCol.forEach(card => {
-            card.style.setProperty('--card-theme-color', colorVar);
-          });
-        });
-      } else {
-        // 单栏模式：全为主色
-        allCards.forEach(card => {
-          card.style.setProperty('--card-theme-color', 'var(--mdc-theme-primary)');
-        });
-      }
+      allCards.forEach(card => {
+        card.style.setProperty('--card-theme-color', 'var(--mdc-theme-primary)');
+      });
     }
     window.applyColumnColorTones = applyColumnColorTones;
 
