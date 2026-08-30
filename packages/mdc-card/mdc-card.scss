@@ -84,10 +84,42 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* 🌟 M2.9 无背景仅边框卡片 (Outlined / Border-only Card · 页脚与轻量容器专属) */
+.mdc-card--outlined,
+.demo-card--outlined,
+#section-footer {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: 1px solid var(--mdc-theme-outline-variant, rgba(0, 0, 0, 0.12)) !important;
+  box-shadow: none !important;
+  color: var(--mdc-theme-on-surface, #1d1b20);
+}
+
+.demo-card--outlined:hover,
+#section-footer:hover {
+  border-color: var(--mdc-theme-outline, rgba(0, 0, 0, 0.28)) !important;
+  box-shadow: none !important;
+}
+
 .dark-theme .demo-card {
   background-color: var(--mdc-theme-surface-container, #131217) !important;
   border-color: rgba(255, 255, 255, 0.08);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65) !important;
+}
+
+.dark-theme .mdc-card--outlined,
+.dark-theme .demo-card--outlined,
+.dark-theme #section-footer {
+  background-color: transparent !important;
+  background: transparent !important;
+  border-color: var(--mdc-theme-outline-variant, rgba(255, 255, 255, 0.12)) !important;
+  box-shadow: none !important;
+  color: var(--mdc-theme-on-surface, #e6e1e5) !important;
+}
+
+.dark-theme .demo-card--outlined:hover,
+.dark-theme #section-footer:hover {
+  border-color: var(--mdc-theme-outline, rgba(255, 255, 255, 0.28)) !important;
 }
 
 .preview-img-box {
@@ -132,7 +164,7 @@
 /* 🌟 M2.9 单/双/三栏自适应瀑布流布局系统 */
 .main-container {
   margin-left: 72px;
-  padding: 28px 36px 28px 36px;
+  padding: 28px 36px;
   max-width: 960px;
   box-sizing: border-box;
   display: flex;
@@ -227,7 +259,7 @@ body.downgrade-1col .main-container {
 @media (max-width: 639.9px) {
   .main-container {
     margin-left: 0 !important;
-    padding: 16px 16px 24px 16px !important;
+    padding: 16px !important;
     width: 100% !important;
     max-width: 100vw !important;
     overflow-x: hidden;

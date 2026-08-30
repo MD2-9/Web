@@ -1755,6 +1755,7 @@ window.addEventListener('m29:loaded', function() {
     // 真实莫奈 (Material You / CAM16 & HCT) 色彩调色盘矩阵 (包含深色、鲜亮色与浅色粉彩)
     // =========================================================================
     const MONET_PALETTES = [
+      { cn: '秋色麦浪', en: 'Autumn Wheat', color: '#825500', text: '#FFFFFF' },
       { cn: '薰衣紫', en: 'Lavender', color: '#6750A4', text: '#FFFFFF' },
       { cn: '莫奈靛蓝', en: 'Indigo', color: '#4F5B92', text: '#FFFFFF' },
       { cn: '极光蔚蓝', en: 'Cyan Teal', color: '#006874', text: '#FFFFFF' },
@@ -1784,9 +1785,9 @@ window.addEventListener('m29:loaded', function() {
     ];
 
     let currentStep = 1; // 1: Primary, 2: Secondary, 3: Tertiary
-    let selectedPrimary = '#6750A4';
-    let selectedSecondary = null;
-    let selectedTertiary = null;
+    let selectedPrimary = '#825500'; // 🌟 默认主题：秋色麦浪
+    let selectedSecondary = '#6F5B40';
+    let selectedTertiary = '#5B6400';
 
     function renderThemeTiles() {
       const grid = document.getElementById('themeGrid');

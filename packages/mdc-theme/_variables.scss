@@ -24,20 +24,20 @@
 //
 
 // Primary (主色：高权重主行动点与核心状态)
-$mdc-theme-primary: #6750a4 !default;
-$mdc-theme-primary-container: #eaddff !default;
+$mdc-theme-primary: #825500 !default;
+$mdc-theme-primary-container: #ffddb3 !default;
 $mdc-theme-on-primary: #ffffff !default;
-$mdc-theme-on-primary-container: #21005d !default;
+$mdc-theme-on-primary-container: #291800 !default;
 
 // Secondary (次色：低饱和度中阶伴生元素、Navigation 激活指示药丸、Filter Chips、Segmented Buttons)
-$mdc-theme-accent: #625b71 !default;
+$mdc-theme-accent: #6f5b40 !default;
 $mdc-theme-secondary: $mdc-theme-accent !default;
-$mdc-theme-secondary-container: #e8def8 !default;
+$mdc-theme-secondary-container: #fbdebc !default;
 $mdc-theme-on-secondary: #ffffff !default;
-$mdc-theme-on-secondary-container: #1d192b !default;
+$mdc-theme-on-secondary-container: #271904 !default;
 
 // Tertiary (第三色：顺时针/逆时针色相偏移的对比表达色、TimePicker AM/PM 切换、Badges 徽标、特色卡片)
-$mdc-theme-tertiary: #7d5260 !default;
+$mdc-theme-tertiary: #5b6400 !default;
 $mdc-theme-tertiary-container: #ffd8e4 !default;
 $mdc-theme-on-tertiary: #ffffff !default;
 $mdc-theme-on-tertiary-container: #31111d !default;

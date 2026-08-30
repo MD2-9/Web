@@ -82,7 +82,7 @@ function build() {
 /* =============================================================== */
 .main-container {
   margin-left: 72px;
-  padding: 28px 36px 28px 36px;
+  padding: 28px 36px;
   max-width: 1200px;
   box-sizing: border-box;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -101,7 +101,7 @@ function build() {
 @media (max-width: 639.9px) {
   .main-container {
     margin-left: 0 !important;
-    padding: 16px 16px 24px 16px !important;
+    padding: 16px !important;
     width: 100% !important;
     max-width: 100vw !important;
     overflow-x: hidden;
